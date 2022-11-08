@@ -1,5 +1,7 @@
 # Classroom-Management-System
 
+## Discord
+https://discord.gg/uFgsvDbPXQ
 
 
 ## Getting started
