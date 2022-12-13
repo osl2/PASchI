@@ -3,9 +3,14 @@
 ## Discord
 https://discord.gg/uFgsvDbPXQ
 
-##Overleaf (Online Latex Editor fürs Pflichtenheft)
+## Overleaf (Online Latex Editor fürs Pflichtenheft)
 https://www.overleaf.com/project
 Anmeldung mit KIT Account
+
+### Pflichtenheft
+https://www.overleaf.com/project/636a25483d4e3fe399ee20c5
+### Entwurf
+https://www.overleaf.com/project/638caebe8658eb619a29ea48
 
 ## Getting started
 
