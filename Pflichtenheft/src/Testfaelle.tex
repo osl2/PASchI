@@ -1,0 +1,292 @@
+\section{Testfälle und Testszenarien}
+In diesem Kapitel werden die Testfälle und Testfallszenarien definiert. Sie helfen dabei, die Korrektheit der Produktfunktionalität sicherzustellen.
+
+\subsection{Testfälle}
+\label{section:testfaelle}
+Jede Produktfunktion wird durch einen entsprechenden Testfall abgedeckt. Wie auch bei den Funktionen wird zwischen Basis-Testfällen und erweiterten Testfällen unterschieden.
+    
+    \paragraph{\large Basis-Testfälle} $~$ \\
+        
+    \begin{table}[h!]
+        \centering
+        \begin{tabular}{p{1.5cm}|p{9cm}|p{3cm}}
+            \textbf{\sffamily{Nr.}} & \textbf{\sffamily{Beschreibung}} & \textbf{\sffamily{Funktion}}\textsuperscript{\ref{table:Basis-Funktionen}}\\
+            \hline
+            \hline
+                $\langle T010 \rangle$ & Aufrufen der Webseite & $\langle F010 \rangle$ \\
+            \hline
+                $\langle T020 \rangle$ & \Gls{Account} anlegen & $\langle F020 \rangle$ \\
+            \hline
+                $\langle T030 \rangle$ & Einloggen & $\langle F020 \rangle$ \\
+            \hline
+                $\langle T040 \rangle$ & Schüler anzeigen & $\langle F030 \rangle$\\
+            \hline
+                $\langle T050 \rangle$ & Neuen Schüler anlegen & $\langle F040 \rangle$\\
+            \hline
+                $\langle T060 \rangle$ & Schülerstatistiken ansehen & $\langle F050\rangle$ \\                
+            \hline
+                $\langle T070 \rangle$ & Kurse anzeigen & $\langle F060\rangle$\\
+            \hline
+                $\langle T080 \rangle$ & Neuen Kurs anlegen & $\langle F070\rangle$ \\
+            \hline
+                $\langle T090 \rangle$ & Kursstatistiken ansehen & $\langle F080\rangle$ \\
+            \hline
+                $\langle T100 \rangle$ & Schüler in einem Kurs anzeigen & $\langle F090 \rangle$ \\
+            \hline
+                $\langle T110 \rangle$ & Schüler zu einem Kurs hinzufügen & $\langle F100\rangle$ \\
+            \hline
+                $\langle T120 \rangle$ & Schüler aus einem Kurs entfernen & $\langle F110 \rangle$\\
+            \hline
+                $\langle T130 \rangle$ & Neue Sitzung erstellen & $\langle F120 \rangle$ \\
+            \hline
+                $\langle T140 \rangle$ & Interaktion aufzeichnen & $\langle F130 \rangle$ \\
+            \hline
+                $\langle T150 \rangle$ & Kategorie für Interaktion auswählen & $\langle F140 \rangle$ \\
+            \hline
+                $\langle T160 \rangle$ & Interaktionskarten speichern & $\langle F150 \rangle$ \\
+            \hline
+                $\langle T170 \rangle$ & Interaktionskarten ansehen & $\langle F160 \rangle$ \\
+            \hline
+                $\langle T180 \rangle$ & Sitzungsstatistiken ansehen & $\langle F170 \rangle$ \\ 
+            \hline
+                $\langle T190 \rangle$ & Interaktionskarten exportieren & $\langle F180 \rangle$ \\
+            \hline
+                $\langle T200 \rangle$ & Ausloggen & $\langle F020 \rangle$ \\
+            \hline
+        \end{tabular}
+        \caption{Basis-Testfälle}
+        \label{table:Basis-Testfaelle}
+    \end{table}
+        
+\newpage
+
+\paragraph{\large Erweiterte Testfälle} $~$ \\
+        
+    \begin{table}[h!]
+            \centering
+            \begin{tabular}{p{1.5cm}|p{9cm}|p{3cm}}
+                    \textbf{\sffamily{Nr.}} & \textbf{\sffamily{Beschreibung}} & \textbf{\sffamily{Funktion}}\textsuperscript{\ref{table:Erweiterte Funktionen}}\\
+                \hline
+                \hline
+                    $\langle T200 \rangle$ & Schüler teilen & $\langle F190 \rangle$\\
+                \hline
+                    $\langle T210 \rangle$ & Kurse teilen & $\langle F200 \rangle$\\
+                \hline
+                    $\langle T220 \rangle$ & Sitzordnung für einen Kurs anlegen & $\langle F210 \rangle$\\
+                \hline
+                    $\langle T230 \rangle$ & Unterrichtsfach zu einem Kurs hinzufügen & $\langle F220 \rangle$\\
+                \hline
+                    $\langle T240 \rangle$ & Interaktion rückgängig machen mit \Gls{undo}  &  $\langle F230 \rangle$\\
+                \hline
+                    $\langle T250 \rangle$ & Qualität bei Interaktion angeben &  $\langle F240 \rangle$\\
+                \hline
+                    $\langle T260 \rangle$ & Eigene Kategorie für Interaktionen erstellen &  $\langle F250 \rangle$\\
+                \hline
+                \end{tabular}
+            \caption{Erweiterte Testfälle}
+            \label{table:Erweiterte Testfaelle}
+        \end{table}
+
+    \subsection{Testszenarien}
+       Ein Testszenario setzt sich aus mehreren Testfällen\textsuperscript{\ref{section:testfaelle}} zusammen.
+       
+    \paragraph{Szenario 1 - Erster Besuch der Webseite} $~$
+        
+        % Liste mit Tiefe 1
+        \newlist{test1}{enumerate}{1}
+        % Configure the behaviour of level 1 entries
+        \setlist[test1, 1]{label=\arabic{test1i}.}
+        
+        \begin{test1}
+            \item $\langle T010 \rangle$: Aufrufen der Webseite 
+            \item $\langle T020 \rangle$: \Gls{Account} anlegen 
+            \item $\langle T030 \rangle$: Einloggen 
+            \item $\langle T200 \rangle$: Ausloggen 
+        \end{test1}
+        
+        \textbf{\sffamily Ziel:} Die Seite soll angezeigt werden. Nachdem der Benutzer einen \Gls{Account} angelegt hat, soll er sich mit den eingegebenen Daten anmelden und abmelden können.\\
+        
+    \textbf{Im Folgenden wird vorausgesetzt, dass bereits ein \Gls{Account} angelegt worden ist, die Seite aufgerufen wurde und ein User eingeloggt ist.}
+    
+    \newpage
+    
+    \paragraph{Szenario 2 - Anlegen von einem Kurs \& Schülern und Ausgabe des Kurses \&  der Schüler} $~$ 
+        
+        % Liste mit Tiefe 1
+        \newlist{test2}{enumerate}{1}
+        \setlist[test2, 1]{label=\arabic{test2i}.}
+        
+        \begin{test2}
+            \item $\langle T080 \rangle$: Neuen Kurs anlegen
+            \item $\langle T050 \rangle$: Neuen Schüler anlegen
+            \item Ausführen von 2. weitere 14-mal
+            \item $\langle T070 \rangle$: Angelegten Kurs anzeigen
+            \item $\langle T040 \rangle$: Angelegte Schüler anzeigen
+        \end{test2}
+        
+        \textbf{\sffamily Ziel:} Der angelegte Kurs sowie alle angelegten Schüler müssen in den jeweiligen Listen angezeigt werden.
+    
+    \paragraph{Szenario 3 - Hinzufügen von Schülern zu einem Kurs und Ausgabe der Schüler} $~$ 
+        
+        % Liste mit Tiefe 1
+        \newlist{test3}{enumerate}{1}
+        \setlist[test3, 1]{label=\arabic{test3i}.}
+        
+        \begin{test3}
+            \item $\langle T080 \rangle$: Neuen Kurs anlegen
+            \item $\langle T050 \rangle$: Neuen Schüler anlegen
+            \item Ausführen von 2. weitere 14-mal
+            \item $\langle T110 \rangle$: Schüler zu dem angelegten Kurs hinzufügen
+            \item Ausführen von 4. für alle weiteren Schüler
+            \item $\langle T100 \rangle$: Schülerliste im angelegten Kurs anzeigen
+        \end{test3}
+        
+        \textbf{\sffamily Ziel:} Es müssen alle in 2. und 3. angelegten Schüler in dem Kurs sichtbar sein.
+        
+        \newpage
+        
+    \paragraph{Szenario 4 - Entfernen von Schülern und Ausgabe} $~$ 
+        
+        % Liste mit Tiefe 1
+        \newlist{test4}{enumerate}{1}
+        \setlist[test4, 1]{label=\arabic{test4i}.}
+        
+        \begin{test4}
+            \item $\langle T080 \rangle$: Neuen Kurs anlegen
+            \item $\langle T050 \rangle$: Neuen Schüler anlegen
+            \item Ausführen von 2. weitere 14-mal
+            \item $\langle T110 \rangle$: Schüler zu dem angelegten Kurs hinzufügen
+            \item Ausführen von 4. für alle weiteren Schüler
+            \item $\langle T120 \rangle$: Schüler aus dem Kurs entfernen
+            \item Ausführen von 6. weitere 4-mal
+            \item $\langle T100 \rangle$: Schülerliste im angelegten Kurs anzeigen
+        \end{test4}
+        
+        \textbf{\sffamily Ziel:} Es müssen alle in 2. und 3. angelegten Schüler, außer die entfernten, in dem Kurs sichtbar sein.
+    
+    \paragraph{Szenario 5 - Interaktionen aufzeichnen und ansehen} $~$ 
+    
+        \textbf{Es wird Testszenario 3 vorausgesetzt.}
+        
+        % Liste mit Tiefe 1
+        \newlist{test5}{enumerate}{1}
+        \setlist[test5, 1]{label=\arabic{test5i}.}
+        
+        \begin{test5}
+            \item $\langle T130 \rangle$: Neue Sitzung erstellen
+            \item $\langle T140 \rangle$: Interaktion aufzeichnen
+            \item $\langle T150 \rangle$: Kategorie für Interaktion auswählen
+            \item Ausführen von 2. bis 3. mindestens 10-mal
+            \item $\langle T160 \rangle$: Speichern der Interaktionskarte
+            \item $\langle T170 \rangle$: Anzeigen der Interaktionskarte
+            \item $\langle T180 \rangle$: Sitzungsstatistiken ansehen
+            \item $\langle T190 \rangle$: Interaktionskarte exportieren
+        \end{test5}
+        
+        \textbf{\sffamily Ziel:} Alle Interaktionen zwischen den betreffenden Personen und die dazugehörenden Statistiken müssen angezeigt werden. Die Interaktionskarte wird erfolgreich exportiert.
+
+    \paragraph{Szenario 6 - Kurs- und Schülerstatistiken ansehen} $~$ 
+    
+        \textbf{Es wird Testszenario 5 vorausgesetzt.}
+        
+        % Liste mit Tiefe 1
+        \newlist{test6}{enumerate}{1}
+        \setlist[test6, 1]{label=\arabic{test6i}.}
+        
+        \begin{test6}
+            \item $\langle T070 \rangle$: Kurse anzeigen
+            \item $\langle T090 \rangle$: Kurs auswählen und Kursstatistiken ansehen
+            \item $\langle T100 \rangle$: Schülerliste in dem Kurs anzeigen
+            \item $\langle T060 \rangle$: Schülerstatistiken ansehen
+        \end{test6}
+        
+        \textbf{\sffamily Ziel:} Es müssen alle Statistiken zu dem Kurs und dem ausgewählten Schüler angezeigt werden.\\
+
+    \textbf{Die folgenden Szenarien enthalten erweiterte Funktionen.}
+
+    \paragraph{Szenario 7 - Kurs teilen} $~$ 
+        
+        % Liste mit Tiefe 1
+        \newlist{test7}{enumerate}{1}
+        \setlist[test7, 1]{label=\arabic{test7i}.}
+        
+        \begin{test7}
+            \item $\langle T080 \rangle$: Neuen Kurs anlegen
+            \item $\langle T050 \rangle$: Neuen Schüler anlegen
+            \item Ausführen von 2. weitere 14-mal
+            \item $\langle T110 \rangle$: Schüler zu dem angelegten Kurs hinzufügen
+            \item Ausführen von 4. für alle weiteren Schüler
+            \item $\langle T210 \rangle$: Angelegten Kurs mit anderem \Gls{Account} teilen
+        \end{test7}
+        
+        \textbf{\sffamily Ziel:} Der angelegte Kurs muss in der Kursbibliothek des anderen \Gls{Account}s mit allen Schülern des Kurses angezeigt werden.
+
+    \newpage
+        
+    \paragraph{Szenario 8 - Sitzordnung für Kurs erstellen} $~$ 
+
+        \textbf{Die Nutzung der \Gls{Desktop}-Version wird vorausgesetzt.}
+        
+        % Liste mit Tiefe 1
+        \newlist{test8}{enumerate}{1}
+        \setlist[test8, 1]{label=\arabic{test8i}.}
+        
+        \begin{test8}
+            \item $\langle T080 \rangle$: Neuen Kurs anlegen
+            \item $\langle T050 \rangle$: Neuen Schüler anlegen
+            \item Ausführen von 2. weitere 14-mal
+            \item $\langle T110 \rangle$: Schüler zu dem angelegten Kurs hinzufügen
+            \item Ausführen von 4. für alle weiteren Schüler
+            \item $\langle T220 \rangle$: Sitzordnung für den Kurs anlegen
+            \item $\langle T130 \rangle$: Neue Sitzung erstellen
+        \end{test8}
+        
+        \textbf{\sffamily Ziel:} Die für den Kurs angelegte Sitzordnung muss in der Sitzung angezeigt werden.
+
+    \paragraph{Szenario 9 - Interaktion rückgängig machen} $~$ 
+
+        \textbf{Es wird Testszenario 3 vorausgesetzt.}
+        
+        % Liste mit Tiefe 1
+        \newlist{test9}{enumerate}{1}
+        \setlist[test9, 1]{label=\arabic{test9i}.}
+        
+        \begin{test9}
+            \item $\langle T130 \rangle$: Neue Sitzung erstellen
+            \item $\langle T140 \rangle$: Interaktion aufzeichnen
+            \item $\langle T150 \rangle$: Kategorie für Interaktion auswählen
+            \item Ausführen von 2. bis 3. mindestens 10-mal
+            \item $\langle T240 \rangle$: Letzte Interaktion rückgängig machen
+            \item $\langle T160 \rangle$: Speichern der Interaktionskarte
+            \item $\langle T170 \rangle$: Anzeigen der Interaktionskarte
+        \end{test9}
+        
+        \textbf{\sffamily Ziel:} Die mit \gls{undo} rückgängig gemachte Interaktion darf nicht angezeigt werden. 
+
+    \newpage
+
+    \paragraph{Szenario 10 - Eigene Interaktionskategorie erstellen} $~$ 
+
+        \textbf{Es wird Testszenario 3 vorausgesetzt.}
+        
+        % Liste mit Tiefe 1
+        \newlist{test10}{enumerate}{1}
+        \setlist[test10, 1]{label=\arabic{test10i}.}
+        
+        \begin{test10}
+            \item $\langle T130 \rangle$: Neue Sitzung erstellen
+            \item $\langle T140 \rangle$: Interaktion aufzeichnen
+            \item $\langle T260 \rangle$: Eigene Kategorie erstellen
+            \item $\langle T140 \rangle$: Neue Interaktion aufzeichnen
+            \item $\langle T150 \rangle$: Kategorie für Interaktion auswählen
+            \item Ausführen von 4. bis 5. mindestens 10-mal
+            \item $\langle T160 \rangle$: Speichern der Interaktionskarte
+            \item $\langle T170 \rangle$: Anzeigen der Interaktionskarte
+            \item $\langle T180 \rangle$: Sitzungsstatistiken ansehen
+        \end{test10}
+        
+        \textbf{\sffamily Ziel:} Die neu erstellte Kategorie muss in 5. und in der Sitzungsstatistik angezeigt werden.
+        
+    
+    
+   
