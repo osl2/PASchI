@@ -1,11 +1,10 @@
 <template>
   <v-app>
-    <v-main>
-      <Login />
-    </v-main>
+    <v-layout>
+      <router-view />
+    </v-layout>
   </v-app>
 </template>
 
 <script setup lang="ts">
-  import Login from '@/components/authentication/Login.vue'
 </script>
