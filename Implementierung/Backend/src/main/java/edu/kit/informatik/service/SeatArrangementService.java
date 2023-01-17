@@ -1,5 +1,6 @@
 package edu.kit.informatik.service;
 
+import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.userdata.courses.SeatArrangementDto;
 import edu.kit.informatik.model.userdata.courses.SeatArrangement;
 import edu.kit.informatik.repositories.SeatArrangementRepository;
@@ -23,7 +24,9 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
      * Konstruktor zum Erstellen eines Objektes der Klasse
      * @param seatArrangementRepository {@link SeatArrangementRepository}
      */
-    public SeatArrangementService(SeatArrangementRepository seatArrangementRepository) {
+    public SeatArrangementService(SeatArrangementRepository seatArrangementRepository,
+                                  IModelDtoMapper<SeatArrangement, SeatArrangementDto> mapper) {
+        super(mapper);
         this.seatArrangementRepository = seatArrangementRepository;
     }
 

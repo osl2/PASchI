@@ -1,5 +1,6 @@
 package edu.kit.informatik.service;
 
+import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.model.userdata.interactions.Participant;
 import edu.kit.informatik.repositories.ParticipantRepository;
@@ -23,7 +24,9 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto>
      * Konstruktor zum Erstellen eines Objektes der Klasse
      * @param participantRepository {@link ParticipantRepository}
      */
-    public ParticipantService(ParticipantRepository participantRepository) {
+    public ParticipantService(ParticipantRepository participantRepository,
+                              IModelDtoMapper<Participant, ParticipantDto> mapper) {
+        super(mapper);
         this.participantRepository = participantRepository;
     }
 

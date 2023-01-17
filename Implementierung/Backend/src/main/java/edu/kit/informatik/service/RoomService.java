@@ -1,5 +1,6 @@
 package edu.kit.informatik.service;
 
+import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.userdata.rooms.RoomDto;
 import edu.kit.informatik.model.userdata.rooms.Room;
 import edu.kit.informatik.repositories.RoomRepository;
@@ -23,7 +24,8 @@ public class RoomService extends BaseService<Room, RoomDto> {
      * Konstruktor zum Erstellen eines Objektes der Klasse
      * @param roomRepository {@link RoomRepository}
      */
-    public RoomService(RoomRepository roomRepository) {
+    public RoomService(RoomRepository roomRepository, IModelDtoMapper<Room, RoomDto> mapper) {
+        super(mapper);
         this.roomRepository = roomRepository;
     }
 

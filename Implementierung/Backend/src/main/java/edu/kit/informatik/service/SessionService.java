@@ -1,5 +1,6 @@
 package edu.kit.informatik.service;
 
+import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.userdata.courses.SessionDto;
 import edu.kit.informatik.model.userdata.courses.Session;
 import edu.kit.informatik.repositories.SessionRepository;
@@ -23,7 +24,8 @@ public class SessionService extends BaseService<Session, SessionDto> {
      * Konstruktor zum Erstellen eines Objektes der Klasse
      * @param sessionRepository {@link SessionRepository}
      */
-    public SessionService(SessionRepository sessionRepository) {
+    public SessionService(SessionRepository sessionRepository, IModelDtoMapper<Session, SessionDto> mapper) {
+        super(mapper);
         this.sessionRepository = sessionRepository;
     }
 

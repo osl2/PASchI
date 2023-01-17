@@ -1,5 +1,7 @@
 package edu.kit.informatik.service;
 
+import edu.kit.informatik.dto.mapper.IModelDtoMapper;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +17,15 @@ import java.util.List;
  * @version 1.0
  */
 @Service
+@EnableAutoConfiguration
 public abstract class BaseService<Entity, Dto> {
+
+    protected final IModelDtoMapper<Entity, Dto> mapper;
+
+    public BaseService(IModelDtoMapper<Entity, Dto> mapper) {
+        this.mapper = mapper;
+    }
+
     /**
      * Hinzufügen einer Entität
      * @param dto Dto
