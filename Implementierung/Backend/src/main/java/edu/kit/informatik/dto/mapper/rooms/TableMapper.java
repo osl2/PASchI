@@ -3,9 +3,8 @@ package edu.kit.informatik.dto.mapper.rooms;
 import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.userdata.rooms.PositionDto;
 import edu.kit.informatik.dto.userdata.rooms.TableDto;
-import edu.kit.informatik.model.userdata.rooms.Position;
 import edu.kit.informatik.model.userdata.rooms.Table;
-import edu.kit.informatik.repositories.PositionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -14,15 +13,15 @@ import java.util.List;
 @Service
 public class TableMapper implements IModelDtoMapper<Table, TableDto> {
 
-    private final PositionRepository positionRepository;
+    private final PositionMapper positionMapper;
 
-    public TableMapper(PositionRepository positionRepository) {
-        this.positionRepository = positionRepository;
+    @Autowired
+    public TableMapper(PositionMapper positionMapper) {
+        this.positionMapper = positionMapper;
     }
 
     @Override
     public TableDto modelToDto(Table table) {
-        IModelDtoMapper<Position, PositionDto> positionMapper = new PositionMapper(positionRepository);
         PositionDto positionDto = positionMapper.modelToDto(table.getPosition());
 
         return new TableDto(

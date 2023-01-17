@@ -5,7 +5,6 @@ import edu.kit.informatik.dto.userdata.rooms.RoomObjectDto;
 import edu.kit.informatik.model.userdata.rooms.Chair;
 import edu.kit.informatik.model.userdata.rooms.RoomObject;
 import edu.kit.informatik.model.userdata.rooms.Table;
-import edu.kit.informatik.repositories.PositionRepository;
 import edu.kit.informatik.repositories.RoomObjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,9 +19,10 @@ public class RoomObjectMapper implements IModelDtoMapper<RoomObject, RoomObjectD
     private final ChairMapper chairMapper;
 
     @Autowired
-    public RoomObjectMapper(RoomObjectRepository roomObjectRepository, PositionRepository positionRepository) {
-        this.tableMapper = new TableMapper(positionRepository);
-        this.chairMapper = new ChairMapper(positionRepository);
+    public RoomObjectMapper(RoomObjectRepository roomObjectRepository, TableMapper tableMapper,
+                            ChairMapper chairMapper) {
+        this.tableMapper = tableMapper;
+        this.chairMapper = chairMapper;
     }
 
     @Override

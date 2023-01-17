@@ -5,8 +5,6 @@ import edu.kit.informatik.dto.mapper.interactions.InteractionMapper;
 import edu.kit.informatik.dto.userdata.courses.SessionDto;
 import edu.kit.informatik.dto.userdata.interactions.InteractionDto;
 import edu.kit.informatik.model.userdata.courses.Session;
-import edu.kit.informatik.model.userdata.interactions.Interaction;
-import edu.kit.informatik.repositories.InteractionRepository;
 import edu.kit.informatik.repositories.SessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,17 +16,16 @@ import java.util.List;
 public class SessionMapper implements IModelDtoMapper<Session, SessionDto> {
 
     private final SessionRepository sessionRepository;
-    private final InteractionRepository interactionRepository;
+    private final InteractionMapper interactionMapper;
 
     @Autowired
-    public SessionMapper(SessionRepository sessionRepository, InteractionRepository interactionRepository) {
+    public SessionMapper(SessionRepository sessionRepository, InteractionMapper interactionMapper) {
         this.sessionRepository = sessionRepository;
-        this.interactionRepository = interactionRepository;
+        this.interactionMapper = interactionMapper;
     }
 
     @Override
     public SessionDto modelToDto(Session session) {
-        IModelDtoMapper<Interaction, InteractionDto> interactionMapper = new InteractionMapper(interactionRepository);
         List<InteractionDto> interactionDtos = new LinkedList<>();
         session.getInteractions().
                 forEach(interaction -> interactionDtos.add(interactionMapper.modelToDto(interaction)));

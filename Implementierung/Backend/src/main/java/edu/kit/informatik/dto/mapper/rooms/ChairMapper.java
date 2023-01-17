@@ -4,8 +4,7 @@ import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.userdata.rooms.ChairDto;
 import edu.kit.informatik.dto.userdata.rooms.PositionDto;
 import edu.kit.informatik.model.userdata.rooms.Chair;
-import edu.kit.informatik.model.userdata.rooms.Position;
-import edu.kit.informatik.repositories.PositionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -14,15 +13,15 @@ import java.util.List;
 @Service
 public class ChairMapper implements IModelDtoMapper<Chair, ChairDto> {
 
-    private final PositionRepository positionRepository;
+    private final PositionMapper positionMapper;
 
-    public ChairMapper(PositionRepository positionRepository) {
-        this.positionRepository = positionRepository;
+    @Autowired
+    public ChairMapper(PositionMapper positionMapper) {
+        this.positionMapper = positionMapper;
     }
 
     @Override
     public ChairDto modelToDto(Chair chair) {
-        IModelDtoMapper<Position, PositionDto> positionMapper = new PositionMapper(positionRepository);
         PositionDto positionDto = positionMapper.modelToDto(chair.getPosition());
 
         return new ChairDto(chair.getId(), chair.getUser().getId(), positionDto);

@@ -15,15 +15,16 @@ import java.util.List;
 public class RatedCategoryMapper implements IModelDtoMapper<RatedCategory, RatedCategoryDto> {
 
     private final CategoryBaseRepository categoryRepository;
+    private final QualityMapper qualityMapper;
 
     @Autowired
-    public RatedCategoryMapper(CategoryBaseRepository categoryRepository) {
+    public RatedCategoryMapper(CategoryBaseRepository categoryRepository, QualityMapper qualityMapper) {
         this.categoryRepository = categoryRepository;
+        this.qualityMapper = qualityMapper;
     }
 
     @Override
     public RatedCategoryDto modelToDto(RatedCategory category) {
-        QualityMapper qualityMapper = new QualityMapper();
         QualityDto qualityDto = qualityMapper.modelToDto(category.getQuality());
 
         return new RatedCategoryDto(
