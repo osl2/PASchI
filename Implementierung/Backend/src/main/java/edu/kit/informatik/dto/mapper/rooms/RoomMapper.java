@@ -2,31 +2,62 @@ package edu.kit.informatik.dto.mapper.rooms;
 
 import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.userdata.rooms.RoomDto;
+import edu.kit.informatik.dto.userdata.rooms.RoomObjectDto;
 import edu.kit.informatik.model.userdata.rooms.Room;
+import edu.kit.informatik.model.userdata.rooms.RoomObject;
+import edu.kit.informatik.repositories.RoomObjectRepository;
+import edu.kit.informatik.repositories.RoomRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
 public class RoomMapper implements IModelDtoMapper<Room, RoomDto> {
 
+    private final RoomRepository roomRepository;
+    private final RoomObjectRepository roomObjectRepository;
+
+    @Autowired
+    public RoomMapper(RoomRepository roomRepository, RoomObjectRepository roomObjectRepository) {
+        this.roomRepository = roomRepository;
+        this.roomObjectRepository = roomObjectRepository;
+    }
+
     @Override
     public RoomDto modelToDto(Room room) {
-        return null;
+        IModelDtoMapper<RoomObject, RoomObjectDto> roomObjectMapper = new RoomObjectMapper(roomObjectRepository);
+        List<RoomObjectDto> roomObjectDtos = new LinkedList<>();
+        room.getRoomObjects().forEach(roomObject -> roomObjectDtos.add(roomObjectMapper.modelToDto(roomObject)));
+
+        return new RoomDto(
+                room.getId(),
+                room.getUser().getId(),
+                room.getName(),
+                roomObjectDtos
+        );
     }
 
     @Override
     public List<RoomDto> modelToDto(List<Room> rooms) {
-        return null;
+        List<RoomDto> roomDtos = new LinkedList<>();
+        rooms.forEach(room -> roomDtos.add(modelToDto(room)));
+
+        return roomDtos;
     }
 
     @Override
     public Room dtoToModel(RoomDto roomDto) {
+        // repository fehlt noch
         return null;
     }
 
     @Override
     public List<Room> dtoToModel(List<RoomDto> roomDtos) {
-        return null;
+        List<Room> rooms = new LinkedList<>();
+        roomDtos.forEach(roomDto -> rooms.add(dtoToModel(roomDto)));
+
+        return rooms;
     }
 }

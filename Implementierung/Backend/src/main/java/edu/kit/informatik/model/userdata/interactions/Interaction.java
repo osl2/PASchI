@@ -13,7 +13,8 @@ public class Interaction {
     private Participant to;
     private Category category;
 
-    public Interaction(User user, String timeStamp, Session session, Participant from, Participant to, Category category) {
+    public Interaction(User user, String timeStamp, Session session, Participant from, Participant to,
+                       Category category) {
         this.user = user;
         this.timeStamp = timeStamp;
         this.session = session;

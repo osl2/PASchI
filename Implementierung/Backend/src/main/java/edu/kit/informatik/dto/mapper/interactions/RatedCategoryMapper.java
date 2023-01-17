@@ -26,7 +26,12 @@ public class RatedCategoryMapper implements IModelDtoMapper<RatedCategory, Rated
         QualityMapper qualityMapper = new QualityMapper();
         QualityDto qualityDto = qualityMapper.modelToDto(category.getQuality());
 
-        return new RatedCategoryDto(category.getId(), category.getUser().getId(), category.getName(), qualityDto);
+        return new RatedCategoryDto(
+                category.getId(),
+                category.getUser().getId(),
+                category.getName(),
+                qualityDto
+        );
     }
 
     @Override
