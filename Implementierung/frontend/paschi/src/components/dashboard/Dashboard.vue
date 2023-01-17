@@ -13,17 +13,18 @@
   </AppBar>
 
   <v-main>
-
+    <RecentCoursesCard class="ma-3" />
   </v-main>
 </template>
 
 <script>
 import AppBar from "@/components/navigation/AppBar.vue";
 import {useUserStore} from "@/store/UserStore";
+import RecentCoursesCard from "@/components/dashboard/RecentCoursesCard.vue";
 
 export default {
   name: "Dashboard",
-  components: {AppBar},
+  components: {RecentCoursesCard, AppBar},
   setup() {
     const userStore = useUserStore()
 

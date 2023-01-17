@@ -1,16 +1,32 @@
 <template>
-  <v-list>
-    <v-list-item v-for="course, key in courses">
-      <v-list-item-title>{{course.name}}</v-list-item-title>
+  <v-card>
+    <v-card-title>
+      Kürzlich verwendete Kurse
+      <v-spacer />
+      <v-btn color="secondary" @click="navigateToCourses()">Alle anzeigen</v-btn>
+    </v-card-title>
+    <v-card-item v-for="course in courses">
+      {{course.name}}
       <v-btn @click="navigateTo(course)"></v-btn>
-    </v-list-item>
-  </v-list>
+    </v-card-item>
+  </v-card>
 </template>
 
-<script>
-export default {
-  name: "RecentCoursesCard"
-}
+<script lang="ts">
+import {defineComponent} from "vue";
+import router from "@/plugins/router";
+
+export default defineComponent({
+  name: "RecentCoursesCard",
+  setup() {
+    function navigateToCourses() {
+      router.push("/courses")
+    }
+    return {
+      navigateToCourses
+    }
+  }
+})
 </script>
 
 <style scoped>
