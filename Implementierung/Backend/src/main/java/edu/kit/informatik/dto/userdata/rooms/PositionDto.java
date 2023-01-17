@@ -1,17 +1,19 @@
-package edu.kit.informatik.dto.rooms;
+package edu.kit.informatik.dto.userdata.rooms;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-public abstract class RoomObjectDto {
+public class PositionDto {
 
     private Long id;
     private Long userId;
-    private PositionDto position;
+    private double xCoordinate;
+    private double yCoordinate;
+    private double orientation;
 }

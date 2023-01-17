@@ -1,6 +1,6 @@
 package edu.kit.informatik.controller;
 
-import edu.kit.informatik.dto.courses.SessionDto;
+import edu.kit.informatik.dto.userdata.courses.SessionDto;
 import edu.kit.informatik.model.userdata.courses.Session;
 import edu.kit.informatik.service.SessionService;
 import jakarta.websocket.server.PathParam;

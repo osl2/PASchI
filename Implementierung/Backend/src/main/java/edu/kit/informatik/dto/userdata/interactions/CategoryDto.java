@@ -1,22 +1,17 @@
-package edu.kit.informatik.dto.courses;
+package edu.kit.informatik.dto.userdata.interactions;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Map;
-
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-public class SeatArrangementDto {
+public class CategoryDto {
 
     private Long id;
     private Long userId;
     private String name;
-    private Map<Long, Long> seatMap;
-    private Long roomId;
-    private Long courseId;
 }

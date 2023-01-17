@@ -1,4 +1,4 @@
-package edu.kit.informatik.dto.rooms;
+package edu.kit.informatik.dto.userdata.rooms;
 
 public class ChairDto extends RoomObjectDto {
 }

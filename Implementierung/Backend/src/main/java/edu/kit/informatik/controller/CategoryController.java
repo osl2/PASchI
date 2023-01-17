@@ -1,6 +1,6 @@
 package edu.kit.informatik.controller;
 
-import edu.kit.informatik.dto.interactions.CategoryDto;
+import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
 import edu.kit.informatik.model.userdata.interactions.Category;
 import edu.kit.informatik.service.CategoryService;
 import jakarta.websocket.server.PathParam;

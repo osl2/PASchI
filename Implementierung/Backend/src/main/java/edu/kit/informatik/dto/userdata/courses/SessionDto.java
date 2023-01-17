@@ -1,7 +1,7 @@
-package edu.kit.informatik.dto.courses;
+package edu.kit.informatik.dto.userdata.courses;
 
 
-import edu.kit.informatik.dto.interactions.InteractionDto;
+import edu.kit.informatik.dto.userdata.interactions.InteractionDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

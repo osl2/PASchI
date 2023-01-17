@@ -1,4 +1,4 @@
-package edu.kit.informatik.dto.rooms;
+package edu.kit.informatik.dto.userdata.interactions;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,10 +11,12 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class RoomDto {
+public abstract class ParticipantDto {
 
     private Long id;
     private Long userId;
-    private String name;
-    private List<RoomObjectDto> roomObjects;
+    private String firstName;
+    private String lastName;
+    private List<Long> courseIds;
+    private List<Long> interactionIds;
 }

@@ -1,6 +1,6 @@
 package edu.kit.informatik.service;
 
-import edu.kit.informatik.dto.courses.SeatArrangementDto;
+import edu.kit.informatik.dto.userdata.courses.SeatArrangementDto;
 import edu.kit.informatik.model.userdata.courses.SeatArrangement;
 import edu.kit.informatik.repositories.SeatArrangementRepository;
 import org.springframework.stereotype.Service;

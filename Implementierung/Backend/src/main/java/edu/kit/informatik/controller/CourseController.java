@@ -1,6 +1,6 @@
 package edu.kit.informatik.controller;
 
-import edu.kit.informatik.dto.courses.CourseDto;
+import edu.kit.informatik.dto.userdata.courses.CourseDto;
 import edu.kit.informatik.model.userdata.courses.Course;
 import edu.kit.informatik.service.CourseService;
 import jakarta.websocket.server.PathParam;

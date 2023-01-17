@@ -1,6 +1,6 @@
 package edu.kit.informatik.controller;
 
-import edu.kit.informatik.dto.interactions.ParticipantDto;
+import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.model.userdata.interactions.Participant;
 import edu.kit.informatik.service.ParticipantService;
 import jakarta.websocket.server.PathParam;

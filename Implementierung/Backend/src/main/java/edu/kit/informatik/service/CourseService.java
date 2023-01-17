@@ -1,6 +1,6 @@
 package edu.kit.informatik.service;
 
-import edu.kit.informatik.dto.courses.CourseDto;
+import edu.kit.informatik.dto.userdata.courses.CourseDto;
 import edu.kit.informatik.model.userdata.courses.Course;
 import edu.kit.informatik.repositories.CourseRepository;
 import org.springframework.stereotype.Service;

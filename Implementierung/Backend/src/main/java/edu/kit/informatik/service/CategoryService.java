@@ -1,6 +1,6 @@
 package edu.kit.informatik.service;
 
-import edu.kit.informatik.dto.interactions.CategoryDto;
+import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
 import edu.kit.informatik.model.userdata.interactions.Category;
 import edu.kit.informatik.repositories.CategoryBaseRepository;
 import org.springframework.stereotype.Service;

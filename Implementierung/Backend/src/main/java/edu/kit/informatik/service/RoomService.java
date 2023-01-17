@@ -1,6 +1,6 @@
 package edu.kit.informatik.service;
 
-import edu.kit.informatik.dto.rooms.RoomDto;
+import edu.kit.informatik.dto.userdata.rooms.RoomDto;
 import edu.kit.informatik.model.userdata.rooms.Room;
 import edu.kit.informatik.repositories.RoomRepository;
 import org.springframework.stereotype.Service;

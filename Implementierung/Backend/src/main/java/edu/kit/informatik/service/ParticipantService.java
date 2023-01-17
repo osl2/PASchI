@@ -1,6 +1,6 @@
 package edu.kit.informatik.service;
 
-import edu.kit.informatik.dto.interactions.ParticipantDto;
+import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.model.userdata.interactions.Participant;
 import edu.kit.informatik.repositories.ParticipantRepository;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package edu.kit.informatik.controller;
 
-import edu.kit.informatik.dto.courses.SeatArrangementDto;
+import edu.kit.informatik.dto.userdata.courses.SeatArrangementDto;
 import edu.kit.informatik.model.userdata.courses.SeatArrangement;
 import edu.kit.informatik.service.SeatArrangementService;
 import jakarta.websocket.server.PathParam;

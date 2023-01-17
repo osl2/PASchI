@@ -1,4 +1,4 @@
-package edu.kit.informatik.dto.interactions;
+package edu.kit.informatik.dto.userdata.interactions;
 
 
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
 package edu.kit.informatik.controller;
 
-import edu.kit.informatik.dto.rooms.RoomDto;
+import edu.kit.informatik.dto.userdata.rooms.RoomDto;
 import edu.kit.informatik.model.userdata.rooms.Room;
 import edu.kit.informatik.service.RoomService;
 import jakarta.websocket.server.PathParam;

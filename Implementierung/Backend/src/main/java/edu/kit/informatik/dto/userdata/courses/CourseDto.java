@@ -1,4 +1,4 @@
-package edu.kit.informatik.dto.courses;
+package edu.kit.informatik.dto.userdata.courses;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
