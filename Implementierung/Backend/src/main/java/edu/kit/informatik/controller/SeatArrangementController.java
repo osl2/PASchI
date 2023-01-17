@@ -29,7 +29,7 @@ public class SeatArrangementController extends BaseController<SeatArrangement, S
      * @param seatArrangementService {@link SeatArrangementService}
      */
     public SeatArrangementController(SeatArrangementService seatArrangementService) {
-        this.service = seatArrangementService;
+        super(seatArrangementService);
     }
 
     @Override

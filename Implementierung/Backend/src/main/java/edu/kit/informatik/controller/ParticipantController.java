@@ -28,7 +28,7 @@ public class ParticipantController extends BaseController<Participant, Participa
      * @param participantService {@link ParticipantService}
      */
     public ParticipantController(ParticipantService participantService) {
-        this.service = participantService;
+        super(participantService);
     }
 
     @Override

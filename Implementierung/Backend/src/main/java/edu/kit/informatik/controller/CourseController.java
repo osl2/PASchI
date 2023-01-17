@@ -28,7 +28,7 @@ public class CourseController extends BaseController<Course, CourseDto> {
      * @param courseService {@link CourseService}
      */
     public CourseController(CourseService courseService) {
-        this.service = courseService;
+        super(courseService);
     }
 
     @Override

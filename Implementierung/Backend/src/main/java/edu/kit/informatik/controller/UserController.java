@@ -24,14 +24,15 @@ import java.util.List;
 @RequestMapping(path = "/api/user")
 public class UserController extends BaseController<User, UserDto> {
 
-    private final UserService service;
+    private final UserService userService;
 
     /**
      * Konstruktor zum Erstellen eins Objektes der Klasse
-     * @param service {@link UserService}
+     * @param userService {@link UserService}
      */
-    public UserController(UserService service) {
-        this.service = service;
+    public UserController(UserService userService) {
+        super(userService);
+        this.userService = userService;
     }
 
     @Override
@@ -72,6 +73,6 @@ public class UserController extends BaseController<User, UserDto> {
      */
     @PostMapping(path = "login")
     public UserDto login(String email, String password) {
-        return this.service.login(email, password);
+        return this.userService.login(email, password);
     }
 }

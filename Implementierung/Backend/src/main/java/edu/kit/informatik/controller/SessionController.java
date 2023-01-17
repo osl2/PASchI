@@ -25,10 +25,11 @@ public class SessionController extends BaseController<Session, SessionDto> {
 
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
+     *
      * @param sessionService {@link SessionService}
      */
     public SessionController(SessionService sessionService) {
-        this.service = sessionService;
+        super(sessionService);
     }
 
     @Override

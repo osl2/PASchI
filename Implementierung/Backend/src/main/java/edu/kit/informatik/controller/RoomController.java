@@ -28,7 +28,7 @@ public class RoomController extends BaseController<Room, RoomDto> {
      * @param roomService {@link RoomService}
      */
     public RoomController(RoomService roomService) {
-        this.service = roomService;
+        super(roomService);
     }
 
     @Override
