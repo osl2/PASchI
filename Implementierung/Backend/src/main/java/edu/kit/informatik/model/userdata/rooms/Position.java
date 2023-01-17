@@ -1,8 +1,11 @@
 package edu.kit.informatik.model.userdata.rooms;
 
+import edu.kit.informatik.model.User;
+
 public class Position {
 
     private Long id;
+    private User user;
     private double xCoordinate;
     private double yCoordinate;
     private double orientation;
@@ -17,6 +20,10 @@ public class Position {
         return id;
     }
 
+    public User getUser() {
+        return user;
+    }
+
     public double getXCoordinate() {
         return xCoordinate;
     }
@@ -27,6 +34,10 @@ public class Position {
 
     public double getOrientation() {
         return orientation;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setXCoordinate(double xCoordinate) {
