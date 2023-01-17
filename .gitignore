@@ -2,8 +2,12 @@ Implementierung/Backend/HELP.md
 .DS_Store
 target/
 !.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
 !**/src/main/**/target/
 !**/src/test/**/target/
+
+### Application.properties sollte nur lokal sein###
+./Implementierung/Backend/src/resources/application.properties
 
 ### STS ###
 .apt_generated
