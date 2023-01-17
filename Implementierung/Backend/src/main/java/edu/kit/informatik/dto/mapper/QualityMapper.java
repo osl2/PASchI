@@ -3,27 +3,34 @@ package edu.kit.informatik.dto.mapper;
 import edu.kit.informatik.dto.userdata.interactions.QualityDto;
 import edu.kit.informatik.model.userdata.interactions.Quality;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class QualityMapper implements IModelDtoMapper<Quality, QualityDto> {
 
     @Override
     public QualityDto modelToDto(Quality quality) {
-        return null;
+        return QualityDto.valueOf(quality.toString());
     }
 
     @Override
     public List<QualityDto> modelToDto(List<Quality> qualities) {
-        return null;
+        List<QualityDto> qualityDtos = new LinkedList<>();
+        qualities.forEach(quality -> qualityDtos.add(modelToDto(quality)));
+
+        return qualityDtos;
     }
 
     @Override
     public Quality dtoToModel(QualityDto qualityDto) {
-        return null;
+        return Quality.valueOf(qualityDto.toString());
     }
 
     @Override
     public List<Quality> dtoToModel(List<QualityDto> qualityDtos) {
-        return null;
+        List<Quality> qualities = new LinkedList<>();
+        qualityDtos.forEach(qualityDto -> qualities.add(dtoToModel(qualityDto)));
+
+        return qualities;
     }
 }

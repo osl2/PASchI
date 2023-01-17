@@ -5,11 +5,9 @@ import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.model.Role;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 public class UserMapper implements IModelDtoMapper<User, UserDto> {
 
