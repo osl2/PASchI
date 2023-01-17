@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>edu.kit.informatik</groupId>
-	<artifactId>PAschI</artifactId>
+	<artifactId>classroom-management-system</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>PAschI</name>
 	<description>Classroom Interaction App</description>
