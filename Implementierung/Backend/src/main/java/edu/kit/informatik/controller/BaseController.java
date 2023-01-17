@@ -19,7 +19,7 @@ public abstract class BaseController<Entity, Dto> {
     /**
      * Allgemeiner {@link BaseService Service}
      */
-    protected final BaseService<Entity, Dto> service;
+    private final BaseService<Entity, Dto> service;
 
     public BaseController(BaseService<Entity, Dto> service) {
         this.service = service;
