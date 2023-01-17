@@ -5,6 +5,7 @@ import edu.kit.informatik.dto.userdata.rooms.RoomDto;
 import edu.kit.informatik.dto.userdata.rooms.RoomObjectDto;
 import edu.kit.informatik.model.userdata.rooms.Room;
 import edu.kit.informatik.model.userdata.rooms.RoomObject;
+import edu.kit.informatik.repositories.PositionRepository;
 import edu.kit.informatik.repositories.RoomObjectRepository;
 import edu.kit.informatik.repositories.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +19,20 @@ public class RoomMapper implements IModelDtoMapper<Room, RoomDto> {
 
     private final RoomRepository roomRepository;
     private final RoomObjectRepository roomObjectRepository;
+    private final PositionRepository positionRepository;
 
     @Autowired
-    public RoomMapper(RoomRepository roomRepository, RoomObjectRepository roomObjectRepository) {
+    public RoomMapper(RoomRepository roomRepository, RoomObjectRepository roomObjectRepository,
+                      PositionRepository positionRepository) {
         this.roomRepository = roomRepository;
         this.roomObjectRepository = roomObjectRepository;
+        this.positionRepository = positionRepository;
     }
 
     @Override
     public RoomDto modelToDto(Room room) {
-        IModelDtoMapper<RoomObject, RoomObjectDto> roomObjectMapper = new RoomObjectMapper(roomObjectRepository);
+        IModelDtoMapper<RoomObject, RoomObjectDto> roomObjectMapper = new RoomObjectMapper(roomObjectRepository,
+                positionRepository);
         List<RoomObjectDto> roomObjectDtos = new LinkedList<>();
         room.getRoomObjects().forEach(roomObject -> roomObjectDtos.add(roomObjectMapper.modelToDto(roomObject)));
 

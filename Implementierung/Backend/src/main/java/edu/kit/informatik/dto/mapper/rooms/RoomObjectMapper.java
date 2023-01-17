@@ -1,32 +1,66 @@
 package edu.kit.informatik.dto.mapper.rooms;
 
 import edu.kit.informatik.dto.mapper.IModelDtoMapper;
+import edu.kit.informatik.dto.userdata.rooms.PositionDto;
 import edu.kit.informatik.dto.userdata.rooms.RoomObjectDto;
+import edu.kit.informatik.model.userdata.rooms.Chair;
+import edu.kit.informatik.model.userdata.rooms.Position;
 import edu.kit.informatik.model.userdata.rooms.RoomObject;
+import edu.kit.informatik.model.userdata.rooms.Table;
+import edu.kit.informatik.repositories.PositionRepository;
+import edu.kit.informatik.repositories.RoomObjectRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
 public class RoomObjectMapper implements IModelDtoMapper<RoomObject, RoomObjectDto> {
 
+    private final RoomObjectRepository roomObjectRepository;
+    private final PositionRepository positionRepository;
+    private final TableMapper tableMapper;
+    private final ChairMapper chairMapper;
+
+    @Autowired
+    public RoomObjectMapper(RoomObjectRepository roomObjectRepository, PositionRepository positionRepository) {
+        this.roomObjectRepository = roomObjectRepository;
+        this.positionRepository = positionRepository;
+        this.tableMapper = new TableMapper();
+        this.chairMapper = new ChairMapper();
+    }
+
     @Override
     public RoomObjectDto modelToDto(RoomObject roomObject) {
-        return null;
+        IModelDtoMapper<Position, PositionDto> positionMapper = new PositionMapper(positionRepository);
+
+        if (roomObject.isTable()) {
+            return tableMapper.modelToDto((Table) roomObject);
+        } else {
+            return chairMapper.modelToDto((Chair) roomObject);
+        }
     }
 
     @Override
     public List<RoomObjectDto> modelToDto(List<RoomObject> roomObjects) {
-        return null;
+        List<RoomObjectDto> roomObjectDtos = new LinkedList<>();
+        roomObjects.forEach(roomObject -> roomObjectDtos.add(modelToDto(roomObject)));
+
+        return roomObjectDtos;
     }
 
     @Override
     public RoomObject dtoToModel(RoomObjectDto roomObjectDto) {
+        // repository fehlt noch
         return null;
     }
 
     @Override
     public List<RoomObject> dtoToModel(List<RoomObjectDto> roomObjectDtos) {
-        return null;
+        List<RoomObject> roomObjects = new LinkedList<>();
+        roomObjectDtos.forEach(roomObjectDto -> roomObjects.add(dtoToModel(roomObjectDto)));
+
+        return roomObjects;
     }
 }

@@ -13,6 +13,8 @@ public abstract class RoomObject {
         this.position = position;
     }
 
+    public abstract boolean isTable();
+
     public Long getId() {
         return id;
     }

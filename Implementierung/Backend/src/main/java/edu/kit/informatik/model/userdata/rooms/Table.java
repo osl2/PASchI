@@ -13,6 +13,10 @@ public class Table extends RoomObject {
         this.width = width;
     }
 
+    public boolean isTable() {
+        return true;
+    }
+
     public double getLength() {
         return length;
     }

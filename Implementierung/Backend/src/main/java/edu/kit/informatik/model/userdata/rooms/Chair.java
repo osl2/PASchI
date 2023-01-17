@@ -7,4 +7,8 @@ public class Chair extends RoomObject {
     public Chair(User user, Position position) {
         super(user, position);
     }
+
+    public boolean isTable() {
+        return false;
+    }
 }
