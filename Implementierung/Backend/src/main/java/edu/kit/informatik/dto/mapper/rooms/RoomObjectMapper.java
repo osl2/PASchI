@@ -19,22 +19,18 @@ import java.util.List;
 public class RoomObjectMapper implements IModelDtoMapper<RoomObject, RoomObjectDto> {
 
     private final RoomObjectRepository roomObjectRepository;
-    private final PositionRepository positionRepository;
     private final TableMapper tableMapper;
     private final ChairMapper chairMapper;
 
     @Autowired
     public RoomObjectMapper(RoomObjectRepository roomObjectRepository, PositionRepository positionRepository) {
         this.roomObjectRepository = roomObjectRepository;
-        this.positionRepository = positionRepository;
         this.tableMapper = new TableMapper();
-        this.chairMapper = new ChairMapper();
+        this.chairMapper = new ChairMapper(positionRepository);
     }
 
     @Override
     public RoomObjectDto modelToDto(RoomObject roomObject) {
-        IModelDtoMapper<Position, PositionDto> positionMapper = new PositionMapper(positionRepository);
-
         if (roomObject.isTable()) {
             return tableMapper.modelToDto((Table) roomObject);
         } else {
