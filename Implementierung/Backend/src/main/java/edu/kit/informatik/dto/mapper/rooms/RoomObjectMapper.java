@@ -1,10 +1,8 @@
 package edu.kit.informatik.dto.mapper.rooms;
 
 import edu.kit.informatik.dto.mapper.IModelDtoMapper;
-import edu.kit.informatik.dto.userdata.rooms.PositionDto;
 import edu.kit.informatik.dto.userdata.rooms.RoomObjectDto;
 import edu.kit.informatik.model.userdata.rooms.Chair;
-import edu.kit.informatik.model.userdata.rooms.Position;
 import edu.kit.informatik.model.userdata.rooms.RoomObject;
 import edu.kit.informatik.model.userdata.rooms.Table;
 import edu.kit.informatik.repositories.PositionRepository;
@@ -18,14 +16,12 @@ import java.util.List;
 @Service
 public class RoomObjectMapper implements IModelDtoMapper<RoomObject, RoomObjectDto> {
 
-    private final RoomObjectRepository roomObjectRepository;
     private final TableMapper tableMapper;
     private final ChairMapper chairMapper;
 
     @Autowired
     public RoomObjectMapper(RoomObjectRepository roomObjectRepository, PositionRepository positionRepository) {
-        this.roomObjectRepository = roomObjectRepository;
-        this.tableMapper = new TableMapper();
+        this.tableMapper = new TableMapper(positionRepository);
         this.chairMapper = new ChairMapper(positionRepository);
     }
 
