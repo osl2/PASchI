@@ -53,4 +53,14 @@ public class UserService implements BaseService<User, UserDto> {
     public long delete(long id) {
         return 0;
     }
+
+    /**
+     * Login des Benutzers
+     * @param email E-Mail
+     * @param password Password
+     * @return {@link UserDto}
+     */
+    public UserDto login(String email, String password) {
+        return null;
+    }
 }
