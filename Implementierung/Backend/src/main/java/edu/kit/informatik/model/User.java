@@ -1,8 +1,9 @@
 package edu.kit.informatik.model;
 
+/**
+ * @author uekai
+ */
 public class User {
-
-     // @author uekai
 
     private Long id;
     private String firstName;
