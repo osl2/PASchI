@@ -3,9 +3,11 @@ package edu.kit.informatik.dto.mapper.courses;
 import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.userdata.courses.SeatArrangementDto;
 import edu.kit.informatik.model.userdata.courses.SeatArrangement;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, SeatArrangementDto> {
 
     @Override

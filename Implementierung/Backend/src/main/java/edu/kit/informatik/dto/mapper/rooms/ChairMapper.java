@@ -3,9 +3,11 @@ package edu.kit.informatik.dto.mapper.rooms;
 import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.userdata.rooms.ChairDto;
 import edu.kit.informatik.model.userdata.rooms.Chair;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class ChairMapper implements IModelDtoMapper<Chair, ChairDto> {
 
     @Override

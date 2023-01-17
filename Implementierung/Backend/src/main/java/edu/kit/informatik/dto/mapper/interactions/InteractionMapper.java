@@ -4,14 +4,18 @@ import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.userdata.interactions.InteractionDto;
 import edu.kit.informatik.model.userdata.interactions.Interaction;
 import edu.kit.informatik.repositories.InteractionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
 
+@Service
 public class InteractionMapper implements IModelDtoMapper<Interaction, InteractionDto> {
 
     private final InteractionRepository interactionRepository;
 
+    @Autowired
     public InteractionMapper(InteractionRepository interactionRepository) {
         this.interactionRepository = interactionRepository;
     }

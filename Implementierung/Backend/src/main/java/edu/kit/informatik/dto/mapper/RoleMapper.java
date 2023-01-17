@@ -2,10 +2,12 @@ package edu.kit.informatik.dto.mapper;
 
 import edu.kit.informatik.dto.RoleDto;
 import edu.kit.informatik.model.Role;
+import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
 
+@Service
 public class RoleMapper implements IModelDtoMapper<Role, RoleDto> {
 
     @Override

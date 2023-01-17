@@ -4,14 +4,18 @@ import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
 import edu.kit.informatik.model.userdata.interactions.Category;
 import edu.kit.informatik.repositories.CategoryBaseRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
 
+@Service
 public class CategoryMapper implements IModelDtoMapper<Category, CategoryDto> {
 
     private final CategoryBaseRepository categoryRepository;
 
+    @Autowired
     public CategoryMapper(CategoryBaseRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }

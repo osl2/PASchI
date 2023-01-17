@@ -3,10 +3,12 @@ package edu.kit.informatik.dto.mapper.interactions;
 import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.userdata.interactions.QualityDto;
 import edu.kit.informatik.model.userdata.interactions.Quality;
+import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
 
+@Service
 public class QualityMapper implements IModelDtoMapper<Quality, QualityDto> {
 
     @Override

@@ -5,14 +5,18 @@ import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.dto.userdata.interactions.StudentDto;
 import edu.kit.informatik.model.userdata.interactions.Participant;
 import edu.kit.informatik.repositories.ParticipantRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
 
+@Service
 public class ParticipantMapper implements IModelDtoMapper<Participant, ParticipantDto> {
 
     private final ParticipantRepository participantRepository;
 
+    @Autowired
     public ParticipantMapper(ParticipantRepository participantRepository) {
         this.participantRepository = participantRepository;
     }

@@ -3,9 +3,11 @@ package edu.kit.informatik.dto.mapper.courses;
 import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.userdata.courses.CourseDto;
 import edu.kit.informatik.model.userdata.courses.Course;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
 
     @Override

@@ -1,8 +1,11 @@
 package edu.kit.informatik.model;
 
+import lombok.NoArgsConstructor;
+
 /**
  * @author uekai
  */
+@NoArgsConstructor
 public class User {
 
     private Long id;

@@ -5,14 +5,18 @@ import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.model.Role;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
 
+@Service
 public class UserMapper implements IModelDtoMapper<User, UserDto> {
 
     private final UserRepository userRepository;
 
+    @Autowired
     public UserMapper(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -45,14 +49,16 @@ public class UserMapper implements IModelDtoMapper<User, UserDto> {
     public User dtoToModel(UserDto userDto) {
         IModelDtoMapper<Role, RoleDto> roleMapper = new RoleMapper();
         Role role = roleMapper.dtoToModel(userDto.getRole());
+        User user = userRepository.findUserById(userDto.getId()).orElseGet(User::new);
 
-        return userRepository.findUserById(userDto.getId()).orElseGet(() -> new User(
-                userDto.getFirstName(),
-                userDto.getLastName(),
-                userDto.getEmail(),
-                userDto.getPassword(),
-                userDto.isAuth(),
-                role));
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setEmail(userDto.getEmail());
+        user.setPassword(userDto.getPassword());
+        user.setAuth(userDto.isAuth());
+        user.setRole(role);
+
+        return null;
     }
 
     @Override
