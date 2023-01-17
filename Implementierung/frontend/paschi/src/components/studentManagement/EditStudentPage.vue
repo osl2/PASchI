@@ -1,5 +1,5 @@
 <template>
-  <navigation-bar>
+  <navigation-bar extended="true">
     <template v-slot:extension>
       <v-btn>speichern</v-btn>
       <v-btn>Schüler löschen</v-btn>

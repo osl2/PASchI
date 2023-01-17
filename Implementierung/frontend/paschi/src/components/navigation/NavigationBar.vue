@@ -20,10 +20,15 @@ import {ref} from "vue";
 
 export default {
   name: "NavigationBar",
+  props: {
+    extended: {
+      type: Boolean,
+      required: false,
+      default: false
+    }
+  },
   setup() {
-    const extended = ref(false)
     return {
-      extended
     }
   }
 }
