@@ -28,7 +28,7 @@ public class CategoryController extends BaseController<Category, CategoryDto> {
      * @param categoryService {@link CategoryService}
      */
     public CategoryController(CategoryService categoryService) {
-        this.service = categoryService;
+        super(categoryService);
     }
 
     @Override

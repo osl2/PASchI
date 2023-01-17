@@ -19,7 +19,11 @@ public abstract class BaseController<Entity, Dto> {
     /**
      * Allgemeiner {@link BaseService Service}
      */
-    BaseService<Entity, Dto> service;
+    protected final BaseService<Entity, Dto> service;
+
+    public BaseController(BaseService<Entity, Dto> service) {
+        this.service = service;
+    }
 
     /**
      * REST-Api zum Hinzufügen der Entität
