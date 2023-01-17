@@ -42,7 +42,7 @@ export default {
   data: () => ({
     preName: 'Gregor',
     lastName: 'Snelting',
-    deleteSudentDialog: true,
+    deleteSudentDialog: false,
   }),
 }
 </script>
