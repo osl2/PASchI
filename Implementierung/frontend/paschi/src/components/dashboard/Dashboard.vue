@@ -1,5 +1,5 @@
 <template>
-  <AppBar>
+  <NavigationBar>
     <template #default>
       <v-toolbar-title>
         Willkommen zurück, {{userStore.getFirstName}} {{ userStore.getSurName }}
@@ -10,7 +10,7 @@
         Abmelden
       </v-btn>
     </template>
-  </AppBar>
+  </NavigationBar>
 
   <v-main>
     <RecentCoursesCard class="ma-3" />
@@ -18,13 +18,14 @@
 </template>
 
 <script>
-import AppBar from "@/components/navigation/AppBar.vue";
+import AppBar from "@/components/navigation/NavigationBar.vue";
 import {useUserStore} from "@/store/UserStore";
 import RecentCoursesCard from "@/components/dashboard/RecentCoursesCard.vue";
+import NavigationBar from "@/components/navigation/NavigationBar.vue";
 
 export default {
   name: "Dashboard",
-  components: {RecentCoursesCard, AppBar},
+  components: {NavigationBar, RecentCoursesCard},
   setup() {
     const userStore = useUserStore()
 

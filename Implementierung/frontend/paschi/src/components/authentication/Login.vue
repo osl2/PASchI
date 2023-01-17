@@ -22,7 +22,7 @@
 <script lang="ts">
 
 import {useUserStore} from "@/store/UserStore";
-import AppBar from "@/components/navigation/AppBar.vue";
+import AppBar from "@/components/navigation/NavigationBar.vue";
 import router from "@/plugins/router";
 export default {
   name: "Login",

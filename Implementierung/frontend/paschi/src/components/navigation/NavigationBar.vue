@@ -19,7 +19,7 @@
 import {ref} from "vue";
 
 export default {
-  name: "AppBar",
+  name: "NavigationBar",
   setup() {
     const extended = ref(false)
     return {
