@@ -1,9 +1,11 @@
 <template>
-  <v-card>
+  <v-card color="primary">
     <v-card-title>
-      Kürzlich verwendete Kurse
-      <v-spacer />
-      <v-btn color="secondary" @click="navigateToCourses()">Alle anzeigen</v-btn>
+      <v-row class="ma-2">
+        Kürzlich verwendete Kurse
+        <v-spacer />
+        <v-btn color="secondary" @click="navigateToCourses()" class="white" >Alle anzeigen</v-btn>
+      </v-row>
     </v-card-title>
     <v-card-item v-for="course in courses">
       {{course.name}}

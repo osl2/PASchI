@@ -13,7 +13,13 @@
   </NavigationBar>
 
   <v-main>
-    <RecentCoursesCard class="ma-3" />
+    <v-container fluid>
+      <v-row justify="space-around" align-content="stretch">
+        <v-col>
+          <RecentCoursesCard class="ma-3" />
+        </v-col>
+      </v-row>
+    </v-container>
   </v-main>
 </template>
 
