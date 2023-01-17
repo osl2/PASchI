@@ -15,7 +15,7 @@ import java.util.List;
  */
 
 @Service
-public class SeatArrangementService implements BaseService<SeatArrangement, SeatArrangementDto> {
+public class SeatArrangementService extends BaseService<SeatArrangement, SeatArrangementDto> {
 
     private final SeatArrangementRepository seatArrangementRepository;
 

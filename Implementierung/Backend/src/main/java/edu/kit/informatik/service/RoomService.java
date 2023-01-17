@@ -15,7 +15,7 @@ import java.util.List;
  */
 
 @Service
-public class RoomService implements BaseService<Room, RoomDto> {
+public class RoomService extends BaseService<Room, RoomDto> {
 
     private final RoomRepository roomRepository;
 

@@ -15,7 +15,7 @@ import java.util.List;
  */
 
 @Service
-public class CourseService implements BaseService<Course, CourseDto> {
+public class CourseService extends BaseService<Course, CourseDto> {
 
     private final CourseRepository courseRepository;
 

@@ -15,7 +15,7 @@ import java.util.List;
  */
 
 @Service
-public class CategoryService implements BaseService<Category, CategoryDto> {
+public class CategoryService extends BaseService<Category, CategoryDto> {
 
     private final CategoryBaseRepository categoryBaseRepository;
 

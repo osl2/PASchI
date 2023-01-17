@@ -16,7 +16,7 @@ import java.util.List;
  */
 
 @Service
-public class UserService implements BaseService<User, UserDto> {
+public class UserService extends BaseService<User, UserDto> {
 
     private final UserRepository userRepository;
 

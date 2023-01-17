@@ -15,7 +15,7 @@ import java.util.List;
  */
 
 @Service
-public class SessionService implements BaseService<Session, SessionDto> {
+public class SessionService extends BaseService<Session, SessionDto> {
 
     private final SessionRepository sessionRepository;
 
