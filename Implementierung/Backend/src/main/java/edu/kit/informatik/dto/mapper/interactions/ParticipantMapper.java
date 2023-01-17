@@ -35,7 +35,8 @@ public class ParticipantMapper implements IModelDtoMapper<Participant, Participa
                 participant.getFirstName(),
                 participant.getLastName(),
                 courseIds,
-                interactionIds);
+                interactionIds
+        );
     }
 
     @Override

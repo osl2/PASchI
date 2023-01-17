@@ -29,7 +29,8 @@ public class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
                 interaction.getSession().getId(),
                 interaction.getTo().getId(),
                 interaction.getFrom().getId(),
-                interaction.getCategory().getId());
+                interaction.getCategory().getId()
+        );
     }
 
     @Override

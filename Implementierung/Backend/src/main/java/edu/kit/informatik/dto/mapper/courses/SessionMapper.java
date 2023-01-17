@@ -30,8 +30,8 @@ public class SessionMapper implements IModelDtoMapper<Session, SessionDto> {
     public SessionDto modelToDto(Session session) {
         IModelDtoMapper<Interaction, InteractionDto> interactionMapper = new InteractionMapper(interactionRepository);
         List<InteractionDto> interactionDtos = new LinkedList<>();
-        session.getInteractions().forEach(interaction ->
-                interactionDtos.add(interactionMapper.modelToDto(interaction)));
+        session.getInteractions().
+                forEach(interaction -> interactionDtos.add(interactionMapper.modelToDto(interaction)));
 
         return new SessionDto(
                 session.getId(),
@@ -40,7 +40,8 @@ public class SessionMapper implements IModelDtoMapper<Session, SessionDto> {
                 session.getDate(),
                 session.getCourse().getId(),
                 session.getSeatArrangement().getId(),
-                interactionDtos);
+                interactionDtos
+        );
     }
 
     @Override

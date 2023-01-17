@@ -37,7 +37,8 @@ public class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
                 course.getSubject(),
                 sessionIds,
                 participantIds,
-                seatArrangementIds);
+                seatArrangementIds
+        );
     }
 
     @Override
