@@ -3,6 +3,7 @@ package edu.kit.informatik.service;
 import edu.kit.informatik.dto.courses.SeatArrangementDto;
 import edu.kit.informatik.model.userdata.courses.SeatArrangement;
 import edu.kit.informatik.repositories.SeatArrangementRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -12,6 +13,8 @@ import java.util.List;
  * @author ugqbo
  * @version 1.0
  */
+
+@Service
 public class SeatArrangementService implements BaseService<SeatArrangement, SeatArrangementDto> {
 
     private final SeatArrangementRepository seatArrangementRepository;

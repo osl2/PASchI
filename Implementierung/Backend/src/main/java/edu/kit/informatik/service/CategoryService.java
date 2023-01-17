@@ -3,6 +3,7 @@ package edu.kit.informatik.service;
 import edu.kit.informatik.dto.interactions.CategoryDto;
 import edu.kit.informatik.model.userdata.interactions.Category;
 import edu.kit.informatik.repositories.CategoryBaseRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -12,6 +13,8 @@ import java.util.List;
  * @author ugqbo
  * @version 0.1
  */
+
+@Service
 public class CategoryService implements BaseService<Category, CategoryDto> {
 
     private final CategoryBaseRepository categoryBaseRepository;

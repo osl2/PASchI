@@ -3,6 +3,7 @@ package edu.kit.informatik.service;
 import edu.kit.informatik.dto.interactions.ParticipantDto;
 import edu.kit.informatik.model.userdata.interactions.Participant;
 import edu.kit.informatik.repositories.ParticipantRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -12,6 +13,8 @@ import java.util.List;
  * @author ugqbo
  * @version 1.0
  */
+
+@Service
 public class ParticipantService implements BaseService<Participant, ParticipantDto> {
 
     private final ParticipantRepository participantRepository;

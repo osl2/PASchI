@@ -3,6 +3,7 @@ package edu.kit.informatik.service;
 import edu.kit.informatik.dto.rooms.RoomDto;
 import edu.kit.informatik.model.userdata.rooms.Room;
 import edu.kit.informatik.repositories.RoomRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -12,6 +13,8 @@ import java.util.List;
  * @author ugqbo
  * @version 1.0
  */
+
+@Service
 public class RoomService implements BaseService<Room, RoomDto> {
 
     private final RoomRepository roomRepository;

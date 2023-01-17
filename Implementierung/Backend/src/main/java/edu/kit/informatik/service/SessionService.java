@@ -3,6 +3,7 @@ package edu.kit.informatik.service;
 import edu.kit.informatik.dto.courses.SessionDto;
 import edu.kit.informatik.model.userdata.courses.Session;
 import edu.kit.informatik.repositories.SessionRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -12,6 +13,8 @@ import java.util.List;
  * @author ugqbo
  * @version 1.0
  */
+
+@Service
 public class SessionService implements BaseService<Session, SessionDto> {
 
     private final SessionRepository sessionRepository;
