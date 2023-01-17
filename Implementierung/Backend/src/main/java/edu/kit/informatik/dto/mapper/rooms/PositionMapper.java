@@ -7,6 +7,7 @@ import edu.kit.informatik.repositories.PositionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -21,21 +22,34 @@ public class PositionMapper implements IModelDtoMapper<Position, PositionDto> {
 
     @Override
     public PositionDto modelToDto(Position position) {
-        return null;
+        return new PositionDto(
+                position.getId(),
+                position.getUser().getId(),
+                position.getXCoordinate(),
+                position.getYCoordinate(),
+                position.getOrientation()
+        );
     }
 
     @Override
     public List<PositionDto> modelToDto(List<Position> positions) {
-        return null;
+        List<PositionDto> positionDtos = new LinkedList<>();
+        positions.forEach(position -> positionDtos.add(modelToDto(position)));
+
+        return positionDtos;
     }
 
     @Override
     public Position dtoToModel(PositionDto positionDto) {
+        // repository fehlt noch
         return null;
     }
 
     @Override
     public List<Position> dtoToModel(List<PositionDto> positionDtos) {
-        return null;
+        List<Position> positions = new LinkedList<>();
+        positionDtos.forEach(positionDto -> positions.add(dtoToModel(positionDto)));
+
+        return positions;
     }
 }
