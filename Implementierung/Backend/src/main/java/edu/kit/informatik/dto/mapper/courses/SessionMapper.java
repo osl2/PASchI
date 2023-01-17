@@ -1,5 +1,6 @@
-package edu.kit.informatik.dto.mapper;
+package edu.kit.informatik.dto.mapper.courses;
 
+import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.userdata.courses.SessionDto;
 import edu.kit.informatik.model.userdata.courses.Session;
 

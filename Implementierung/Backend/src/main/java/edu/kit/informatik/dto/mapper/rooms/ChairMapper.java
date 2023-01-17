@@ -1,5 +1,6 @@
-package edu.kit.informatik.dto.mapper;
+package edu.kit.informatik.dto.mapper.rooms;
 
+import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.userdata.rooms.ChairDto;
 import edu.kit.informatik.model.userdata.rooms.Chair;
 

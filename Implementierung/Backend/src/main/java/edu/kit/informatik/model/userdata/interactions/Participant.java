@@ -23,6 +23,8 @@ public abstract class Participant {
         this.interactions = new LinkedList<>();
     }
 
+    public abstract boolean isStudent();
+
     public Long getId() {
         return id;
     }

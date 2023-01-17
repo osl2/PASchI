@@ -7,4 +7,9 @@ public class Student extends Participant {
     public Student(User user, String firstName, String lastName) {
         super(user, firstName, lastName);
     }
+
+    @Override
+    public boolean isStudent() {
+        return true;
+    }
 }

@@ -1,5 +1,6 @@
-package edu.kit.informatik.dto.mapper;
+package edu.kit.informatik.dto.mapper.interactions;
 
+import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.userdata.interactions.InteractionDto;
 import edu.kit.informatik.model.userdata.interactions.Interaction;
 
