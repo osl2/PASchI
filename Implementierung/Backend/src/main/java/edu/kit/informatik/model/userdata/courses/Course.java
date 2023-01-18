@@ -19,7 +19,7 @@ public class Course {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private String id;
 
     @ManyToOne
     private User user;
@@ -47,7 +47,7 @@ public class Course {
     public Course() {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 

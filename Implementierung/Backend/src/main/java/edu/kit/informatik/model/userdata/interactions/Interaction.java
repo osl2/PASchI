@@ -14,7 +14,7 @@ public class Interaction {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private String id;
 
     @ManyToOne
     private User user;
@@ -45,7 +45,7 @@ public class Interaction {
     public Interaction() {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 

@@ -7,7 +7,6 @@ import edu.kit.informatik.model.userdata.rooms.Room;
 import edu.kit.informatik.model.userdata.rooms.RoomObject;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -25,7 +24,7 @@ public class SeatArrangement {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private String id;
 
     @ManyToOne
     private User user;
@@ -53,7 +52,7 @@ public class SeatArrangement {
     public SeatArrangement() {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 

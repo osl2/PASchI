@@ -13,7 +13,7 @@ public class Category {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private String id;
 
     @ManyToOne
     private User user;
@@ -27,7 +27,7 @@ public class Category {
     public Category() {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 

@@ -12,7 +12,7 @@ public class Chair extends RoomObject {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private String id;
 
     public Chair(User user, Position position) {
         super(user, position);

@@ -14,7 +14,7 @@ public class Room {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private String id;
 
     @ManyToOne
     private User user;
@@ -36,7 +36,7 @@ public class Room {
     public Room() {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 

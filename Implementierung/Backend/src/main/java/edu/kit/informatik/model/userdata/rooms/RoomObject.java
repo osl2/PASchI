@@ -7,7 +7,7 @@ import edu.kit.informatik.model.User;
  */
 public abstract class RoomObject {
 
-    private Long id;
+    private String id;
 
     private User user;
     private Position position;
@@ -18,6 +18,10 @@ public abstract class RoomObject {
     }
 
     public RoomObject() {
+    }
+
+    public String getId() {
+        return id;
     }
 
     public abstract boolean isTable();

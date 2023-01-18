@@ -11,7 +11,7 @@ public class Table extends RoomObject {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private String id;
 
     private double length;
     private double width;

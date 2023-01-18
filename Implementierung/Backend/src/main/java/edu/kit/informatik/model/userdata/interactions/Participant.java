@@ -18,7 +18,7 @@ public abstract class Participant {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private String id;
 
     @ManyToOne
     private User user;
@@ -43,7 +43,7 @@ public abstract class Participant {
 
     public abstract boolean isStudent();
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 

@@ -18,7 +18,7 @@ public class Session {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private String id;
 
     @ManyToOne
     private User user;
@@ -45,7 +45,7 @@ public class Session {
     public Session() {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 

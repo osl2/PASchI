@@ -4,7 +4,7 @@ import edu.kit.informatik.model.User;
 
 public class Position {
 
-    private Long id;
+    private String id;
     private User user;
     private double xCoordinate;
     private double yCoordinate;
@@ -16,7 +16,7 @@ public class Position {
         this.orientation = orientation;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
