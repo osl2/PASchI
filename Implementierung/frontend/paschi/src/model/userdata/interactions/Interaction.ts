@@ -4,14 +4,14 @@ import {Category} from "@/model/userdata/interactions/Category";
 
 export class Interaction {
 
-  id: number;
+  id: string;
   user: User;
   timeStamp: string;
   fromParticipant: Participant;
   toParticipant: Participant;
   category: Category;
 
-  constructor(id: number, user: User, timeStamp: string, fromParticipant: Participant, toParticipant: Participant,
+  constructor(id: string, user: User, timeStamp: string, fromParticipant: Participant, toParticipant: Participant,
               category: Category) {
     this.id = id;
     this.user = user;
