@@ -2,18 +2,37 @@ package edu.kit.informatik.model.userdata.courses;
 
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.interactions.Participant;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 import java.util.LinkedList;
 import java.util.List;
 
+@Entity
+@Table(name = "courses")
 public class Course {
 
+    @Id
+    @GeneratedValue
     private Long id;
+
+    @ManyToOne
     private User user;
     private String name;
     private String subject;
+
+    @ManyToMany
     private List<Participant> participants;
+
+    @OneToMany
     private List<Session> sessions;
+
+    @OneToMany
     private List<SeatArrangement> seatArrangements;
 
     public Course(User user, String name, String subject) {
@@ -23,6 +42,9 @@ public class Course {
         this.participants = new LinkedList<>();
         this.sessions = new LinkedList<>();
         this.seatArrangements = new LinkedList<>();
+    }
+
+    public Course() {
     }
 
     public Long getId() {

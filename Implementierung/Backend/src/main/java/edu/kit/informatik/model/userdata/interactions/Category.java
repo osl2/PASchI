@@ -1,16 +1,30 @@
 package edu.kit.informatik.model.userdata.interactions;
 
 import edu.kit.informatik.model.User;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = "categories")
 public class Category {
 
+    @Id
+    @GeneratedValue
     private Long id;
+
+    @ManyToOne
     private User user;
     private String name;
 
     public Category(User user, String name) {
         this.user = user;
         this.name = name;
+    }
+
+    public Category() {
     }
 
     public Long getId() {

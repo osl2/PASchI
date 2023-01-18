@@ -2,18 +2,35 @@ package edu.kit.informatik.model.userdata.courses;
 
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.interactions.Interaction;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 import java.util.LinkedList;
 import java.util.List;
 
+@Entity
+@Table(name = "sessions")
 public class Session {
 
+    @Id
+    @GeneratedValue
     private Long id;
+
+    @ManyToOne
     private User user;
     private String name;
     private String date;
-    private final Course course;
+    @ManyToOne
+    private Course course;
+
+    @OneToMany
     private List<Interaction> interactions;
+
+    @ManyToOne
     private SeatArrangement seatArrangement;
 
     public Session(User user, String name, String date, Course course, SeatArrangement seatArrangement) {
@@ -23,6 +40,9 @@ public class Session {
         this.course = course;
         this.seatArrangement = seatArrangement;
         this.interactions = new LinkedList<>();
+    }
+
+    public Session() {
     }
 
     public Long getId() {

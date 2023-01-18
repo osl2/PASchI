@@ -1,13 +1,25 @@
 package edu.kit.informatik.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.NoArgsConstructor;
 
 /**
+ * Benutzer zur Authentifizierung der Rest-Api
+ *
  * @author uekai
+ * @author ugqbo
+ * @version 1.0
  */
 @NoArgsConstructor
+@Entity
+@Table(name = "users")
 public class User {
 
+    @Id
+    @GeneratedValue
     private Long id;
     private String firstName;
     private String lastName;

@@ -2,15 +2,34 @@ package edu.kit.informatik.model.userdata.interactions;
 
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.courses.Session;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = "interactions")
 public class Interaction {
 
+    @Id
+    @GeneratedValue
     private Long id;
+
+    @ManyToOne
     private User user;
     private String timeStamp;
+
+    @ManyToOne
     private Session session;
+
+    @ManyToOne
     private Participant from;
+
+    @ManyToOne
     private Participant to;
+
+    @ManyToOne
     private Category category;
 
     public Interaction(User user, String timeStamp, Session session, Participant from, Participant to,
@@ -21,6 +40,9 @@ public class Interaction {
         this.from = from;
         this.to = to;
         this.category = category;
+    }
+
+    public Interaction() {
     }
 
     public Long getId() {
