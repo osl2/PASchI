@@ -40,9 +40,9 @@ public class SeatArrangement {
     @OneToMany(cascade = CascadeType.ALL)
     @CollectionTable(name = "roomobject_participant_mapping")
     @MapKey(name = "seatMap")
-    private Map<RoomObject, Participant> seatMap;
+    private Map<Chair, Participant> seatMap;
 
-    public SeatArrangement(User user, String name, Room room, Course course, Map<RoomObject, Participant> seatMap) {
+    public SeatArrangement(User user, String name, Room room, Course course, Map<Chair, Participant> seatMap) {
         this.user = user;
         this.name = name;
         this.room = room;
@@ -73,7 +73,7 @@ public class SeatArrangement {
         return course;
     }
 
-    public Map<RoomObject, Participant> getSeatMap() {
+    public Map<Chair, Participant> getSeatMap() {
         return seatMap;
     }
 
@@ -97,11 +97,11 @@ public class SeatArrangement {
         this.course = course;
     }
 
-    public void setSeatMap(Map<RoomObject, Participant> seatMap) {
+    public void setSeatMap(Map<Chair, Participant> seatMap) {
         this.seatMap = seatMap;
     }
 
-    public void setSeat(RoomObject seat, Participant participant) {
+    public void setSeat(Chair seat, Participant participant) {
         this.seatMap.put(seat, participant);
     }
 }
