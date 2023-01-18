@@ -21,11 +21,11 @@ export class Session {
     this.interactions = [];
   }
 
-  addInteraction(interaction: Interaction): void {
+  addInteraction(interaction: Interaction) {
     this.interactions.push(interaction);
   }
 
-  removeInteraction(interactionId: number): void {
+  removeInteraction(interactionId: number) {
     this.interactions.forEach((element, index) => {
       if (element.id == interactionId) {
         this.interactions.splice(index, 1);

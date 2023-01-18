@@ -15,11 +15,11 @@ export class Room {
     this.roomObjects = [];
   }
 
-  addRoomObject(object: RoomObject): void {
+  addRoomObject(object: RoomObject) {
     this.roomObjects.push(object);
   }
 
-  removeRoomObject(objectId: number): void {
+  removeRoomObject(objectId: number) {
     this.roomObjects.forEach((element, index) => {
       if (element.id == objectId) {
         this.roomObjects.splice(index, 1);

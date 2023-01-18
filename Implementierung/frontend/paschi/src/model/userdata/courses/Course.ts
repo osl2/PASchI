@@ -23,11 +23,11 @@ export class Course {
     this.seatArrangements = [];
   }
 
-  addParticipant(participant: Participant): void {
+  addParticipant(participant: Participant) {
     this.participants.push(participant);
   }
 
-  removeParticipant(participantId: number): void {
+  removeParticipant(participantId: number) {
     this.participants.forEach((element, index) => {
       if (element.id == participantId) {
         this.participants.splice(index, 1)
@@ -35,11 +35,11 @@ export class Course {
     });
   }
 
-  addSession(session: Session): void {
+  addSession(session: Session) {
     this.sessions.push(session);
   }
 
-  removeSession(sessionId: number): void {
+  removeSession(sessionId: number) {
     this.sessions.forEach((element, index) => {
       if (element.id == sessionId) {
         this.sessions.splice(index, 1);
@@ -47,16 +47,15 @@ export class Course {
     });
   }
 
-  addSeatArrangement(seatArrangement: SeatArrangement): void {
+  addSeatArrangement(seatArrangement: SeatArrangement) {
     this.seatArrangements.push(seatArrangement);
   }
 
-  removeSeatArrangement(arrangementId: number): void {
+  removeSeatArrangement(arrangementId: number) {
     this.seatArrangements.forEach((element, index) => {
       if (element.id == arrangementId) {
         this.seatArrangements.splice(index, 1);
       }
     });
   }
-
 }

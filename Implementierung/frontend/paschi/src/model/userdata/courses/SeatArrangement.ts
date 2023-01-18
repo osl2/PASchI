@@ -26,7 +26,7 @@ export class SeatArrangement {
     return this.seatMap.get(seat);
   }
 
-  setSeat(seat: RoomObject, participant: Participant): void {
+  setSeat(seat: RoomObject, participant: Participant) {
     this.seatMap.set(seat, participant);
   }
 }

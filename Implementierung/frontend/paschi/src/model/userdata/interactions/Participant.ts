@@ -20,11 +20,11 @@ export abstract class Participant {
     this.interactions = [];
   }
 
-  addCourse(course: Course): void {
+  addCourse(course: Course) {
     this.courses.push(course);
   }
 
-  removeCourse(courseId: number): void {
+  removeCourse(courseId: number) {
     this.courses.forEach((element, index) => {
       if (element.id == courseId) {
         this.courses.splice(index, 1);
@@ -32,11 +32,11 @@ export abstract class Participant {
     });
   }
 
-  addInteraction(interaction: Interaction): void {
+  addInteraction(interaction: Interaction) {
     this.interactions.push(interaction);
   }
 
-  removeInteraction(interactionId: number): void {
+  removeInteraction(interactionId: number) {
     this.interactions.forEach((element, index) => {
       if (element.id == interactionId) {
         this.interactions.splice(index, 1);
