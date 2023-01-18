@@ -11,7 +11,7 @@ export abstract class Participant {
   courses: Course[];
   interactions: Interaction[];
 
-  constructor(id: number, user: User, firstName: string, lastName: string) {
+  protected constructor(id: number, user: User, firstName: string, lastName: string) {
     this.id = id;
     this.user = user;
     this.firstName = firstName;
