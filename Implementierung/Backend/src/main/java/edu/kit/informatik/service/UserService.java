@@ -2,6 +2,7 @@ package edu.kit.informatik.service;
 
 import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.dto.mapper.IModelDtoMapper;
+import edu.kit.informatik.dto.mapper.UserMapper;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,11 @@ public class UserService extends BaseService<User, UserDto> {
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
      * @param userRepository {@link UserRepository}
-     * @param mapper {@link IModelDtoMapper}
+     * @param userMapper {@link UserMapper}
      */
     @Autowired
-    public UserService(UserRepository userRepository, IModelDtoMapper<User, UserDto> mapper) {
-        super(mapper);
+    public UserService(UserRepository userRepository, UserMapper userMapper) {
+        super(userMapper);
         this.userRepository = userRepository;
     }
 

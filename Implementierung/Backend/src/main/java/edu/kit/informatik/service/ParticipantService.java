@@ -1,6 +1,7 @@
 package edu.kit.informatik.service;
 
 import edu.kit.informatik.dto.mapper.IModelDtoMapper;
+import edu.kit.informatik.dto.mapper.interactions.ParticipantMapper;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.model.userdata.interactions.Participant;
 import edu.kit.informatik.repositories.ParticipantRepository;
@@ -23,15 +24,11 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto>
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
      * @param participantRepository {@link ParticipantRepository}
-     * @param mapper {@link }
-     *
-     * TODO: ist hier IModelDtoMapper<Participant, ParticipantDto> sinnvoll oder sollte dies eher ein
-     *  {@link edu.kit.informatik.dto.mapper.interactions.ParticipantMapper } sein?
-     *  ->Gilt für alle Services
+     * @param participantMapper {@link ParticipantMapper}
      */
     public ParticipantService(ParticipantRepository participantRepository,
-                              IModelDtoMapper<Participant, ParticipantDto> mapper) {
-        super(mapper);
+                              ParticipantMapper participantMapper) {
+        super(participantMapper);
         this.participantRepository = participantRepository;
     }
 

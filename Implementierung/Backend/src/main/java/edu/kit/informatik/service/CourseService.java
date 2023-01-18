@@ -1,6 +1,7 @@
 package edu.kit.informatik.service;
 
 import edu.kit.informatik.dto.mapper.IModelDtoMapper;
+import edu.kit.informatik.dto.mapper.courses.CourseMapper;
 import edu.kit.informatik.dto.userdata.courses.CourseDto;
 import edu.kit.informatik.model.userdata.courses.Course;
 import edu.kit.informatik.repositories.CourseRepository;
@@ -23,10 +24,10 @@ public class CourseService extends BaseService<Course, CourseDto> {
     /**
      * Konstruktor zum Erstellen eines Objektes
      * @param courseRepository {@link CourseRepository}
-     * @param mapper {@link IModelDtoMapper}
+     * @param courseMapper {@link CourseMapper}
      */
-    public CourseService(CourseRepository courseRepository, IModelDtoMapper<Course, CourseDto> mapper) {
-        super(mapper);
+    public CourseService(CourseRepository courseRepository, CourseMapper courseMapper) {
+        super(courseMapper);
         this.courseRepository = courseRepository;
     }
 

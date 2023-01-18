@@ -1,6 +1,7 @@
 package edu.kit.informatik.service;
 
 import edu.kit.informatik.dto.mapper.IModelDtoMapper;
+import edu.kit.informatik.dto.mapper.interactions.CategoryMapper;
 import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
 import edu.kit.informatik.model.userdata.interactions.Category;
 import edu.kit.informatik.repositories.CategoryBaseRepository;
@@ -23,11 +24,11 @@ public class CategoryService extends BaseService<Category, CategoryDto> {
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
      * @param categoryBaseRepository {@link CategoryBaseRepository}
-     * @param mapper {@link IModelDtoMapper}
+     * @param categoryMapper {@link CategoryMapper}
      */
     public CategoryService(CategoryBaseRepository categoryBaseRepository,
-                           IModelDtoMapper<Category, CategoryDto> mapper) {
-        super(mapper);
+                           CategoryMapper categoryMapper) {
+        super(categoryMapper);
         this.categoryBaseRepository = categoryBaseRepository;
     }
 
