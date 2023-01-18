@@ -15,12 +15,18 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import router from "@/plugins/router";
+import {SessionController} from "@/controller/SessionController";
 
 export default defineComponent({
   name: "RecentSessionsCard",
   setup() {
 
+    const sessionController = SessionController.getSessionController()
+
+    const sessions = sessionController.getAllSessions()
+
     return {
+      sessions
     }
   }
 })
