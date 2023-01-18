@@ -17,7 +17,7 @@ export class CategoryController {
   }
 
   createRatedCategory(name: string, quality: Quality): string {
-    return 0;
+    return "";
   }
 
   deleteCategory(id: string) {
