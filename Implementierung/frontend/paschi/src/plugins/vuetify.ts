@@ -6,7 +6,8 @@
 
 // Styles
 import { aliases, fa } from 'vuetify/iconsets/fa'
-import { mdi } from 'vuetify/iconsets/mdi'
+import '@fortawesome/fontawesome-free/css/all.css'
+
 import 'vuetify/styles'
 
 // Composables
@@ -18,8 +19,7 @@ export default createVuetify({
     defaultSet: 'fa',
     aliases,
     sets: {
-      fa,
-      mdi,
+      fa
     }
   },
   theme: {
@@ -27,7 +27,9 @@ export default createVuetify({
       light: {
         colors: {
           primary: '#1867C0',
-          secondary: '#5CBBF6'
+          secondary: '#5CBBF6',
+          white: '#FFFFFF',
+          grey: '#525252'
         },
       },
     },
