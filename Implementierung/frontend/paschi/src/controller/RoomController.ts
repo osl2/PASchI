@@ -16,15 +16,15 @@ export class RoomController {
     return 0;
   }
 
-  updateRoom(id: number) {
+  updateRoom(id: string) {
 
   }
 
-  deleteRoom(id: number) {
+  deleteRoom(id: string) {
 
   }
 
-  getRoom(id: number): Room | undefined {
+  getRoom(id: string): Room | undefined {
     return undefined;
   }
 
@@ -32,15 +32,15 @@ export class RoomController {
     return [];
   }
 
-  addChair(roomId: number, pos: Position): number {
+  addChair(roomId: string, pos: Position): number {
     return 0;
   }
 
-  addTable(roomId: number, pos: Position, length: number, width: number): number {
+  addTable(roomId: string, pos: Position, length: number, width: number): number {
     return 0;
   }
 
-  removeRoomObject(roomId: number, objectId: number) {
+  removeRoomObject(roomId: string, objectId: string) {
 
   }
 }

@@ -17,15 +17,15 @@ export class StudentController {
     return 0;
   }
 
-  updateStudent(id: number, firstName: string, lastName: string) {
+  updateStudent(id: string, firstName: string, lastName: string) {
 
   }
 
-  deleteStudent(id: number) {
+  deleteStudent(id: string) {
 
   }
 
-  getStudent(id: number): Student | undefined {
+  getStudent(id: string): Student | undefined {
     return undefined;
   }
 
@@ -33,27 +33,27 @@ export class StudentController {
     return [];
   }
 
-  getCoursesOfStudent(studentId: number): Course[] {
+  getCoursesOfStudent(studentId: string): Course[] {
     return [];
   }
 
-  addCourseToStudent(studentId: number, courseId: number) {
+  addCourseToStudent(studentId: string, courseId: string) {
 
   }
 
-  removeCourseFromStudent(studentId: number, courseId: number) {
+  removeCourseFromStudent(studentId: string, courseId: string) {
 
   }
 
-  getInteractionsOfStudent(studentId: number): Interaction[] {
+  getInteractionsOfStudent(studentId: string): Interaction[] {
     return [];
   }
 
-  addInteraction(studentId: number, interactionId: number) {
+  addInteraction(studentId: string, interactionId: string) {
 
   }
 
-  removeInteraction(studentId: number, interactionId: number) {
+  removeInteraction(studentId: string, interactionId: string) {
 
   }
 }

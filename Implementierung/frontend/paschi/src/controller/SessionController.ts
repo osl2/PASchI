@@ -15,11 +15,11 @@ export class SessionController {
     return SessionController.controller;
   }
 
-  createSession(courseId: number, name: string): number {
+  createSession(courseId: string, name: string): number {
     return 0;
   }
 
-  updateSession(id: number, name: string) {
+  updateSession(id: string, name: string) {
 
   }
 

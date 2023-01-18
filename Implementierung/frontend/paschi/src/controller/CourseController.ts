@@ -18,15 +18,15 @@ export class CourseController {
     return 0;
   }
 
-  updateCourse(courseId: number, name: string, subject: string) {
+  updateCourse(courseId: string, name: string, subject: string) {
 
   }
 
-  deleteCourse(id: number) {
+  deleteCourse(id: string) {
 
   }
 
-  getCourse(id: number): Course | undefined {
+  getCourse(id: string): Course | undefined {
     return undefined;
   }
 
@@ -34,39 +34,39 @@ export class CourseController {
     return [];
   }
 
-  getStudents(courseId: number): Participant[] {
+  getStudents(courseId: string): Participant[] {
     return [];
   }
 
-  addStudentToCourse(courseId: number, studentId: number) {
+  addStudentToCourse(courseId: string, studentId: string) {
 
   }
 
-  removeStudentFromCourse(courseId: number, studentId: number) {
+  removeStudentFromCourse(courseId: string, studentId: string) {
 
   }
 
-  getSessions(courseId: number): Session[] {
+  getSessions(courseId: string): Session[] {
     return [];
   }
 
-  addSessionToCourse(courseId: number, sessionId: number) {
+  addSessionToCourse(courseId: string, sessionId: string) {
 
   }
 
-  deleteSession(courseId: number, sessionId: number) {
+  deleteSession(courseId: string, sessionId: string) {
 
   }
 
-  getSeatArrangements(courseId: number): SeatArrangement[] {
+  getSeatArrangements(courseId: string): SeatArrangement[] {
     return [];
   }
 
-  addSeatArrangementToCourse(courseId: number, arrangementId: number) {
+  addSeatArrangementToCourse(courseId: string, arrangementId: string) {
 
   }
 
-  deleteSeatArrangement(courseId: number, arrangementId: number) {
+  deleteSeatArrangement(courseId: string, arrangementId: string) {
 
   }
 }

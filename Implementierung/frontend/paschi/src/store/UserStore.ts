@@ -1,28 +1,16 @@
 import {defineStore} from "pinia"
+import {User} from "@/model/User";
 
-export const useUserStore = defineStore('user',
-  {
-    state: () => ({
-      userID: 0,
-      userName: 'igor@abc.info',
-      firstName: 'Igor',
-      surName: 'Schnecke'
-    }),
-    getters: {
-      getUserID: (state) => {
-        return state.userID
-      },
-      getUserName: (state) => {
-        return state.userName
-      },
-      getFirstName: (state) => {
-        return state.firstName
-      },
-      getSurName: (state) => {
-        return state.surName
-      }
+export const useUserStore = defineStore('user', {
+  state: () => ({
+    user: undefined as User | undefined
+  }),
+  actions: {
+    getUser(): User | undefined {
+      return this.user;
+    },
+    setUser(user: User) {
+      this.user = user;
     }
-
   }
-
-  )
+})

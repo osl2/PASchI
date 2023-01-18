@@ -10,15 +10,15 @@ export class AdminController {
     return AdminController.controller;
   }
 
-  authUser(userId: number) {
+  authUser(userId: string) {
 
   }
 
-  deleteUser(userId: number) {
+  deleteUser(userId: string) {
 
   }
 
-  resetPassword(userId: number) {
+  resetPassword(userId: string) {
 
   }
 }

@@ -6,14 +6,14 @@ import {Room} from "@/model/userdata/rooms/Room";
 
 export class SeatArrangement {
 
-  id: number
+  id: string
   user: User
   name: string;
   seatMap: Map<RoomObject, Participant>;
   course: Course;
   room: Room;
 
-  constructor(id: number, user: User, name: string, course: Course, room: Room) {
+  constructor(id: string, user: User, name: string, course: Course, room: Room) {
     this.id = id;
     this.user = user;
     this.name = name;

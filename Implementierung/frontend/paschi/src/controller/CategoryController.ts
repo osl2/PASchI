@@ -16,15 +16,15 @@ export class CategoryController {
     return 0;
   }
 
-  createRatedCategory(name: string, quality: Quality): number {
-    return 0;
+  createRatedCategory(name: string, quality: Quality): string {
+    return "";
   }
 
-  deleteCategory(id: number) {
+  deleteCategory(id: string) {
 
   }
 
-  updateCategory(id: number, name: string, quality: Quality) {
+  updateCategory(id: string, name: string, quality: Quality) {
 
   }
 

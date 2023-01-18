@@ -1,8 +1,8 @@
 <template>
   <navigation-bar extended="true">
     <template v-slot:extension>
-      <v-btn>speichern</v-btn>
-      <v-btn>Schüler löschen</v-btn>
+      <v-btn @click="saveChangesClick">speichern</v-btn>
+      <v-btn @click="activateCardClick">Schüler löschen</v-btn>
     </template>
   </navigation-bar>
   <v-main>
@@ -23,8 +23,8 @@
     >
       <v-card>
         "Delete student?"
-        <v-btn>cancel</v-btn>
-        <v-btn>confirm</v-btn>
+        <v-btn @click="cancelDeleteClick">cancel</v-btn>
+        <v-btn @click="deleteStudentClick">confirm</v-btn>
       </v-card>
     </v-dialog>
   </v-main>
@@ -32,18 +32,45 @@
 
 <script>
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
-
+import {StudentController} from "@/controller/StudentController";
 export default {
   name: "editStudentPage.vue",
   components: {
-  NavigationBar
+    NavigationBar
   },
-  props:['studentId'],
-  data: () => ({
-    preName: 'Gregor',
-    lastName: 'Snelting',
-    deleteSudentDialog: false,
-  }),
+  props: {
+    studentId: {
+      type: String,
+    }
+  },
+  setup() {
+    let firstName=studentController.getStudent(this.studentId).firstName
+    let lastName='Snelting'
+    let deleteSudentDialog=false
+    const studentController=StudentController.getStudentConroller();
+
+    function activateCardClick() {
+      this.deleteSudentDialog=true;
+    }
+    function saveChangesClick() {
+
+    }
+
+    function deleteStudentClick(){
+      studentController.deleteStudent(this.studentId);
+      this.deleteSudentDialog=false;
+    }
+    function cancelDeleteClick() {
+      this.deleteSudentDialog=false;
+    }
+
+    return {
+      activateCardClick,
+      deleteStudentClick,
+      cancelDeleteClick,
+      saveChangesClick
+    }
+  },
 }
 </script>
 
