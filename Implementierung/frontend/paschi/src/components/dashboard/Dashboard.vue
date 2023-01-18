@@ -18,6 +18,9 @@
         <v-col>
           <RecentCoursesCard class="ma-3" />
         </v-col>
+        <v-col>
+          <RecentSessionsCard class="ma-3" />
+        </v-col>
       </v-row>
     </v-container>
   </v-main>
@@ -28,10 +31,11 @@ import AppBar from "@/components/navigation/NavigationBar.vue";
 import {useUserStore} from "@/store/UserStore";
 import RecentCoursesCard from "@/components/dashboard/RecentCoursesCard.vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
+import RecentSessionsCard from "@/components/dashboard/RecentSessionsCard.vue";
 
 export default {
   name: "Dashboard",
-  components: {NavigationBar, RecentCoursesCard},
+  components: {RecentSessionsCard, NavigationBar, RecentCoursesCard},
   setup() {
     const userStore = useUserStore()
 
