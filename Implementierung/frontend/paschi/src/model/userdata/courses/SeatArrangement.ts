@@ -13,11 +13,11 @@ export class SeatArrangement {
   course: Course;
   room: Room;
 
-  constructor(id: number, user: User, name: string, seatMap: Map<RoomObject, Participant>, course: Course, room: Room) {
+  constructor(id: number, user: User, name: string, course: Course, room: Room) {
     this.id = id;
     this.user = user;
     this.name = name;
-    this.seatMap = seatMap;
+    this.seatMap = new Map<RoomObject, Participant>();
     this.course = course;
     this.room = room;
   }
