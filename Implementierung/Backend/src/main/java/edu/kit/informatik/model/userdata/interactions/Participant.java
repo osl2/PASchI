@@ -4,6 +4,7 @@ import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.courses.Course;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
@@ -17,7 +18,7 @@ import java.util.List;
 public abstract class Participant {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @ManyToOne

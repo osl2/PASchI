@@ -3,6 +3,7 @@ package edu.kit.informatik.model.userdata.rooms;
 import edu.kit.informatik.model.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
@@ -10,7 +11,7 @@ import jakarta.persistence.Id;
 public class Table extends RoomObject {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     private double length;
