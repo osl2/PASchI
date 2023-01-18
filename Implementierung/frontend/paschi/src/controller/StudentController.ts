@@ -21,7 +21,7 @@ export class StudentController {
 
   }
 
-  deleteStudent(id: number) {
+  deleteStudent(string: number) {
 
   }
 
