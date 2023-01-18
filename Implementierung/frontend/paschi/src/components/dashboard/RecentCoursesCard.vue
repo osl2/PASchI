@@ -4,7 +4,7 @@
       <v-row class="ma-2">
         Kürzlich verwendete Kurse
         <v-spacer />
-        <v-btn color="secondary" @click="navigateToCourses()" class="primary-text" >Alle anzeigen</v-btn>
+        <v-btn color="secondary" @click="navigateToCourses()" class="text-grey" >Alle anzeigen</v-btn>
       </v-row>
     </v-card-title>
     <v-card-item v-for="course in courses">

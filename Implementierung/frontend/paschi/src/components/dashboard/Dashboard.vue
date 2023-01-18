@@ -13,6 +13,7 @@
   </NavigationBar>
 
   <v-main>
+    <SideMenu />
     <v-container fluid>
       <v-row justify="space-around" align-content="stretch">
         <v-col>
@@ -32,10 +33,11 @@ import {useUserStore} from "@/store/UserStore";
 import RecentCoursesCard from "@/components/dashboard/RecentCoursesCard.vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import RecentSessionsCard from "@/components/dashboard/RecentSessionsCard.vue";
+import SideMenu from "@/components/navigation/SideMenu.vue";
 
 export default {
   name: "Dashboard",
-  components: {RecentSessionsCard, NavigationBar, RecentCoursesCard},
+  components: {SideMenu, RecentSessionsCard, NavigationBar, RecentCoursesCard},
   setup() {
     const userStore = useUserStore()
 
