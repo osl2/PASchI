@@ -47,7 +47,7 @@ export default {
   setup(props) {
     const studentController = StudentController.getStudentConroller();
     const firstName = ref<String>(studentController.getStudent(props.studentId).firstName)
-    const lastName = ref<String>(studentController.getStudent(props.studentId).firstName)
+    const lastName = ref<String>(studentController.getStudent(props.studentId).lastName)
     const deleteSudentDialog = ref<Boolean>false
 
     function activateCardClick() {
