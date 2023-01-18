@@ -3,11 +3,11 @@ import {User} from "@/model/User";
 
 export abstract class RoomObject {
 
-  id: number;
+  id: string;
   user: User;
   position: Position;
 
-  constructor(id: number, user: User, position: Position) {
+  protected constructor(id: string, user: User, position: Position) {
     this.id = id;
     this.user = user;
     this.position = position;
