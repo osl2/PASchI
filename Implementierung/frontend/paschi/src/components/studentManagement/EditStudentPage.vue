@@ -2,7 +2,7 @@
   <navigation-bar extended="true">
     <template v-slot:extension>
       <v-btn>speichern</v-btn>
-      <v-btn>Schüler löschen</v-btn>
+      <v-btn @click="activateCardClick">Schüler löschen</v-btn>
     </template>
   </navigation-bar>
   <v-main>
@@ -32,18 +32,35 @@
 
 <script>
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
-
+import StudentController from "@/controller/StudentController.vue";
 export default {
   name: "editStudentPage.vue",
   components: {
-  NavigationBar
+    NavigationBar
   },
   props:['studentId'],
   data: () => ({
+    studentController: StudentController.getStudentConroller(),
     preName: 'Gregor',
     lastName: 'Snelting',
     deleteSudentDialog: false,
   }),
+  methods: {
+    activateCardClick() {
+      this.deleteSudentDialog=true;
+    },
+    saveChangesClick() {
+
+    },
+
+    deleteStudentClick(){
+      studentController.deleteStudent(studentId);
+      this.deleteSudentDialog=false;
+    },
+    cancelDeleteClick() {
+      this.deleteSudentDialog=false;
+    }
+  }
 }
 </script>
 
