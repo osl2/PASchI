@@ -25,11 +25,21 @@ export class Session {
     this.interactions.push(interaction);
   }
 
-  removeInteraction(interactionId: number) {
+  removeInteraction(interactionId: string) {
     this.interactions.forEach((element, index) => {
       if (element.id == interactionId) {
         this.interactions.splice(index, 1);
       }
     });
+  }
+
+  getInteraction(interactionId: string): Interaction | undefined {
+    this.interactions.forEach((element, index) => {
+      if (element.id == interactionId) {
+        return element;
+      }
+    });
+
+    return undefined;
   }
 }
