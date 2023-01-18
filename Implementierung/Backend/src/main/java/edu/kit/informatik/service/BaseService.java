@@ -20,8 +20,17 @@ import java.util.List;
 @EnableAutoConfiguration
 public abstract class BaseService<Entity, Dto> {
 
+    /**
+     * Allgemeiner {@link IModelDtoMapper Mapper} zum Abbilden einer Entität auf das dazugehörige Dto und
+     * Abbilden eines Dto auf die dazugehörige Entität.
+     */
     protected final IModelDtoMapper<Entity, Dto> mapper;
 
+    /**
+     * Konstruktor zum Erstellen eines Objektes der Klasse. Wir durch die Unterklassen aufgerufen um dem
+     * {@link IModelDtoMapper} du initialisieren.
+     * @param mapper {@link IModelDtoMapper}
+     */
     public BaseService(IModelDtoMapper<Entity, Dto> mapper) {
         this.mapper = mapper;
     }

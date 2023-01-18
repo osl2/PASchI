@@ -23,6 +23,11 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto>
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
      * @param participantRepository {@link ParticipantRepository}
+     * @param mapper {@link }
+     *
+     * TODO: ist hier IModelDtoMapper<Participant, ParticipantDto> sinnvoll oder sollte dies eher ein
+     *  {@link edu.kit.informatik.dto.mapper.interactions.ParticipantMapper } sein?
+     *  ->Gilt für alle Services
      */
     public ParticipantService(ParticipantRepository participantRepository,
                               IModelDtoMapper<Participant, ParticipantDto> mapper) {

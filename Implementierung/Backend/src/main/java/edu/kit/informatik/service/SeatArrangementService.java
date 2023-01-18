@@ -23,6 +23,7 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
      * @param seatArrangementRepository {@link SeatArrangementRepository}
+     * @param mapper {@link IModelDtoMapper}
      */
     public SeatArrangementService(SeatArrangementRepository seatArrangementRepository,
                                   IModelDtoMapper<SeatArrangement, SeatArrangementDto> mapper) {

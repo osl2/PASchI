@@ -23,6 +23,7 @@ public class RoomService extends BaseService<Room, RoomDto> {
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
      * @param roomRepository {@link RoomRepository}
+     * @param mapper {@link IModelDtoMapper}
      */
     public RoomService(RoomRepository roomRepository, IModelDtoMapper<Room, RoomDto> mapper) {
         super(mapper);

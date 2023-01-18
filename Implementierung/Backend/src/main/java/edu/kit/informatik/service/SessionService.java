@@ -23,6 +23,7 @@ public class SessionService extends BaseService<Session, SessionDto> {
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
      * @param sessionRepository {@link SessionRepository}
+     * @param mapper {@link IModelDtoMapper}
      */
     public SessionService(SessionRepository sessionRepository, IModelDtoMapper<Session, SessionDto> mapper) {
         super(mapper);

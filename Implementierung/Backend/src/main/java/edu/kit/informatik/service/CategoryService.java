@@ -23,6 +23,7 @@ public class CategoryService extends BaseService<Category, CategoryDto> {
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
      * @param categoryBaseRepository {@link CategoryBaseRepository}
+     * @param mapper {@link IModelDtoMapper}
      */
     public CategoryService(CategoryBaseRepository categoryBaseRepository,
                            IModelDtoMapper<Category, CategoryDto> mapper) {

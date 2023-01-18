@@ -24,6 +24,7 @@ public class UserService extends BaseService<User, UserDto> {
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
      * @param userRepository {@link UserRepository}
+     * @param mapper {@link IModelDtoMapper}
      */
     @Autowired
     public UserService(UserRepository userRepository, IModelDtoMapper<User, UserDto> mapper) {

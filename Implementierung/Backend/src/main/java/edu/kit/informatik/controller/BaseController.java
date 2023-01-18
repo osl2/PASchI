@@ -21,6 +21,11 @@ public abstract class BaseController<Entity, Dto> {
      */
     private final BaseService<Entity, Dto> service;
 
+    /**
+     * Konstruktor zum Erstellen eines Objektes der Klasse. Er wird durch Unterklassen aufgerufen, die den
+     * {@link BaseService} durch die passende Unterklasse ersetzten.
+     * @param service {@link BaseService}
+     */
     public BaseController(BaseService<Entity, Dto> service) {
         this.service = service;
     }

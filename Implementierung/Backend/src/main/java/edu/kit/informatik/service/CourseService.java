@@ -23,6 +23,7 @@ public class CourseService extends BaseService<Course, CourseDto> {
     /**
      * Konstruktor zum Erstellen eines Objektes
      * @param courseRepository {@link CourseRepository}
+     * @param mapper {@link IModelDtoMapper}
      */
     public CourseService(CourseRepository courseRepository, IModelDtoMapper<Course, CourseDto> mapper) {
         super(mapper);
