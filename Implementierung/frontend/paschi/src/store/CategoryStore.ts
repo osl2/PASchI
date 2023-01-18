@@ -7,16 +7,25 @@ export const useCategoryStore = defineStore('categories', {
   }),
   actions: {
     addCategory(category: Category) {
-
+      this.categories.push(category);
     },
     deleteCategory(id: string) {
-
+      this.categories.forEach((element, index) => {
+        if (element.id === id) {
+          this.categories.splice(index, 1);
+        }
+      });
     },
-    getCategory(id: string): Category {
-
+    getCategory(id: string): Category | undefined {
+      this.categories.forEach((element, index) => {
+        if (element.id === id) {
+          this.categories.splice(index, 1);
+        }
+      });
+      return undefined;
     },
     getAllCategories(): Category[] {
-
+      return this.categories;
     }
   }
 })

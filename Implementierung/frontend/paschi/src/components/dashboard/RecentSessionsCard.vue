@@ -14,7 +14,6 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
-import router from "@/plugins/router";
 import {SessionController} from "@/controller/SessionController";
 
 export default defineComponent({
