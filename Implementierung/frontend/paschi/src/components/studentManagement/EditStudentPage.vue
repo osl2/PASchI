@@ -32,7 +32,7 @@
 
 <script>
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
-import StudentController from "@/controller/StudentController.vue";
+
 export default {
   name: "editStudentPage.vue",
   components: {
@@ -40,11 +40,13 @@ export default {
   },
   props:['studentId'],
   data: () => ({
-    studentController: StudentController.getStudentConroller(),
     preName: 'Gregor',
     lastName: 'Snelting',
     deleteSudentDialog: false,
   }),
+  setup() {
+    const studentController=StudentController.getStudentConroller();
+  },
   methods: {
     activateCardClick() {
       this.deleteSudentDialog=true;
@@ -54,7 +56,6 @@ export default {
     },
 
     deleteStudentClick(){
-      studentController.deleteStudent(studentId);
       this.deleteSudentDialog=false;
     },
     cancelDeleteClick() {
