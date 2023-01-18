@@ -5,14 +5,14 @@ import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 
 export class Session {
 
-  id: number;
+  id: string;
   user: User;
   date: string;
   interactions: Interaction[];
   course: Course;
   seatArrangement: SeatArrangement;
 
-  constructor(id: number, user: User, date: string, course: Course, seatArrangement: SeatArrangement) {
+  constructor(id: string, user: User, date: string, course: Course, seatArrangement: SeatArrangement) {
     this.id = id;
     this.user = user;
     this.date = date;

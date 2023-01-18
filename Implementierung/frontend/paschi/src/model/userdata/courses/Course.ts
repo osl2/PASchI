@@ -5,7 +5,7 @@ import {User} from "@/model/User";
 
 export class Course {
 
-  id: number;
+  id: string;
   user: User
   name: string;
   subject: string;
@@ -13,7 +13,7 @@ export class Course {
   sessions: Session[];
   seatArrangements: SeatArrangement[];
 
-  constructor(id: number, user: User, name: string, subject: string) {
+  constructor(id: string, user: User, name: string, subject: string) {
     this.id = id;
     this.user = user;
     this.name = name;
@@ -51,9 +51,9 @@ export class Course {
     this.seatArrangements.push(seatArrangement);
   }
 
-  removeSeatArrangement(arrangementId: number) {
+  removeSeatArrangement(arrangementId: string) {
     this.seatArrangements.forEach((element, index) => {
-      if (element.id == arrangementId) {
+      if (element.id === arrangementId) {
         this.seatArrangements.splice(index, 1);
       }
     });

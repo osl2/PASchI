@@ -5,7 +5,7 @@ export class RatedCategory extends Category {
 
   quality: Quality;
 
-  constructor(id: number, user: number, name: string, quality: Quality) {
+  constructor(id: string, user: number, name: string, quality: Quality) {
     super(id, user, name);
     this.quality = quality;
   }
