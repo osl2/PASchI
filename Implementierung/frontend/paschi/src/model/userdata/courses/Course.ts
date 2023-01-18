@@ -51,7 +51,7 @@ export class Course {
     this.seatArrangements.push(seatArrangement);
   }
 
-  removeSeatArrangement(arrangementId: number) {
+  removeSeatArrangement(arrangementId: number): void {
     this.seatArrangements.forEach((element, index) => {
       if (element.id == arrangementId) {
         this.seatArrangements.splice(index, 1);
