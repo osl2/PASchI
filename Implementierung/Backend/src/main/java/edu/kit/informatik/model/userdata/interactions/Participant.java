@@ -3,6 +3,7 @@ package edu.kit.informatik.model.userdata.interactions;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.courses.Course;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "participants")
-public abstract class Participant {
+public class Participant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -28,13 +29,17 @@ public abstract class Participant {
     @ManyToMany
     private List<Course> courses;
 
+    @Enumerated
+    private ParticipantType participantType;
+
     @ManyToMany
     private List<Interaction> interactions;
 
-    public Participant(User user, String firstName, String lastName) {
+    public Participant(User user, String firstName, String lastName, ParticipantType participantType) {
         this.user = user;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.participantType = participantType;
         this.courses = new LinkedList<>();
         this.interactions = new LinkedList<>();
     }
@@ -42,7 +47,9 @@ public abstract class Participant {
     public Participant() {
     }
 
-    public abstract boolean isStudent();
+    public boolean isStudent() {
+        return this.participantType.equals(ParticipantType.Student);
+    }
 
     public String getId() {
         return id;
