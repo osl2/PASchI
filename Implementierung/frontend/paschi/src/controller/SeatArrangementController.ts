@@ -9,15 +9,15 @@ export class SeatArrangementController {
     return SeatArrangementController.controller;
   }
 
-  createSeatArrangement(name: string, roomId: number) {
+  createSeatArrangement(name: string, roomId: string) {
 
   }
 
-  addMapping(arrangementId: number, chairId: number, studentId: number) {
+  addMapping(arrangementId: string, chairId: string, studentId: string) {
 
   }
 
-  deleteMapping(arrangementId: number, chairId: number) {
+  deleteMapping(arrangementId: string, chairId: string) {
 
   }
 }

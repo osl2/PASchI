@@ -9,19 +9,19 @@ export class StatsController {
     return StatsController.controller;
   }
 
-  getStudentStats(studentId: number) {
+  getStudentStats(studentId: string) {
 
   }
 
-  getCourseStats(courseId: number) {
+  getCourseStats(courseId: string) {
 
   }
 
-  getSessionStats(sessionId: number) {
+  getSessionStats(sessionId: string) {
 
   }
 
-  getInteractionMap(sessionId: number) {
-    
+  getInteractionMap(sessionId: string) {
+
   }
 }
