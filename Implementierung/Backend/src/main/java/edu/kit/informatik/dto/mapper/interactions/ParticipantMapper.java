@@ -2,7 +2,6 @@ package edu.kit.informatik.dto.mapper.interactions;
 
 import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
-import edu.kit.informatik.dto.userdata.interactions.StudentDto;
 import edu.kit.informatik.model.userdata.interactions.Participant;
 import edu.kit.informatik.repositories.ParticipantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,17 +22,18 @@ public class ParticipantMapper implements IModelDtoMapper<Participant, Participa
 
     @Override
     public ParticipantDto modelToDto(Participant participant) {
-        List<Long> courseIds = new LinkedList<>();
-        List<Long> interactionIds = new LinkedList<>();
+        List<String> courseIds = new LinkedList<>();
+        List<String> interactionIds = new LinkedList<>();
 
         participant.getCourses().forEach(course -> courseIds.add(course.getId()));
         participant.getInteractions().forEach(interaction -> interactionIds.add(interaction.getId()));
 
-        return new StudentDto(
+        return new ParticipantDto(
                 participant.getId(),
                 participant.getUser().getId(),
                 participant.getFirstName(),
                 participant.getLastName(),
+                participant.getParticipantType(),
                 courseIds,
                 interactionIds
         );
