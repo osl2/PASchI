@@ -9,11 +9,26 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Schnittstelle zur Datenbanktabelle mit  {@link Participant Teilnehmern}.
+ *
+ * @author ugqbo
+ * @version 1.0
+ */
 @Repository
 public interface ParticipantRepository extends JpaRepository<Participant, ParticipantDto> {
 
-
+    /**
+     * Methode zur Rückgabe eines Optionals von {@link Participant}
+     * @param id Id
+     * @return {@link Optional} von {@link Participant}
+     */
     Optional<Participant> findParticipantById(String id);
 
-    List<Optional<Participant>> findParticipantsByUser(User user);
+    /**
+     * Methode zur Rückgabe eins Optionals von {@link  Participant}
+     * @param user {@link User}
+     * @return {@link Optional} von {@link Participant}
+     */
+    Optional<List<Participant>> findParticipantsByUser(User user);
 }
