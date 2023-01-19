@@ -1,5 +1,7 @@
 package edu.kit.informatik.model;
 
+import edu.kit.informatik.model.userdata.interactions.ParticipantType;
+
 /**
  * Enum zur Implementierung verschiedener Rollen
  *
@@ -8,9 +10,19 @@ package edu.kit.informatik.model;
  * @version 1.0
  */
 public enum Role {
-    ADMIN(),
-    USER();
+    ADMIN("admin"),
+    USER("user");
 
-    Role() {
+    Role(String string) {
+    }
+
+    public static Role getRoleByString(String string) {
+        for (Role role: Role.values()) {
+            if (role.toString().toLowerCase().equals(string)) {
+                return role;
+            }
+        }
+
+        return null;
     }
 }
