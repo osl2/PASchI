@@ -79,6 +79,10 @@ public class Participant {
         this.user = user;
     }
 
+    public ParticipantType getParticipantType() {
+        return participantType;
+    }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -93,6 +97,10 @@ public class Participant {
 
     public void setInteractions(List<Interaction> interactions) {
         this.interactions = interactions;
+    }
+
+    public void setParticipantType(ParticipantType participantType) {
+        this.participantType = participantType;
     }
 
     public void addCourse(Course course) {
