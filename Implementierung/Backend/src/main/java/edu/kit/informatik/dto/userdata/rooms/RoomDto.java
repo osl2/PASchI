@@ -1,5 +1,6 @@
 package edu.kit.informatik.dto.userdata.rooms;
 
+import edu.kit.informatik.model.userdata.rooms.Chair;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,5 +17,7 @@ public class RoomDto {
     private String id;
     private String userId;
     private String name;
-    private List<RoomObjectDto> roomObjects;
+    private List<TableDto> tables;
+
+    private List<Chair> chairs;
 }
