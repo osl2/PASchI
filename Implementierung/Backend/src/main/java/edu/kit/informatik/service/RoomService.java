@@ -5,6 +5,7 @@ import edu.kit.informatik.dto.mapper.rooms.RoomMapper;
 import edu.kit.informatik.dto.userdata.rooms.RoomDto;
 import edu.kit.informatik.model.userdata.rooms.Room;
 import edu.kit.informatik.repositories.RoomRepository;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
  * @version 1.0
  */
 
-@Service
+@Component
 public class RoomService extends BaseService<Room, RoomDto> {
 
     private final RoomRepository roomRepository;

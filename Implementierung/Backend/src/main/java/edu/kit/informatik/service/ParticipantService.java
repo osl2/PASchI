@@ -5,6 +5,7 @@ import edu.kit.informatik.dto.mapper.interactions.ParticipantMapper;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.model.userdata.interactions.Participant;
 import edu.kit.informatik.repositories.ParticipantRepository;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
  * @version 1.0
  */
 
-@Service
+@Component
 public class ParticipantService extends BaseService<Participant, ParticipantDto> {
 
     private final ParticipantRepository participantRepository;

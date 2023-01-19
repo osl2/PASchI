@@ -6,6 +6,7 @@ import edu.kit.informatik.dto.mapper.UserMapper;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
  * @version 1.0
  */
 
-@Service
+@Component
 public class UserService extends BaseService<User, UserDto> {
 
     private final UserRepository userRepository;

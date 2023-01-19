@@ -5,6 +5,7 @@ import edu.kit.informatik.dto.mapper.courses.CourseMapper;
 import edu.kit.informatik.dto.userdata.courses.CourseDto;
 import edu.kit.informatik.model.userdata.courses.Course;
 import edu.kit.informatik.repositories.CourseRepository;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
  * @version 1.0
  */
 
-@Service
+@Component
 public class CourseService extends BaseService<Course, CourseDto> {
 
     private final CourseRepository courseRepository;

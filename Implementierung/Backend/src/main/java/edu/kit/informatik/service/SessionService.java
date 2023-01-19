@@ -5,6 +5,7 @@ import edu.kit.informatik.dto.mapper.courses.SessionMapper;
 import edu.kit.informatik.dto.userdata.courses.SessionDto;
 import edu.kit.informatik.model.userdata.courses.Session;
 import edu.kit.informatik.repositories.SessionRepository;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
  * @version 1.0
  */
 
-@Service
+@Component
 public class SessionService extends BaseService<Session, SessionDto> {
 
     private final SessionRepository sessionRepository;
