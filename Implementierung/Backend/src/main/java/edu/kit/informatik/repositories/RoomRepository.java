@@ -9,10 +9,25 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Schnittstelle zur Datenbanktabelle mit {@link Room Räumen}
+ *
+ * @author ugqbo
+ * @version 1.0
+ */
 @Repository
 public interface RoomRepository extends JpaRepository<Room, RoomDto> {
-
+    /**
+     * Rückgabe eines Optionals von {@link Room Räumen}
+     * @param id Id
+     * @return {@link Optional} von {@link Room}
+     */
     Optional<Room> findRoomById(String id);
 
+    /**
+     * Rückgabe eines Optionals von {@link Room Räumen}
+     * @param user {@link User}
+     * @return {@link Optional} von {@link Room}
+     */
     Optional<List<Room>> findRoomsByUser(User user);
 }
