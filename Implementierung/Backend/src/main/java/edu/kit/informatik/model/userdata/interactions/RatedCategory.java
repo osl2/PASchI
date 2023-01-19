@@ -7,7 +7,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "ratedcategories")
+//@Table(name = "ratedcategories")
 public class RatedCategory extends Category {
 
     @Enumerated(EnumType.STRING)
