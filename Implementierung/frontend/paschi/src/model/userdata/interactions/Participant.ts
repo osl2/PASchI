@@ -4,17 +4,15 @@ import {Interaction} from "@/model/userdata/interactions/Interaction";
 
 export abstract class Participant {
 
-  private id: string | undefined;
-  localId: number;
+  id: string;
   user: User;
   firstName: string;
   lastName: string;
   courses: Course[];
   interactions: Interaction[];
 
-  protected constructor(id: string | undefined, localId:number, user: User, firstName: string, lastName: string) {
+  protected constructor(id: string, user: User, firstName: string, lastName: string) {
     this.id = id;
-    this.localId = localId;
     this.user = user;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -44,16 +42,5 @@ export abstract class Participant {
         this.interactions.splice(index, 1);
       }
     });
-  }
-
-  get getId(): string {
-    if (this.id == undefined) {
-      return this.localId.toString();
-    }
-    return this.id;
-  }
-
-  set setId(id: string) {
-    this.id = id;
   }
 }

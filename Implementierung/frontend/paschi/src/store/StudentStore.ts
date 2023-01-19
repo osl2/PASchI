@@ -3,8 +3,7 @@ import {Student} from "@/model/userdata/interactions/Student";
 
 export const useStudentStore = defineStore('students', {
   state: () => ({
-    students: [] as Student[],
-    id: 0
+    students: [] as Student[]
   }),
   actions: {
     addStudent(student: Student) {
@@ -12,25 +11,21 @@ export const useStudentStore = defineStore('students', {
     },
     deleteStudent(id: string) {
       this.students.forEach((element, index) => {
-        if (element.getId === id) {
+        if (element.id === id) {
           this.students.splice(index, 1);
         }
       });
     },
     getStudent(id: string): Student | undefined {
       this.students.forEach((element) => {
-        if (element.getId === id) {
+        if (element.id === id) {
           return element;
         }
       });
       return undefined;
     },
     getAllStudents(): Student[] {
-      // @ts-ignore
       return this.students;
-    },
-    getId(): number {
-      return this.id++;
     }
   }
 })

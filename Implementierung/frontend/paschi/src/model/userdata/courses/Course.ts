@@ -27,9 +27,9 @@ export class Course {
     this.participants.push(participant);
   }
 
-  removeParticipant(participantId: string) {
+  removeParticipant(participantId: number) {
     this.participants.forEach((element, index) => {
-      if (element.getId == participantId) {
+      if (element.id == participantId) {
         this.participants.splice(index, 1)
       }
     });
@@ -39,7 +39,7 @@ export class Course {
     this.sessions.push(session);
   }
 
-  removeSession(sessionId: string) {
+  removeSession(sessionId: number) {
     this.sessions.forEach((element, index) => {
       if (element.id == sessionId) {
         this.sessions.splice(index, 1);

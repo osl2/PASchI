@@ -31,7 +31,7 @@ export class SessionController {
     return [];
   }
 
-  getSession(id: string): Session | undefined {
+  getSession(id: number): Session | undefined {
     return undefined;
   }
 

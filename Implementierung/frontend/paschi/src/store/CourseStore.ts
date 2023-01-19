@@ -25,7 +25,6 @@ export const useCourseStore = defineStore('courses', {
       return undefined;
     },
     getAllCourses(): Course[] {
-      // @ts-ignore
       return this.courses;
     }
   }
