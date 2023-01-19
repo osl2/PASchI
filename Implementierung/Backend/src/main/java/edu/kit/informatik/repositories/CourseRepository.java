@@ -31,5 +31,5 @@ public interface CourseRepository extends JpaRepository<Course, CourseDto> {
      * @param user {@link User}
      * @return {@link Optional} von ´{@link Course}
      */
-    Optional<List<Course>> findCoursesBy(User user);
+    Optional<List<Course>> findCoursesByUser(User user);
 }
