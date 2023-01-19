@@ -7,6 +7,7 @@ export const useUserStore = defineStore('user', {
   }),
   actions: {
     getUser(): User | undefined {
+      // @ts-ignore
       return this.user;
     },
     setUser(user: User) {

@@ -25,6 +25,7 @@ export const useRoomStore = defineStore('rooms', {
       return undefined;
     },
     getAllRooms(): Room[] {
+      // @ts-ignore
       return this.rooms;
     }
   }

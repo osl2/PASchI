@@ -19,7 +19,7 @@ export class Room {
     this.roomObjects.push(object);
   }
 
-  removeRoomObject(objectId: number) {
+  removeRoomObject(objectId: string) {
     this.roomObjects.forEach((element, index) => {
       if (element.id == objectId) {
         this.roomObjects.splice(index, 1);
