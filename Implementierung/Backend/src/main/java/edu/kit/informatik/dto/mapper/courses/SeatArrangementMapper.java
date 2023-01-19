@@ -24,7 +24,7 @@ public class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, S
 
     @Override
     public SeatArrangementDto modelToDto(SeatArrangement seatArrangement) {
-        Map<Long, Long> seatMap = new HashMap<>();
+        Map<String, String> seatMap = new HashMap<>();
         seatArrangement.getSeatMap().forEach((key, value) -> seatMap.put(key.getId(), value.getId()));
 
         return new SeatArrangementDto(

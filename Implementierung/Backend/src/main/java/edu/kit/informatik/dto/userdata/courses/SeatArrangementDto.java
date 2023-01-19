@@ -16,7 +16,7 @@ public class SeatArrangementDto {
     private String id;
     private String userId;
     private String name;
-    private Map<Long, Long> seatMap;
-    private Long roomId;
-    private Long courseId;
+    private Map<String, String> seatMap;
+    private String roomId;
+    private String courseId;
 }

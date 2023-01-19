@@ -19,7 +19,7 @@ public class SessionDto {
     private String userId;
     private String name;
     private String date;
-    private Long courseId;
-    private Long seatArrangementId;
+    private String courseId;
+    private String seatArrangementId;
     List<InteractionDto> interactions;
 }

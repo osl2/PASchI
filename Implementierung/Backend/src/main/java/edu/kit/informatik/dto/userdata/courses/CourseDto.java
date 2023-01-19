@@ -17,7 +17,7 @@ public class CourseDto {
     private String userId;
     private String name;
     private String subject;
-    private List<Long> sessionIds;
-    private List<Long> participantIds;
-    private List<Long> seatArrangementIds;
+    private List<String> sessionIds;
+    private List<String> participantIds;
+    private List<String> seatArrangementIds;
 }

@@ -15,8 +15,8 @@ public class InteractionDto {
     private String id;
     private String userId;
     private String timeStamp;
-    private Long sessionId;
-    private Long toParticipantId;
-    private Long fromParticipant;
-    private Long categoryId;
+    private String sessionId;
+    private String toParticipantId;
+    private String fromParticipant;
+    private String categoryId;
 }

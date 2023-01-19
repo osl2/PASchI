@@ -22,9 +22,9 @@ public class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
 
     @Override
     public CourseDto modelToDto(Course course) {
-        List<Long> sessionIds = new LinkedList<>();
-        List<Long> participantIds = new LinkedList<>();
-        List<Long> seatArrangementIds = new LinkedList<>();
+        List<String> sessionIds = new LinkedList<>();
+        List<String> participantIds = new LinkedList<>();
+        List<String> seatArrangementIds = new LinkedList<>();
 
         course.getSessions().forEach(session -> sessionIds.add(session.getId()));
         course.getParticipants().forEach(participant -> participantIds.add(participant.getId()));
