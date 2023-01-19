@@ -1,11 +1,10 @@
 package edu.kit.informatik.service;
 
-import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.mapper.courses.SeatArrangementMapper;
 import edu.kit.informatik.dto.userdata.courses.SeatArrangementDto;
 import edu.kit.informatik.model.userdata.courses.SeatArrangement;
 import edu.kit.informatik.repositories.SeatArrangementRepository;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ import java.util.List;
  * @version 1.0
  */
 
-@Service
+@Component
 public class SeatArrangementService extends BaseService<SeatArrangement, SeatArrangementDto> {
 
     private final SeatArrangementRepository seatArrangementRepository;
