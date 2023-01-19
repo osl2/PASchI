@@ -5,7 +5,6 @@ import edu.kit.informatik.dto.userdata.rooms.RoomObjectDto;
 import edu.kit.informatik.model.userdata.rooms.Chair;
 import edu.kit.informatik.model.userdata.rooms.RoomObject;
 import edu.kit.informatik.model.userdata.rooms.Table;
-import edu.kit.informatik.repositories.RoomObjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,13 +12,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Service
-public class RoomObjectMapper implements IModelDtoMapper<RoomObject, RoomObjectDto> {
+public abstract class RoomObjectMapper implements IModelDtoMapper<RoomObject, RoomObjectDto> {
 
     private final TableMapper tableMapper;
     private final ChairMapper chairMapper;
 
     @Autowired
-    public RoomObjectMapper(RoomObjectRepository roomObjectRepository, TableMapper tableMapper,
+    public RoomObjectMapper(TableMapper tableMapper,
                             ChairMapper chairMapper) {
         this.tableMapper = tableMapper;
         this.chairMapper = chairMapper;
