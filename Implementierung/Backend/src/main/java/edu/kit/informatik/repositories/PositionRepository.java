@@ -18,7 +18,7 @@ public interface PositionRepository extends JpaRepository<Position, PositionDto>
 
     /**
      * Rückgabe eines Optionals von {@link Position}
-     * @param id ID
+     * @param id Id
      * @return {@link Optional} von {@link Position}
      */
     Optional<Position> findPositionById(String id);
