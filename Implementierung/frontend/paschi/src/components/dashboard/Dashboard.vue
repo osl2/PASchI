@@ -1,7 +1,7 @@
 <template>
   <NavigationBar>
     <template #default>
-      <v-toolbar-title>
+      <v-toolbar-title >
         Willkommen zurück, {{userStore.getFirstName}} {{ userStore.getSurName }}
       </v-toolbar-title>
     </template>

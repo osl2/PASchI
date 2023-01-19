@@ -13,10 +13,10 @@
 
 
             <v-card-item>
-              <v-btn block prepend-icon="fa-sign-in-alt" color="primary" @click="router.push('Dashboard')" >Login</v-btn>
+              <v-btn block prepend-icon="fas fa-sign-in-alt" color="primary" @click="router.push('Dashboard')" >Login</v-btn>
             </v-card-item>
             <v-card-item>
-              <v-btn block prepend-icon="fa-sign-in-alt" color="primary" @click="router.push('Register')" >Noch keinen Account? Zur Registrierung</v-btn>
+              <v-btn block prepend-icon="fas fa-sign-in-alt" color="primary" @click="router.push('Register')" >Noch keinen Account? Zur Registrierung</v-btn>
             </v-card-item>
           </v-card-item>
         </v-card>
