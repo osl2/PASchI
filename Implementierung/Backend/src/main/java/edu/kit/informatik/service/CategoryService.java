@@ -1,11 +1,12 @@
 package edu.kit.informatik.service;
 
-import edu.kit.informatik.dto.mapper.IModelDtoMapper;
+
 import edu.kit.informatik.dto.mapper.interactions.CategoryMapper;
 import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
 import edu.kit.informatik.model.userdata.interactions.Category;
 import edu.kit.informatik.repositories.CategoryBaseRepository;
-import org.springframework.stereotype.Service;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -16,7 +17,8 @@ import java.util.List;
  * @version 0.1
  */
 
-@Service
+@Component
+@EnableAutoConfiguration
 public class CategoryService extends BaseService<Category, CategoryDto> {
 
     private final CategoryBaseRepository categoryBaseRepository;
