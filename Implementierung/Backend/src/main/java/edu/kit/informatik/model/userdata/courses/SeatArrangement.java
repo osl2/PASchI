@@ -39,7 +39,7 @@ public class SeatArrangement {
 
     @OneToMany(cascade = CascadeType.ALL)
     @CollectionTable(name = "roomobject_participant_mapping")
-    @MapKey(name = "seatMap")
+    @MapKey
     private Map<Chair, Participant> seatMap;
 
     public SeatArrangement(User user, String name, Room room, Course course, Map<Chair, Participant> seatMap) {
