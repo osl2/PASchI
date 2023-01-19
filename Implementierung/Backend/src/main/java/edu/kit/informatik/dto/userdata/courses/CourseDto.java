@@ -13,8 +13,8 @@ import java.util.List;
 @Getter
 public class CourseDto {
 
-    private Long id;
-    private Long userId;
+    private String id;
+    private String userId;
     private String name;
     private String subject;
     private List<Long> sessionIds;

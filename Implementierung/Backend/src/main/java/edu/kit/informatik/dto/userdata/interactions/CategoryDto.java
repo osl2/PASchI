@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class CategoryDto {
 
-    private Long id;
-    private Long userId;
+    private String id;
+    private String userId;
     private String name;
 }

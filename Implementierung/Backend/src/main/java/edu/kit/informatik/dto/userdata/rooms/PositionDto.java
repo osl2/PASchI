@@ -11,8 +11,8 @@ import lombok.Setter;
 @Setter
 public class PositionDto {
 
-    private Long id;
-    private Long userId;
+    private String id;
+    private String userId;
     private double xCoordinate;
     private double yCoordinate;
     private double orientation;

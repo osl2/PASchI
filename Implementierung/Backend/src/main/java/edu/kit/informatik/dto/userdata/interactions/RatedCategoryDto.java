@@ -11,7 +11,7 @@ public class RatedCategoryDto extends CategoryDto {
 
     private QualityDto quality;
 
-    public RatedCategoryDto(Long id, Long userId, String name, QualityDto quality) {
+    public RatedCategoryDto(String id, String userId, String name, QualityDto quality) {
         super(id, userId, name);
         this.quality = quality;
     }

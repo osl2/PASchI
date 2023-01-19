@@ -12,7 +12,7 @@ public class TableDto extends RoomObjectDto {
     private double length;
     private double width;
 
-    public TableDto(Long id, Long userId, PositionDto position, double length, double width) {
+    public TableDto(String id, String userId, PositionDto position, double length, double width) {
         super(id, userId, position);
         this.length = length;
         this.width = width;

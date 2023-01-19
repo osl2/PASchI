@@ -11,10 +11,10 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public abstract class ParticipantDto {
+public class ParticipantDto {
 
-    private Long id;
-    private Long userId;
+    private String id;
+    private String userId;
     private String firstName;
     private String lastName;
     private List<Long> courseIds;

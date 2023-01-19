@@ -12,8 +12,8 @@ import lombok.Setter;
 @Setter
 public class InteractionDto {
 
-    private Long id;
-    private Long userId;
+    private String id;
+    private String userId;
     private String timeStamp;
     private Long sessionId;
     private Long toParticipantId;

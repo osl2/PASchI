@@ -13,8 +13,8 @@ import java.util.Map;
 @Setter
 public class SeatArrangementDto {
 
-    private Long id;
-    private Long userId;
+    private String id;
+    private String userId;
     private String name;
     private Map<Long, Long> seatMap;
     private Long roomId;

@@ -15,8 +15,8 @@ import java.util.List;
 @Setter
 public class SessionDto {
 
-    private Long id;
-    private Long userId;
+    private String id;
+    private String userId;
     private String name;
     private String date;
     private Long courseId;

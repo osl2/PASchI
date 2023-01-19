@@ -22,7 +22,7 @@ public interface UserRepository extends JpaRepository<User, UserDto> {
      * @param id Id
      * @return {@link Optional} von {@link User}
      */
-    Optional<User> findUserById(long id);
+    Optional<User> findUserById(String id);
 
     /**
      * Rückgabe von Optionals von {@link User}

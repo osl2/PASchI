@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 public abstract class RoomObjectDto {
 
-    private Long id;
-    private Long userId;
+    private String id;
+    private String userId;
     private PositionDto position;
 }

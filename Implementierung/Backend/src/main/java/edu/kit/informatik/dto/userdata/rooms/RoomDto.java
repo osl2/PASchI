@@ -13,8 +13,8 @@ import java.util.List;
 @Setter
 public class RoomDto {
 
-    private Long id;
-    private Long userId;
+    private String id;
+    private String userId;
     private String name;
     private List<RoomObjectDto> roomObjects;
 }
