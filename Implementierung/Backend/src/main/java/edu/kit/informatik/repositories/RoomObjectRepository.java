@@ -1,4 +1,4 @@
-package edu.kit.informatik.repositories;
+/*package edu.kit.informatik.repositories;
 
 import edu.kit.informatik.dto.userdata.rooms.RoomObjectDto;
 import edu.kit.informatik.model.userdata.rooms.Room;
@@ -9,11 +9,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
 public interface RoomObjectRepository extends JpaRepository<RoomObject, RoomObjectDto> {
 
     Optional<RoomObject> findRoomObjectById(String id);
 
     //Wirft Fehler
-    Optional<List<RoomObject>> findRoomObjectsByRoom(Room room);
+    //Optional<List<RoomObject>> findRoomObjectsByRoom(Room room);
 }
+
+ */
