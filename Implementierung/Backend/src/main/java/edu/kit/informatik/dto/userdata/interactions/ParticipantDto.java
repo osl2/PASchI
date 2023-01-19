@@ -1,5 +1,6 @@
 package edu.kit.informatik.dto.userdata.interactions;
 
+import edu.kit.informatik.model.userdata.interactions.ParticipantType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,9 @@ public class ParticipantDto {
     private String userId;
     private String firstName;
     private String lastName;
-    private List<Long> courseIds;
-    private List<Long> interactionIds;
+
+    private ParticipantType participantType;
+
+    private List<String> courseIds;
+    private List<String> interactionIds;
 }
