@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +42,7 @@ public class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, S
     @Override
     public SeatArrangementDto modelToDto(SeatArrangement seatArrangement) {
         Map<String, String> seatMap = new HashMap<>();
-        seatArrangement.getSeatMap().forEach((key, value) -> seatMap.put(key.getId(), value.getId()));
+        seatArrangement.getSeatMap().forEach((chair, participant) -> seatMap.put(chair.getId(), participant.getId()));
 
         return new SeatArrangementDto(
                 seatArrangement.getId(),
@@ -56,7 +56,7 @@ public class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, S
 
     @Override
     public List<SeatArrangementDto> modelToDto(List<SeatArrangement> seatArrangements) {
-        List<SeatArrangementDto> seatArrangementDtos = new LinkedList<>();
+        List<SeatArrangementDto> seatArrangementDtos = new ArrayList<>();
         seatArrangements.forEach(seatArrangement -> seatArrangementDtos.add(modelToDto(seatArrangement)));
 
         return seatArrangementDtos;
@@ -88,7 +88,7 @@ public class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, S
 
     @Override
     public List<SeatArrangement> dtoToModel(List<SeatArrangementDto> seatArrangementDtos) {
-        List<SeatArrangement> seatArrangements = new LinkedList<>();
+        List<SeatArrangement> seatArrangements = new ArrayList<>();
         seatArrangementDtos.forEach(seatArrangementDto -> seatArrangements.add(dtoToModel(seatArrangementDto)));
 
         return seatArrangements;
