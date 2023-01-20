@@ -3,20 +3,28 @@ package edu.kit.informatik.dto.mapper.rooms;
 import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.userdata.rooms.PositionDto;
 import edu.kit.informatik.dto.userdata.rooms.TableDto;
+import edu.kit.informatik.model.User;
+import edu.kit.informatik.model.userdata.rooms.Position;
 import edu.kit.informatik.model.userdata.rooms.Table;
+import edu.kit.informatik.repositories.TableRepository;
+import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class TableMapper implements IModelDtoMapper<Table, TableDto> {
 
+    private final TableRepository tableRepository;
+    private final UserRepository userRepository;
     private final PositionMapper positionMapper;
 
     @Autowired
-    public TableMapper(PositionMapper positionMapper) {
+    public TableMapper(TableRepository tableRepository, UserRepository userRepository, PositionMapper positionMapper) {
+        this.tableRepository = tableRepository;
+        this.userRepository = userRepository;
         this.positionMapper = positionMapper;
     }
 
@@ -35,7 +43,7 @@ public class TableMapper implements IModelDtoMapper<Table, TableDto> {
 
     @Override
     public List<TableDto> modelToDto(List<Table> tables) {
-        List<TableDto> tableDtos = new LinkedList<>();
+        List<TableDto> tableDtos = new ArrayList<>();
         tables.forEach(table -> tableDtos.add(modelToDto(table)));
 
         return tableDtos;
@@ -43,13 +51,21 @@ public class TableMapper implements IModelDtoMapper<Table, TableDto> {
 
     @Override
     public Table dtoToModel(TableDto tableDto) {
-        // repository fehlt noch
-        return null;
+        Table table = tableRepository.findTableById(tableDto.getId()).orElseGet(Table::new);
+        User user = userRepository.findUserByEmail(tableDto.getUserId()).orElse(null);
+        Position position = positionMapper.dtoToModel(tableDto.getPosition());
+
+        table.setUser(user);
+        table.setPosition(position);
+        table.setLength(tableDto.getLength());
+        table.setWidth(tableDto.getWidth());
+
+        return table;
     }
 
     @Override
     public List<Table> dtoToModel(List<TableDto> tableDtos) {
-        List<Table> tables = new LinkedList<>();
+        List<Table> tables = new ArrayList<>();
         tableDtos.forEach(tableDto -> tables.add(dtoToModel(tableDto)));
 
         return tables;
