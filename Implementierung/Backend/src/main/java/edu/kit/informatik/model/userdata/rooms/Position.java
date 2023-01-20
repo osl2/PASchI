@@ -57,7 +57,7 @@ public class Position {
         this.xCoordinate = xCoordinate;
     }
 
-    public void setCCoordinate(double yCoordinate) {
+    public void setYCoordinate(double yCoordinate) {
         this.yCoordinate = yCoordinate;
     }
 
