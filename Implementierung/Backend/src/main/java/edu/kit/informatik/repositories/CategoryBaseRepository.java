@@ -1,16 +1,18 @@
 package edu.kit.informatik.repositories;
 
+import edu.kit.informatik.model.userdata.interactions.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface CategoryBaseRepository<Category, String> extends JpaRepository<Category, String> {
+public interface CategoryBaseRepository<CategoryType extends Category, String>
+        extends JpaRepository<CategoryType, String> {
 
-    Optional<Category> findCategoryById(String id);
+    Optional<CategoryType> findCategoryById(String id);
 
 
     //Wirft Fehler
-    Optional<Category> findCategoryByInteraction();
+    Optional<CategoryType> findCategoryByInteraction();
 }
