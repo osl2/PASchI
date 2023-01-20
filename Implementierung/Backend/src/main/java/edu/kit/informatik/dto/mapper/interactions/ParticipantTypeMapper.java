@@ -4,7 +4,7 @@ import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantTypeDto;
 import edu.kit.informatik.model.userdata.interactions.ParticipantType;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ParticipantTypeMapper implements IModelDtoMapper<ParticipantType, ParticipantTypeDto> {
@@ -16,7 +16,7 @@ public class ParticipantTypeMapper implements IModelDtoMapper<ParticipantType, P
 
     @Override
     public List<ParticipantTypeDto> modelToDto(List<ParticipantType> qualities) {
-        List<ParticipantTypeDto> ParticipantTypeDtos = new LinkedList<>();
+        List<ParticipantTypeDto> ParticipantTypeDtos = new ArrayList<>();
         qualities.forEach(ParticipantType -> ParticipantTypeDtos.add(modelToDto(ParticipantType)));
 
         return ParticipantTypeDtos;
@@ -29,7 +29,7 @@ public class ParticipantTypeMapper implements IModelDtoMapper<ParticipantType, P
 
     @Override
     public List<ParticipantType> dtoToModel(List<ParticipantTypeDto> ParticipantTypeDtos) {
-        List<ParticipantType> qualities = new LinkedList<>();
+        List<ParticipantType> qualities = new ArrayList<>();
         ParticipantTypeDtos.forEach(ParticipantTypeDto -> qualities.add(dtoToModel(ParticipantTypeDto)));
 
         return qualities;

@@ -4,7 +4,7 @@ import edu.kit.informatik.dto.RoleDto;
 import edu.kit.informatik.model.Role;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,7 +17,7 @@ public class RoleMapper implements IModelDtoMapper<Role, RoleDto> {
 
     @Override
     public List<RoleDto> modelToDto(List<Role> roles) {
-        List<RoleDto> roleDtos = new LinkedList<>();
+        List<RoleDto> roleDtos = new ArrayList<>();
         roles.forEach(role -> roleDtos.add(modelToDto(role)));
 
         return roleDtos;
@@ -30,7 +30,7 @@ public class RoleMapper implements IModelDtoMapper<Role, RoleDto> {
 
     @Override
     public List<Role> dtoToModel(List<RoleDto> roleDtos) {
-        List<Role> roles = new LinkedList<>();
+        List<Role> roles = new ArrayList<>();
         roleDtos.forEach(roleDto -> roles.add(dtoToModel(roleDto)));
 
         return roles;

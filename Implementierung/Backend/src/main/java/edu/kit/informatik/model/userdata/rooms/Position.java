@@ -6,7 +6,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Entity
 public class Position {
 
@@ -23,10 +25,6 @@ public class Position {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
         this.orientation = orientation;
-    }
-
-    public Position() {
-
     }
 
     public String getId() {

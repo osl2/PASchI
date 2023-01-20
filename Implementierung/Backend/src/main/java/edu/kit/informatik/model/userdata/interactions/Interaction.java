@@ -8,7 +8,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Entity
 @Table(name = "interactions")
 public class Interaction {
@@ -41,9 +43,6 @@ public class Interaction {
         this.from = from;
         this.to = to;
         this.category = category;
-    }
-
-    public Interaction() {
     }
 
     public String getId() {

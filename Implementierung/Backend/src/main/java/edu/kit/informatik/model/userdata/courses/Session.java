@@ -9,10 +9,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.NoArgsConstructor;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor
 @Entity
 @Table(name = "sessions")
 public class Session {
@@ -40,10 +42,7 @@ public class Session {
         this.date = date;
         this.course = course;
         this.seatArrangement = seatArrangement;
-        this.interactions = new LinkedList<>();
-    }
-
-    public Session() {
+        this.interactions = new ArrayList<>();
     }
 
     public String getId() {

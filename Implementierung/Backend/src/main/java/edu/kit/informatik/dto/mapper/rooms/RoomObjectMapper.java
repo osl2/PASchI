@@ -10,7 +10,7 @@ import edu.kit.informatik.model.userdata.rooms.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,7 +36,7 @@ public abstract class RoomObjectMapper implements IModelDtoMapper<RoomObject, Ro
 
     @Override
     public List<RoomObjectDto> modelToDto(List<RoomObject> roomObjects) {
-        List<RoomObjectDto> roomObjectDtos = new LinkedList<>();
+        List<RoomObjectDto> roomObjectDtos = new ArrayList<>();
         roomObjects.forEach(roomObject -> roomObjectDtos.add(modelToDto(roomObject)));
 
         return roomObjectDtos;
@@ -53,7 +53,7 @@ public abstract class RoomObjectMapper implements IModelDtoMapper<RoomObject, Ro
 
     @Override
     public List<RoomObject> dtoToModel(List<RoomObjectDto> roomObjectDtos) {
-        List<RoomObject> roomObjects = new LinkedList<>();
+        List<RoomObject> roomObjects = new ArrayList<>();
         roomObjectDtos.forEach(roomObjectDto -> roomObjects.add(dtoToModel(roomObjectDto)));
 
         return roomObjects;

@@ -5,7 +5,7 @@ import edu.kit.informatik.dto.userdata.interactions.QualityDto;
 import edu.kit.informatik.model.userdata.interactions.Quality;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,7 +18,7 @@ public class QualityMapper implements IModelDtoMapper<Quality, QualityDto> {
 
     @Override
     public List<QualityDto> modelToDto(List<Quality> qualities) {
-        List<QualityDto> qualityDtos = new LinkedList<>();
+        List<QualityDto> qualityDtos = new ArrayList<>();
         qualities.forEach(quality -> qualityDtos.add(modelToDto(quality)));
 
         return qualityDtos;
@@ -31,7 +31,7 @@ public class QualityMapper implements IModelDtoMapper<Quality, QualityDto> {
 
     @Override
     public List<Quality> dtoToModel(List<QualityDto> qualityDtos) {
-        List<Quality> qualities = new LinkedList<>();
+        List<Quality> qualities = new ArrayList<>();
         qualityDtos.forEach(qualityDto -> qualities.add(dtoToModel(qualityDto)));
 
         return qualities;

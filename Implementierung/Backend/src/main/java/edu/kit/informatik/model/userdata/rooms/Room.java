@@ -53,7 +53,6 @@ public class Room {
         this.user = user;
     }
 
-
     public void setName(String name) {
         this.name = name;
     }

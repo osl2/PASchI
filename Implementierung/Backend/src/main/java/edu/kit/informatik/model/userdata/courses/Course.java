@@ -12,7 +12,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.NoArgsConstructor;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -42,9 +42,9 @@ public class Course {
         this.user = user;
         this.name = name;
         this.subject = subject;
-        this.participants = new LinkedList<>();
-        this.sessions = new LinkedList<>();
-        this.seatArrangements = new LinkedList<>();
+        this.participants = new ArrayList<>();
+        this.sessions = new ArrayList<>();
+        this.seatArrangements = new ArrayList<>();
     }
 
     public String getId() {

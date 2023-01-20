@@ -10,7 +10,6 @@ public enum Quality {
     Quality(String name) {
     }
 
-
     @Override
     public String toString() {
         return this.name();

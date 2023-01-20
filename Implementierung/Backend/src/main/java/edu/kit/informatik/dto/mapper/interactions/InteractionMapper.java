@@ -11,7 +11,7 @@ import edu.kit.informatik.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -49,7 +49,7 @@ public class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
 
     @Override
     public List<InteractionDto> modelToDto(List<Interaction> interactions) {
-        List<InteractionDto> interactionDtos = new LinkedList<>();
+        List<InteractionDto> interactionDtos = new ArrayList<>();
         interactions.forEach(interaction -> interactionDtos.add(modelToDto(interaction)));
 
         return interactionDtos;
@@ -79,7 +79,7 @@ public class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
 
     @Override
     public List<Interaction> dtoToModel(List<InteractionDto> interactionDtos) {
-        List<Interaction> interactions = new LinkedList<>();
+        List<Interaction> interactions = new ArrayList<>();
         interactionDtos.forEach(interactionDto -> interactions.add(dtoToModel(interactionDto)));
 
         return interactions;

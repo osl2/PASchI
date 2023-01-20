@@ -1,10 +1,12 @@
 package edu.kit.informatik.model.userdata.rooms;
 
 import edu.kit.informatik.model.User;
+import lombok.NoArgsConstructor;
 
 /**
  *
  */
+@NoArgsConstructor
 public abstract class RoomObject {
 
     private String id;
@@ -15,9 +17,6 @@ public abstract class RoomObject {
     public RoomObject(User user, Position position) {
         this.user = user;
         this.position = position;
-    }
-
-    public RoomObject() {
     }
 
     public String getId() {

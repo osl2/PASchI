@@ -11,7 +11,7 @@ import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -43,7 +43,7 @@ public class RatedCategoryMapper implements IModelDtoMapper<RatedCategory, Rated
 
     @Override
     public List<RatedCategoryDto> modelToDto(List<RatedCategory> categories) {
-        List<RatedCategoryDto> ratedCategoryDtos = new LinkedList<>();
+        List<RatedCategoryDto> ratedCategoryDtos = new ArrayList<>();
         categories.forEach(category -> ratedCategoryDtos.add(modelToDto(category)));
 
         return ratedCategoryDtos;
@@ -64,7 +64,7 @@ public class RatedCategoryMapper implements IModelDtoMapper<RatedCategory, Rated
 
     @Override
     public List<RatedCategory> dtoToModel(List<RatedCategoryDto> categoryDtos) {
-        List<RatedCategory> ratedCategories = new LinkedList<>();
+        List<RatedCategory> ratedCategories = new ArrayList<>();
         categoryDtos.forEach(categoryDto -> ratedCategories.add(dtoToModel(categoryDto)));
 
         return ratedCategories;
