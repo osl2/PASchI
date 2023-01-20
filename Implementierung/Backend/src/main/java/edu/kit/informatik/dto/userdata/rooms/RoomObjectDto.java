@@ -14,4 +14,6 @@ public abstract class RoomObjectDto {
     private String id;
     private String userId;
     private PositionDto position;
+
+    public abstract boolean isTable();
 }

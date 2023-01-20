@@ -1,7 +1,9 @@
 package edu.kit.informatik.dto.mapper.rooms;
 
 import edu.kit.informatik.dto.mapper.IModelDtoMapper;
+import edu.kit.informatik.dto.userdata.rooms.ChairDto;
 import edu.kit.informatik.dto.userdata.rooms.RoomObjectDto;
+import edu.kit.informatik.dto.userdata.rooms.TableDto;
 import edu.kit.informatik.model.userdata.rooms.Chair;
 import edu.kit.informatik.model.userdata.rooms.RoomObject;
 import edu.kit.informatik.model.userdata.rooms.Table;
@@ -18,8 +20,7 @@ public abstract class RoomObjectMapper implements IModelDtoMapper<RoomObject, Ro
     private final ChairMapper chairMapper;
 
     @Autowired
-    public RoomObjectMapper(TableMapper tableMapper,
-                            ChairMapper chairMapper) {
+    public RoomObjectMapper(TableMapper tableMapper, ChairMapper chairMapper) {
         this.tableMapper = tableMapper;
         this.chairMapper = chairMapper;
     }
@@ -43,8 +44,11 @@ public abstract class RoomObjectMapper implements IModelDtoMapper<RoomObject, Ro
 
     @Override
     public RoomObject dtoToModel(RoomObjectDto roomObjectDto) {
-        // repository fehlt noch
-        return null;
+        if (roomObjectDto.isTable()) {
+            return tableMapper.dtoToModel((TableDto) roomObjectDto);
+        } else {
+            return chairMapper.dtoToModel((ChairDto) roomObjectDto);
+        }
     }
 
     @Override

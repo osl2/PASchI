@@ -17,4 +17,9 @@ public class TableDto extends RoomObjectDto {
         this.length = length;
         this.width = width;
     }
+
+    @Override
+    public boolean isTable() {
+        return true;
+    }
 }
