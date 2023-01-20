@@ -17,6 +17,6 @@ public class InteractionDto {
     private String timeStamp;
     private String sessionId;
     private String toParticipantId;
-    private String fromParticipant;
+    private String fromParticipantId;
     private String categoryId;
 }

@@ -5,7 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Entity
 //@Table(name = "ratedcategories")
 public class RatedCategory extends Category {
@@ -16,10 +18,6 @@ public class RatedCategory extends Category {
     public RatedCategory(User user, String name, Quality quality) {
         super(user, name);
         this.quality = quality;
-    }
-
-    public RatedCategory() {
-
     }
 
     public Quality getQuality() {

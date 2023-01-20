@@ -7,7 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Entity
 @Table(name = "categories")
 public class Category {
@@ -23,9 +25,6 @@ public class Category {
     public Category(User user, String name) {
         this.user = user;
         this.name = name;
-    }
-
-    public Category() {
     }
 
     public String getId() {
