@@ -8,23 +8,24 @@ import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UserMapper implements IModelDtoMapper<User, UserDto> {
 
     private final UserRepository userRepository;
+    private final RoleMapper roleMapper;
 
     @Autowired
-    public UserMapper(UserRepository userRepository) {
+    public UserMapper(UserRepository userRepository, RoleMapper roleMapper) {
         this.userRepository = userRepository;
+        this.roleMapper = roleMapper;
     }
 
     @Override
     public UserDto modelToDto(User user) {
-        IModelDtoMapper<Role, RoleDto> roleMapper = new RoleMapper();
-        RoleDto role = roleMapper.modelToDto(user.getRole());
+        RoleDto roleDto = roleMapper.modelToDto(user.getRole());
 
         return new UserDto(
                 user.getId(),
@@ -34,12 +35,12 @@ public class UserMapper implements IModelDtoMapper<User, UserDto> {
                 user.getPassword(),
                 user.isAuth(),
                 null,
-                role);
+                roleDto);
     }
 
     @Override
     public List<UserDto> modelToDto(List<User> users) {
-        List<UserDto> userDtos = new LinkedList<>();
+        List<UserDto> userDtos = new ArrayList<>();
         users.forEach(user -> userDtos.add(modelToDto(user)));
 
         return userDtos;
@@ -47,7 +48,6 @@ public class UserMapper implements IModelDtoMapper<User, UserDto> {
 
     @Override
     public User dtoToModel(UserDto userDto) {
-        IModelDtoMapper<Role, RoleDto> roleMapper = new RoleMapper();
         Role role = roleMapper.dtoToModel(userDto.getRole());
         User user = userRepository.findUserById(userDto.getId()).orElseGet(User::new);
 
@@ -58,12 +58,12 @@ public class UserMapper implements IModelDtoMapper<User, UserDto> {
         user.setAuth(userDto.isAuth());
         user.setRole(role);
 
-        return null;
+        return user;
     }
 
     @Override
     public List<User> dtoToModel(List<UserDto> userDtos) {
-        List<User> users = new LinkedList<>();
+        List<User> users = new ArrayList<>();
         userDtos.forEach(userDto -> users.add(dtoToModel(userDto)));
 
         return users;
