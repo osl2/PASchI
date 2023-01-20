@@ -1,6 +1,5 @@
 package edu.kit.informatik.repositories;
 
-import edu.kit.informatik.dto.userdata.rooms.PositionDto;
 import edu.kit.informatik.model.userdata.rooms.Position;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,7 +13,7 @@ import java.util.Optional;
  * @version 1.0
  */
 @Repository
-public interface PositionRepository extends JpaRepository<Position, PositionDto> {
+public interface PositionRepository extends JpaRepository<Position, String> {
 
     /**
      * Rückgabe eines Optionals von {@link Position}

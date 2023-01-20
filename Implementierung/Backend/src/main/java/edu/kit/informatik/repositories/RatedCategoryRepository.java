@@ -1,5 +1,6 @@
 package edu.kit.informatik.repositories;
 
+import edu.kit.informatik.model.userdata.interactions.RatedCategory;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,5 +10,5 @@ import org.springframework.stereotype.Repository;
  * @version 1.0
  */
 @Repository
-public interface RatedCategoryRepository {
+public interface RatedCategoryRepository extends CategoryBaseRepository<RatedCategory, String> {
 }

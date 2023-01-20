@@ -1,6 +1,5 @@
 package edu.kit.informatik.repositories;
 
-import edu.kit.informatik.dto.userdata.courses.SessionDto;
 import edu.kit.informatik.model.userdata.courses.Course;
 import edu.kit.informatik.model.userdata.courses.Session;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,7 +15,7 @@ import java.util.Optional;
  * @version 1.0
  */
 @Repository
-public interface SessionRepository extends JpaRepository<Session, SessionDto> {
+public interface SessionRepository extends JpaRepository<Session, String> {
 
     /**
      * Rückgabe von Optionals von {@link Session}

@@ -1,6 +1,5 @@
 package edu.kit.informatik.repositories;
 
-import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.interactions.Participant;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,7 +15,7 @@ import java.util.Optional;
  * @version 1.0
  */
 @Repository
-public interface ParticipantRepository extends JpaRepository<Participant, ParticipantDto> {
+public interface ParticipantRepository extends JpaRepository<Participant, String> {
 
     /**
      * Methode zur Rückgabe eines Optionals von {@link Participant}

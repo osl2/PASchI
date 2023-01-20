@@ -1,6 +1,5 @@
 package edu.kit.informatik.repositories;
 
-import edu.kit.informatik.dto.userdata.rooms.RoomDto;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.rooms.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,7 +15,7 @@ import java.util.Optional;
  * @version 1.0
  */
 @Repository
-public interface RoomRepository extends JpaRepository<Room, RoomDto> {
+public interface RoomRepository extends JpaRepository<Room, String> {
     /**
      * Rückgabe eines Optionals von {@link Room Räumen}
      * @param id Id

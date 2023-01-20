@@ -10,5 +10,5 @@ import edu.kit.informatik.model.userdata.interactions.Category;
  * @version 1.0
  */
 @Repository
-public interface CategoryRepository {
+public interface CategoryRepository extends CategoryBaseRepository<Category, String> {
 }

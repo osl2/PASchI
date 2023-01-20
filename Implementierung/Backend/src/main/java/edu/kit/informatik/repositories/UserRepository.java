@@ -1,9 +1,7 @@
 package edu.kit.informatik.repositories;
 
-import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -15,7 +13,7 @@ import java.util.Optional;
  * @version 1.0
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, UserDto> {
+public interface UserRepository extends JpaRepository<User, String> {
 
     /**
      * Rückgabe von Optionals von {@link User}

@@ -1,6 +1,5 @@
 package edu.kit.informatik.repositories;
 
-import edu.kit.informatik.dto.userdata.courses.SeatArrangementDto;
 import edu.kit.informatik.model.userdata.courses.Course;
 import edu.kit.informatik.model.userdata.courses.SeatArrangement;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,7 +15,7 @@ import java.util.Optional;
  * @version 1.0
  */
 @Repository
-public interface SeatArrangementRepository extends JpaRepository<SeatArrangement, SeatArrangementDto> {
+public interface SeatArrangementRepository extends JpaRepository<SeatArrangement, String> {
 
     /**
      * Rückgabe von Optionals mit {@link SeatArrangement}

@@ -1,6 +1,5 @@
 package edu.kit.informatik.repositories;
 
-import edu.kit.informatik.dto.userdata.rooms.ChairDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import edu.kit.informatik.model.userdata.rooms.Chair;
@@ -14,7 +13,7 @@ import java.util.Optional;
  * @version 1.0
  */
 @Repository
-public interface ChairRepository extends JpaRepository<Chair, ChairDto> {
+public interface ChairRepository extends JpaRepository<Chair, String> {
 
     Optional<Chair> findChairById(String id);
 }
