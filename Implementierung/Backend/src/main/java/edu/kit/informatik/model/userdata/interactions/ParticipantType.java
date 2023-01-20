@@ -22,6 +22,4 @@ public enum ParticipantType {
 
         return null;
     }
-
-
 }
