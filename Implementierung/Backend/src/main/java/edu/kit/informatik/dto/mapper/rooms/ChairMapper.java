@@ -3,20 +3,28 @@ package edu.kit.informatik.dto.mapper.rooms;
 import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.userdata.rooms.ChairDto;
 import edu.kit.informatik.dto.userdata.rooms.PositionDto;
+import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.rooms.Chair;
+import edu.kit.informatik.model.userdata.rooms.Position;
+import edu.kit.informatik.repositories.ChairRepository;
+import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ChairMapper implements IModelDtoMapper<Chair, ChairDto> {
 
+    private final ChairRepository chairRepository;
+    private final UserRepository userRepository;
     private final PositionMapper positionMapper;
 
     @Autowired
-    public ChairMapper(PositionMapper positionMapper) {
+    public ChairMapper(ChairRepository chairRepository, UserRepository userRepository, PositionMapper positionMapper) {
+        this.chairRepository = chairRepository;
+        this.userRepository = userRepository;
         this.positionMapper = positionMapper;
     }
 
@@ -29,7 +37,7 @@ public class ChairMapper implements IModelDtoMapper<Chair, ChairDto> {
 
     @Override
     public List<ChairDto> modelToDto(List<Chair> chairs) {
-        List<ChairDto> chairDtos = new LinkedList<>();
+        List<ChairDto> chairDtos = new ArrayList<>();
         chairs.forEach(chair -> chairDtos.add(modelToDto(chair)));
 
         return chairDtos;
@@ -37,13 +45,19 @@ public class ChairMapper implements IModelDtoMapper<Chair, ChairDto> {
 
     @Override
     public Chair dtoToModel(ChairDto chairDto) {
-        // repository fehlt noch
-        return null;
+        Chair chair = chairRepository.findChairById(chairDto.getId()).orElseGet(Chair::new);
+        User user = userRepository.findUserById(chairDto.getUserId()).orElse(null);
+        Position position = positionMapper.dtoToModel(chairDto.getPosition());
+
+        chair.setUser(user);
+        chair.setPosition(position);
+
+        return chair;
     }
 
     @Override
     public List<Chair> dtoToModel(List<ChairDto> chairDtos) {
-        List<Chair> chairs = new LinkedList<>();
+        List<Chair> chairs = new ArrayList<>();
         chairDtos.forEach(chairDto -> chairs.add(dtoToModel(chairDto)));
 
         return chairs;
