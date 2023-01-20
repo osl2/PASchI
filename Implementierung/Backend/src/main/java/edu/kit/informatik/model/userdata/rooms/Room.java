@@ -7,9 +7,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+
+@NoArgsConstructor
 @Entity
 public class Room {
 
@@ -32,9 +35,6 @@ public class Room {
         this.name = name;
         this.tables = new ArrayList<>();
         this.chairs = new ArrayList<>();
-    }
-
-    public Room() {
     }
 
     public String getId() {
