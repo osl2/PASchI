@@ -16,9 +16,11 @@ import jakarta.persistence.MapKey;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
+@NoArgsConstructor
 @Entity
 @Table(name = "seatarrangements")
 public class SeatArrangement {
@@ -50,9 +52,6 @@ public class SeatArrangement {
         this.seatMap = seatMap;
     }
 
-    public SeatArrangement() {
-    }
-
     public String getId() {
         return id;
     }
@@ -77,7 +76,7 @@ public class SeatArrangement {
         return seatMap;
     }
 
-    public Participant getParticipantForSeat(RoomObject seat) {
+    public Participant getParticipantForSeat(Chair seat) {
         return seatMap.get(seat);
     }
 

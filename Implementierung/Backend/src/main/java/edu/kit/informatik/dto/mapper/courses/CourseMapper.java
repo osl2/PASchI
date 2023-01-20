@@ -23,6 +23,7 @@ public class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
     private final SessionRepository sessionRepository;
     private final SeatArrangementRepository seatArrangementRepository;
 
+    @Autowired
     public CourseMapper(CourseRepository courseRepository, UserRepository userRepository,
                         ParticipantRepository participantRepository, SessionRepository sessionRepository,
                         SeatArrangementRepository seatArrangementRepository) {
@@ -32,9 +33,6 @@ public class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
         this.sessionRepository = sessionRepository;
         this.seatArrangementRepository = seatArrangementRepository;
     }
-
-    @Autowired
-
 
     @Override
     public CourseDto modelToDto(Course course) {
