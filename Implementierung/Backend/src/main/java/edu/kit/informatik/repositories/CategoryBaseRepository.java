@@ -12,7 +12,5 @@ public interface CategoryBaseRepository<CategoryType extends Category, String>
 
     Optional<CategoryType> findCategoryById(String id);
 
-
-    //Wirft Fehler
     Optional<CategoryType> findCategoryByInteraction();
 }
