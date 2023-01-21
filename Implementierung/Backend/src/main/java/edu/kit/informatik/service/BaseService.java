@@ -54,7 +54,7 @@ public abstract class BaseService<Entity, Dto> {
      * @param id id der Entität
      * @return Dto
      */
-    public abstract Dto getById(long id);
+    public abstract Dto getById(String id);
 
     /**
      * Rückgabe aller Entitäten
@@ -67,6 +67,6 @@ public abstract class BaseService<Entity, Dto> {
      * @param id id der Entität
      * @return id
      */
-    public abstract long delete(long id);
+    public abstract String delete(String id);
 
 }
