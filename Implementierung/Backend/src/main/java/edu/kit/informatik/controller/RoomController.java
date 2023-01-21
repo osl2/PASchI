@@ -45,7 +45,7 @@ public class RoomController extends BaseController<Room, RoomDto> {
 
     @Override
     @GetMapping(path = "id")
-    public RoomDto getById(@PathParam("id") long id) {
+    public RoomDto getById(@PathParam("id") String id) {
         return super.getById(id);
     }
 
@@ -57,7 +57,7 @@ public class RoomController extends BaseController<Room, RoomDto> {
 
     @Override
     @DeleteMapping
-    public long delete(long id) {
+    public String delete(String id) {
         return super.delete(id);
     }
 }

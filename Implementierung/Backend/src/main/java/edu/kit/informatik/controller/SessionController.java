@@ -46,7 +46,7 @@ public class SessionController extends BaseController<Session, SessionDto> {
 
     @Override
     @GetMapping(path = "id")
-    public SessionDto getById(@PathParam("id") long id) {
+    public SessionDto getById(@PathParam("id") String id) {
         return super.getById(id);
     }
 
@@ -58,7 +58,7 @@ public class SessionController extends BaseController<Session, SessionDto> {
 
     @Override
     @DeleteMapping
-    public long delete(long id) {
+    public String delete(String id) {
         return super.delete(id);
     }
 }

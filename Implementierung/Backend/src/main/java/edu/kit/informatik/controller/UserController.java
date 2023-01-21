@@ -50,7 +50,7 @@ public class UserController extends BaseController<User, UserDto> {
 
     @Override
     @GetMapping(path = "id")
-    public UserDto getById(@PathParam("id") long id) {
+    public UserDto getById(@PathParam("id") String id) {
         return super.getById(id);
     }
 
@@ -62,7 +62,7 @@ public class UserController extends BaseController<User, UserDto> {
 
     @Override
     @DeleteMapping
-    public long delete(long id) {
+    public String delete(String id) {
         return super.delete(id);
     }
 

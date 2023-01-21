@@ -45,7 +45,7 @@ public class CourseController extends BaseController<Course, CourseDto> {
 
     @Override
     @GetMapping(path = "id")
-    public CourseDto getById(@PathParam("id") long id) {
+    public CourseDto getById(@PathParam("id") String id) {
         return super.getById(id);
     }
 
@@ -57,7 +57,7 @@ public class CourseController extends BaseController<Course, CourseDto> {
 
     @Override
     @DeleteMapping
-    public long delete(long id) {
+    public String delete(String id) {
         return super.delete(id);
     }
 }

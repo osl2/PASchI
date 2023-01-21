@@ -53,7 +53,7 @@ public abstract class BaseController<Entity, Dto> {
      * @param id Id der Entität
      * @return Dto der Entität
      */
-    public Dto getById(long id) {
+    public Dto getById(String id) {
         return this.service.getById(id);
     }
 
@@ -70,7 +70,7 @@ public abstract class BaseController<Entity, Dto> {
      * @param id Id der Entität
      * @return Dto der Entität
      */
-    public long delete(long id) {
+    public String delete(String id) {
         return this.service.delete(id);
     }
 

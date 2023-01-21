@@ -45,7 +45,7 @@ public class CategoryController extends BaseController<Category, CategoryDto> {
 
     @Override
     @GetMapping(path = "id")
-    public CategoryDto getById(@PathParam("id") long id) {
+    public CategoryDto getById(@PathParam("id") String id) {
         return super.getById(id);
     }
 
@@ -57,7 +57,7 @@ public class CategoryController extends BaseController<Category, CategoryDto> {
 
     @Override
     @DeleteMapping
-    public long delete(long id) {
+    public String delete(String id) {
         return super.delete(id);
     }
 }

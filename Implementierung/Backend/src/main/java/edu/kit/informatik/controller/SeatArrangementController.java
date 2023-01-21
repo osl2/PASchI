@@ -46,7 +46,7 @@ public class SeatArrangementController extends BaseController<SeatArrangement, S
 
     @Override
     @GetMapping(path = "id")
-    public SeatArrangementDto getById(@PathParam("id") long id) {
+    public SeatArrangementDto getById(@PathParam("id") String id) {
         return super.getById(id);
     }
 
@@ -58,7 +58,7 @@ public class SeatArrangementController extends BaseController<SeatArrangement, S
 
     @Override
     @DeleteMapping
-    public long delete(long id) {
+    public String delete(String id) {
         return super.delete(id);
     }
 }
