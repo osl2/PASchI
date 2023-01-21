@@ -3,9 +3,9 @@ package edu.kit.informatik.controller;
 import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.service.UserService;
-import jakarta.websocket.server.PathParam;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,13 +44,13 @@ public class UserController extends BaseController<User, UserDto> {
 
     @Override
     @PutMapping
-    public UserDto update(UserDto userDto) {
+    public UserDto update(@RequestBody UserDto userDto) {
         return super.update(userDto);
     }
 
     @Override
-    @GetMapping(path = "id")
-    public UserDto getById(@PathParam("id") String id) {
+    @GetMapping(path = "/{id}")
+    public UserDto getById(@PathVariable("id") String id) {
         return super.getById(id);
     }
 
