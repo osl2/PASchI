@@ -3,10 +3,13 @@ package edu.kit.informatik.dto.mapper.interactions;
 import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantTypeDto;
 import edu.kit.informatik.model.userdata.interactions.ParticipantType;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
+@Service
 public class ParticipantTypeMapper implements IModelDtoMapper<ParticipantType, ParticipantTypeDto> {
     
     @Override
