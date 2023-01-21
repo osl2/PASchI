@@ -25,7 +25,7 @@ public class RoleMapper implements IModelDtoMapper<Role, RoleDto> {
 
     @Override
     public Role dtoToModel(RoleDto roleDto) {
-        return Role.valueOf(roleDto.toString());
+        return Role.valueOf(roleDto.toString().toUpperCase());
     }
 
     @Override
