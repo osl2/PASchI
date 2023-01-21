@@ -3,9 +3,9 @@ package edu.kit.informatik.controller;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.model.userdata.interactions.Participant;
 import edu.kit.informatik.service.ParticipantService;
-import jakarta.websocket.server.PathParam;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,8 +44,8 @@ public class ParticipantController extends BaseController<Participant, Participa
     }
 
     @Override
-    @GetMapping(path = "id")
-    public ParticipantDto getById(@PathParam("id") String id) {
+    @GetMapping(path = "/{id}")
+    public ParticipantDto getById(@PathVariable("id") String id) {
         return super.getById(id);
     }
 

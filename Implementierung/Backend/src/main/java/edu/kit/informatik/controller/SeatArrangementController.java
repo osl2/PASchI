@@ -3,10 +3,10 @@ package edu.kit.informatik.controller;
 import edu.kit.informatik.dto.userdata.courses.SeatArrangementDto;
 import edu.kit.informatik.model.userdata.courses.SeatArrangement;
 import edu.kit.informatik.service.SeatArrangementService;
-import jakarta.websocket.server.PathParam;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,8 +45,8 @@ public class SeatArrangementController extends BaseController<SeatArrangement, S
     }
 
     @Override
-    @GetMapping(path = "id")
-    public SeatArrangementDto getById(@PathParam("id") String id) {
+    @GetMapping(path = "/{id}")
+    public SeatArrangementDto getById(@PathVariable("id") String id) {
         return super.getById(id);
     }
 

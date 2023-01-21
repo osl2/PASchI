@@ -3,9 +3,9 @@ package edu.kit.informatik.controller;
 import edu.kit.informatik.dto.userdata.rooms.RoomDto;
 import edu.kit.informatik.model.userdata.rooms.Room;
 import edu.kit.informatik.service.RoomService;
-import jakarta.websocket.server.PathParam;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,8 +44,8 @@ public class RoomController extends BaseController<Room, RoomDto> {
     }
 
     @Override
-    @GetMapping(path = "id")
-    public RoomDto getById(@PathParam("id") String id) {
+    @GetMapping(path = "/{id}")
+    public RoomDto getById(@PathVariable("id") String id) {
         return super.getById(id);
     }
 

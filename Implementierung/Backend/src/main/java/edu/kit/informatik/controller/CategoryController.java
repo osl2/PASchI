@@ -3,9 +3,9 @@ package edu.kit.informatik.controller;
 import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
 import edu.kit.informatik.model.userdata.interactions.Category;
 import edu.kit.informatik.service.CategoryService;
-import jakarta.websocket.server.PathParam;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,8 +44,8 @@ public class CategoryController extends BaseController<Category, CategoryDto> {
     }
 
     @Override
-    @GetMapping(path = "id")
-    public CategoryDto getById(@PathParam("id") String id) {
+    @GetMapping(path = "/{id}")
+    public CategoryDto getById(@PathVariable("id") String id) {
         return super.getById(id);
     }
 
