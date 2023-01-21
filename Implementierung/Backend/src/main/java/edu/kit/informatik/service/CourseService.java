@@ -43,7 +43,7 @@ public class CourseService extends BaseService<Course, CourseDto> {
     }
 
     @Override
-    public CourseDto getById(long id) {
+    public CourseDto getById(String id) {
         return null;
     }
 
@@ -53,7 +53,7 @@ public class CourseService extends BaseService<Course, CourseDto> {
     }
 
     @Override
-    public long delete(long id) {
-        return 0;
+    public String delete(String id) {
+        return null;
     }
 }

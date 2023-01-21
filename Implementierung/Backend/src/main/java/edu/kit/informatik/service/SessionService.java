@@ -43,7 +43,7 @@ public class SessionService extends BaseService<Session, SessionDto> {
     }
 
     @Override
-    public SessionDto getById(long id) {
+    public SessionDto getById(String id) {
         return null;
     }
 
@@ -53,7 +53,7 @@ public class SessionService extends BaseService<Session, SessionDto> {
     }
 
     @Override
-    public long delete(long id) {
-        return 0;
+    public String delete(String id) {
+        return null;
     }
 }

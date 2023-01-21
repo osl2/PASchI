@@ -45,7 +45,7 @@ public class CategoryService extends BaseService<Category, CategoryDto> {
     }
 
     @Override
-    public CategoryDto getById(long id) {
+    public CategoryDto getById(String id) {
         return null;
     }
 
@@ -55,7 +55,7 @@ public class CategoryService extends BaseService<Category, CategoryDto> {
     }
 
     @Override
-    public long delete(long id) {
-        return 0;
+    public String delete(String id) {
+        return null;
     }
 }

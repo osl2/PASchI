@@ -44,7 +44,7 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto>
     }
 
     @Override
-    public ParticipantDto getById(long id) {
+    public ParticipantDto getById(String id) {
         return null;
     }
 
@@ -54,7 +54,7 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto>
     }
 
     @Override
-    public long delete(long id) {
-        return 0;
+    public String delete(String id) {
+        return null;
     }
 }

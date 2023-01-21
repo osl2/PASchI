@@ -42,7 +42,7 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
     }
 
     @Override
-    public SeatArrangementDto getById(long id) {
+    public SeatArrangementDto getById(String id) {
         return null;
     }
 
@@ -52,7 +52,7 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
     }
 
     @Override
-    public long delete(long id) {
-        return 0;
+    public String delete(String id) {
+        return null;
     }
 }
