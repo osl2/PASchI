@@ -1,15 +1,16 @@
 package edu.kit.informatik.service;
 
 import edu.kit.informatik.dto.UserDto;
-import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.mapper.UserMapper;
+import edu.kit.informatik.model.Role;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service für {@link User Benutzer}
@@ -36,27 +37,37 @@ public class UserService extends BaseService<User, UserDto> {
 
     @Override
     public UserDto add(UserDto userDto) {
-        return null;
+        User user = this.mapper.dtoToModel(userDto);
+        userRepository.save(user);
+
+        return userDto;
     }
+
 
     @Override
     public UserDto update(UserDto userDto) {
-        return null;
+        User user = this.mapper.dtoToModel(userDto);
+
+        return userDto;
     }
 
     @Override
-    public UserDto getById(long id) {
-        return null;
+    public UserDto getById(String id) {
+        Optional<User> userOptional = userRepository.findUserById(id);
+
+        return userOptional.map(this.mapper::modelToDto).orElse(null);
     }
 
     @Override
     public List<UserDto> getAll() {
-        return null;
+        return this.mapper.modelToDto(userRepository.findAll());
     }
 
     @Override
-    public long delete(long id) {
-        return 0;
+    public String delete(String id) {
+        this.userRepository.deleteById(id);
+
+        return id;
     }
 
     /**
