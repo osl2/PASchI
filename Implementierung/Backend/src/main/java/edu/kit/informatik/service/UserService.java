@@ -2,12 +2,11 @@ package edu.kit.informatik.service;
 
 import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.dto.mapper.UserMapper;
-import edu.kit.informatik.model.Role;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,15 +37,38 @@ public class UserService extends BaseService<User, UserDto> {
     @Override
     public UserDto add(UserDto userDto) {
         User user = this.mapper.dtoToModel(userDto);
-        userRepository.save(user);
+        User newUser = userRepository.save(user);
 
-        return userDto;
+        return this.mapper.modelToDto(newUser);
     }
 
-
+    @Transactional
     @Override
     public UserDto update(UserDto userDto) {
-        User user = this.mapper.dtoToModel(userDto);
+
+        System.out.println(userDto.getFirstName());
+
+        Optional<User> repositoryUserOptional = userRepository.findUserById(userDto.getId());
+        if (repositoryUserOptional.isEmpty()) {
+            return null;
+        }
+
+        User repositoryUser = repositoryUserOptional.get();
+        User newUser = this.mapper.dtoToModel(userDto);
+
+        if (!newUser.getFirstName().equals(repositoryUser.getFirstName())) {
+            repositoryUser.setFirstName(newUser.getFirstName());
+        } else if (!newUser.getLastName().equals(repositoryUser.getLastName())) {
+            repositoryUser.setLastName(repositoryUser.getLastName());
+        } else if (!newUser.getEmail().equals(repositoryUser.getEmail())) {
+            repositoryUser.setEmail(repositoryUser.getEmail());
+        } else if (!newUser.getPassword().equals(repositoryUser.getPassword())) {
+            repositoryUser.setPassword(repositoryUser.getPassword());
+        } else if (!newUser.isAuth() == repositoryUser.isAuth()) {
+            repositoryUser.setAuth(repositoryUser.isAuth());
+        } else if (!newUser.getRole().equals(repositoryUser.getRole())) {
+            repositoryUser.setRole(repositoryUser.getRole());
+        }
 
         return userDto;
     }
