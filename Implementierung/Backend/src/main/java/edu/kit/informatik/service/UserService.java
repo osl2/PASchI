@@ -46,8 +46,6 @@ public class UserService extends BaseService<User, UserDto> {
     @Override
     public UserDto update(UserDto userDto) {
 
-        System.out.println(userDto.getFirstName());
-
         Optional<User> repositoryUserOptional = userRepository.findUserById(userDto.getId());
         if (repositoryUserOptional.isEmpty()) {
             return null;
