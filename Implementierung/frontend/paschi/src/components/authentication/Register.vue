@@ -13,10 +13,10 @@
             <v-text-field type="password" variant="outlined" label="Passwort bestätigen" />
           </v-card-item>
           <v-card-item>
-            <v-btn block prepend-icon="fa-sign-in-alt" color="primary" >Registrieren</v-btn>
+            <v-btn block prepend-icon="fas fa-sign-in-alt" color="primary" >Registrieren</v-btn>
           </v-card-item>
             <v-card-item>
-            <v-btn block prepend-icon="fa-sign-in-alt" color="primary" @click="router.push('Login')" >Schon registriert? Zum Login</v-btn>
+            <v-btn block color="primary" @click="router.push('Login')" >Schon registriert? Zum Login</v-btn>
           </v-card-item>
         </v-card>
       </v-row>

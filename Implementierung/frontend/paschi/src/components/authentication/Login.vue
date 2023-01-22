@@ -8,15 +8,12 @@
           </v-card-title>
           <v-card-item>
             <v-text-field class="mt-2" variant="outlined" label="Benutzername" />
-
             <v-text-field type="password" variant="outlined" label="Passwort" />
-
-
             <v-card-item>
               <v-btn block prepend-icon="fas fa-sign-in-alt" color="primary" @click="router.push('Dashboard')" >Login</v-btn>
             </v-card-item>
             <v-card-item>
-              <v-btn block prepend-icon="fas fa-sign-in-alt" color="primary" @click="router.push('Register')" >Noch keinen Account? Zur Registrierung</v-btn>
+              <v-btn block color="primary" @click="router.push('Register')" >Noch keinen Account? Zur Registrierung</v-btn>
             </v-card-item>
           </v-card-item>
         </v-card>
