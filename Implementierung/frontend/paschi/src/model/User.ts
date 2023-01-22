@@ -23,6 +23,10 @@ export class User {
     this.token = token;
   }
 
+  hasId(): boolean {
+    return this.id != undefined;
+  }
+
   get getId(): string {
     if (this.id == undefined) {
       return this.localId.toString();
