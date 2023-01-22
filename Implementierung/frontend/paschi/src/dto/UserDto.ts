@@ -2,16 +2,16 @@ import {RoleDto} from "@/dto/RoleDto";
 
 export class UserDto {
 
-  id: string;
+  id: string | undefined;
   firstName: string;
   lastName: string;
   email: string;
-  auth: boolean;
+  auth: boolean ;
   role: RoleDto;
-  token: String;
+  token: string | undefined;
 
-  constructor(id: string, firstName: string, lastName: string, email: string, auth: boolean, role: RoleDto,
-              token: String) {
+  constructor(id: string | undefined, firstName: string, lastName: string, email: string, auth: boolean, role: RoleDto,
+              token: string | undefined) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;

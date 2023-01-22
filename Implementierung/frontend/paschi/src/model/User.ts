@@ -9,10 +9,10 @@ export class User {
   email: string;
   auth: boolean;
   role: Role;
-  token: string;
+  token: string | undefined;
 
-  constructor(id: string | undefined, localId: number, firstName: string, lastName: string, email: string, auth: boolean,
-              role: Role, token: string) {
+  constructor(id: string | undefined, localId: number, firstName: string, lastName: string, email: string,
+              auth: boolean, role: Role, token: string | undefined) {
     this.id = id;
     this.localId = localId;
     this.firstName = firstName;

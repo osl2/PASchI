@@ -4,7 +4,7 @@ import {Student} from "@/model/userdata/interactions/Student";
 export const useStudentStore = defineStore('students', {
   state: () => ({
     students: [] as Student[],
-    id: 0
+    nextId: 0
   }),
   actions: {
     addStudent(student: Student) {
@@ -29,8 +29,8 @@ export const useStudentStore = defineStore('students', {
       // @ts-ignore
       return this.students;
     },
-    getId(): number {
-      return this.id++;
+    getNextId(): number {
+      return this.nextId++;
     }
   }
 })
