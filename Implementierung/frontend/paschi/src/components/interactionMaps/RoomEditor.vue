@@ -6,8 +6,9 @@
     @dragover="dragOver"
   >
     <v-card
-      key="1"
-      class="ma-0"
+      v-for="chair in chairs"
+      :key="chair.id"
+      class="ma-0 v-row align-center justify-center"
       width="80"
       height="80"
       color="secondary"
@@ -15,15 +16,15 @@
       draggable="true"
       :style="{
         position: 'absolute',
-        top: y + 'px',
-        left: x + 'px',
+        top: chair.y + 'px',
+        left: chair.x + 'px',
       }"
       @touchstart="touchStart"
-      @touchmove="moveTouch"
+      @touchmove="moveTouch($event, chair)"
       @dragstart="dragStart"
-      @dragend="moveDrag"
+      @dragend="moveDrag($event, chair)"
     >
-      <v-card-title> main </v-card-title>
+      <v-icon class="v-col-auto" size="40px" color="white" icon="fas fa-chair"></v-icon>
     </v-card>
   </v-main>
 </template>
@@ -32,10 +33,15 @@
 import { defineComponent, ref } from "vue";
 
 export default defineComponent({
-  name: "InteractionMap.vue",
+  name: "RoomEditor.vue",
   setup: function () {
-    const x = ref(100);
-    const y = ref(100);
+    const chairs = ref([
+      { id: 1, x: 100, y: 100 },
+      { id: 2, x: 200, y: 200 },
+      { id: 3, x: 300, y: 300 },
+      { id: 4, x: 400, y: 400 },
+      { id: 5, x: 500, y: 500 },
+    ]);
 
     const moveXStart = ref(0);
     const moveYStart = ref(0);
@@ -45,9 +51,9 @@ export default defineComponent({
       moveYStart.value = event.touches[0].clientY;
     }
 
-    function moveTouch(event: TouchEvent) {
-      x.value = x.value + event.touches[0].clientX - moveXStart.value;
-      y.value = y.value + event.touches[0].clientY - moveYStart.value;
+    function moveTouch(event: TouchEvent, chair: any) {
+      chair.x = chair.x + event.touches[0].clientX - moveXStart.value;
+      chair.y = chair.y + event.touches[0].clientY - moveYStart.value;
       moveXStart.value = event.touches[0].clientX;
       moveYStart.value = event.touches[0].clientY;
     }
@@ -62,16 +68,15 @@ export default defineComponent({
       moveYStart.value = event.clientY;
     }
 
-    function moveDrag(event: DragEvent) {
-      x.value = x.value + event.clientX - moveXStart.value;
-      y.value = y.value + event.clientY - moveYStart.value;
+    function moveDrag(event: DragEvent, chair: any) {
+      chair.x = chair.x + event.clientX - moveXStart.value;
+      chair.y = chair.y + event.clientY - moveYStart.value;
       moveXStart.value = event.clientX;
       moveYStart.value = event.clientY;
     }
 
     return {
-      x,
-      y,
+      chairs,
       dragStart,
       moveDrag,
       dragOver,
