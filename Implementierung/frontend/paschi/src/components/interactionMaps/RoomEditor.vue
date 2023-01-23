@@ -14,11 +14,7 @@
       color="secondary"
       elevation="0"
       draggable="true"
-      :style="{
-        position: 'absolute',
-        top: chair.y + 'px',
-        left: chair.x + 'px',
-      }"
+      :style="getChairStyle(chair)"
       @touchstart="touchStart"
       @touchmove="moveTouch($event, chair)"
       @dragstart="dragStart"
@@ -31,29 +27,73 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
+import {Chair} from "@/model/userdata/rooms/Chair";
 
 export default defineComponent({
   name: "RoomEditor.vue",
-  setup: function () {
+  setup() {
     const chairs = ref([
-      { id: 1, x: 100, y: 100 },
-      { id: 2, x: 200, y: 200 },
-      { id: 3, x: 300, y: 300 },
-      { id: 4, x: 400, y: 400 },
-      { id: 5, x: 500, y: 500 },
+      { id: 1, position: { xCoordinate: 400, yCoordinate: 400 } },
+      { id: 2, position: { xCoordinate: 500, yCoordinate: 500 } },
+      { id: 3, position: { xCoordinate: 600, yCoordinate: 600 } },
     ]);
+
+    const roomWidth = 16180
+    const roomHeight = 10000
+
+    const maxRoomDisplayWidth = 0.9 * window.innerWidth
+    const maxRoomDisplayHeight = 0.9 * window.innerHeight
+
+    const roomScale = Math.min(maxRoomDisplayWidth / roomWidth, maxRoomDisplayHeight / roomHeight)
+
+    const roomDisplayWidth = roomWidth * roomScale
+    const roomDisplayHeight = roomHeight * roomScale
+
+    const roomDisplayTopMargin = (maxRoomDisplayHeight - roomDisplayHeight) / 2
+    const roomDisplayLeftMargin = (maxRoomDisplayWidth - roomDisplayWidth) / 2
 
     const moveXStart = ref(0);
     const moveYStart = ref(0);
+
+    function roomToDisplayCoordinates(x: number, y: number) {
+      return {
+        x: roomDisplayLeftMargin + x * roomScale,
+        y: roomDisplayTopMargin + y * roomScale
+      }
+    }
+
+    function displayToRoomCoordinates(x: number, y: number) {
+      return {
+        x: (x - roomDisplayLeftMargin) / roomScale,
+        y: (y - roomDisplayTopMargin) / roomScale
+      }
+    }
+
+    function getChairStyle(chair: Chair) {
+      const { x, y } = roomToDisplayCoordinates(chair.position.xCoordinate, chair.position.yCoordinate)
+      return {
+        position: 'absolute',
+        top: y + 'px',
+        left: x + 'px',
+      }
+    }
 
     function touchStart(event: TouchEvent) {
       moveXStart.value = event.touches[0].clientX;
       moveYStart.value = event.touches[0].clientY;
     }
 
-    function moveTouch(event: TouchEvent, chair: any) {
-      chair.x = chair.x + event.touches[0].clientX - moveXStart.value;
-      chair.y = chair.y + event.touches[0].clientY - moveYStart.value;
+    function screenCoordinatesDeltaToRoomCoordinatesDelta(x: number, y: number) {
+      return {
+        x: x / roomScale,
+        y: y / roomScale
+      }
+    }
+
+    function moveTouch(event: TouchEvent, chair: Chair) {
+      const delta = screenCoordinatesDeltaToRoomCoordinatesDelta(event.touches[0].clientX - moveXStart.value, event.touches[0].clientY - moveYStart.value)
+      chair.position.xCoordinate = chair.position.xCoordinate + delta.x;
+      chair.position.yCoordinate = chair.position.yCoordinate + delta.y;
       moveXStart.value = event.touches[0].clientX;
       moveYStart.value = event.touches[0].clientY;
     }
@@ -68,9 +108,9 @@ export default defineComponent({
       moveYStart.value = event.clientY;
     }
 
-    function moveDrag(event: DragEvent, chair: any) {
-      chair.x = chair.x + event.clientX - moveXStart.value;
-      chair.y = chair.y + event.clientY - moveYStart.value;
+    function moveDrag(event: DragEvent, chair: Chair) {
+      chair.position.xCoordinate = chair.position.xCoordinate + event.clientX - moveXStart.value;
+      chair.position.yCoordinate = chair.position.yCoordinate + event.clientY - moveYStart.value;
       moveXStart.value = event.clientX;
       moveYStart.value = event.clientY;
     }
@@ -82,6 +122,7 @@ export default defineComponent({
       dragOver,
       touchStart,
       moveTouch,
+      getChairStyle,
     };
   },
 });
