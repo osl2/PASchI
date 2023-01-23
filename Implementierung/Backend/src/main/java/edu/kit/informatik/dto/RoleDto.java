@@ -27,6 +27,6 @@ public enum RoleDto {
 
     @Override
     public String toString() {
-        return super.toString();
+        return this.name();
     }
 }
