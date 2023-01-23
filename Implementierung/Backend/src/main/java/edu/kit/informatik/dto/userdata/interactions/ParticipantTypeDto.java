@@ -27,14 +27,4 @@ public enum ParticipantTypeDto {
     public String toString() {
         return this.name();
     }
-
-    public static ParticipantTypeDto getQualityByString(String string) {
-        for (ParticipantTypeDto participantType: ParticipantTypeDto.values()) {
-            if (participantType.toString().toLowerCase().equals(string)) {
-                return participantType;
-            }
-        }
-
-        return null;
-    }
 }

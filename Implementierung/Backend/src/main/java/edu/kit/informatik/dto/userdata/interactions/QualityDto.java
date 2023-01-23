@@ -38,14 +38,4 @@ public enum QualityDto {
     public String toString() {
         return this.name();
     }
-
-    public static QualityDto getQualityByString(String string) {
-        for (QualityDto quality : QualityDto.values()) {
-            if (quality.toString().toLowerCase().equals(string)) {
-                return quality;
-            }
-        }
-
-        return null;
-    }
 }
