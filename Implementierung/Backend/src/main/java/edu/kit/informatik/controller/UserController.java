@@ -55,7 +55,7 @@ public class UserController extends BaseController<User, UserDto> {
     }
 
     @Override
-    @GetMapping
+    @GetMapping(path = "/admin")
     public List<UserDto> getAll() {
         return super.getAll();
     }
@@ -72,7 +72,7 @@ public class UserController extends BaseController<User, UserDto> {
      * @param password Password
      * @return {@link UserDto}
      */
-    @PostMapping(path = "login")
+    @PostMapping(path = "/login")
     public UserDto login(String email, String password) {
         return this.userService.login(email, password);
     }
