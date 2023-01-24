@@ -6,6 +6,7 @@ import {UserController} from "@/controller/UserController";
 import {CourseController} from "@/controller/CourseController";
 import {SessionController} from "@/controller/SessionController";
 
+// TODO: Backend Service einbinden
 export class StudentController {
 
   private static controller: StudentController = new StudentController();
@@ -22,8 +23,8 @@ export class StudentController {
   }
 
   createStudent(firstName: string, lastName: string): string {
-    let localId = this.studentStore.getId();
-    let student = new Student(undefined, localId, this.userController.getUser(), firstName, lastName)
+    let student = new Student(undefined, this.studentStore.getNextId(), this.userController.getUser(), firstName,
+      lastName);
     this.studentStore.addStudent(student);
 
     return student.getId;

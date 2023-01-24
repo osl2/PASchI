@@ -3,7 +3,7 @@ import {Role} from "@/model/Role";
 export class User {
 
   private id: string | undefined;
-  localId: number;
+  private localId: number;
   firstName: string;
   lastName: string;
   email: string;

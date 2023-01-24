@@ -5,14 +5,14 @@ import {Interaction} from "@/model/userdata/interactions/Interaction";
 export abstract class Participant {
 
   private id: string | undefined;
-  localId: number;
+  private localId: number;
   user: User;
   firstName: string;
   lastName: string;
   courses: Course[];
   interactions: Interaction[];
 
-  protected constructor(id: string | undefined, localId:number, user: User, firstName: string, lastName: string) {
+  protected constructor(id: string | undefined, localId: number, user: User, firstName: string, lastName: string) {
     this.id = id;
     this.localId = localId;
     this.user = user;
