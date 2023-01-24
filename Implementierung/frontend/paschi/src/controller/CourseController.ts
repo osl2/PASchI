@@ -2,10 +2,15 @@ import {Course} from "@/model/userdata/courses/Course";
 import {Participant} from "@/model/userdata/interactions/Participant";
 import {Session} from "@/model/userdata/courses/Session";
 import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
+import {useCourseStore} from "@/store/CourseStore";
+import {UserController} from "@/controller/UserController";
 
+// TODO: Backend Service einbinden
 export class CourseController {
 
   private static controller: CourseController = new CourseController();
+  private courseStore = useCourseStore();
+  private userController = UserController.getUserController();
 
   private constructor() {
   }
@@ -15,7 +20,10 @@ export class CourseController {
   }
 
   createCourse(name: string, subject: string): string {
-    return "";
+    let course = new Course(undefined, this.courseStore.nextId, this.userController.getUser(), name, subject);
+    this.courseStore.addCourse(course);
+
+    return course.getId;
   }
 
   updateCourse(courseId: string, name: string, subject: string) {
