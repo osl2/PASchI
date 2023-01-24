@@ -12,8 +12,8 @@ export class RoomController {
     return RoomController.controller;
   }
 
-  createRoom(name: string): number {
-    return 0;
+  createRoom(name: string): string {
+    return "";
   }
 
   updateRoom(id: string) {
@@ -32,12 +32,12 @@ export class RoomController {
     return [];
   }
 
-  addChair(roomId: string, pos: Position): number {
-    return 0;
+  addChair(roomId: string, pos: Position): string {
+    return "";
   }
 
-  addTable(roomId: string, pos: Position, length: number, width: number): number {
-    return 0;
+  addTable(roomId: string, pos: Position, length: number, width: number): string {
+    return "";
   }
 
   removeRoomObject(roomId: string, objectId: string) {

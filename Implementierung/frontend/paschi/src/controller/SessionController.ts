@@ -15,15 +15,15 @@ export class SessionController {
     return SessionController.controller;
   }
 
-  createSession(courseId: string, name: string): number {
-    return 0;
+  createSession(courseId: string, name: string): string {
+    return "";
   }
 
   updateSession(id: string, name: string) {
 
   }
 
-  deleteSession(id: number) {
+  deleteSession(id: string) {
 
   }
 
@@ -35,29 +35,29 @@ export class SessionController {
     return undefined;
   }
 
-  getCourseOfSession(sessionId: number): Course | undefined {
+  getCourseOfSession(sessionId: string): Course | undefined {
     // undefined entfernen nachdem implementiert
     return undefined;
   }
 
-  getInteractionsOfSession(sessionId: number): Interaction[] {
+  getInteractionsOfSession(sessionId: string): Interaction[] {
     return [];
   }
 
-  createInteraction(sessionId: number, fromParticipant: Participant, toParticipant: Participant,
-                    categoryId: Category): number {
-    return 0;
+  createInteraction(sessionId: string, fromParticipant: Participant, toParticipant: Participant,
+                    categoryId: Category): string {
+    return "";
   }
 
-  deleteInteraction(sesisonId: number, interactionId: number) {
-
-  }
-
-  setSeatArrangementOfSession(sessionId: number, arrangementId: number) {
+  deleteInteraction(sesisonId: string, interactionId: string) {
 
   }
 
-  getSeatArrangementOfSession(sessionId: number) {
+  setSeatArrangementOfSession(sessionId: string, arrangementId: string) {
+
+  }
+
+  getSeatArrangementOfSession(sessionId: string) {
 
   }
 }

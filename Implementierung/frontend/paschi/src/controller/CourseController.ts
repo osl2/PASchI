@@ -14,8 +14,8 @@ export class CourseController {
     return CourseController.controller;
   }
 
-  createCourse(name: string, subject: string): number {
-    return 0;
+  createCourse(name: string, subject: string): string {
+    return "";
   }
 
   updateCourse(courseId: string, name: string, subject: string) {

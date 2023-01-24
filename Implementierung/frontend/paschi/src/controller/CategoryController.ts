@@ -12,8 +12,8 @@ export class CategoryController {
     return CategoryController.controller;
   }
 
-  createCategory(name: string): number {
-    return 0;
+  createCategory(name: string): string {
+    return "";
   }
 
   createRatedCategory(name: string, quality: Quality): string {
