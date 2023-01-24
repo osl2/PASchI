@@ -4,9 +4,11 @@ import edu.kit.informatik.dto.mapper.courses.SeatArrangementMapper;
 import edu.kit.informatik.dto.userdata.courses.SeatArrangementDto;
 import edu.kit.informatik.model.userdata.courses.SeatArrangement;
 import edu.kit.informatik.repositories.SeatArrangementRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service für {@link SeatArrangement Sitzordnungen}.
@@ -33,26 +35,50 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
 
     @Override
     public SeatArrangementDto add(SeatArrangementDto seatArrangementDto) {
-        return null;
+        SeatArrangement seatArrangement = this.mapper.dtoToModel(seatArrangementDto);
+        SeatArrangement newSeatArrangement = this.seatArrangementRepository.save(seatArrangement);
+        return this.mapper.modelToDto(newSeatArrangement);
     }
 
+    @Transactional
     @Override
     public SeatArrangementDto update(SeatArrangementDto seatArrangementDto) {
+        Optional<SeatArrangement> repositorySeatArrangementOptional = this.seatArrangementRepository
+                                                                .findSeatArrangementById(seatArrangementDto.getId());
+        if (repositorySeatArrangementOptional.isEmpty()) {
+            return null;
+        }
+        
+        SeatArrangement repositorySeatArrangement = repositorySeatArrangementOptional.get();
+        SeatArrangement newSeatArrangement = this.mapper.dtoToModel(seatArrangementDto);
+        
+        
+
+        if (!newSeatArrangement.getName().equals(repositorySeatArrangement.getName())) {
+            repositorySeatArrangement.setName(repositorySeatArrangement.getName());
+        } else if (!newSeatArrangement.getSeatMap().equals(repositorySeatArrangement.getSeatMap())) {
+            repositorySeatArrangement.setSeatMap(repositorySeatArrangement.getSeatMap());
+        }
+        
         return null;
     }
 
     @Override
     public SeatArrangementDto getById(String id) {
-        return null;
+        Optional<SeatArrangement> seatArrangementOptional = this.seatArrangementRepository.findSeatArrangementById(id);
+        
+        return seatArrangementOptional.map(this.mapper::modelToDto).orElse(null);
     }
 
     @Override
     public List<SeatArrangementDto> getAll() {
-        return null;
+        return mapper.modelToDto(this.seatArrangementRepository.findAll());
     }
 
     @Override
     public String delete(String id) {
-        return null;
+        this.seatArrangementRepository.deleteById(id);
+        
+        return id;
     }
 }
