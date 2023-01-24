@@ -58,8 +58,6 @@ public class UserService extends BaseService<User, UserDto> {
             repositoryUser.setFirstName(newUser.getFirstName());
         } else if (!newUser.getLastName().equals(repositoryUser.getLastName())) {
             repositoryUser.setLastName(repositoryUser.getLastName());
-        } else if (!newUser.getEmail().equals(repositoryUser.getEmail())) {
-            repositoryUser.setEmail(repositoryUser.getEmail());
         } else if (!newUser.getPassword().equals(repositoryUser.getPassword())) {
             repositoryUser.setPassword(repositoryUser.getPassword());
         } else if (!newUser.isAuth() == repositoryUser.isAuth()) {
