@@ -15,15 +15,25 @@ export class UserController {
     return UserController.controller;
   }
 
-  login(email: string, password: string) {
+  login(email: string, password: string): boolean {
+    // nur lokal
+    let user = this.getUser();
+    return user.email === email && user.auth;
 
   }
 
   register(firstName: string, lastName: string, email: string, password: string, repeatPassword: string) {
-    let id = this.userStore.getNextId();
     // TODO: auth vom admin setzen
-    this.userStore.setUser(new User(undefined, id, firstName, lastName, email, true, Role.USER,
-      undefined));
+    this.userStore.setUser(
+      new User(undefined,
+        this.userStore.getNextId(),
+        firstName,
+        lastName,
+        email,
+        false,
+        Role.USER,
+        undefined
+      ));
   }
 
   update(firstName: string, lastName: string, email: string, password: string) {
