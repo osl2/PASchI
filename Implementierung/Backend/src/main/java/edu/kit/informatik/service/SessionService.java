@@ -1,14 +1,15 @@
 package edu.kit.informatik.service;
 
-import edu.kit.informatik.dto.mapper.IModelDtoMapper;
+
 import edu.kit.informatik.dto.mapper.courses.SessionMapper;
 import edu.kit.informatik.dto.userdata.courses.SessionDto;
 import edu.kit.informatik.model.userdata.courses.Session;
 import edu.kit.informatik.repositories.SessionRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service für {@link Session Sitzungen}
@@ -34,26 +35,51 @@ public class SessionService extends BaseService<Session, SessionDto> {
 
     @Override
     public SessionDto add(SessionDto sessionDto) {
-        return null;
+        Session session = this.mapper.dtoToModel(sessionDto);
+        Session newSession = sessionRepository.save(session);
+
+        return this.mapper.modelToDto(newSession);
     }
 
+    @Transactional
     @Override
     public SessionDto update(SessionDto sessionDto) {
-        return null;
+        Optional<Session> repositorySessionOptional = sessionRepository.findSessionById(sessionDto.getId());
+
+        if (repositorySessionOptional.isEmpty()) {
+            return null;
+        }
+
+        Session repositorySession = repositorySessionOptional.get();
+        Session newSession = this.mapper.dtoToModel(sessionDto);
+
+        if (!newSession.getInteractions().equals(repositorySession.getInteractions())) {
+            repositorySession.setInteractions(repositorySession.getInteractions());
+        } else if (!newSession.getSeatArrangement().equals(repositorySession.getSeatArrangement())) {
+            repositorySession.setSeatArrangement(repositorySession.getSeatArrangement());
+        } else if (!newSession.getName().equals(repositorySession.getName())) {
+            repositorySession.setName(repositorySession.getName());
+        }
+
+        return sessionDto;
     }
 
     @Override
     public SessionDto getById(String id) {
-        return null;
+        Optional<Session> sessionOptional = sessionRepository.findSessionById(id);
+
+        return sessionOptional.map(this.mapper::modelToDto).orElse(null);
     }
 
     @Override
     public List<SessionDto> getAll() {
-        return null;
+        return mapper.modelToDto(sessionRepository.findAll());
     }
 
     @Override
     public String delete(String id) {
-        return null;
+        this.sessionRepository.deleteById(id);
+
+        return id;
     }
 }
