@@ -28,7 +28,7 @@ export abstract class Participant {
 
   removeCourse(courseId: string) {
     this.courses.forEach((element, index) => {
-      if (element.id === courseId) {
+      if (element.getId === courseId) {
         this.courses.splice(index, 1);
       }
     });
@@ -40,7 +40,7 @@ export abstract class Participant {
 
   removeInteraction(interactionId: string) {
     this.interactions.forEach((element, index) => {
-      if (element.id === interactionId) {
+      if (element.getId === interactionId) {
         this.interactions.splice(index, 1);
       }
     });

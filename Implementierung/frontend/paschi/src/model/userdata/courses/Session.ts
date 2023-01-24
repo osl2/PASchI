@@ -5,15 +5,18 @@ import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 
 export class Session {
 
-  id: string;
+  private id: string | undefined;
+  private localId: number;
   user: User;
   date: string;
   interactions: Interaction[];
   course: Course;
   seatArrangement: SeatArrangement;
 
-  constructor(id: string, user: User, date: string, course: Course, seatArrangement: SeatArrangement) {
+  constructor(id: string | undefined, localId: number, user: User, date: string, course: Course,
+              seatArrangement: SeatArrangement) {
     this.id = id;
+    this.localId = localId;
     this.user = user;
     this.date = date;
     this.course = course;
@@ -27,7 +30,7 @@ export class Session {
 
   removeInteraction(interactionId: string) {
     this.interactions.forEach((element, index) => {
-      if (element.id == interactionId) {
+      if (element.getId == interactionId) {
         this.interactions.splice(index, 1);
       }
     });
@@ -35,11 +38,22 @@ export class Session {
 
   getInteraction(interactionId: string): Interaction | undefined {
     this.interactions.forEach((element, index) => {
-      if (element.id == interactionId) {
+      if (element.getId == interactionId) {
         return element;
       }
     });
 
     return undefined;
+  }
+
+  get getId(): string {
+    if (this.id == undefined) {
+      return this.localId.toString();
+    }
+    return this.id;
+  }
+
+  set setId(id: string) {
+    this.id = id;
   }
 }

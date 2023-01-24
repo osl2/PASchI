@@ -6,15 +6,17 @@ import {Room} from "@/model/userdata/rooms/Room";
 
 export class SeatArrangement {
 
-  id: string
+  private id: string | undefined;
+  private localId: number;
   user: User
   name: string;
   seatMap: Map<RoomObject, Participant>;
   course: Course;
   room: Room;
 
-  constructor(id: string, user: User, name: string, course: Course, room: Room) {
+  constructor(id: string | undefined, localId: number, user: User, name: string, course: Course, room: Room) {
     this.id = id;
+    this.localId = localId;
     this.user = user;
     this.name = name;
     this.seatMap = new Map<RoomObject, Participant>();
@@ -28,5 +30,16 @@ export class SeatArrangement {
 
   setSeat(seat: RoomObject, participant: Participant) {
     this.seatMap.set(seat, participant);
+  }
+
+  get getId(): string {
+    if (this.id == undefined) {
+      return this.localId.toString();
+    }
+    return this.id;
+  }
+
+  set setId(id: string) {
+    this.id = id;
   }
 }
