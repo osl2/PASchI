@@ -8,17 +8,19 @@ export class Session {
   private id: string | undefined;
   private localId: number;
   user: User;
+  name: string;
   date: string;
   interactions: Interaction[];
   course: Course;
   seatArrangement: SeatArrangement;
 
-  constructor(id: string | undefined, localId: number, user: User, date: string, course: Course,
+  constructor(id: string | undefined, localId: number, user: User, name: string, date: string, course: Course,
               seatArrangement: SeatArrangement) {
     this.id = id;
     this.localId = localId;
     this.user = user;
     this.date = date;
+    this.name = name;
     this.course = course;
     this.seatArrangement = seatArrangement;
     this.interactions = [];
