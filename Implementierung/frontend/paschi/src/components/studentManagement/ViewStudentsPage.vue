@@ -10,19 +10,16 @@
     <v-list>
       <v-list-item>
         David M
-        <v-btn @click="deleteStudentClick(student)">schüler löschen</v-btn>
         <v-btn @click="editStudentClick(student)">schüler bearbeiten</v-btn>
         <v-btn @click="showStatisticsClick(student)">Statistiken anzeigen</v-btn>
       </v-list-item>
       <v-list-item>
         Bob b
-        <v-btn @click="deleteStudentClick(student)">schüler löschen</v-btn>
         <v-btn @click="editStudentClick(student)">schüler bearbeiten</v-btn>
         <v-btn @click="showStatisticsClick(student)">Statistiken anzeigen</v-btn>
       </v-list-item>
       <v-list-item v-for="student in students">
         {{student.firstName}} {{student.firstName}}
-        <v-btn @click="deleteStudentClick(student)">schüler löschen</v-btn>
         <v-btn @click="editStudentClick(student)">schüler bearbeiten</v-btn>
         <v-btn @click="showStatisticsClick(student)">Statistiken anzeigen</v-btn>
       </v-list-item>
@@ -51,17 +48,12 @@ export default defineComponent({
 
     }
 
-    function deleteStudentClick(student: Student) {
-
-    }
-
     function showStatisticsClick(student: Student) {
 
     }
     return {
       newStudentClick,
       editStudentClick,
-      deleteStudentClick,
       showStatisticsClick,
       students
     }

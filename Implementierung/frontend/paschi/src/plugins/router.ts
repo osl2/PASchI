@@ -6,6 +6,7 @@ import Register from "@/components/authentication/Register.vue";
 import AdminPage from "@/components/authentication/AdminPage.vue";
 import RoomEditor from "@/components/interactionMaps/RoomEditor.vue";
 import ViewStudentsPage from "@/components/studentManagement/ViewStudentsPage.vue";
+import ViewCoursesPage from "@/components/courses/viewCoursesPage.vue";
 
 const routes = [
   {path: '/login', name: 'Login', component: Login},
@@ -14,6 +15,7 @@ const routes = [
   {path: '/dashboard', name: 'Dashboard', component: Dashboard},
   {path: '/edit-student', name: 'EditStudentPage', component: EditStudentPage, props: { studentId: 1}},
   {path: '/view-students', name: 'ViewStudentsPage', component: ViewStudentsPage},
+  {path: '/view-courses', name: 'ViewCoursessPage', component: ViewCoursesPage},
   {path: '/room-editor', name: 'InteractionMap', component: RoomEditor}
 
 ]
