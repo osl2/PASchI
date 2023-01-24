@@ -1,3 +1,6 @@
+import {useUserStore} from "@/store/UserStore";
+import {User} from "@/model/User";
+
 export class AdminController {
 
   private static controller: AdminController = new AdminController();
@@ -10,8 +13,23 @@ export class AdminController {
     return AdminController.controller;
   }
 
-  authUser(userId: string) {
+  getUsers(): User[] {
+    // nur lokal
+    let users: User[] | undefined = [];
+    let user = useUserStore().getUser();
+    if (user !== undefined) {
+      users.push(user);
+    }
+    return users;
+  }
 
+  authUser(userId: string) {
+    let users: User[] = this.getUsers();
+    users.forEach(user => {
+      if (user.getId === userId) {
+        user.auth = true;
+      }
+    });
   }
 
   deleteUser(userId: string) {
