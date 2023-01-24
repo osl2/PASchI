@@ -25,7 +25,7 @@ export class AdminController {
 
   authUser(userId: string) {
     let users: User[] = this.getUsers();
-    users.forEach(user => {
+    users.forEach((user: User) => {
       if (user.getId === userId) {
         user.auth = true;
       }
