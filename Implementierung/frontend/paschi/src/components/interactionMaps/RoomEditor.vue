@@ -5,6 +5,7 @@
     style="touch-action: none"
     @dragover="dragOver"
   >
+    <v-card>
     <v-card
       v-for="chair in chairs"
       :key="chair.id"
@@ -21,6 +22,7 @@
       @dragend="moveDrag($event, chair)"
     >
       <v-icon class="v-col-auto" size="40px" color="white" icon="fas fa-chair"></v-icon>
+    </v-card>
     </v-card>
   </v-main>
 </template>
