@@ -13,7 +13,7 @@ const routes = [
   {path: '/admin', name: 'AdminPage', component: AdminPage},
   {path: '/dashboard', name: 'Dashboard', component: Dashboard},
   {path: '/edit-student', name: 'EditStudentPage', component: EditStudentPage, props: { studentId: 1}},
-  {path: '/viewStudents', name: 'viewStudentsPage', component: ViewStudentsPage},
+  {path: '/view-students', name: 'ViewStudentsPage', component: ViewStudentsPage},
   {path: '/room-editor', name: 'InteractionMap', component: RoomEditor}
 
 ]

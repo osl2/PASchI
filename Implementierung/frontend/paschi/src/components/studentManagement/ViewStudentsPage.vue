@@ -35,10 +35,10 @@ import {StudentController} from "@/controller/StudentController";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import {Student} from "@/model/userdata/interactions/Student";
-import {ref} from "vue";
+import {defineComponent, ref} from "vue";
 
-export default({
-  name: "viewStudentsPage",
+export default defineComponent({
+  name: "ViewStudentsPage",
   components: {SideMenu, NavigationBar},
 
   setup() {
