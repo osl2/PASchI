@@ -3,7 +3,8 @@ import {Session} from "@/model/userdata/courses/Session";
 
 export const useSessionStore = defineStore('sessions', {
   state: () => ({
-    sessions: [] as Session[]
+    sessions: [] as Session[],
+    nextId: 0
   }),
   actions: {
     addSession(session: Session) {
@@ -11,14 +12,14 @@ export const useSessionStore = defineStore('sessions', {
     },
     deleteSession(id: string) {
       this.sessions.forEach((element, index) => {
-        if (element.id === id) {
+        if (element.getId === id) {
           this.sessions.splice(index, 1);
         }
       });
     },
     getSession(id: string): Session | undefined {
       this.sessions.forEach((element) => {
-        if (element.id === id) {
+        if (element.getId === id) {
           return element;
         }
       });
@@ -27,6 +28,9 @@ export const useSessionStore = defineStore('sessions', {
     getAllSessions(): Session[] {
       // @ts-ignore
       return this.sessions;
+    },
+    getNextId(): number {
+      return this.nextId++;
     }
   }
 })

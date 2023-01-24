@@ -3,7 +3,8 @@ import {Room} from "@/model/userdata/rooms/Room";
 
 export const useRoomStore = defineStore('rooms', {
   state: () => ({
-    rooms: [] as Room[]
+    rooms: [] as Room[],
+    nextId: 0
   }),
   actions: {
     addRoom(room: Room) {
@@ -11,14 +12,14 @@ export const useRoomStore = defineStore('rooms', {
     },
     deleteRoom(id: string) {
       this.rooms.forEach((element, index) => {
-        if (element.id === id) {
+        if (element.getId === id) {
           this.rooms.splice(index, 1);
         }
       });
     },
     getRoom(id: string): Room | undefined {
       this.rooms.forEach((element) => {
-        if (element.id === id) {
+        if (element.getId === id) {
           return element;
         }
       });
@@ -27,6 +28,9 @@ export const useRoomStore = defineStore('rooms', {
     getAllRooms(): Room[] {
       // @ts-ignore
       return this.rooms;
+    },
+    getNextId(): number {
+      return this.nextId++;
     }
   }
 })

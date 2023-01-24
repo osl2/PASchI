@@ -25,7 +25,8 @@ export class UserController {
   register(firstName: string, lastName: string, email: string, password: string, repeatPassword: string) {
     // TODO: auth vom admin setzen
     this.userStore.setUser(
-      new User(undefined,
+      new User(
+        undefined,
         this.userStore.getNextId(),
         firstName,
         lastName,
