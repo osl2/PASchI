@@ -2,9 +2,10 @@
   <v-main
     fluid
     :scrollable="false"
+    class="bg-grey-lighten-3"
     style="touch-action: none"
   >
-    <v-card @dragover="dragOver" @drop="moveDrag($event, lastUsedChair)" key="background" color="primary" :style="roomDisplayStyle">
+    <v-card @dragover="dragOver" @drop="moveDrag($event, lastUsedChair)" key="background" variant="flat" color="white" :style="roomDisplayStyle">
       <v-card
         v-for="chair in chairs"
         :key="chair.id"
