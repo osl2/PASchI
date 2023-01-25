@@ -4,7 +4,6 @@ import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.interactions.Participant;
 import edu.kit.informatik.model.userdata.rooms.Chair;
 import edu.kit.informatik.model.userdata.rooms.Room;
-import edu.kit.informatik.model.userdata.rooms.RoomObject;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Entity;
@@ -40,7 +39,7 @@ public class SeatArrangement {
     private Course course;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @CollectionTable(name = "roomobject_participant_mapping")
+    @CollectionTable(name = "chair_participant_mapping")
     @MapKey
     private Map<Chair, Participant> seatMap;
 
