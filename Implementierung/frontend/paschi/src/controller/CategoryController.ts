@@ -28,6 +28,10 @@ export class CategoryController {
 
   }
 
+  getCategory(id: string): Category | undefined {
+    return undefined;
+  }
+
   getCategories(): Category[] {
     return [];
   }

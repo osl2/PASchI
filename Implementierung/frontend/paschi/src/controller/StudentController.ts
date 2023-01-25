@@ -41,9 +41,7 @@ export class StudentController {
   deleteStudent(id: string) {
     let student = this.studentStore.getStudent(id);
     if (student !== undefined) {
-      student.courses.forEach((course: Course) => {
-        course.removeParticipant(id);
-      });
+      student.courses.forEach((course: Course) => course.removeParticipant(id));
       this.studentStore.deleteStudent(id);
     }
   }
