@@ -13,6 +13,7 @@
         <v-text-field variant="outlined" label="Nachname"/>
         <v-text-field type="password" variant="outlined" label="Passwort"/>
         <v-text-field type="password" variant="outlined" label="Passwort bestätigen"/>
+        <v-btn class="mr-2" @click="">Verwerfen</v-btn>
         <v-btn color="primary" @click="">Speichern</v-btn>
       </v-card-item>
     </v-container>
