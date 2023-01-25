@@ -23,10 +23,8 @@
 </template>
 
 <script lang="ts">
-import { StudentController } from "@/controller/StudentController";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
-import { Student } from "@/model/userdata/interactions/Student";
 import { defineComponent, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
 import { Course } from "@/model/userdata/courses/Course";
