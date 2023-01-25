@@ -60,7 +60,7 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
             repositorySeatArrangement.setSeatMap(repositorySeatArrangement.getSeatMap());
         }
         
-        return null;
+        return seatArrangementDto;
     }
 
     @Override
