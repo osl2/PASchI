@@ -5,20 +5,27 @@
     class="bg-grey-lighten-3"
     style="touch-action: none"
   >
-    <v-card @dragover="dragOver" @drop="moveDrag($event, lastUsedChair)" key="background" variant="flat" color="white" :style="roomDisplayStyle">
+    <v-card
+      @dragover="dragOver"
+      @drop="moveDrag($event, lastUsedroomObject)"
+      key="background"
+      variant="flat"
+      color="white"
+      :style="roomDisplayStyle"
+    >
       <v-card
-        v-for="chair in chairs"
-        :key="chair.id"
+        v-for="roomObject in roomObjects"
+        :key="roomObject.id"
         class="ma-0 v-row align-center justify-center"
         width="30"
         height="30"
         color="secondary"
         elevation="0"
         draggable="true"
-        :style="getChairStyle(chair)"
+        :style="getRoomObjectStyle(roomObject)"
         @touchstart="touchStart($event)"
-        @touchmove="moveTouch($event, chair)"
-        @dragstart="dragStart($event, chair)"
+        @touchmove="moveTouch($event, roomObject)"
+        @dragstart="dragStart($event, roomObject)"
       >
         <v-icon
           class="v-col-auto"
@@ -32,17 +39,35 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
-import { Chair } from "@/model/userdata/rooms/Chair";
+import {defineComponent, onBeforeMount, onMounted, ref} from "vue";
+import { RoomObject } from "@/model/userdata/rooms/roomObject";
+import { Room } from "@/model/userdata/rooms/Room";
+import { User } from "@/model/User";
+import { Role } from "@/model/Role";
+import {Position} from "@/model/userdata/rooms/Position";
+import {Chair} from "@/model/userdata/rooms/Chair";
 
 export default defineComponent({
   name: "RoomEditor.vue",
   setup() {
-    const chairs = ref([
-      { id: 1, position: { xCoordinate: 400, yCoordinate: 400 } },
-      { id: 2, position: { xCoordinate: 500, yCoordinate: 500 } },
-      { id: 3, position: { xCoordinate: 600, yCoordinate: 600 } },
-    ]);
+
+    const Gregor = ref<User>(
+      new User(4, "Gregor", "Snelting", "f", true, Role.USER, "")
+    );
+    const room = ref<Room>(
+      new Room(
+        "123",
+        Gregor.value,
+        "Test"
+      )
+    );
+
+    onBeforeMount(() => {
+      room.value.addRoomObject( new Chair("0", Gregor.value, new Position("0", Gregor.value, 0, 0, 0)))
+      room.value.addRoomObject( new Chair("1", Gregor.value, new Position("1", Gregor.value, 100, 100, 0)))
+      room.value.addRoomObject( new Chair("2", Gregor.value, new Position("2", Gregor.value, 200, 200, 0)))
+      room.value.addRoomObject( new Chair("3", Gregor.value, new Position("3", Gregor.value, 300, 300, 0)))
+    });
 
     const roomWidth = 16180;
     const roomHeight = 10000;
@@ -61,7 +86,7 @@ export default defineComponent({
     const roomDisplayTopMargin = (window.innerHeight - roomDisplayHeight) / 2;
     const roomDisplayLeftMargin = (window.innerWidth - roomDisplayWidth) / 2;
 
-    const lastUsedChair = ref<Chair>();
+    const lastUsedroomObject = ref<RoomObject>();
 
     const moveXStart = ref(0);
     const moveYStart = ref(0);
@@ -88,10 +113,10 @@ export default defineComponent({
       };
     }
 
-    function getChairStyle(chair: Chair) {
+    function getRoomObjectStyle(roomObject: RoomObject) {
       const { x, y } = roomToDisplayCoordinates(
-        chair.position.xCoordinate,
-        chair.position.yCoordinate
+        roomObject.position.xCoordinate,
+        roomObject.position.yCoordinate
       );
       return {
         position: "absolute",
@@ -115,13 +140,13 @@ export default defineComponent({
       };
     }
 
-    function moveTouch(event: TouchEvent, chair: Chair) {
+    function moveTouch(event: TouchEvent, roomObject: RoomObject) {
       const delta = screenCoordinatesDeltaToRoomCoordinatesDelta(
         event.touches[0].clientX - moveXStart.value,
         event.touches[0].clientY - moveYStart.value
       );
-      chair.position.xCoordinate = chair.position.xCoordinate + delta.x;
-      chair.position.yCoordinate = chair.position.yCoordinate + delta.y;
+      roomObject.position.xCoordinate = roomObject.position.xCoordinate + delta.x;
+      roomObject.position.yCoordinate = roomObject.position.yCoordinate + delta.y;
       moveXStart.value = event.touches[0].clientX;
       moveYStart.value = event.touches[0].clientY;
     }
@@ -131,33 +156,31 @@ export default defineComponent({
       event.preventDefault();
     }
 
-    function dragStart(event: DragEvent, chair: Chair) {
+    function dragStart(event: DragEvent, roomObject: RoomObject) {
       moveXStart.value = event.clientX;
       moveYStart.value = event.clientY;
-      lastUsedChair.value = chair
+      lastUsedroomObject.value = roomObject;
     }
 
-    function moveDrag(event: DragEvent, chair: Chair) {
+    function moveDrag(event: DragEvent, roomObject: RoomObject) {
       const delta = screenCoordinatesDeltaToRoomCoordinatesDelta(
         event.clientX - moveXStart.value,
         event.clientY - moveYStart.value
       );
-      chair.position.xCoordinate =
-        chair.position.xCoordinate + delta.x;
-      chair.position.yCoordinate =
-        chair.position.yCoordinate + delta.y;
+      roomObject.position.xCoordinate = roomObject.position.xCoordinate + delta.x;
+      roomObject.position.yCoordinate = roomObject.position.yCoordinate + delta.y;
     }
 
     return {
-      chairs,
+      roomObjects : room.value.roomObjects,
       dragStart,
       moveDrag,
       dragOver,
       touchStart,
       moveTouch,
-      getChairStyle,
+      getRoomObjectStyle,
       roomDisplayStyle,
-      lastUsedChair,
+      lastUsedroomObject,
     };
   },
 });

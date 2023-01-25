@@ -1,7 +1,9 @@
-import {Position} from "@/model/userdata/rooms/Position";
-import {User} from "@/model/User";
+import { Position } from "@/model/userdata/rooms/Position";
+import { User } from "@/model/User";
+import { ref } from "vue";
 
 export abstract class RoomObject {
+  room = ref;
 
   id: string;
   user: User;
