@@ -12,10 +12,10 @@ export class Session {
   date: string;
   interactions: Interaction[];
   course: Course;
-  seatArrangement: SeatArrangement;
+  seatArrangement: SeatArrangement | undefined;
 
   constructor(id: string | undefined, localId: number, user: User, name: string, date: string, course: Course,
-              seatArrangement: SeatArrangement) {
+              seatArrangement: SeatArrangement | undefined) {
     this.id = id;
     this.localId = localId;
     this.user = user;
@@ -39,7 +39,7 @@ export class Session {
   }
 
   getInteraction(interactionId: string): Interaction | undefined {
-    this.interactions.forEach((element, index) => {
+    this.interactions.forEach((element: Interaction) => {
       if (element.getId == interactionId) {
         return element;
       }

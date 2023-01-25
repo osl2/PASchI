@@ -5,12 +5,17 @@ import {UserController} from "@/controller/UserController";
 import {Chair} from "@/model/userdata/rooms/Chair";
 import {useRoomObjectStore} from "@/store/RoomObjectStore";
 import {Table} from "@/model/userdata/rooms/Table";
+import {SeatArrangementController} from "@/controller/SeatArrangementController";
+import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
+import {RoomObject} from "@/model/userdata/rooms/RoomObject";
 
+// TODO: Backend Service einbinden
 export class RoomController {
 
   private static controller: RoomController = new RoomController();
   private roomStore = useRoomStore();
   private userController = UserController.getUserController();
+  private arrangementController = SeatArrangementController.getSeatArrangementController();
 
   private constructor() {
   }
@@ -34,7 +39,14 @@ export class RoomController {
   }
 
   deleteRoom(id: string) {
-    this.roomStore.deleteRoom(id);
+    let room = this.roomStore.getRoom(id);
+    if (room !== undefined) {
+      this.arrangementController.getAllArrangements().forEach((arrangement: SeatArrangement) => {
+        if (arrangement.room.getId === id) {
+          this.arrangementController.deleteSeatArrangement(arrangement.getId);
+        }
+      });
+    }
   }
 
   getRoom(id: string): Room | undefined {
@@ -59,6 +71,27 @@ export class RoomController {
     room.addRoomObject(chair);
 
     return chair.getId;
+  }
+
+  getRoomObjects(roomId: string): RoomObject[] | undefined {
+    let room = this.roomStore.getRoom(roomId);
+    if (room == undefined) {
+      return undefined;
+    }
+
+    return room.roomObjects;
+  }
+
+  getRoomObject(roomId: string, objectId: string): RoomObject | undefined {
+    let room = this.roomStore.getRoom(roomId);
+    if (room == undefined) {
+      return undefined;
+    }
+    room.roomObjects.forEach((object: RoomObject) => {
+      if (object.getId === objectId) {
+        return object;
+      }
+    });
   }
 
   addTable(roomId: string, pos: Position, length: number, width: number): string | undefined {

@@ -32,6 +32,10 @@ export class SeatArrangement {
     this.seatMap.set(seat, participant);
   }
 
+  removeSeat(seat: RoomObject) {
+    this.seatMap.delete(seat);
+  }
+
   get getId(): string {
     if (this.id == undefined) {
       return this.localId.toString();

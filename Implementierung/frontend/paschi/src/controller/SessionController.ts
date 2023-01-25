@@ -10,6 +10,7 @@ import {CategoryController} from "@/controller/CategoryController";
 import {useInteractionStore} from "@/store/InteractionStore";
 
 // TODO: Backend Service einbinden
+// TODO: Standard Sitzordnung
 export class SessionController {
 
   private static controller: SessionController = new SessionController();

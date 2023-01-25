@@ -4,6 +4,7 @@ import {useCategoryStore} from "@/store/CategoryStore";
 import {UserController} from "@/controller/UserController";
 import {RatedCategory} from "@/model/userdata/interactions/RatedCategory";
 
+// TODO: Backend Service einbinden
 export class CategoryController {
 
   private static controller: CategoryController = new CategoryController();

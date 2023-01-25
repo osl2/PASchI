@@ -37,6 +37,16 @@ export class Course {
     });
   }
 
+  getParticipant(participantId: string): Participant | undefined {
+    this.participants.forEach((participant: Participant) => {
+      if (participant.getId === participantId) {
+        return participant;
+      }
+    });
+
+    return undefined;
+  }
+
   addSession(session: Session) {
     this.sessions.push(session);
   }
