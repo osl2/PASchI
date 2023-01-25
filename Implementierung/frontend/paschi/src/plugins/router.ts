@@ -1,9 +1,9 @@
 import {createRouter, createWebHistory} from "vue-router";
-import Login from "@/components/authentication/Login.vue";
+import Login from "@/components/userManagement/Login.vue";
 import Dashboard from "@/components/dashboard/Dashboard.vue";
 import EditStudentPage from "@/components/studentManagement/EditStudentPage.vue";
-import Register from "@/components/authentication/Register.vue";
-import AdminPage from "@/components/authentication/AdminPage.vue";
+import Register from "@/components/userManagement/Register.vue";
+import AdminPage from "@/components/userManagement/AdminPage.vue";
 import RoomEditor from "@/components/interactionMaps/RoomEditor.vue";
 import ViewStudentsPage from "@/components/studentManagement/ViewStudentsPage.vue";
 import ViewCoursesPage from "@/components/courses/viewCoursesPage.vue";

@@ -18,8 +18,8 @@
 import {useUserStore} from "@/store/UserStore";
 import AppBar from "@/components/navigation/NavigationBar.vue";
 import router from "@/plugins/router";
-import UserListCard from "@/components/authentication/UserListCard.vue";
-import RequestListCard from "@/components/authentication/RequestListCard.vue";
+import UserListCard from "@/components/userManagement/UserListCard.vue";
+import RequestListCard from "@/components/userManagement/RequestListCard.vue";
 export default {
   name: "AdminPage",
   components: {AppBar, RequestListCard, UserListCard},
