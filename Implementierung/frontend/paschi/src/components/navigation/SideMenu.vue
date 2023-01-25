@@ -1,12 +1,40 @@
 <template>
   <v-navigation-drawer expand-on-hover rail elevation="12" color="primary">
     <v-list nav density="compact" class="mt-12">
-      <v-list-item :active="subRouteOf('Dashboard')" prepend-icon="fas fa-gauge" @click="router().push('/dashboard')" >
+      <v-list-item :active="subRouteOf('Dashboard')" prepend-icon="fas fa-gauge" @click="router().push('/dashboard')">
         <v-list-item-title>
           Dashboard
         </v-list-item-title>
       </v-list-item>
+      <v-list-item :active="subRouteOf('Dashboard')" prepend-icon="fas fa-users" @click="router().push('/view-students')">
+        <v-list-item-title>
+          Schüler
+        </v-list-item-title>
+      </v-list-item>
+      <v-list-item :active="subRouteOf('Dashboard')" prepend-icon="fas fa-people-group" @click="router().push('/view-courses')">
+        <v-list-item-title>
+          Kurse
+        </v-list-item-title>
+      </v-list-item>
+      <v-list-item :active="subRouteOf('Dashboard')" prepend-icon="fas fa-door-closed" @click="router().push('')"> <!-- TODO: view rooms verlinken wenn implemntiert -->
+        <v-list-item-title>
+          Räume
+        </v-list-item-title>
+      </v-list-item>
+
     </v-list>
+
+    <template v-slot:append>
+      <v-list nav density="compact">
+        <v-list-item :active="subRouteOf('Dashboard')" prepend-icon="fas fa-gear" @click="router().push('/edit-account')">
+          <v-list-item-title>
+            Benutzereinstellungen
+          </v-list-item-title>
+        </v-list-item>
+      </v-list>
+
+    </template>
+
   </v-navigation-drawer>
 </template>
 
@@ -26,6 +54,7 @@ export default defineComponent({
     function subRouteOf(route: string): boolean {
       return useRoute().matched.some(({name}) => name === route)
     }
+
     return {
       subRouteOf
     }
