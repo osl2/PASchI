@@ -67,6 +67,23 @@ export class CourseController {
     return course.participants;
   }
 
+  getStudentsNotInCourse(courseId: string): Participant[] | undefined {
+    let course = this.courseStore.getCourse(courseId);
+    if (course == undefined) {
+      return undefined;
+    }
+
+    let allStudents = this.studentController.getAllStudents();
+    let students: Participant[] = [];
+    allStudents.forEach((student: Participant) => {
+      if (course!.getParticipant(student.getId) == undefined) {
+        students.push(student);
+      }
+    });
+
+    return students;
+  }
+
   addStudentToCourse(courseId: string, studentId: string) {
     let course = this.courseStore.getCourse(courseId);
     let student = this.studentController.getStudent(studentId);
