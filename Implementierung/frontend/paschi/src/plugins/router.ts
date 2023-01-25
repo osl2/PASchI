@@ -8,6 +8,7 @@ import RoomEditor from "@/components/interactionMaps/RoomEditor.vue";
 import ViewStudentsPage from "@/components/studentManagement/ViewStudentsPage.vue";
 import ViewCoursesPage from "@/components/courses/viewCoursesPage.vue";
 import EditCoursePage from "@/components/courses/editCoursePage.vue";
+import EditAccountPage from "@/components/userManagement/EditAccountPage.vue";
 
 const routes = [
   {path: '/login', name: 'Login', component: Login},
@@ -18,7 +19,9 @@ const routes = [
   {path: '/view-students', name: 'ViewStudentsPage', component: ViewStudentsPage},
   {path: '/edit-course', name: 'EditCoursePage', component: EditCoursePage, props: { courseId: 1}},
   {path: '/view-courses', name: 'ViewCoursessPage', component: ViewCoursesPage},
-  {path: '/room-editor', name: 'InteractionMap', component: RoomEditor}
+  {path: '/room-editor', name: 'InteractionMap', component: RoomEditor},
+  {path: '/edit-account', name: 'EditAccountPage', component: EditAccountPage},
+
 
 ]
 

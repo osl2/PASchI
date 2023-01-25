@@ -7,7 +7,8 @@
             Bitte registrieren Sie sich.
           </v-card-title>
           <v-card-item>
-            <v-text-field class="mt-2" variant="outlined" label="Benutzername" />
+            <v-text-field class="mt-2" variant="outlined" label="Vorname" />
+            <v-text-field class="mt-2" variant="outlined" label="Nachname" />
             <v-text-field class="mt-2" variant="outlined" label="Mailadresse" />
             <v-text-field type="password" variant="outlined" label="Passwort" />
             <v-text-field type="password" variant="outlined" label="Passwort bestätigen" />
