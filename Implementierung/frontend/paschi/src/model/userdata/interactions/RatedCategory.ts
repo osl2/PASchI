@@ -10,4 +10,12 @@ export class RatedCategory extends Category {
     super(id, localId, user, name);
     this.quality = quality;
   }
+
+  hasQuality(): boolean {
+    return true;
+  }
+
+  set setQuality(quality: Quality) {
+    this.quality = quality;
+  }
 }

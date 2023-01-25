@@ -1,4 +1,5 @@
 import {User} from "@/model/User";
+import {Quality} from "@/model/userdata/interactions/Quality";
 
 export class Category {
 
@@ -14,6 +15,10 @@ export class Category {
     this.name = name;
   }
 
+  hasQuality(): boolean {
+    return false;
+  }
+
   get getId(): string {
     if (this.id == undefined) {
       return this.localId.toString();
@@ -23,5 +28,8 @@ export class Category {
 
   set setId(id: string) {
     this.id = id;
+  }
+
+  set setQuality(quality: Quality) {
   }
 }
