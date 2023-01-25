@@ -6,23 +6,16 @@
   </navigation-bar>
 
   <v-main>
-    <SideMenu />
+    <SideMenu/>
     <v-list>
-      <v-list-item>
-        David M
-        <v-btn @click="editStudentClick(student)">schüler bearbeiten</v-btn>
-        <v-btn @click="showStatisticsClick(student)">Statistiken anzeigen</v-btn>
-      </v-list-item>
-      <v-list-item>
-        Bob b
-        <v-btn @click="editStudentClick(student)">schüler bearbeiten</v-btn>
-        <v-btn @click="showStatisticsClick(student)">Statistiken anzeigen</v-btn>
-      </v-list-item>
-      <v-list-item v-for="student in students">
-        {{student.firstName}} {{student.firstName}}
-        <v-btn @click="editStudentClick(student)">schüler bearbeiten</v-btn>
-        <v-btn @click="showStatisticsClick(student)">Statistiken anzeigen</v-btn>
-      </v-list-item>
+      <v-card-item v-for="student in students">
+        <v-row class="ma-2">
+          {{ student.name }}
+          <v-spacer/>
+          <v-btn prepend-icon="fas fa-edit" color="primary" @click="editStudentClick(undefined)"/>
+          <v-btn prepend-icon="fas fa-chart-line" color="primary" @click="showStatisticsClick(undefined)"/>
+        </v-row>
+      </v-card-item>
     </v-list>
   </v-main>
 </template>
@@ -39,11 +32,19 @@ export default defineComponent({
   components: {SideMenu, NavigationBar},
 
   setup() {
+
+    const students = [
+      {name: "Hansi"},
+      {name: "Gudrun"},
+    ]
+
     const studentController = StudentController.getStudentConroller();
-    const students = ref<Student[]>(studentController.getAllStudents());
+    //const students = ref<Student[]>(studentController.getAllStudents());
+
     function newStudentClick() {
 
     }
+
     function editStudentClick(student: Student) {
 
     }
@@ -51,6 +52,7 @@ export default defineComponent({
     function showStatisticsClick(student: Student) {
 
     }
+
     return {
       newStudentClick,
       editStudentClick,
