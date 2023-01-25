@@ -12,7 +12,7 @@
         <v-row class="ma-2">
           {{ student.name }}
           <v-spacer/>
-          <v-btn prepend-icon="fas fa-edit" color="primary" @click="editStudentClick(undefined)"/>
+          <v-btn class="mr-2" prepend-icon="fas fa-edit" color="primary" @click="editStudentClick(undefined)"/>
           <v-btn prepend-icon="fas fa-chart-line" color="primary" @click="showStatisticsClick(undefined)"/>
         </v-row>
       </v-card-item>
