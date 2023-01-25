@@ -1,14 +1,14 @@
 package edu.kit.informatik.service;
 
-import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.mapper.rooms.RoomMapper;
 import edu.kit.informatik.dto.userdata.rooms.RoomDto;
 import edu.kit.informatik.model.userdata.rooms.Room;
 import edu.kit.informatik.repositories.RoomRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service für {@link Room Räume}.
@@ -34,26 +34,50 @@ public class RoomService extends BaseService<Room, RoomDto> {
 
     @Override
     public RoomDto add(RoomDto roomDto) {
-        return null;
+        Room newRoom = this.roomRepository.save(this.mapper.dtoToModel(roomDto));
+
+        return this.mapper.modelToDto(newRoom);
     }
 
+    @Transactional
     @Override
     public RoomDto update(RoomDto roomDto) {
-        return null;
+        Optional<Room> repositoryRoomOptional = this.roomRepository.findRoomById(roomDto.getId());
+
+        if (repositoryRoomOptional.isEmpty()) {
+            return null;
+        }
+
+        Room repositoyRoom = repositoryRoomOptional.get();
+        Room newRoom = this.mapper.dtoToModel(roomDto);
+
+        if (!newRoom.getName().equals(repositoyRoom.getName())) {
+            repositoyRoom.setName(newRoom.getName());
+        } else if (!newRoom.getTables().equals(repositoyRoom.getTables())) {
+            repositoyRoom.setTables(newRoom.getTables());
+        } else if (!newRoom.getChairs().equals(repositoyRoom.getChairs())) {
+            repositoyRoom.setChairs(newRoom.getChairs());
+        }
+
+        return roomDto;
     }
 
     @Override
     public RoomDto getById(String id) {
-        return null;
+        Optional<Room> roomOptional = this.roomRepository.findRoomById(id);
+
+        return roomOptional.map(this.mapper::modelToDto).orElse(null);
     }
 
     @Override
     public List<RoomDto> getAll() {
-        return null;
+        return mapper.modelToDto(this.roomRepository.findAll());
     }
 
     @Override
     public String delete(String id) {
-        return null;
+        this.roomRepository.deleteById(id);
+
+        return id;
     }
 }
