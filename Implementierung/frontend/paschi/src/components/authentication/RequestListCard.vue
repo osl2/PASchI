@@ -2,23 +2,37 @@
   <v-card color="primary">
     <v-card-title>
       <v-row class="ma-2">
-        Neue, noch nicht bestätigte Accounts:
+       Accountanträge
       </v-row>
     </v-card-title>
+
     <v-card-item v-for="request in requests">
-      {{request.name}}
-      <v-btn @click="navigateTo(course)"></v-btn>
+      <v-row class="ma-2">
+        {{ request.name }}
+        <v-spacer />
+        <v-btn prepend-icon="fas fa-check" color="primary" @click="" />
+        <v-btn prepend-icon="fas fa-xmark" color="primary" @click="" />
+      </v-row>
     </v-card-item>
   </v-card>
 </template>
 
-<script lang="ts">
-import {defineComponent} from "vue";
-import router from "@/plugins/router";
 
-export default defineComponent({
-  name: "RequestListCard",
-})
+
+<script lang="ts">
+
+
+  export default {
+    data() {
+      return {
+        requests: [
+          { name: "Hansi"},
+          {name: "Gudrun"},
+        ]
+      }
+    }
+  }
+
 </script>
 
 <style scoped>

@@ -1,6 +1,5 @@
 <template>
   <v-main>
-    v-main>
     <v-container fluid>
       <v-row justify="space-around" align-content="stretch">
         <v-col>
@@ -19,9 +18,11 @@
 import {useUserStore} from "@/store/UserStore";
 import AppBar from "@/components/navigation/NavigationBar.vue";
 import router from "@/plugins/router";
+import UserListCard from "@/components/authentication/UserListCard.vue";
+import RequestListCard from "@/components/authentication/RequestListCard.vue";
 export default {
   name: "AdminPage",
-  components: {AppBar},
+  components: {AppBar, RequestListCard, UserListCard},
   setup() {
     const userStore = useUserStore()
 
