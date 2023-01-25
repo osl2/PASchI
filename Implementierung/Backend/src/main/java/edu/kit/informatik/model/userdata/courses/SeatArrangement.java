@@ -10,8 +10,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapKey;
+import jakarta.persistence.MapKeyJoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -29,6 +32,7 @@ public class SeatArrangement {
     private String id;
 
     @ManyToOne
+
     private User user;
     private String name;
 
@@ -39,8 +43,13 @@ public class SeatArrangement {
     private Course course;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @CollectionTable(name = "chair_participant_mapping")
-    @MapKey
+    //@CollectionTable(name = "chair_participant_mapping")
+    //@MapKey
+    @JoinTable(name = "chair_participant_mapping",
+            joinColumns = @JoinColumn(name = "seatarrangementId"),
+            inverseJoinColumns  = @JoinColumn(name = "participantId"))
+    @MapKeyJoinColumn(name = "chairId")
+
     private Map<Chair, Participant> seatMap;
 
     public SeatArrangement(User user, String name, Room room, Course course, Map<Chair, Participant> seatMap) {
