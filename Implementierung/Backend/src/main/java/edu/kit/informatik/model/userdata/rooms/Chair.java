@@ -10,10 +10,12 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "chairs")
 public class Chair extends RoomObject {
-
+    /*
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+
+     */
 
     public Chair(User user, Position position) {
         super(user, position);

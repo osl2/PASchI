@@ -9,10 +9,12 @@ import jakarta.persistence.Id;
 @Entity
 @jakarta.persistence.Table(name = "tables")
 public class Table extends RoomObject {
-
+    /*
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+
+     */
 
     private double length;
     private double width;
