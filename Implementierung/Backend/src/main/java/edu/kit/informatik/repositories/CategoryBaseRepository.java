@@ -11,6 +11,8 @@ public interface CategoryBaseRepository<CategoryType extends Category, String>
         extends JpaRepository<CategoryType, String> {
 
     Optional<CategoryType> findCategoryById(String id);
-
+/*
     Optional<CategoryType> findCategoryByInteraction();
+
+ */
 }
