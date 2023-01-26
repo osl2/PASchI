@@ -6,7 +6,7 @@ import edu.kit.informatik.dto.userdata.interactions.RatedCategoryDto;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.interactions.Quality;
 import edu.kit.informatik.model.userdata.interactions.RatedCategory;
-import edu.kit.informatik.repositories.RatedCategoryRepository;
+import edu.kit.informatik.repositories.CategoryBaseRepository;
 import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,12 +17,12 @@ import java.util.List;
 @Service
 public class RatedCategoryMapper implements IModelDtoMapper<RatedCategory, RatedCategoryDto> {
 
-    private final RatedCategoryRepository categoryRepository;
+    private final CategoryBaseRepository<RatedCategory, String> categoryRepository;
     private final QualityMapper qualityMapper;
     private final UserRepository userRepository;
 
     @Autowired
-    public RatedCategoryMapper(RatedCategoryRepository categoryRepository, QualityMapper qualityMapper,
+    public RatedCategoryMapper(CategoryBaseRepository<RatedCategory, String> categoryRepository, QualityMapper qualityMapper,
                                UserRepository userRepository) {
         this.categoryRepository = categoryRepository;
         this.qualityMapper = qualityMapper;
