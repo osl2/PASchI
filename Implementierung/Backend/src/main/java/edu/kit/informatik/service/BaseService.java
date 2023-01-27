@@ -11,27 +11,28 @@ import java.util.List;
  * Services dienen zur Bearbeitung der Methoden des dazugehörigen Controllers.
  *
  * @param <Entity> Entität des Services
- * @param <Dto> Dto zur Entität
+ * @param <ParameterDto> Data-Transfer-Objekt als übergebener Parameter
+ * @param <ReturnDto> Zurückgegebenes Data-Transfer-Objekt
  *
  * @author ugqbo
  * @version 1.0
  */
 @Service
 @EnableAutoConfiguration
-public abstract class BaseService<Entity, Dto> {
+public abstract class BaseService<Entity, ParameterDto, ReturnDto> {
 
     /**
      * Allgemeiner {@link IModelDtoMapper Mapper} zum Abbilden einer Entität auf das dazugehörige Dto und
      * Abbilden eines Dto auf die dazugehörige Entität.
      */
-    protected final IModelDtoMapper<Entity, Dto> mapper;
+    protected final IModelDtoMapper<Entity, ParameterDto, ReturnDto> mapper;
 
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse. Wir durch die Unterklassen aufgerufen um dem
      * {@link IModelDtoMapper} du initialisieren.
      * @param mapper {@link IModelDtoMapper}
      */
-    public BaseService(IModelDtoMapper<Entity, Dto> mapper) {
+    public BaseService(IModelDtoMapper<Entity, ParameterDto, ReturnDto> mapper) {
         this.mapper = mapper;
     }
 
@@ -40,27 +41,27 @@ public abstract class BaseService<Entity, Dto> {
      * @param dto Dto
      * @return Dto
      */
-    public abstract Dto add(Dto dto);
+    public abstract ReturnDto add(ParameterDto dto);
     /**
      * Aktualisieren einer Entität
      * @param dto Dto
      * @return Dto
      */
 
-    public abstract Dto update(Dto dto);
+    public abstract ReturnDto update(ParameterDto dto);
 
     /**
      * Rückgabe einer Entität
      * @param id id der Entität
      * @return Dto
      */
-    public abstract Dto getById(String id);
+    public abstract ReturnDto getById(String id);
 
     /**
      * Rückgabe aller Entitäten
      * @return Liste der Entitäten
      */
-    public abstract List<Dto> getAll();
+    public abstract List<ReturnDto> getAll();
 
     /**
      * Löschen einer Entität
