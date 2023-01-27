@@ -23,7 +23,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(path = "/api/user")
-public class UserController extends BaseController<User, UserDto> {
+public class UserController extends BaseController<User, UserDto, UserDto> {
 
     private final UserService userService;
 

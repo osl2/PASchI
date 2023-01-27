@@ -21,7 +21,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(path = "/api/participant")
-public class ParticipantController extends BaseController<Participant, ParticipantDto> {
+public class ParticipantController extends BaseController<Participant, ParticipantDto, ParticipantDto> {
 
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse

@@ -21,7 +21,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(path = "/api/session")
-public class SessionController extends BaseController<Session, SessionDto> {
+public class SessionController extends BaseController<Session, SessionDto, SessionDto> {
 
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse

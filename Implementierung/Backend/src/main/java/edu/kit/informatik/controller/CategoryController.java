@@ -1,6 +1,7 @@
 package edu.kit.informatik.controller;
 
 import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
+import edu.kit.informatik.dto.userdata.interactions.RatedCategoryDto;
 import edu.kit.informatik.model.userdata.interactions.Category;
 import edu.kit.informatik.service.CategoryService;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,7 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(path = "/api/category")
-public class CategoryController extends BaseController<Category, CategoryDto> {
+public class CategoryController extends BaseController<Category, RatedCategoryDto, CategoryDto> {
 
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
@@ -33,13 +34,13 @@ public class CategoryController extends BaseController<Category, CategoryDto> {
 
     @Override
     @PostMapping
-    public CategoryDto add(CategoryDto categoryDto) {
+    public CategoryDto add(RatedCategoryDto categoryDto) {
         return super.add(categoryDto);
     }
 
     @Override
     @PutMapping
-    public CategoryDto update(CategoryDto categoryDto) {
+    public CategoryDto update(RatedCategoryDto categoryDto) {
         return super.update(categoryDto);
     }
 

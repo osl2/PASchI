@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/api/seatarrangement")
 @CrossOrigin
-public class SeatArrangementController extends BaseController<SeatArrangement, SeatArrangementDto> {
+public class SeatArrangementController extends BaseController<SeatArrangement, SeatArrangementDto, SeatArrangementDto> {
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
      * @param seatArrangementService {@link SeatArrangementService}

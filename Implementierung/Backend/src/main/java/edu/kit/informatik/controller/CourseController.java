@@ -22,7 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(path = "/api/course")
-public class CourseController extends BaseController<Course, CourseDto> {
+public class CourseController extends BaseController<Course, CourseDto, CourseDto> {
 
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse

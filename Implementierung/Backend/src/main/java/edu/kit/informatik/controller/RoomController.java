@@ -21,7 +21,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(path = "/api/room")
-public class RoomController extends BaseController<Room, RoomDto> {
+public class RoomController extends BaseController<Room, RoomDto, RoomDto> {
 
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
