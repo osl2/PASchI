@@ -19,16 +19,23 @@ public class CategoryMapper implements IModelDtoMapper<Category, RatedCategoryDt
 
     private final CategoryBaseRepository<Category, String> categoryRepository;
     private final UserRepository userRepository;
+    private final QualityMapper qualityMapper;
 
     @Autowired
-    public CategoryMapper(CategoryBaseRepository<Category, String> categoryRepository, UserRepository userRepository) {
+    public CategoryMapper(CategoryBaseRepository<Category, String> categoryRepository, UserRepository userRepository, QualityMapper qualityMapper) {
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
+        this.qualityMapper = qualityMapper;
     }
 
     @Override
     public CategoryDto modelToDto(Category category) {
-        return new CategoryDto(category.getId(), category.getUser().getId(), category.getName());
+        if (category instanceof RatedCategory ratedCategory) {
+            return new RatedCategoryDto(ratedCategory.getId(), ratedCategory.getUser().getId(),
+                                        ratedCategory.getName(), this.qualityMapper.modelToDto(ratedCategory.getQuality()));
+        } else {
+            return new CategoryDto(category.getId(), category.getUser().getId(), category.getName());
+        }
     }
 
     @Override
@@ -41,7 +48,13 @@ public class CategoryMapper implements IModelDtoMapper<Category, RatedCategoryDt
 
     @Override
     public Category dtoToModel(RatedCategoryDto categoryDto) {
-        Category category = categoryRepository.findCategoryById(categoryDto.getId()).orElseGet(Category::new);
+        Category category;
+
+        if (categoryDto.getQuality() == null) {
+            category = categoryRepository.findCategoryById(categoryDto.getId()).orElseGet(Category::new);
+        } else {
+            category = categoryRepository.findCategoryById(categoryDto.getId()).orElseGet(RatedCategory::new);
+        }
         User user = userRepository.findUserById(categoryDto.getUserId()).orElse(null);
 
         category.setUser(user);
