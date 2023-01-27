@@ -4,14 +4,14 @@
       Kurse ansehen
     </v-app-bar-title>
     <template v-slot:extension>
-      <v-btn class="ml-15" variant="flat" color="green" rounded @click="newCourseClick">Kurs erstellen</v-btn>
+      <v-btn class="ml-15" variant="flat" color="green" rounded prepend-icon="mdi mdi-plus" @click="newCourseClick">Kurs erstellen</v-btn>
     </template>
   </navigation-bar>
 
   <v-main>
     <SideMenu />
     <v-container fluid>
-      <v-list max-width="500px">
+      <v-list max-width="700">
         <v-list-item
           rounded
           v-for="course in courses"
@@ -25,7 +25,7 @@
           </v-list-item-subtitle>
           <template v-slot:append>
             <v-btn class="ml-2" variant="tonal" color="primary" @click="editCourseClick(course)"><v-icon>fas fa-pencil</v-icon></v-btn>
-            <v-btn class="ml-2" variant="tonal" color="red" @click="deleteCourseClick(course)"><v-icon>fas fa-trash</v-icon></v-btn>
+            <v-btn class="ml-2" variant="tonal" color="red" @click="deleteCourseClick(course)"><v-icon>far fa-trash-can</v-icon></v-btn>
           </template>
         </v-list-item>
       </v-list>

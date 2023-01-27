@@ -5,33 +5,36 @@
  */
 
 // Styles
-import { aliases, fa } from 'vuetify/iconsets/fa'
-import '@fortawesome/fontawesome-free/css/all.css'
+import { aliases, fa } from "vuetify/iconsets/fa";
+import { mdi } from "vuetify/iconsets/mdi";
+import "@fortawesome/fontawesome-free/css/all.css";
+import "@mdi/font/css/materialdesignicons.css";
 
-import 'vuetify/styles'
+import "vuetify/styles";
 
 // Composables
-import { createVuetify } from 'vuetify'
+import { createVuetify } from "vuetify";
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
   icons: {
-    defaultSet: 'fa',
+    defaultSet: "fa",
     aliases,
     sets: {
-      fa
-    }
+      fa,
+      mdi,
+    },
   },
   theme: {
     themes: {
       light: {
         colors: {
-          primary: '#1867C0',
-          secondary: '#5CBBF6',
-          white: '#FFFFFF',
-          grey: '#525252'
+          primary: "#1867C0",
+          secondary: "#5CBBF6",
+          white: "#FFFFFF",
+          grey: "#525252",
         },
       },
     },
   },
-})
+});
