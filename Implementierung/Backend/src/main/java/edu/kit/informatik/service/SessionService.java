@@ -19,7 +19,7 @@ import java.util.Optional;
  */
 
 @Component
-public class SessionService extends BaseService<Session, SessionDto> {
+public class SessionService extends BaseService<Session, SessionDto, SessionDto> {
 
     private final SessionRepository sessionRepository;
 

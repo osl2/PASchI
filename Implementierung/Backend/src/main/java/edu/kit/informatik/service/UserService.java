@@ -19,7 +19,7 @@ import java.util.Optional;
  */
 
 @Component
-public class UserService extends BaseService<User, UserDto> {
+public class UserService extends BaseService<User, UserDto, UserDto> {
 
     private final UserRepository userRepository;
 

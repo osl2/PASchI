@@ -18,7 +18,7 @@ import java.util.Optional;
  */
 
 @Component
-public class RoomService extends BaseService<Room, RoomDto> {
+public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
 
     private final RoomRepository roomRepository;
 

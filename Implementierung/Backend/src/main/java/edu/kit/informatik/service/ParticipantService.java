@@ -18,7 +18,7 @@ import java.util.Optional;
  */
 
 @Component
-public class ParticipantService extends BaseService<Participant, ParticipantDto> {
+public class ParticipantService extends BaseService<Participant, ParticipantDto, ParticipantDto> {
 
     private final ParticipantRepository participantRepository;
 
