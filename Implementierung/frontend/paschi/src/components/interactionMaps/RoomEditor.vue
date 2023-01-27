@@ -39,38 +39,53 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onBeforeMount, onMounted, ref} from "vue";
+import { defineComponent, onBeforeMount, onMounted, ref } from "vue";
 import { RoomObject } from "@/model/userdata/rooms/roomObject";
 import { Room } from "@/model/userdata/rooms/Room";
 import { User } from "@/model/User";
 import { Role } from "@/model/Role";
-import {Position} from "@/model/userdata/rooms/Position";
-import {Chair} from "@/model/userdata/rooms/Chair";
+import { Position } from "@/model/userdata/rooms/Position";
+import { Chair } from "@/model/userdata/rooms/Chair";
 
 export default defineComponent({
   name: "RoomEditor.vue",
   setup() {
-
     const Gregor = ref<User>(
       new User(4, "Gregor", "Snelting", "f", true, Role.USER, "")
     );
-    const room = ref<Room>(
-      new Room(
-        "123",
-        Gregor.value,
-        "Test"
-      )
-    );
+    const room = ref<Room>(new Room("123", Gregor.value, "Test"));
 
     onBeforeMount(() => {
-      room.value.addRoomObject( new Chair("0", Gregor.value, new Position("0", Gregor.value, 0, 0, 0)))
-      room.value.addRoomObject( new Chair("1", Gregor.value, new Position("1", Gregor.value, 100, 100, 0)))
-      room.value.addRoomObject( new Chair("2", Gregor.value, new Position("2", Gregor.value, 200, 200, 0)))
-      room.value.addRoomObject( new Chair("3", Gregor.value, new Position("3", Gregor.value, 300, 300, 0)))
+      room.value.addRoomObject(
+        new Chair("0", Gregor.value, new Position("0", Gregor.value, 0, 0, 0))
+      );
+      room.value.addRoomObject(
+        new Chair(
+          "1",
+          Gregor.value,
+          new Position("1", Gregor.value, 100, 100, 0)
+        )
+      );
+      room.value.addRoomObject(
+        new Chair(
+          "2",
+          Gregor.value,
+          new Position("2", Gregor.value, 200, 200, 0)
+        )
+      );
+      room.value.addRoomObject(
+        new Chair(
+          "3",
+          Gregor.value,
+          new Position("3", Gregor.value, 300, 300, 0)
+        )
+      );
     });
 
     const roomWidth = 16180;
     const roomHeight = 10000;
+
+    const chairWidth = 500;
 
     const maxRoomDisplayWidth = 0.9 * window.innerWidth;
     const maxRoomDisplayHeight = 0.9 * window.innerHeight;
@@ -86,6 +101,8 @@ export default defineComponent({
     const roomDisplayTopMargin = (window.innerHeight - roomDisplayHeight) / 2;
     const roomDisplayLeftMargin = (window.innerWidth - roomDisplayWidth) / 2;
 
+    const tableDockingDistance = 20;
+
     const lastUsedroomObject = ref<RoomObject>();
 
     const moveXStart = ref(0);
@@ -98,6 +115,34 @@ export default defineComponent({
       width: roomDisplayWidth + "px",
       height: roomDisplayHeight + "px",
     };
+
+    function roomObjectOverlaps(
+      roomObject: RoomObject,
+      roomObjects: RoomObject[]
+    ) {
+      for (const otherRoomObject of roomObjects) {
+        if (roomObject.id === otherRoomObject.id) {
+          continue;
+        }
+        if (
+          roomObject.position.xCoordinate + chairWidth >
+            otherRoomObject.position.xCoordinate &&
+          roomObject.position.xCoordinate <
+            otherRoomObject.position.xCoordinate + chairWidth &&
+          roomObject.position.yCoordinate + chairWidth >
+            otherRoomObject.position.yCoordinate &&
+          roomObject.position.yCoordinate <
+            otherRoomObject.position.yCoordinate + chairWidth
+        ) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function roomObjectsCollide(object: RoomObject) {
+
+    }
 
     function roomToDisplayCoordinates(x: number, y: number) {
       return {
@@ -145,8 +190,16 @@ export default defineComponent({
         event.touches[0].clientX - moveXStart.value,
         event.touches[0].clientY - moveYStart.value
       );
-      roomObject.position.xCoordinate = roomObject.position.xCoordinate + delta.x;
-      roomObject.position.yCoordinate = roomObject.position.yCoordinate + delta.y;
+      roomObject.position.xCoordinate =
+        roomObject.position.xCoordinate + delta.x;
+      roomObject.position.yCoordinate =
+        roomObject.position.yCoordinate + delta.y;
+      if (roomObjectOverlaps(roomObject, room.value.roomObjects)) {
+        roomObject.position.xCoordinate =
+          roomObject.position.xCoordinate - delta.x;
+        roomObject.position.yCoordinate =
+          roomObject.position.yCoordinate - delta.y;
+      }
       moveXStart.value = event.touches[0].clientX;
       moveYStart.value = event.touches[0].clientY;
     }
@@ -167,12 +220,14 @@ export default defineComponent({
         event.clientX - moveXStart.value,
         event.clientY - moveYStart.value
       );
-      roomObject.position.xCoordinate = roomObject.position.xCoordinate + delta.x;
-      roomObject.position.yCoordinate = roomObject.position.yCoordinate + delta.y;
+      roomObject.position.xCoordinate =
+        roomObject.position.xCoordinate + delta.x;
+      roomObject.position.yCoordinate =
+        roomObject.position.yCoordinate + delta.y;
     }
 
     return {
-      roomObjects : room.value.roomObjects,
+      roomObjects: room.value.roomObjects,
       dragStart,
       moveDrag,
       dragOver,

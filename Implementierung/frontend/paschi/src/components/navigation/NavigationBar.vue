@@ -1,11 +1,10 @@
 <template>
-  <v-app-bar color="primary" elevation="0" border >
+  <v-app-bar color="primary" elevation="0" border>
     <template v-slot:prepend>
       <slot name="prepend" />
+      <v-app-bar-nav-icon icon="fas fa-arrow-left" @click="router.back()" />
     </template>
-    <slot name="default">
-
-    </slot>
+    <slot name="default"> </slot>
     <template v-slot:append>
       <slot name="append" />
     </template>
@@ -16,23 +15,24 @@
 </template>
 
 <script>
+import router from "@/plugins/router";
 
 export default {
   name: "NavigationBar",
+
   props: {
     extended: {
       type: Boolean,
       required: false,
-      default: false
-    }
+      default: false,
+    },
   },
   setup() {
     return {
-    }
-  }
-}
+      router,
+    };
+  },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
