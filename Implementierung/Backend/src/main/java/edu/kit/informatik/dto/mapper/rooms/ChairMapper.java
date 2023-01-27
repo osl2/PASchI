@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ChairMapper implements IModelDtoMapper<Chair, ChairDto> {
+public class ChairMapper implements IModelDtoMapper<Chair, ChairDto, ChairDto> {
 
     private final ChairRepository chairRepository;
     private final UserRepository userRepository;

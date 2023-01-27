@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @Service
-public class ParticipantTypeMapper implements IModelDtoMapper<ParticipantType, ParticipantTypeDto> {
+public class ParticipantTypeMapper implements IModelDtoMapper<ParticipantType, ParticipantTypeDto, ParticipantTypeDto> {
     
     @Override
     public ParticipantTypeDto modelToDto(ParticipantType ParticipantType) {

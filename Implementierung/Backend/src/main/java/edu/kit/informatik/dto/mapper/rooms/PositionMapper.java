@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class PositionMapper implements IModelDtoMapper<Position, PositionDto> {
+public class PositionMapper implements IModelDtoMapper<Position, PositionDto, PositionDto> {
 
     private final PositionRepository positionRepository;
     private final UserRepository userRepository;

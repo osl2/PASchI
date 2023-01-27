@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, SeatArrangementDto> {
+public class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, SeatArrangementDto, SeatArrangementDto> {
 
     private final SeatArrangementRepository seatArrangementRepository;
     private final UserRepository userRepository;

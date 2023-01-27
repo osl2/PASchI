@@ -18,7 +18,7 @@ import java.util.Optional;
  */
 
 @Component
-public class SeatArrangementService extends BaseService<SeatArrangement, SeatArrangementDto> {
+public class SeatArrangementService extends BaseService<SeatArrangement, SeatArrangementDto, SeatArrangementDto> {
 
     private final SeatArrangementRepository seatArrangementRepository;
 

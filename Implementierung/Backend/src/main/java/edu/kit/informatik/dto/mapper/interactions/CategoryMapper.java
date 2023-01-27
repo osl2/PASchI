@@ -2,6 +2,7 @@ package edu.kit.informatik.dto.mapper.interactions;
 
 import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
+import edu.kit.informatik.dto.userdata.interactions.RatedCategoryDto;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.interactions.Category;
 import edu.kit.informatik.model.userdata.interactions.RatedCategory;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CategoryMapper implements IModelDtoMapper<Category, CategoryDto> {
+public class CategoryMapper implements IModelDtoMapper<Category, RatedCategoryDto, CategoryDto> {
 
     private final CategoryBaseRepository<Category, String> categoryRepository;
     private final UserRepository userRepository;
@@ -39,7 +40,7 @@ public class CategoryMapper implements IModelDtoMapper<Category, CategoryDto> {
     }
 
     @Override
-    public Category dtoToModel(CategoryDto categoryDto) {
+    public Category dtoToModel(RatedCategoryDto categoryDto) {
         Category category = categoryRepository.findCategoryById(categoryDto.getId()).orElseGet(Category::new);
         User user = userRepository.findUserById(categoryDto.getUserId()).orElse(null);
 
@@ -50,7 +51,7 @@ public class CategoryMapper implements IModelDtoMapper<Category, CategoryDto> {
     }
 
     @Override
-    public List<Category> dtoToModel(List<CategoryDto> categoryDtos) {
+    public List<Category> dtoToModel(List<RatedCategoryDto> categoryDtos) {
         List<Category> categories = new ArrayList<>();
         categoryDtos.forEach(categoryDto -> categories.add(dtoToModel(categoryDto)));
 
