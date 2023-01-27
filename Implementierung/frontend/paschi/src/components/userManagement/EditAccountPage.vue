@@ -4,7 +4,7 @@
       <v-app-bar-title> Benutzerdaten bearbeiten </v-app-bar-title>
     </template>
     <template v-slot:extension>
-      <v-btn class="ml-15 ma-2" variant="tonal" rounded="pill" @click=""
+      <v-btn class="ml-15 ma-2" variant="tonal" rounded="pill" @click="router.back()"
         >Verwerfen</v-btn
       >
       <v-btn class="ma-2" variant="flat" rounded="pill" color="green" @click=""
