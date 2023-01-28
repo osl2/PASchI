@@ -1,23 +1,32 @@
 <template>
-  <v-main>
-    <v-container fluid class="h-100">
-      <v-row  class="h-100" align="center" justify="center">
-        <v-card class="v-col-11 bg-grey-lighten-3 elevation-6" max-width="500px">
-          <v-card-title class="text-center" >
+  <v-main class="ma-0 bg-grey-lighten-3 v-row justify-center align-content-center" :style="{borderTop: 'solid', borderWidth:'5px', borderTopColor: $vuetify.theme.current.colors.primary}">
+    <v-container fluid class="v-col-11" style="max-width: 450px">
+        <v-card class="pa-2" variant="text">
+          <v-card-title class="text-h4 text-center text-indigo-darken-4 text-wrap" >
+            Willkommen bei PAschI
+          </v-card-title>
+          <v-card-subtitle class="text-xxl-caption text-center text-indigo-darken-3 text-wrap" >
+          Das Programm zur Aufzeichnung von schülerischen Interaktionen
+          </v-card-subtitle>
+        </v-card>
+        <v-card class="mt-10 pa-5 rounded-lg" variant="flat">
+          <v-card-title class="text-center text-grey-darken-3" >
             Bitte melden Sie sich an.
           </v-card-title>
           <v-card-item>
-            <v-text-field class="mt-2" variant="outlined" label="Mailadresse" />
-            <v-text-field type="password" variant="outlined" label="Passwort" />
-            <v-card-item>
-              <v-btn block prepend-icon="fas fa-sign-in-alt" color="primary" @click="router.push('Dashboard')" >Login</v-btn>
-            </v-card-item>
-            <v-card-item>
-              <v-btn block color="primary" @click="router.push('Register')" >Noch keinen Account? Zur Registrierung</v-btn>
-            </v-card-item>
+            <v-text-field prepend-inner-icon="mdi mdi-email-outline" class="mt-2" variant="outlined" label="Mailadresse" />
+            <v-text-field prepend-inner-icon="mdi mdi-lock-outline" type="password" variant="outlined" label="Passwort" />
           </v-card-item>
+            <v-card-item>
+              <v-btn block height="50" variant="flat" prepend-icon="fas fa-sign-in-alt" color="primary" @click="router.push('Dashboard')" >Login</v-btn>
+            </v-card-item>
         </v-card>
-      </v-row>
+        <v-card class="mt-8 pa-2 rounded-lg bg-grey-lighten-2" variant="flat" @click="router.push('Register')">
+          <v-card-title class="text-sm-button align-content-center text-center text-grey-darken-3 text-wrap">
+            Noch nicht registriert? &middot;
+            Zum Registrieren
+          </v-card-title>
+        </v-card>
     </v-container>
   </v-main>
 </template>
