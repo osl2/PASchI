@@ -61,23 +61,23 @@ const routes = [
     props: true,
   },
   {
-    path: "session-statistic",
+    path: "/session-statistic",
     name: "SessionStatisticPage",
     component: SessionStatisticPage,
     props: true,
   },
   {
-    path: "student-statistic",
+    path: "/student-statistic",
     name: "StudentStatisticPage",
     component: StudentStatisticPage,
     props: true,
   },
   {
-    path: "show-interaction-map",
+    path: "/show-interaction-map",
     name: "ShowInteractionMapPage",
     component: ShowInteractionMapPage,
     props: true,
-  }
+  },
 ];
 
 const router = createRouter({
