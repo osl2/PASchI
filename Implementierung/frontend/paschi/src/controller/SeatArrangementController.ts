@@ -3,7 +3,6 @@ import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 import {UserController} from "@/controller/UserController";
 import {Session} from "@/model/userdata/courses/Session";
 import {useRoomStore} from "@/store/RoomStore";
-import {createPinia} from "pinia";
 import {useCourseStore} from "@/store/CourseStore";
 import {useSessionStore} from "@/store/SessionStore";
 import {useStudentStore} from "@/store/StudentStore";
@@ -16,11 +15,11 @@ export class SeatArrangementController {
   private static controller: SeatArrangementController = new SeatArrangementController();
   private userController = UserController.getUserController();
   private seatArrangementStore = useSeatArrangementStore();
-  private roomStore = useRoomStore(createPinia());
-  private roomObjectStore = useRoomObjectStore(createPinia());
-  private courseStore = useCourseStore(createPinia());
-  private sessionStore = useSessionStore(createPinia());
-  private studentStore = useStudentStore(createPinia());
+  private roomStore = useRoomStore();
+  private roomObjectStore = useRoomObjectStore();
+  private courseStore = useCourseStore();
+  private sessionStore = useSessionStore();
+  private studentStore = useStudentStore();
 
   private constructor() {
   }

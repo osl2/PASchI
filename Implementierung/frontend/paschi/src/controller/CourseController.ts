@@ -5,7 +5,6 @@ import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {useCourseStore} from "@/store/CourseStore";
 import {UserController} from "@/controller/UserController";
 import {useStudentStore} from "@/store/StudentStore";
-import {createPinia} from "pinia";
 import {useSessionStore} from "@/store/SessionStore";
 import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 
@@ -15,9 +14,9 @@ export class CourseController {
   private static controller: CourseController = new CourseController();
   private userController = UserController.getUserController();
   private courseStore = useCourseStore();
-  private studentStore = useStudentStore(createPinia());
-  private sessionStore = useSessionStore(createPinia());
-  private arrangementStore = useSeatArrangementStore(createPinia());
+  private studentStore = useStudentStore();
+  private sessionStore = useSessionStore();
+  private arrangementStore = useSeatArrangementStore();
 
   private constructor() {
   }

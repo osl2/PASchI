@@ -8,7 +8,6 @@ import {Table} from "@/model/userdata/rooms/Table";
 import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {RoomObject} from "@/model/userdata/rooms/RoomObject";
 import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
-import {createPinia} from "pinia";
 
 // TODO: Backend Service einbinden
 export class RoomController {
@@ -16,7 +15,7 @@ export class RoomController {
   private static controller: RoomController = new RoomController();
   private userController = UserController.getUserController();
   private roomStore = useRoomStore();
-  private arrangementStore = useSeatArrangementStore(createPinia());
+  private arrangementStore = useSeatArrangementStore();
 
   private constructor() {
   }

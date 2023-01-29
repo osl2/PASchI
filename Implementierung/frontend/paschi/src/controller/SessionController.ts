@@ -6,7 +6,6 @@ import {useSessionStore} from "@/store/SessionStore";
 import {UserController} from "@/controller/UserController";
 import {useInteractionStore} from "@/store/InteractionStore";
 import {useCourseStore} from "@/store/CourseStore";
-import {createPinia} from "pinia";
 import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 import {useCategoryStore} from "@/store/CategoryStore";
 
@@ -17,9 +16,9 @@ export class SessionController {
   private static controller: SessionController = new SessionController();
   private userController = UserController.getUserController();
   private sessionStore = useSessionStore();
-  private courseStore = useCourseStore(createPinia());
-  private arrangementStore = useSeatArrangementStore(createPinia());
-  private categoryStore = useCategoryStore(createPinia());
+  private courseStore = useCourseStore();
+  private arrangementStore = useSeatArrangementStore();
+  private categoryStore = useCategoryStore();
 
   private constructor() {
   }

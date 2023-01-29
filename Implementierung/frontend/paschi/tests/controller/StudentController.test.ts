@@ -1,7 +1,6 @@
 import {StudentController} from "@/controller/StudentController";
 import {setActivePinia, createPinia} from "pinia";
 import {UserController} from "@/controller/UserController";
-import exp from "constants";
 
 // TODO: Backend
 

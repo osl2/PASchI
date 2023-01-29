@@ -3,7 +3,6 @@ import {Course} from "@/model/userdata/courses/Course";
 import {Interaction} from "@/model/userdata/interactions/Interaction";
 import {useStudentStore} from "@/store/StudentStore";
 import {UserController} from "@/controller/UserController";
-import {createPinia} from "pinia";
 import {useCourseStore} from "@/store/CourseStore";
 import {useSessionStore} from "@/store/SessionStore";
 
@@ -12,9 +11,9 @@ export class StudentController {
 
   private static controller: StudentController = new StudentController();
   private userController = UserController.getUserController();
-  private studentStore = useStudentStore(createPinia());
-  private courseStore = useCourseStore(createPinia());
-  private sessionStore = useSessionStore(createPinia());
+  private studentStore = useStudentStore();
+  private courseStore = useCourseStore();
+  private sessionStore = useSessionStore();
 
   private constructor() {
   }
