@@ -8,10 +8,13 @@
     <v-card
       @dragover="dragOver"
       @drop="moveDrag($event, lastUsedRoomObject)"
+
       key="background"
       variant="flat"
       color="white"
       :style="roomDisplayStyle"
+      @mouseup="dragEnd()"
+      @mouseleave="dragEnd()"
     >
       <v-card
         v-for="roomObject in roomObjects"
@@ -19,11 +22,16 @@
         class="ma-0 v-row align-center justify-center"
         color="secondary"
         elevation="0"
-        draggable="true"
+        draggable="false"
         :style="getRoomObjectStyle(roomObject)"
         @touchstart="touchStart($event)"
         @touchmove="moveTouch($event, roomObject)"
         @dragstart="dragStart($event, roomObject)"
+        @mousedown="dragStart($event, roomObject)"
+        @mousemove="moveDrag($event, roomObject)"
+        @mouseenter="resetMoveStart($event)"
+        @mouseup="dragEnd()"
+        @mouseleave="moveDrag($event, roomObject)"
       >
         <v-icon
           class="v-col-auto"
@@ -108,6 +116,8 @@ export default defineComponent({
 
     const moveXStart = ref(0);
     const moveYStart = ref(0);
+
+    var mouseDown = false;
 
     const roomDisplayStyle = {
       position: "absolute",
@@ -380,9 +390,13 @@ export default defineComponent({
       moveXStart.value = event.clientX;
       moveYStart.value = event.clientY;
       lastUsedRoomObject.value = roomObject;
+      mouseDown = true;
     }
 
     function moveDrag(event: DragEvent, roomObject: RoomObject) {
+      if (!mouseDown) {
+        return;
+      }
       const delta = screenCoordinatesDeltaToRoomCoordinatesDelta(
         event.clientX - moveXStart.value,
         event.clientY - moveYStart.value
@@ -397,6 +411,17 @@ export default defineComponent({
         roomObject.position.yCoordinate =
           roomObject.position.yCoordinate - delta.y;
       }
+      moveXStart.value = event.clientX;
+      moveYStart.value = event.clientY;
+    }
+
+    function dragEnd() {
+      mouseDown = false;
+    }
+
+    function resetMoveStart(event: MouseEvent) {
+      moveXStart.value = event.clientX;
+      moveYStart.value = event.clientY;
     }
 
     return {
@@ -409,6 +434,8 @@ export default defineComponent({
       getRoomObjectStyle,
       roomDisplayStyle,
       lastUsedRoomObject,
+      dragEnd,
+      resetMoveStart
     };
   },
 });
