@@ -1,13 +1,14 @@
 <template>
   <NavigationBar>
     <template #default>
-      <v-app-bar-title>
-        Willkommen zurück, {{ userStore.getFirstName }}
-        {{ userStore.getSurName }}
-      </v-app-bar-title>
+      <v-toolbar-title>
+        Willkommen zurück, {{userStore.getFirstName}} {{ userStore.getSurName }}
+      </v-toolbar-title>
     </template>
     <template #append>
-      <v-btn variant="tonal" color="white" rounded="pill"> Abmelden </v-btn>
+      <v-btn variant="outlined" rounded="pill">
+        Abmelden
+      </v-btn>
     </template>
   </NavigationBar>
 
@@ -28,7 +29,7 @@
 
 <script>
 import AppBar from "@/components/navigation/NavigationBar.vue";
-import { useUserStore } from "@/store/UserStore";
+import {useUserStore} from "@/store/UserStore";
 import RecentCoursesCard from "@/components/dashboard/RecentCoursesCard.vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import RecentSessionsCard from "@/components/dashboard/RecentSessionsCard.vue";
@@ -36,20 +37,17 @@ import SideMenu from "@/components/navigation/SideMenu.vue";
 
 export default {
   name: "Dashboard",
-  components: {
-    SideMenu,
-    RecentSessionsCard,
-    NavigationBar,
-    RecentCoursesCard,
-  },
+  components: {SideMenu, RecentSessionsCard, NavigationBar, RecentCoursesCard},
   setup() {
-    const userStore = useUserStore();
+    const userStore = useUserStore()
 
     return {
-      userStore,
-    };
-  },
-};
+      userStore
+    }
+  }
+}
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>

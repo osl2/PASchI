@@ -14,7 +14,7 @@ export const useStudentStore = defineStore('students', {
     },
     deleteStudent(id: string) {
       this.students.forEach((element, index) => {
-        if (element.id === id) {
+        if (element.getId === id) {
           this.students.splice(index, 1);
         }
       });
@@ -34,6 +34,7 @@ export const useStudentStore = defineStore('students', {
       return undefined;
     },
     getAllStudents(): Student[] {
+      // @ts-ignore
       return this.students;
     },
     getNextId(): number {

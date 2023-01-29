@@ -1,7 +1,6 @@
-import { RoomObject } from "@/model/userdata/rooms/RoomObject";
-import { User } from "@/model/User";
-import { Position } from "@/model/userdata/rooms/Position";
-import { Dimensions } from "@/model/userdata/rooms/Dimensions";
+import {RoomObject} from "@/model/userdata/rooms/RoomObject";
+import {User} from "@/model/User";
+import {Position} from "@/model/userdata/rooms/Position";
 
 export class Table extends RoomObject {
 

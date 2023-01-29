@@ -1,10 +1,12 @@
 <template>
+  <v-main>
 
+  </v-main>
 </template>
 
 <script>
 export default {
-  name: "viewStudentsPage"
+  name: "InteractionMap.vue"
 }
 </script>
 
