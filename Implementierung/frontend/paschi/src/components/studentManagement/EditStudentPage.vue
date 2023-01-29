@@ -6,7 +6,6 @@
     </template>
   </navigation-bar>
   <v-main>
-    <side-menu />
     <v-container>
       <v-text-field
         v-model="firstName"
@@ -19,7 +18,9 @@
         type="input"
       ></v-text-field>
     </v-container>
-    <v-dialog v-model="deleteSudentDialog">
+    <v-dialog
+      v-model="deleteSudentDialog"
+    >
       <v-card>
         "Delete student?"
         <v-btn @click="cancelDeleteClick">cancel</v-btn>
@@ -29,41 +30,39 @@
   </v-main>
 </template>
 
-<script lang="ts">
+<script>
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
-import { StudentController } from "@/controller/StudentController";
-import { defineComponent, ref } from "vue";
-import SideMenu from "@/components/navigation/SideMenu.vue";
-export default defineComponent({
+import {StudentController} from "@/controller/StudentController";
+import {ref} from "vue";
+export default {
   name: "editStudentPage.vue",
   components: {
-    SideMenu,
-    NavigationBar,
+    NavigationBar
   },
   props: {
     studentId: {
-      type: String,
-      required: true,
-    },
+      type: String
+    }
   },
   setup(props) {
     const studentController = StudentController.getStudentConroller();
-
-    const firstName = ref<String>(studentController.getStudent(props.studentId)!.firstName);
-    const lastName = ref<String>(studentController.getStudent(props.studentId)!.lastName);
-    const deleteSudentDialog = ref<boolean>(false);
+    const firstName = ref<String>(studentController.getStudent(props.studentId).firstName)
+    const lastName = ref<String>(studentController.getStudent(props.studentId).lastName)
+    const deleteSudentDialog = ref<Boolean>false
 
     function activateCardClick() {
-      deleteSudentDialog.value = true;
+      this.deleteSudentDialog.value = true;
     }
-    function saveChangesClick() {}
+    function saveChangesClick() {
 
-    function deleteStudentClick() {
+    }
+
+    function deleteStudentClick(){
       studentController.deleteStudent(props.studentId);
-      deleteSudentDialog.value = false;
+      this.deleteSudentDialog=false;
     }
     function cancelDeleteClick() {
-      deleteSudentDialog.value = false;
+      this.deleteSudentDialog=false;
     }
 
     return {
@@ -73,10 +72,12 @@ export default defineComponent({
       saveChangesClick,
       firstName,
       lastName,
-      deleteSudentDialog,
-    };
+      deleteSudentDialog
+    }
   },
-});
+}
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>

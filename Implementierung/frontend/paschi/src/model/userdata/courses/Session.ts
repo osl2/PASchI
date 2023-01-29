@@ -30,7 +30,7 @@ export class Session {
     this.interactions.push(interaction);
   }
 
-  removeInteraction(interactionId: number) {
+  removeInteraction(interactionId: string) {
     this.interactions.forEach((element, index) => {
       if (element.getId == interactionId) {
         this.interactions.splice(index, 1);

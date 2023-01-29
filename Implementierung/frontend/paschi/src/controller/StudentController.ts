@@ -33,7 +33,11 @@ export class StudentController {
   }
 
   updateStudent(id: string, firstName: string, lastName: string) {
-
+    let student = this.studentStore.getStudent(id);
+    if (student !== undefined) {
+      student.firstName = firstName;
+      student.lastName = lastName;
+    }
   }
 
   deleteStudent(id: string) {
@@ -45,15 +49,20 @@ export class StudentController {
   }
 
   getStudent(id: string): Student | undefined {
-    return undefined;
+    return this.studentStore.getStudent(id);
   }
 
   getAllStudents(): Student[] {
-    return [];
+    return this.studentStore.getAllStudents();
   }
 
-  getCoursesOfStudent(studentId: string): Course[] {
-    return [];
+  getCoursesOfStudent(studentId: string): Course[] | undefined {
+    let student = this.studentStore.getStudent(studentId);
+    if (student == undefined) {
+      return undefined;
+    }
+
+    return student.courses;
   }
 
   addCourseToStudent(studentId: string, courseId: string) {
@@ -74,10 +83,13 @@ export class StudentController {
     }
   }
 
-  }
+  getInteractionsOfStudent(studentId: string): Interaction[] | undefined {
+    let student = this.studentStore.getStudent(studentId);
+    if (student == undefined) {
+      return undefined;
+    }
 
-  getInteractionsOfStudent(studentId: string): Interaction[] {
-    return [];
+    return student.interactions;
   }
 
   addInteraction(studentId: string, sessionId: string, interactionId: string) {
@@ -92,6 +104,9 @@ export class StudentController {
   }
 
   removeInteraction(studentId: string, interactionId: string) {
-
+    let student = this.studentStore.getStudent(studentId);
+    if (student !== undefined) {
+      student.removeInteraction(interactionId);
+    }
   }
 }
