@@ -58,39 +58,43 @@ import { Dimensions } from "@/model/userdata/rooms/Dimensions";
 export default defineComponent({
   name: "RoomEditor.vue",
   setup() {
-    const Gregor = ref<User>(
-      new User(4, "Gregor", "Snelting", "f", true, Role.USER, "")
-    );
-    const room = ref<Room>(new Room("123", Gregor.value, "Test"));
+    const gregor =
+      new User("4", 4, "Gregor", "Snelting", "f", true, Role.USER, "")
+    const room = ref<Room>(new Room("123", 123, gregor, "Test"));
+
 
     onBeforeMount(() => {
       room.value.addRoomObject(
         new Chair(
           "0",
-          Gregor.value,
-          new Position("0", Gregor.value, 0, 0, Math.PI / 4)
+          0,
+          gregor,
+          new Position("0", 0, gregor, 0, 0, Math.PI / 4)
         )
       );
       room.value.addRoomObject(
         new Chair(
           "1",
-          Gregor.value,
-          new Position("1", Gregor.value, 700, 100, 0)
+          2,
+          gregor,
+          new Position("1", 1, gregor, 700, 100, 0)
         )
       );
       room.value.addRoomObject(
         new Chair(
           "2",
-          Gregor.value,
-          new Position("2", Gregor.value, 200, 700, 0)
+          2,
+          gregor,
+          new Position("2", 2, gregor, 200, 700, 0)
         )
       );
       room.value.addRoomObject(
         new Table(
           "3",
-          Gregor.value,
-          new Position("3", Gregor.value, 3000, 3000, Math.PI / 4),
-          new Dimensions(3000, 1000)
+          3,
+          gregor,
+          new Position("3", 3, gregor, 3000, 3000, Math.PI / 4),
+          3000, 1000
         )
       );
     });
@@ -133,7 +137,7 @@ export default defineComponent({
       roomObjects: RoomObject[]
     ) {
       for (let i = 0; i < roomObjects.length; i++) {
-        if (roomObjects[i].id === roomObject.id) {
+        if (roomObjects[i].getId === roomObject.getId) {
           continue;
         }
         if (separatedAxisCollide(roomObject, roomObjects[i]) && separatedAxisCollide(roomObjects[i], roomObject)) {
@@ -150,19 +154,19 @@ export default defineComponent({
       const roomObject1Orientation = roomObject1.position.orientation;
       const roomObject1Origin = {
         x: roomObject1.position.xCoordinate + roomObject1.dimensions.width / 2,
-        y: roomObject1.position.yCoordinate + roomObject1.dimensions.height / 2,
+        y: roomObject1.position.yCoordinate + roomObject1.dimensions.length / 2,
       };
       //describes the vector from the origin to the top right corner of the roomObject1
       const roomObject1TopRightDiagonal = {
         x:
           (roomObject1.dimensions.width / 2) *
             Math.cos(roomObject1Orientation) +
-          (roomObject1.dimensions.height / 2) *
+          (roomObject1.dimensions.length / 2) *
             Math.sin(roomObject1Orientation),
         y:
           (roomObject1.dimensions.width / 2) *
             Math.sin(roomObject1Orientation) -
-          (roomObject1.dimensions.height / 2) *
+          (roomObject1.dimensions.length / 2) *
             Math.cos(roomObject1Orientation),
       };
       //describes the vector from the origin to the top left corner of the roomObject1
@@ -170,12 +174,12 @@ export default defineComponent({
         x:
           -(roomObject1.dimensions.width / 2) *
             Math.cos(roomObject1Orientation) +
-          (roomObject1.dimensions.height / 2) *
+          (roomObject1.dimensions.length / 2) *
             Math.sin(roomObject1Orientation),
         y:
           -(roomObject1.dimensions.width / 2) *
             Math.sin(roomObject1Orientation) -
-          (roomObject1.dimensions.height / 2) *
+          (roomObject1.dimensions.length / 2) *
             Math.cos(roomObject1Orientation),
       };
       //describes the vector from the origin to the bottom right corner of the roomObject1
@@ -209,19 +213,19 @@ export default defineComponent({
       const roomObject2Orientation = roomObject2.position.orientation;
       const roomObject2Origin = {
         x: roomObject2.position.xCoordinate + roomObject2.dimensions.width / 2,
-        y: roomObject2.position.yCoordinate + roomObject2.dimensions.height / 2,
+        y: roomObject2.position.yCoordinate + roomObject2.dimensions.length / 2,
       };
       //describes the vector from the origin to the top right corner of the roomObject2
       const roomObject2TopRightDiagonal = {
         x:
           (roomObject2.dimensions.width / 2) *
             Math.cos(roomObject2Orientation) +
-          (roomObject2.dimensions.height / 2) *
+          (roomObject2.dimensions.length / 2) *
             Math.sin(roomObject2Orientation),
         y:
           (roomObject2.dimensions.width / 2) *
             Math.sin(roomObject2Orientation) -
-          (roomObject2.dimensions.height / 2) *
+          (roomObject2.dimensions.length / 2) *
             Math.cos(roomObject2Orientation),
       };
       //describes the vector from the origin to the top left corner of the roomObject2
@@ -229,12 +233,12 @@ export default defineComponent({
         x:
           -(roomObject2.dimensions.width / 2) *
             Math.cos(roomObject2Orientation) +
-          (roomObject2.dimensions.height / 2) *
+          (roomObject2.dimensions.length / 2) *
             Math.sin(roomObject2Orientation),
         y:
           -(roomObject2.dimensions.width / 2) *
             Math.sin(roomObject2Orientation) -
-          (roomObject2.dimensions.height / 2) *
+          (roomObject2.dimensions.length / 2) *
             Math.cos(roomObject2Orientation),
       };
       //describes the vector from the origin to the bottom right corner of the roomObject2
@@ -342,7 +346,7 @@ export default defineComponent({
         top: y + "px",
         left: x + "px",
         width: roomObject.dimensions.width * roomScale + "px",
-        height: roomObject.dimensions.height * roomScale + "px",
+        height: roomObject.dimensions.length * roomScale + "px",
         transform: `rotate(${roomObject.position.orientation}rad)`,
       };
     }
@@ -405,7 +409,7 @@ export default defineComponent({
         roomObject.position.xCoordinate + delta.x;
       roomObject.position.yCoordinate =
         roomObject.position.yCoordinate + delta.y;
-      if (roomObjectOverlaps(roomObject, room.value.roomObjects)) {
+      if (roomObjectOverlaps(roomObject, room.value!.roomObjects)) {
         roomObject.position.xCoordinate =
           roomObject.position.xCoordinate - delta.x;
         roomObject.position.yCoordinate =
@@ -425,7 +429,7 @@ export default defineComponent({
     }
 
     return {
-      roomObjects: room.value.roomObjects,
+      roomObjects: room.value!.roomObjects,
       dragStart,
       moveDrag,
       dragOver,
