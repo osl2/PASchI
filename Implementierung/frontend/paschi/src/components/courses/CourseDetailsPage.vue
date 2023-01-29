@@ -12,6 +12,15 @@
     <v-btn @click="activateInteractionMapSelection"
       >Interaktionskarte ansehen</v-btn
     >
+    <v-list>
+      <v-list-item v-for="student in studentsInCourse"
+        >{{ student.firstName }} {{ student.lastName }}
+        <v-btn @click="studentStatisticClick(student)"
+          >Statistiken anzeigen</v-btn
+        >
+        <v-btn @click="deleteStudentClick(student)">Schüler entfernen</v-btn>
+      </v-list-item>
+    </v-list>
     <v-dialog v-model="sessionStatisticDialog">
       <v-card>
         <v-list>
@@ -57,6 +66,7 @@ import { Session } from "@/model/userdata/courses/Session";
 import { Student } from "@/model/userdata/interactions/Student";
 import { defineComponent, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
+import router from "@/plugins/router";
 
 export default defineComponent({
   name: "CourseDetailsPage",
@@ -88,17 +98,29 @@ export default defineComponent({
       courseController.getSeatArrangements(props.courseId)
     );
 
-    function showCourseStatisticsClick() {}
-    function editCourseDetailsClick() {}
-    function editStudentClick() {}
-    function deleteStudentClick() {}
-    function activateInteractionMapSelection() {}
-    function activateSessionStatisticsSelection() {}
+    function showCourseStatisticsClick() {
+      router.push({name: 'editCoursePage', params: {courseId: props.courseId}});
+    }
+    function editCourseDetailsClick() {
+
+    }
+    function editStudentClick(student: Student) {}
+    function deleteStudentClick(student: Student) {}
+    function activateInteractionMapSelection() {
+      interactionMapSelectionDialog.value=true;
+    }
+    function activateSessionStatisticsSelection() {
+      sessionStatisticDialog.value=true;
+    }
     function navigateToSessionStatistic(session: Session) {}
     function navigateToInteractionMap(session: Session) {}
     function addStudent(student: Student) {}
-    function activateStudentCard() {}
-    function addSessionClick() {}
+    function activateStudentCard() {
+      addStudentSelectionDialog.value=true;
+    }
+    function addSessionClick() {
+      seatArrangementSelectionDialog.value=true;
+    }
     function startSessionClick(seatArrangement: SeatArrangement) {}
     function studentStatisticClick(student: Student) {}
 
