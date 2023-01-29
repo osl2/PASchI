@@ -35,6 +35,9 @@ export const useCourseStore = defineStore('courses', {
     getAllCourses(): Course[] {
       // @ts-ignore
       return this.courses;
+    },
+    getNextId(): number {
+      return this.nextId++;
     }
   }
 })

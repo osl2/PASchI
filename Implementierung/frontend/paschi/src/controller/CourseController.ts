@@ -29,7 +29,7 @@ export class CourseController {
   createCourse(name: string, subject: string): string {
     return this.courseStore.addCourse(new Course(
       undefined,
-      this.courseStore.nextId,
+      this.courseStore.getNextId(),
       this.userController.getUser(),
       name,
       subject

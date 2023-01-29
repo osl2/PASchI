@@ -1,6 +1,7 @@
 import {StudentController} from "@/controller/StudentController";
 import {setActivePinia, createPinia} from "pinia";
 import {UserController} from "@/controller/UserController";
+import exp from "constants";
 
 // TODO: Backend
 
@@ -20,6 +21,7 @@ const id = studentController.createStudent(firstName, lastName);
 const student = studentController.getStudent(id)!;
 
 test("create", () => {
+  expect(student.getId).toBe(id);
   expect(student.firstName).toBe(firstName);
   expect(student.lastName).toBe(lastName);
 
