@@ -9,6 +9,7 @@
       <slot name="append" />
     </template>
     <template v-if="extended" v-slot:extension>
+      <v-card variant="text" width="56px" height="1px" />
       <slot name="extension" />
     </template>
   </v-app-bar>

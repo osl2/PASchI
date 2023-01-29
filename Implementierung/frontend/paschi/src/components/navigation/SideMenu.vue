@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer elevation="10" floating expand-on-hover rail>
+  <v-navigation-drawer absolute elevation="10" floating expand-on-hover rail>
     <v-list nav density="compact" active-class="sideMenu-active" class="mt-12 text-white">
       <v-list-item :active="subRouteOf('Dashboard')" prepend-icon="fas fa-gauge" @click="router().push('/dashboard')">
         <v-list-item-title>
