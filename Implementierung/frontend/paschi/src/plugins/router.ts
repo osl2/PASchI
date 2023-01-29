@@ -20,7 +20,7 @@ const routes = [
     path: "/edit-student",
     name: "EditStudentPage",
     component: EditStudentPage,
-    props: { studentId: 1 },
+    props: true,
   },
   {
     path: "/view-students",
@@ -31,7 +31,7 @@ const routes = [
     path: "/edit-course",
     name: "EditCoursePage",
     component: EditCoursePage,
-    props: { courseId: 1 },
+    props: true,
   },
   {
     path: "/view-courses",
@@ -48,7 +48,7 @@ const routes = [
     path: "/course-details",
     name: "CourseDetailsPage",
     component: CourseDetailsPage,
-    props: { courseId: 1 },
+    props: true,
   },
 ];
 
