@@ -6,6 +6,7 @@ import edu.kit.informatik.model.userdata.courses.Course;
 import edu.kit.informatik.repositories.CourseRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -78,7 +79,7 @@ public class CourseService extends BaseService<Course, CourseDto, CourseDto> {
     }
 
     @Override
-    public String delete(String id) {
+    public String delete(@RequestParam String id) {
         this.courseRepository.deleteById(id);
         return id;
     }
