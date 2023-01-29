@@ -14,7 +14,6 @@ export abstract class Participant {
 
   protected constructor(id: string | undefined, localId: number, user: User, firstName: string, lastName: string) {
     this.id = id;
-    this.localId = localId;
     this.user = user;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -44,16 +43,5 @@ export abstract class Participant {
         this.interactions.splice(index, 1);
       }
     });
-  }
-
-  get getId(): string {
-    if (this.id == undefined) {
-      return this.localId.toString();
-    }
-    return this.id;
-  }
-
-  set setId(id: string) {
-    this.id = id;
   }
 }
