@@ -10,6 +10,10 @@ import ViewCoursesPage from "@/components/courses/viewCoursesPage.vue";
 import EditCoursePage from "@/components/courses/editCoursePage.vue";
 import EditAccountPage from "@/components/userManagement/EditAccountPage.vue";
 import CourseDetailsPage from "@/components/courses/CourseDetailsPage.vue";
+import CourseStatisticPage from "@/components/statistics/CourseStatisticPage.vue";
+import SessionStatisticPage from "@/components/statistics/SessionStatisticPage.vue";
+import StudentStatisticPage from "@/components/statistics/StudentStatisticPage.vue";
+import ShowInteractionMapPage from "@/components/statistics/ShowInteractionMapPage.vue";
 
 const routes = [
   { path: "/login", name: "Login", component: Login },
@@ -50,6 +54,30 @@ const routes = [
     component: CourseDetailsPage,
     props: true,
   },
+  {
+    path: "/course-statistic",
+    name: "CourseStatisticPage",
+    component: CourseStatisticPage,
+    props: true,
+  },
+  {
+    path: "session-statistic",
+    name: "SessionStatisticPage",
+    component: SessionStatisticPage,
+    props: true,
+  },
+  {
+    path: "student-statistic",
+    name: "StudentStatisticPage",
+    component: StudentStatisticPage,
+    props: true,
+  },
+  {
+    path: "show-interaction-map",
+    name: "ShowInteractionMapPage",
+    component: ShowInteractionMapPage,
+    props: true,
+  }
 ];
 
 const router = createRouter({
