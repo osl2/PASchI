@@ -9,6 +9,7 @@ import ViewStudentsPage from "@/components/studentManagement/ViewStudentsPage.vu
 import ViewCoursesPage from "@/components/courses/viewCoursesPage.vue";
 import EditCoursePage from "@/components/courses/editCoursePage.vue";
 import EditAccountPage from "@/components/userManagement/EditAccountPage.vue";
+import CourseDetailsPage from "@/components/courses/CourseDetailsPage.vue";
 
 const routes = [
   { path: "/login", name: "Login", component: Login },
@@ -42,6 +43,12 @@ const routes = [
     path: "/edit-account",
     name: "EditAccountPage",
     component: EditAccountPage,
+  },
+  {
+    path: "/course-details",
+    name: "CourseDetailsPage",
+    component: CourseDetailsPage,
+    props: { courseId: 1 },
   },
 ];
 

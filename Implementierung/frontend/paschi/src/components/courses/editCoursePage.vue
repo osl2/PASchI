@@ -51,6 +51,7 @@ import { Room } from "@/model/userdata/rooms/Room";
 import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
+import {Course} from "@/model/userdata/courses/Course";
 
 export default defineComponent({
   name: "editCoursePage",
@@ -67,11 +68,30 @@ export default defineComponent({
     const seatArrangements = courseController.getSeatArrangements(
       props.courseId
     );
+    const course = ref<Course|undefined>(courseController.getCourse(props.courseId));
+    const courseName = ref<string>(getCourseName());
+    const courseSubject = ref<string>(getCourseSubject());
     const rooms = roomController.getAllRooms();
     const seatArrangementDialog = ref<boolean>(false);
     const roomSelectionDialog = ref<boolean>(false);
 
-    function saveChangesClick() {}
+
+    function getCourseName(): string {
+      if (typeof (course.value) == typeof Course) {
+        return course.value!.name;
+      }
+      return "";
+    }
+    function getCourseSubject(): string {
+      if (typeof (course.value) == typeof Course) {
+        return course.value!.subject;
+      }
+      return "";
+    }
+
+    function saveChangesClick() {
+      courseController.updateCourse(props.courseId, courseName.value, courseSubject.value);
+    }
 
     function addSeatArrangementClick() {
       roomSelectionDialog.value = true;
@@ -95,6 +115,8 @@ export default defineComponent({
       roomSelectionDialog,
       seatArrangements,
       rooms,
+      courseName,
+      courseSubject,
     };
   },
 });
