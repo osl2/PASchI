@@ -19,8 +19,10 @@ export class UserController {
   login(email: string, password: string): boolean {
     // nur lokal
     let user = this.getUser();
-    return user.email === email && user.auth;
-
+    if (user !== undefined) {
+      return user.email === email && user.auth;
+    }
+    return false;
   }
 
   register(firstName: string, lastName: string, email: string, password: string, repeatPassword: string) {

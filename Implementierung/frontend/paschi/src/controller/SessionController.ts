@@ -36,7 +36,7 @@ export class SessionController {
 
     let currentDate = new Date();
     let date = currentDate.getDay() + '.' + currentDate.getMonth() + '.' + currentDate.getFullYear();
-    let session = new Session(undefined, this.sessionStore.getNextId(), this.userController.getUser(), name,
+    let session = new Session(undefined, this.sessionStore.getNextId(), this.userController.getUser()!, name,
       date, course, arrangement);
     this.sessionStore.addSession(session);
 
@@ -101,7 +101,7 @@ export class SessionController {
     let interaction = new Interaction(
       undefined,
       useInteractionStore().getNextId(),
-      this.userController.getUser(),
+      this.userController.getUser()!,
       date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds(),
       fromParticipant,
       toParticipant,

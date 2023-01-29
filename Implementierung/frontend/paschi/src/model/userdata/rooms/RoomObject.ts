@@ -12,7 +12,8 @@ export abstract class RoomObject {
   position: Position;
   dimensions: Dimensions;
 
-  protected constructor(id: string | undefined, localId: number, user: User, position: Position) {
+  protected constructor(id: string | undefined, localId: number, user: User, position: Position,
+                        dimensions: Dimensions) {
     this.id = id;
     this.localId = localId;
     this.user = user;

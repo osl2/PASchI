@@ -26,7 +26,7 @@ export class StudentController {
     return this.studentStore.addStudent(new Student(
       undefined,
       this.studentStore.getNextId(),
-      this.userController.getUser(),
+      this.userController.getUser()!,
       firstName,
       lastName
     ));
@@ -72,8 +72,6 @@ export class StudentController {
       student.removeCourse(courseId);
       course.removeParticipant(studentId);
     }
-  }
-
   }
 
   getInteractionsOfStudent(studentId: string): Interaction[] {
