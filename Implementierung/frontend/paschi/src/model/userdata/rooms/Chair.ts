@@ -4,7 +4,8 @@ import { Position } from "@/model/userdata/rooms/Position";
 import { Dimensions } from "@/model/userdata/rooms/Dimensions";
 
 export class Chair extends RoomObject {
-  constructor(id: string, user: User, position: Position) {
-    super(id, user, position, new Dimensions(500, 500));
+
+  constructor(id: string | undefined, localId: number, user: User, position: Position) {
+    super(id, localId, user, position);
   }
 }

@@ -5,8 +5,16 @@ export class RatedCategory extends Category {
 
   quality: Quality;
 
-  constructor(id: string, user: number, name: string, quality: Quality) {
-    super(id, user, name);
+  constructor(id: string | undefined, localId: number, user: User, name: string, quality: Quality) {
+    super(id, localId, user, name);
+    this.quality = quality;
+  }
+
+  hasQuality(): boolean {
+    return true;
+  }
+
+  set setQuality(quality: Quality) {
     this.quality = quality;
   }
 }

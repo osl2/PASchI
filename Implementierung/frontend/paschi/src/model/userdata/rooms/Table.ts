@@ -4,12 +4,13 @@ import { Position } from "@/model/userdata/rooms/Position";
 import { Dimensions } from "@/model/userdata/rooms/Dimensions";
 
 export class Table extends RoomObject {
-  constructor(
-    id: string,
-    user: User,
-    position: Position,
-    dimensions: Dimensions
-  ) {
-    super(id, user, position, dimensions);
+
+  length: number;
+  width: number;
+
+  constructor(id: string | undefined, localId: number, user: User, position: Position, length: number, width: number) {
+    super(id, localId, user, position);
+    this.length = length;
+    this.width = width;
   }
 }

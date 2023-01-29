@@ -4,14 +4,15 @@ import {Interaction} from "@/model/userdata/interactions/Interaction";
 
 export abstract class Participant {
 
-  id: string;
+  private id: string | undefined;
+  private localId: number;
   user: User;
   firstName: string;
   lastName: string;
   courses: Course[];
   interactions: Interaction[];
 
-  protected constructor(id: string, user: User, firstName: string, lastName: string) {
+  protected constructor(id: string | undefined, localId: number, user: User, firstName: string, lastName: string) {
     this.id = id;
     this.user = user;
     this.firstName = firstName;
@@ -26,7 +27,7 @@ export abstract class Participant {
 
   removeCourse(courseId: string) {
     this.courses.forEach((element, index) => {
-      if (element.id === courseId) {
+      if (element.getId === courseId) {
         this.courses.splice(index, 1);
       }
     });
@@ -38,7 +39,7 @@ export abstract class Participant {
 
   removeInteraction(interactionId: string) {
     this.interactions.forEach((element, index) => {
-      if (element.id === interactionId) {
+      if (element.getId === interactionId) {
         this.interactions.splice(index, 1);
       }
     });

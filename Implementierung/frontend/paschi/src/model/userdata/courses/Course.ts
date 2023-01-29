@@ -5,7 +5,8 @@ import {User} from "@/model/User";
 
 export class Course {
 
-  id: string;
+  private id: string | undefined;
+  private localId: number;
   user: User
   name: string;
   subject: string;
@@ -13,8 +14,9 @@ export class Course {
   sessions: Session[];
   seatArrangements: SeatArrangement[];
 
-  constructor(id: string, user: User, name: string, subject: string) {
+  constructor(id: string | undefined, localId: number, user: User, name: string, subject: string) {
     this.id = id;
+    this.localId = localId;
     this.user = user;
     this.name = name;
     this.subject = subject;
@@ -35,13 +37,23 @@ export class Course {
     });
   }
 
+  getParticipant(participantId: string): Participant | undefined {
+    this.participants.forEach((participant: Participant) => {
+      if (participant.getId === participantId) {
+        return participant;
+      }
+    });
+
+    return undefined;
+  }
+
   addSession(session: Session) {
     this.sessions.push(session);
   }
 
   removeSession(sessionId: number) {
     this.sessions.forEach((element, index) => {
-      if (element.id == sessionId) {
+      if (element.getId == sessionId) {
         this.sessions.splice(index, 1);
       }
     });
@@ -53,9 +65,20 @@ export class Course {
 
   removeSeatArrangement(arrangementId: string) {
     this.seatArrangements.forEach((element, index) => {
-      if (element.id === arrangementId) {
+      if (element.getId === arrangementId) {
         this.seatArrangements.splice(index, 1);
       }
     });
+  }
+
+  get getId(): string {
+    if (this.id == undefined) {
+      return this.localId.toString();
+    }
+    return this.id;
+  }
+
+  set setId(id: string) {
+    this.id = id;
   }
 }
