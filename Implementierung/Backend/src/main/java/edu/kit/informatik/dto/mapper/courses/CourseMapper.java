@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CourseMapper implements IModelDtoMapper<Course, CourseDto, CourseDto> {
@@ -72,12 +73,17 @@ public class CourseMapper implements IModelDtoMapper<Course, CourseDto, CourseDt
         List<Session> sessions = new ArrayList<>();
         List<SeatArrangement> seatArrangements = new ArrayList<>();
 
-        courseDto.getParticipantIds().forEach(id ->
-                participants.add(participantRepository.findParticipantById(id).orElse(null)));
-        courseDto.getSessionIds().forEach(id ->
-                sessions.add(sessionRepository.findSessionById(id).orElse(null)));
-        courseDto.getSeatArrangementIds().forEach(id ->
-                seatArrangements.add(seatArrangementRepository.findSeatArrangementById(id).orElse(null)));
+        if (courseDto.getParticipantIds() != null) {
+            courseDto.getParticipantIds().forEach(id ->
+                    participantRepository.findParticipantById(id).ifPresent(participants::add));
+        } else if (courseDto.getSessionIds() != null) {
+            courseDto.getSessionIds().forEach(id ->
+                    sessionRepository.findSessionById(id).ifPresent(sessions::add));
+        } else if (courseDto.getSeatArrangementIds() != null) {
+            courseDto.getSeatArrangementIds().forEach(id ->
+                    seatArrangementRepository.findSeatArrangementById(id).ifPresent(seatArrangements::add));
+        }
+
 
         course.setUser(user);
         course.setName(courseDto.getName());
