@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -34,13 +36,13 @@ public class SeatArrangementController extends BaseController<SeatArrangement, S
 
     @Override
     @PostMapping
-    public SeatArrangementDto add(SeatArrangementDto seatArrangementDto) {
+    public SeatArrangementDto add(@RequestBody SeatArrangementDto seatArrangementDto) {
         return super.add(seatArrangementDto);
     }
 
     @Override
     @PutMapping
-    public SeatArrangementDto update(SeatArrangementDto seatArrangementDto) {
+    public SeatArrangementDto update(@RequestBody SeatArrangementDto seatArrangementDto) {
         return super.update(seatArrangementDto);
     }
 
@@ -58,7 +60,7 @@ public class SeatArrangementController extends BaseController<SeatArrangement, S
 
     @Override
     @DeleteMapping
-    public String delete(String id) {
+    public String delete(@RequestParam String id) {
         return super.delete(id);
     }
 }
