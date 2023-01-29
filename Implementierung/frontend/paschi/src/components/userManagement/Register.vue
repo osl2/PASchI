@@ -1,6 +1,6 @@
 <template>
   <v-main
-    class="ma-0 bg-grey-lighten-3 v-row justify-center align-content-xl-space-around"
+    class="ma-0 v-row justify-center align-content-xl-space-around"
     :style="{
       borderTop: 'solid',
       borderWidth: '5px',

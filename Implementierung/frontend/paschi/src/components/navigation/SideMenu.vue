@@ -1,6 +1,6 @@
 <template>
-  <v-navigation-drawer expand-on-hover rail elevation="12" color="primary">
-    <v-list nav density="compact" class="mt-12">
+  <v-navigation-drawer elevation="10" floating expand-on-hover rail>
+    <v-list nav density="compact" active-class="sideMenu-active" class="mt-12 text-white">
       <v-list-item :active="subRouteOf('Dashboard')" prepend-icon="fas fa-gauge" @click="router().push('/dashboard')">
         <v-list-item-title>
           Dashboard
@@ -25,7 +25,7 @@
     </v-list>
 
     <template v-slot:append>
-      <v-list nav density="compact">
+      <v-list nav density="compact" active-class="sideMenu-active" class="text-white">
         <v-list-item :active="subRouteOf('EditAccountPage')" prepend-icon="fas fa-gear" @click="router().push('/edit-account')">
           <v-list-item-title>
             Benutzereinstellungen
