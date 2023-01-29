@@ -1,5 +1,5 @@
-import { User } from "@/model/User";
-import { RoomObject } from "@/model/userdata/rooms/RoomObject";
+import {User} from "@/model/User";
+import {RoomObject} from "@/model/userdata/rooms/RoomObject";
 
 export class Room {
 

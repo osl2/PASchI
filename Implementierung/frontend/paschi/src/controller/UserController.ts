@@ -19,10 +19,8 @@ export class UserController {
   login(email: string, password: string): boolean {
     // nur lokal
     let user = this.getUser();
-    if (user !== undefined) {
-      return user.email === email && user.auth;
-    }
-    return false;
+    return user.email === email && user.auth;
+
   }
 
   register(firstName: string, lastName: string, email: string, password: string, repeatPassword: string) {
@@ -54,9 +52,8 @@ export class UserController {
 
   }
 
-  getUser(): User | undefined {
-    // undefined entfernen nachdem implementiert
-    return undefined
+  getUser(): User {
+    return this.userStore.getUser()!;
   }
 
   delete() {

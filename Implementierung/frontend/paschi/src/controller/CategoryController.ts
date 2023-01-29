@@ -19,14 +19,14 @@ export class CategoryController {
   }
 
   createCategory(name: string): string {
-    let category = new Category(undefined, this.categoryStore.getNextId(), this.userController.getUser()!, name);
+    let category = new Category(undefined, this.categoryStore.getNextId(), this.userController.getUser(), name);
     this.categoryStore.addCategory(category);
 
     return category.getId;
   }
 
   createRatedCategory(name: string, quality: Quality): string {
-    let category = new RatedCategory(undefined, this.categoryStore.getNextId(), this.userController.getUser()!, name,
+    let category = new RatedCategory(undefined, this.categoryStore.getNextId(), this.userController.getUser(), name,
       quality);
     this.categoryStore.addCategory(category);
 

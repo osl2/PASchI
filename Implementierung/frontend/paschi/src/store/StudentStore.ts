@@ -1,5 +1,6 @@
 import {defineStore} from "pinia";
 import {Student} from "@/model/userdata/interactions/Student";
+import {Participant} from "@/model/userdata/interactions/Participant";
 
 export const useStudentStore = defineStore('students', {
   state: () => ({

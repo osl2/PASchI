@@ -10,7 +10,7 @@ const lastName = "Snelting";
 const email = "snelting@kit.edu";
 const password = "exmatrikulaion";
 userController.register(firstName, lastName, email, password, password);
-const user = userController.getUser()!;
+const user = userController.getUser();
 
 test('register', () => {
   expect(user.firstName).toBe(firstName);

@@ -1,24 +1,18 @@
-import { Position } from "@/model/userdata/rooms/Position";
-import { User } from "@/model/User";
-import { ref } from "vue";
-import { Dimensions } from "@/model/userdata/rooms/Dimensions";
+import {Position} from "@/model/userdata/rooms/Position";
+import {User} from "@/model/User";
 
 export abstract class RoomObject {
-  room = ref;
 
   private id: string | undefined;
   private localId: number;
   user: User;
   position: Position;
-  dimensions: Dimensions;
 
-  protected constructor(id: string | undefined, localId: number, user: User, position: Position,
-                        dimensions: Dimensions) {
+  protected constructor(id: string | undefined, localId: number, user: User, position: Position) {
     this.id = id;
     this.localId = localId;
     this.user = user;
     this.position = position;
-    this.dimensions = dimensions;
   }
 
   get getId(): string {
