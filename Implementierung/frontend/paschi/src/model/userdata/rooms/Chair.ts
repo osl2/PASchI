@@ -1,10 +1,10 @@
-import {RoomObject} from "@/model/userdata/rooms/RoomObject";
-import {User} from "@/model/User";
-import {Position} from "@/model/userdata/rooms/Position";
+import { RoomObject } from "@/model/userdata/rooms/RoomObject";
+import { User } from "@/model/User";
+import { Position } from "@/model/userdata/rooms/Position";
+import { Dimensions } from "@/model/userdata/rooms/Dimensions";
 
 export class Chair extends RoomObject {
-
   constructor(id: string, user: User, position: Position) {
-    super(id, user, position);
+    super(id, user, position, new Dimensions(500, 500));
   }
 }

@@ -46,8 +46,8 @@
             prepend-icon="fas fa-sign-in-alt"
             color="primary"
             @click="router.push('Dashboard')"
-            >Login</v-btn
-          >
+            >Anmelden
+          </v-btn>
         </v-card-item>
       </v-card>
       <v-card
