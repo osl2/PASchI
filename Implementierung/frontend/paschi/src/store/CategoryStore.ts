@@ -18,11 +18,17 @@ export const useCategoryStore = defineStore('categories', {
       });
     },
     getCategory(id: string): Category | undefined {
-      this.categories.forEach((element, index) => {
+      let category: Category;
+      this.categories.forEach((element) => {
         if (element.getId === id) {
-          this.categories.splice(index, 1);
+          // @ts-ignore
+          category = element
         }
       });
+      // @ts-ignore
+      if (category !== undefined) {
+        return category;
+      }
       return undefined;
     },
     getAllCategories(): Category[] {

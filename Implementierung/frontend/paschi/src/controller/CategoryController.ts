@@ -8,8 +8,8 @@ import {RatedCategory} from "@/model/userdata/interactions/RatedCategory";
 export class CategoryController {
 
   private static controller: CategoryController = new CategoryController();
-  private categoryStore = useCategoryStore();
   private userController = UserController.getUserController();
+  private categoryStore = useCategoryStore();
 
   private constructor() {
   }

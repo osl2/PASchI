@@ -7,8 +7,9 @@ export const useCourseStore = defineStore('courses', {
     nextId: 0
   }),
   actions: {
-    addCourse(course: Course) {
+    addCourse(course: Course): string {
       this.courses.push(course);
+      return course.getId;
     },
     deleteCourse(id: string) {
       this.courses.forEach((element, index) => {
@@ -18,16 +19,25 @@ export const useCourseStore = defineStore('courses', {
       });
     },
     getCourse(id: string): Course | undefined {
+      let course: Course;
       this.courses.forEach((element) => {
         if (element.getId === id) {
-          return element;
+          // @ts-ignore
+          course = element;
         }
       });
+      // @ts-ignore
+      if (course !== undefined) {
+        return course;
+      }
       return undefined;
     },
     getAllCourses(): Course[] {
       // @ts-ignore
       return this.courses;
+    },
+    getNextId(): number {
+      return this.nextId++;
     }
   }
 })

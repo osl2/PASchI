@@ -5,17 +5,17 @@ import {UserController} from "@/controller/UserController";
 import {Chair} from "@/model/userdata/rooms/Chair";
 import {useRoomObjectStore} from "@/store/RoomObjectStore";
 import {Table} from "@/model/userdata/rooms/Table";
-import {SeatArrangementController} from "@/controller/SeatArrangementController";
 import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {RoomObject} from "@/model/userdata/rooms/RoomObject";
+import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 
 // TODO: Backend Service einbinden
 export class RoomController {
 
   private static controller: RoomController = new RoomController();
-  private roomStore = useRoomStore();
   private userController = UserController.getUserController();
-  private arrangementController = SeatArrangementController.getSeatArrangementController();
+  private roomStore = useRoomStore();
+  private arrangementStore = useSeatArrangementStore();
 
   private constructor() {
   }
@@ -41,9 +41,9 @@ export class RoomController {
   deleteRoom(id: string) {
     let room = this.roomStore.getRoom(id);
     if (room !== undefined) {
-      this.arrangementController.getAllArrangements().forEach((arrangement: SeatArrangement) => {
+      this.arrangementStore.getAllSeatArrangements().forEach((arrangement: SeatArrangement) => {
         if (arrangement.room.getId === id) {
-          this.arrangementController.deleteSeatArrangement(arrangement.getId);
+          this.arrangementStore.deleteSeatArrangement(arrangement.getId);
         }
       });
     }

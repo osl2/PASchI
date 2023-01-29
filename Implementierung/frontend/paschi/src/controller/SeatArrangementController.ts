@@ -1,23 +1,25 @@
 import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 import {UserController} from "@/controller/UserController";
-import {RoomController} from "@/controller/RoomController";
-import {CourseController} from "@/controller/CourseController";
-import {SessionController} from "@/controller/SessionController";
 import {Session} from "@/model/userdata/courses/Session";
-import {StudentController} from "@/controller/StudentController";
+import {useRoomStore} from "@/store/RoomStore";
+import {useCourseStore} from "@/store/CourseStore";
+import {useSessionStore} from "@/store/SessionStore";
+import {useStudentStore} from "@/store/StudentStore";
+import {useRoomObjectStore} from "@/store/RoomObjectStore";
 
 // TODO: Backend Service einbinden
 // TODO: Standard Sitzordnung
 export class SeatArrangementController {
 
   private static controller: SeatArrangementController = new SeatArrangementController();
-  private seatArrangementStore = useSeatArrangementStore();
   private userController = UserController.getUserController();
-  private roomController = RoomController.getRoomController();
-  private courseController = CourseController.getCourseController();
-  private sessionController = SessionController.getSessionController();
-  private studentController = StudentController.getStudentConroller();
+  private seatArrangementStore = useSeatArrangementStore();
+  private roomStore = useRoomStore();
+  private roomObjectStore = useRoomObjectStore();
+  private courseStore = useCourseStore();
+  private sessionStore = useSessionStore();
+  private studentStore = useStudentStore();
 
   private constructor() {
   }
@@ -27,8 +29,8 @@ export class SeatArrangementController {
   }
 
   createSeatArrangement(name: string, roomId: string, courseId: string): string | undefined {
-    let room = this.roomController.getRoom(roomId);
-    let course = this.courseController.getCourse(courseId);
+    let room = this.roomStore.getRoom(roomId);
+    let course = this.courseStore.getCourse(courseId);
     if (room == undefined || course == undefined) {
       return undefined;
     }
@@ -44,7 +46,7 @@ export class SeatArrangementController {
     let arrangement = this.seatArrangementStore.getSeatArrangement(id);
     if (arrangement !== undefined) {
       arrangement.course.removeSeatArrangement(id);
-      this.sessionController.getAllSessions().forEach((session: Session) => {
+      this.sessionStore.getAllSessions().forEach((session: Session) => {
         if (session.seatArrangement !== undefined && session.seatArrangement.getId === id) {
           session.seatArrangement = undefined;
         }
@@ -62,11 +64,11 @@ export class SeatArrangementController {
 
   addMapping(arrangementId: string, chairId: string, studentId: string) {
     let arrangement = this.seatArrangementStore.getSeatArrangement(arrangementId);
-    let student = this.studentController.getStudent(studentId);
+    let student = this.studentStore.getStudent(studentId);
     if (arrangement == undefined || student == undefined) {
       return undefined;
     }
-    let chair = this.roomController.getRoomObject(arrangement.room.getId, chairId);
+    let chair = this.roomObjectStore.getRoomObject(chairId);
     if (chair == undefined) {
       return undefined;
     }
@@ -77,7 +79,7 @@ export class SeatArrangementController {
   deleteMapping(arrangementId: string, chairId: string) {
     let arrangement = this.seatArrangementStore.getSeatArrangement(arrangementId);
     if (arrangement !== undefined) {
-      let chair = this.roomController.getRoomObject(arrangement.room.getId, chairId);
+      let chair = this.roomObjectStore.getRoomObject(chairId);
       if (chair !== undefined) {
         arrangement.removeSeat(chair);
       }

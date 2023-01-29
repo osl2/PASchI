@@ -18,11 +18,17 @@ export const useSessionStore = defineStore('sessions', {
       });
     },
     getSession(id: string): Session | undefined {
+      let session: Session;
       this.sessions.forEach((element) => {
         if (element.getId === id) {
-          return element;
+          // @ts-ignore
+          session = element;
         }
       });
+      // @ts-ignore
+      if (session !== undefined) {
+        return session;
+      }
       return undefined;
     },
     getAllSessions(): Session[] {
