@@ -5,9 +5,11 @@ import edu.kit.informatik.dto.mapper.interactions.InteractionMapper;
 import edu.kit.informatik.dto.userdata.courses.SessionDto;
 import edu.kit.informatik.dto.userdata.interactions.InteractionDto;
 import edu.kit.informatik.model.User;
+import edu.kit.informatik.model.userdata.courses.Course;
 import edu.kit.informatik.model.userdata.courses.SeatArrangement;
 import edu.kit.informatik.model.userdata.courses.Session;
 import edu.kit.informatik.model.userdata.interactions.Interaction;
+import edu.kit.informatik.repositories.CourseRepository;
 import edu.kit.informatik.repositories.SeatArrangementRepository;
 import edu.kit.informatik.repositories.SessionRepository;
 import edu.kit.informatik.repositories.UserRepository;
@@ -24,14 +26,17 @@ public class SessionMapper implements IModelDtoMapper<Session, SessionDto, Sessi
     private final InteractionMapper interactionMapper;
     private final UserRepository userRepository;
     private final SeatArrangementRepository seatArrangementRepository;
+    private final CourseRepository courseRepository;
 
     @Autowired
     public SessionMapper(SessionRepository sessionRepository, InteractionMapper interactionMapper,
-                         UserRepository userRepository, SeatArrangementRepository seatArrangementRepository) {
+                         UserRepository userRepository, SeatArrangementRepository seatArrangementRepository,
+                         CourseRepository courseRepository) {
         this.sessionRepository = sessionRepository;
         this.interactionMapper = interactionMapper;
         this.userRepository = userRepository;
         this.seatArrangementRepository = seatArrangementRepository;
+        this.courseRepository = courseRepository;
     }
 
     @Override
@@ -61,20 +66,26 @@ public class SessionMapper implements IModelDtoMapper<Session, SessionDto, Sessi
 
     @Override
     public Session dtoToModel(SessionDto sessionDto) {
-        Session session = sessionRepository.findSessionById(sessionDto.getId()).orElseGet(Session::new);
         User user = userRepository.findUserById(sessionDto.getUserId()).orElse(null);
+        Course course = courseRepository.findCourseById(sessionDto.getCourseId()).orElse(null);
         SeatArrangement seatArrangement = seatArrangementRepository.
                 findSeatArrangementById(sessionDto.getSeatArrangementId()).orElse(null);
 
         List<Interaction> interactions = new ArrayList<>();
-        sessionDto.getInteractions().forEach(interactionDto ->
-                interactions.add(interactionMapper.dtoToModel(interactionDto)));
+        if (sessionDto.getInteractions() != null) {
+            sessionDto.getInteractions().forEach(interactionDto ->
+                    interactions.add(interactionMapper.dtoToModel(interactionDto)));
+        }
+
+        Session session = sessionRepository.findSessionById(sessionDto.getId())
+                                    .orElseGet(Session::new);
 
         session.setUser(user);
         session.setName(sessionDto.getName());
         session.setDate(sessionDto.getDate());
         session.setSeatArrangement(seatArrangement);
         session.setInteractions(interactions);
+        session.setCourse(course);
 
         return session;
     }
