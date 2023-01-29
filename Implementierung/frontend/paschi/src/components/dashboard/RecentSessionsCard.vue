@@ -1,5 +1,5 @@
 <template>
-  <v-card color="primary">
+  <v-card color="primary-lighten-1">
     <v-card-title>
       <v-row class="ma-2"> Letzte Sitzungen </v-row>
     </v-card-title>

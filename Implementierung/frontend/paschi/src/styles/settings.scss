@@ -1,7 +1,9 @@
 @forward 'vuetify/settings' with (
 $application-background: #eeeeee,
-$navigation-drawer-background: #3770a1
+$navigation-drawer-background: rgb(var(--v-theme-secondary)),
+$app-bar-background: rgb(var(--v-theme-primary)),
 );
+
 html {
   overflow-y: auto;
 }
