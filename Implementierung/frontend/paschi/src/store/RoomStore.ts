@@ -18,11 +18,17 @@ export const useRoomStore = defineStore('rooms', {
       });
     },
     getRoom(id: string): Room | undefined {
+      let room: Room;
       this.rooms.forEach((element) => {
         if (element.getId === id) {
-          return element;
+          // @ts-ignore
+          room = element;
         }
       });
+      // @ts-ignore
+      if (room !== undefined) {
+        return room;
+      }
       return undefined;
     },
     getAllRooms(): Room[] {

@@ -4,21 +4,22 @@ import {Interaction} from "@/model/userdata/interactions/Interaction";
 import {Participant} from "@/model/userdata/interactions/Participant";
 import {useSessionStore} from "@/store/SessionStore";
 import {UserController} from "@/controller/UserController";
-import {CourseController} from "@/controller/CourseController";
-import {SeatArrangementController} from "@/controller/SeatArrangementController";
-import {CategoryController} from "@/controller/CategoryController";
 import {useInteractionStore} from "@/store/InteractionStore";
+import {useCourseStore} from "@/store/CourseStore";
+import {createPinia} from "pinia";
+import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
+import {useCategoryStore} from "@/store/CategoryStore";
 
 // TODO: Backend Service einbinden
 // TODO: Standard Sitzordnung
 export class SessionController {
 
   private static controller: SessionController = new SessionController();
-  private sessionStore = useSessionStore();
   private userController = UserController.getUserController();
-  private courseController = CourseController.getCourseController();
-  private seatArrangementController = SeatArrangementController.getSeatArrangementController();
-  private categoryController = CategoryController.getCategoryController();
+  private sessionStore = useSessionStore();
+  private courseStore = useCourseStore(createPinia());
+  private arrangementStore = useSeatArrangementStore(createPinia());
+  private categoryStore = useCategoryStore(createPinia());
 
   private constructor() {
   }
@@ -28,8 +29,8 @@ export class SessionController {
   }
 
   createSession(courseId: string, seatArrangementId: string, name: string): string | undefined {
-    let course = this.courseController.getCourse(courseId);
-    let arrangement = this.seatArrangementController.getSeatArrangement(seatArrangementId);
+    let course = this.courseStore.getCourse(courseId);
+    let arrangement = this.arrangementStore.getSeatArrangement(seatArrangementId);
     if (course == undefined || arrangement == undefined) {
       return undefined
     }
@@ -92,7 +93,7 @@ export class SessionController {
   createInteraction(sessionId: string, fromParticipant: Participant, toParticipant: Participant,
                     categoryId: string): string | undefined {
     let session = this.sessionStore.getSession(sessionId);
-    let category = this.categoryController.getCategory(categoryId);
+    let category = this.categoryStore.getCategory(categoryId);
     if (session == undefined || category == undefined) {
       return undefined;
     }
@@ -120,7 +121,7 @@ export class SessionController {
 
   setSeatArrangementOfSession(sessionId: string, arrangementId: string) {
     let session = this.sessionStore.getSession(sessionId);
-    let arrangement = this.seatArrangementController.getSeatArrangement(arrangementId);
+    let arrangement = this.arrangementStore.getSeatArrangement(arrangementId);
     if (session !== undefined && arrangement !== undefined) {
       session.seatArrangement = arrangement;
     }

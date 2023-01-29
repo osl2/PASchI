@@ -5,12 +5,12 @@ import {UserController} from "@/controller/UserController";
 // TODO: Backend
 
 setActivePinia(createPinia());
+const adminController = AdminController.getAdminController();
+const userController = UserController.getUserController();
 const firstName = "Gregor";
 const lastName = "Snelting";
 const email = "snelting@kit.edu";
 const password = "exmatrikulaion";
-const adminController = AdminController.getAdminController();
-const userController = UserController.getUserController();
 userController.register(firstName, lastName, email, password, password);
 const user = userController.getUser();
 

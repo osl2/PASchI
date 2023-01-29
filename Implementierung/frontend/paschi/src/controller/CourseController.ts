@@ -4,19 +4,20 @@ import {Session} from "@/model/userdata/courses/Session";
 import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {useCourseStore} from "@/store/CourseStore";
 import {UserController} from "@/controller/UserController";
-import {StudentController} from "@/controller/StudentController";
-import {SessionController} from "@/controller/SessionController";
-import {SeatArrangementController} from "@/controller/SeatArrangementController";
+import {useStudentStore} from "@/store/StudentStore";
+import {createPinia} from "pinia";
+import {useSessionStore} from "@/store/SessionStore";
+import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 
 // TODO: Backend Service einbinden
 export class CourseController {
 
   private static controller: CourseController = new CourseController();
-  private courseStore = useCourseStore();
   private userController = UserController.getUserController();
-  private studentController = StudentController.getStudentConroller();
-  private sessionController = SessionController.getSessionController();
-  private seatArrangementController = SeatArrangementController.getSeatArrangementController();
+  private courseStore = useCourseStore();
+  private studentStore = useStudentStore(createPinia());
+  private sessionStore = useSessionStore(createPinia());
+  private arrangementStore = useSeatArrangementStore(createPinia());
 
   private constructor() {
   }
@@ -26,10 +27,13 @@ export class CourseController {
   }
 
   createCourse(name: string, subject: string): string {
-    let course = new Course(undefined, this.courseStore.nextId, this.userController.getUser(), name, subject);
-    this.courseStore.addCourse(course);
-
-    return course.getId;
+    return this.courseStore.addCourse(new Course(
+      undefined,
+      this.courseStore.nextId,
+      this.userController.getUser(),
+      name,
+      subject
+    ));
   }
 
   updateCourse(courseId: string, name: string, subject: string) {
@@ -73,7 +77,7 @@ export class CourseController {
       return undefined;
     }
 
-    let allStudents = this.studentController.getAllStudents();
+    let allStudents = this.studentStore.getAllStudents();
     let students: Participant[] = [];
     allStudents.forEach((student: Participant) => {
       if (course!.getParticipant(student.getId) == undefined) {
@@ -86,7 +90,7 @@ export class CourseController {
 
   addStudentToCourse(courseId: string, studentId: string) {
     let course = this.courseStore.getCourse(courseId);
-    let student = this.studentController.getStudent(studentId);
+    let student = this.studentStore.getStudent(studentId);
     if (course !== undefined && student !== undefined) {
       course.addParticipant(student);
       student.addCourse(course);
@@ -95,7 +99,7 @@ export class CourseController {
 
   removeStudentFromCourse(courseId: string, studentId: string) {
     let course = this.courseStore.getCourse(courseId);
-    let student = this.studentController.getStudent(studentId);
+    let student = this.studentStore.getStudent(studentId);
     if (course !== undefined && student !== undefined) {
       course.removeParticipant(studentId);
       student.removeCourse(courseId);
@@ -113,7 +117,7 @@ export class CourseController {
 
   addSessionToCourse(courseId: string, sessionId: string) {
     let course = this.courseStore.getCourse(courseId);
-    let session = this.sessionController.getSession(sessionId);
+    let session = this.sessionStore.getSession(sessionId);
     if (course !== undefined && session !== undefined && session.course.getId === courseId) {
       course.addSession(session);
     }
@@ -137,7 +141,7 @@ export class CourseController {
 
   addSeatArrangementToCourse(courseId: string, arrangementId: string) {
     let course = this.courseStore.getCourse(courseId);
-    let arrrangement = this.seatArrangementController.getSeatArrangement(arrangementId);
+    let arrrangement = this.arrangementStore.getSeatArrangement(arrangementId);
     if (course !== undefined && arrrangement !== undefined) {
       course.addSeatArrangement(arrrangement);
       arrrangement.course = course;
@@ -146,10 +150,10 @@ export class CourseController {
 
   deleteSeatArrangement(courseId: string, arrangementId: string) {
     let course = this.courseStore.getCourse(courseId);
-    let arrrangement = this.seatArrangementController.getSeatArrangement(arrangementId);
+    let arrrangement = this.arrangementStore.getSeatArrangement(arrangementId);
     if (course !== undefined && arrrangement !== undefined) {
       course.removeSeatArrangement(arrangementId);
-      this.seatArrangementController.deleteSeatArrangement(arrangementId);
+      this.arrangementStore.deleteSeatArrangement(arrangementId);
     }
   }
 }

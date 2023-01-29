@@ -3,17 +3,18 @@ import {Course} from "@/model/userdata/courses/Course";
 import {Interaction} from "@/model/userdata/interactions/Interaction";
 import {useStudentStore} from "@/store/StudentStore";
 import {UserController} from "@/controller/UserController";
-import {CourseController} from "@/controller/CourseController";
-import {SessionController} from "@/controller/SessionController";
+import {createPinia} from "pinia";
+import {useCourseStore} from "@/store/CourseStore";
+import {useSessionStore} from "@/store/SessionStore";
 
 // TODO: Backend Service einbinden
 export class StudentController {
 
   private static controller: StudentController = new StudentController();
-  private studentStore = useStudentStore();
   private userController = UserController.getUserController();
-  private courseController = CourseController.getCourseController();
-  private sessionController = SessionController.getSessionController();
+  private studentStore = useStudentStore(createPinia());
+  private courseStore = useCourseStore(createPinia());
+  private sessionStore = useSessionStore(createPinia());
 
   private constructor() {
   }
@@ -23,11 +24,13 @@ export class StudentController {
   }
 
   createStudent(firstName: string, lastName: string): string {
-    let student = new Student(undefined, this.studentStore.getNextId(), this.userController.getUser(), firstName,
-      lastName);
-    this.studentStore.addStudent(student);
-
-    return student.getId;
+    return this.studentStore.addStudent(new Student(
+      undefined,
+      this.studentStore.getNextId(),
+      this.userController.getUser(),
+      firstName,
+      lastName
+    ));
   }
 
   updateStudent(id: string, firstName: string, lastName: string) {
@@ -65,7 +68,7 @@ export class StudentController {
 
   addCourseToStudent(studentId: string, courseId: string) {
     let student = this.studentStore.getStudent(studentId);
-    let course = this.courseController.getCourse(courseId);
+    let course = this.courseStore.getCourse(courseId);
     if (student !== undefined && course !== undefined) {
       student.addCourse(course);
       course.addParticipant(student);
@@ -74,7 +77,7 @@ export class StudentController {
 
   removeCourseFromStudent(studentId: string, courseId: string) {
     let student = this.studentStore.getStudent(studentId);
-    let course = this.courseController.getCourse(courseId);
+    let course = this.courseStore.getCourse(courseId);
     if (student !== undefined && course !== undefined) {
       student.removeCourse(courseId);
       course.removeParticipant(studentId);
@@ -92,7 +95,7 @@ export class StudentController {
 
   addInteraction(studentId: string, sessionId: string, interactionId: string) {
     let student = this.studentStore.getStudent(studentId);
-    let session = this.sessionController.getSession(sessionId);
+    let session = this.sessionStore.getSession(sessionId);
     if (student !== undefined && session !== undefined) {
       let interaction = session.getInteraction(interactionId);
       if (interaction !== undefined) {
