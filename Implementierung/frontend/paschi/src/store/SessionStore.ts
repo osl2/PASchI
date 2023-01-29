@@ -32,7 +32,6 @@ export const useSessionStore = defineStore('sessions', {
       return undefined;
     },
     getAllSessions(): Session[] {
-      // @ts-ignore
       return this.sessions;
     },
     getNextId(): number {

@@ -52,8 +52,9 @@ export class UserController {
 
   }
 
-  getUser(): User {
-    return this.userStore.getUser()!;
+  getUser(): User | undefined {
+    // undefined entfernen nachdem implementiert
+    return undefined
   }
 
   delete() {

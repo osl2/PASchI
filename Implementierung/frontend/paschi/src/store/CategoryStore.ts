@@ -32,7 +32,6 @@ export const useCategoryStore = defineStore('categories', {
       return undefined;
     },
     getAllCategories(): Category[] {
-      // @ts-ignore
       return this.categories;
     },
     getNextId(): number {

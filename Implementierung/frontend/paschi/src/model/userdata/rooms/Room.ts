@@ -1,5 +1,5 @@
-import {User} from "@/model/User";
-import {RoomObject} from "@/model/userdata/rooms/RoomObject";
+import { User } from "@/model/User";
+import { RoomObject } from "@/model/userdata/rooms/RoomObject";
 
 export class Room {
 
@@ -21,7 +21,7 @@ export class Room {
     this.roomObjects.push(object);
   }
 
-  removeRoomObject(objectId: string) {
+  removeRoomObject(objectId: number) {
     this.roomObjects.forEach((element, index) => {
       if (element.getId == objectId) {
         this.roomObjects.splice(index, 1);
