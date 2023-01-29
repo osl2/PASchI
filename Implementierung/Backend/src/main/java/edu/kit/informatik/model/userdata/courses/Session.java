@@ -85,6 +85,10 @@ public class Session {
         this.date = date;
     }
 
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
     public void setSeatArrangement(SeatArrangement seatArrangement) {
         this.seatArrangement = seatArrangement;
     }
