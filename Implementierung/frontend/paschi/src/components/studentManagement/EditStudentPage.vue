@@ -19,7 +19,7 @@
         type="input"
       ></v-text-field>
     </v-container>
-    <v-dialog v-model="deleteSudentDialog">
+    <v-dialog v-model="deleteStudentDialog">
       <v-card>
         "Delete student?"
         <v-btn @click="cancelDeleteClick">cancel</v-btn>
@@ -51,19 +51,19 @@ export default defineComponent({
 
     const firstName = ref<String>(studentController.getStudent(props.studentId)!.firstName);
     const lastName = ref<String>(studentController.getStudent(props.studentId)!.lastName);
-    const deleteSudentDialog = ref<boolean>(false);
+    const deleteStudentDialog = ref<boolean>(false);
 
     function activateCardClick() {
-      deleteSudentDialog.value = true;
+      deleteStudentDialog.value = true;
     }
     function saveChangesClick() {}
 
     function deleteStudentClick() {
       studentController.deleteStudent(props.studentId);
-      deleteSudentDialog.value = false;
+      deleteStudentDialog.value = false;
     }
     function cancelDeleteClick() {
-      deleteSudentDialog.value = false;
+      deleteStudentDialog.value = false;
     }
 
     return {
@@ -73,7 +73,7 @@ export default defineComponent({
       saveChangesClick,
       firstName,
       lastName,
-      deleteSudentDialog,
+      deleteStudentDialog,
     };
   },
 });
