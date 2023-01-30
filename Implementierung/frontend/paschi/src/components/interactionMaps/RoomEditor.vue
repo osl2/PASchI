@@ -380,21 +380,20 @@ export default defineComponent({
     }
 
     function mouseMoveRoomObject(event: MouseEvent, roomObject: RoomObject) {
+      if (!roomObject) {
+        return;
+      }
       const oldPosition = {
         x: roomObject.position.xCoordinate,
         y: roomObject.position.yCoordinate,
       };
       const newPosition = {
         x:
-          displayToRoomCoordinates(
-            event.clientX,
-            event.clientY
-          ).x - translationOffset.value.x,
+          displayToRoomCoordinates(event.clientX, event.clientY).x -
+          translationOffset.value.x,
         y:
-          displayToRoomCoordinates(
-            event.clientX,
-            event.clientY
-          ).y - translationOffset.value.y,
+          displayToRoomCoordinates(event.clientX, event.clientY).y -
+          translationOffset.value.y,
       };
       roomObject.position.xCoordinate = newPosition.x;
       roomObject.position.yCoordinate = newPosition.y;
