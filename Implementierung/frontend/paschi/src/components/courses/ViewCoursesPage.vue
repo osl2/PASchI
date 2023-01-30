@@ -16,7 +16,7 @@
 
   <SideMenu />
   <v-main class="ma-0 v-row justify-center align-content-xl-space-around">
-    <v-container fluid class="v-col-11" style="max-width: 700px" >
+    <v-container fluid class="v-col-11" style="max-width: 700px">
       <v-list rounded>
         <v-list-item
           rounded
@@ -54,11 +54,12 @@
 <script lang="ts">
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
-import { defineComponent, ref } from "vue";
+import { defineComponent, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
 import { Course } from "@/model/userdata/courses/Course";
 import { User } from "@/model/User";
 import { Role } from "@/model/Role";
+import router from "@/plugins/router";
 
 export default defineComponent({
   name: "ViewCoursesPage",
@@ -66,9 +67,9 @@ export default defineComponent({
 
   setup() {
     const courseController = CourseController.getCourseController();
-    //const courses = ref<Course[]>(courseController.getAllCourses());
+    //const courses: Ref<Course[]> = ref<Course[]>(courseController.getAllCourses()) as Ref<Course[]>;
 
-    const courses = ref<Course[]>([
+    const courses: Ref<Course[]> = ref<Course[]>([
       new Course(
         "asdf",
         new User(1, "", "", "", true, Role.USER, ""),
@@ -93,12 +94,32 @@ export default defineComponent({
         "Informatik 12",
         "Informatik"
       ),
-    ]);
-    function newCourseClick() {}
-    function deleteCourseClick(course: Course) {}
+    ]) as Ref<Course[]>;
+    function editCourseClick(course: Course) {
+      router.push({
+        name:"EditCoursePage",
+        params: { courseId: course.getId }
+      })
+    }
+    function newCourseClick() {
+      let courseId: string = courseController.createCourse("", "");
+      router.push({
+        name: "EditCoursePage",
+        params: { courseId: courseId },
+      });
+    }
+    function deleteCourseClick(course: Course) {
+      courseController.deleteCourse(course.getId);
+    }
 
-    function showCourse(course: Course) {}
+    function showCourse(course: Course) {
+      router.push({
+        name: "CourseDetailsPage",
+        params: { courseId: course.getId },
+      });
+    }
     return {
+      editCourseClick,
       newCourseClick,
       deleteCourseClick,
       showCourse,
