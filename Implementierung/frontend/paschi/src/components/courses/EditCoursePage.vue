@@ -52,7 +52,6 @@ import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import { Course } from "@/model/userdata/courses/Course";
-import { Session } from "@/model/userdata/courses/Session";
 import router from "@/plugins/router";
 import { SeatArrangementController } from "@/controller/SeatArrangementController";
 
@@ -77,7 +76,7 @@ export default defineComponent({
     const seatArrangements: Ref<SeatArrangement[]> = ref<SeatArrangement[]>(
       getSeatArrangements()
     ) as Ref<SeatArrangement[]>;
-    const rooms: Ref<Room[]> = ref<Room[]>(getAllRooms()) as Ref<Room[]>;
+    const rooms: Ref<Room[]> = ref<Room[]>(roomController.getAllRooms()) as Ref<Room[]>;
     const seatArrangementDialog: Ref<boolean> = ref<boolean>(false);
     const roomSelectionDialog: Ref<boolean> = ref<boolean>(false);
 
@@ -93,13 +92,6 @@ export default defineComponent({
         return course.value.subject;
       }
       return "";
-    }
-    function getAllRooms(): Room[] {
-      let rooms: undefined | Room[] = roomController.getAllRooms();
-      if (rooms instanceof Array) {
-        return rooms as Room[];
-      }
-      return [];
     }
     function getSeatArrangements(): SeatArrangement[] {
       let seatArrangements: undefined | SeatArrangement[] =
