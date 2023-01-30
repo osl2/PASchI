@@ -1,8 +1,6 @@
 <template>
   <navigation-bar extended>
-    <v-app-bar-title>
-      Schüler ansehen
-    </v-app-bar-title>
+    <v-app-bar-title> Schüler ansehen </v-app-bar-title>
     <template v-slot:extension>
       <v-btn
         class="ml-15"
@@ -20,7 +18,7 @@
     <SideMenu />
     <v-container fluid>
       <v-list density="comfortable" max-width="700">
-        <v-list-item rounded v-for="student in students" @click="">
+        <v-list-item rounded v-for="student in students">
           <v-list-item-title>
             {{ student.name }}
           </v-list-item-title>
@@ -51,7 +49,8 @@ import { StudentController } from "@/controller/StudentController";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import { Student } from "@/model/userdata/interactions/Student";
-import { defineComponent, ref } from "vue";
+import { defineComponent, Ref, ref } from "vue";
+import router from "@/plugins/router";
 
 export default defineComponent({
   name: "ViewStudentsPage",
@@ -73,13 +72,29 @@ export default defineComponent({
     ];
 
     const studentController = StudentController.getStudentConroller();
-    //const students = ref<Student[]>(studentController.getAllStudents());
+    //const students: Ref<Student[]> = ref<Student[]>(studentController.getAllStudents()) as Ref<Student[]>;
 
-    function newStudentClick() {}
+    function newStudentClick() {
+      let studentId: string = studentController.createStudent("", "");
+      router.push({
+        name: "EditStudentPage",
+        params: { studentId: studentId },
+      });
+    }
 
-    function editStudentClick(student: Student) {}
+    function editStudentClick(student: Student) {
+      router.push({
+        name: "EditStudentPage",
+        params: { studentId: student.getId },
+      })
+    }
 
-    function showStatisticsClick(student: Student) {}
+    function showStatisticsClick(student: Student) {
+      router.push({
+        name: "StudentStatisticPage",
+        params: {studentId: student.getId},
+      })
+    }
 
     return {
       newStudentClick,
