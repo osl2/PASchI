@@ -29,6 +29,16 @@ export class Room {
     });
   }
 
+  getRoomObject(objectId: string): RoomObject | undefined {
+    this.roomObjects.forEach((element: RoomObject) => {
+      if (element.getId === objectId) {
+        return element;
+      }
+    });
+
+    return undefined;
+  }
+
   get getId(): string {
     if (this.id == undefined) {
       return this.localId.toString();

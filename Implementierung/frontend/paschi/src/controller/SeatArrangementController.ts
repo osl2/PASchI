@@ -6,7 +6,6 @@ import {useRoomStore} from "@/store/RoomStore";
 import {useCourseStore} from "@/store/CourseStore";
 import {useSessionStore} from "@/store/SessionStore";
 import {useStudentStore} from "@/store/StudentStore";
-import {useRoomObjectStore} from "@/store/RoomObjectStore";
 
 // TODO: Backend Service einbinden
 // TODO: Standard Sitzordnung
@@ -16,7 +15,6 @@ export class SeatArrangementController {
   private userController = UserController.getUserController();
   private seatArrangementStore = useSeatArrangementStore();
   private roomStore = useRoomStore();
-  private roomObjectStore = useRoomObjectStore();
   private courseStore = useCourseStore();
   private sessionStore = useSessionStore();
   private studentStore = useStudentStore();
@@ -68,7 +66,7 @@ export class SeatArrangementController {
     if (arrangement == undefined || student == undefined) {
       return undefined;
     }
-    let chair = this.roomObjectStore.getRoomObject(chairId);
+    let chair = arrangement.room.getRoomObject(chairId);
     if (chair == undefined) {
       return undefined;
     }
@@ -79,7 +77,7 @@ export class SeatArrangementController {
   deleteMapping(arrangementId: string, chairId: string) {
     let arrangement = this.seatArrangementStore.getSeatArrangement(arrangementId);
     if (arrangement !== undefined) {
-      let chair = this.roomObjectStore.getRoomObject(chairId);
+      let chair = arrangement.room.getRoomObject(chairId);
       if (chair !== undefined) {
         arrangement.removeSeat(chair);
       }

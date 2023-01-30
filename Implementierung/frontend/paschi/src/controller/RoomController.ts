@@ -8,6 +8,7 @@ import {Table} from "@/model/userdata/rooms/Table";
 import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {RoomObject} from "@/model/userdata/rooms/RoomObject";
 import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
+import {usePositionStore} from "@/store/PositionStore";
 
 // TODO: Backend Service einbinden
 export class RoomController {
@@ -16,6 +17,7 @@ export class RoomController {
   private userController = UserController.getUserController();
   private roomStore = useRoomStore();
   private arrangementStore = useSeatArrangementStore();
+  private positionStore = usePositionStore();
 
   private constructor() {
   }
@@ -61,16 +63,51 @@ export class RoomController {
     return this.roomStore.getAllRooms();
   }
 
-  addChair(roomId: string, pos: Position): string | undefined {
+  addChair(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number): string | undefined {
     let room = this.roomStore.getRoom(roomId);
     if (room == undefined) {
       return undefined;
     }
 
-    let chair = new Chair(undefined, useRoomObjectStore().getNextId(), this.userController.getUser(), pos);
+    let chair = new Chair(
+      undefined,
+      useRoomObjectStore().getNextId(),
+      this.userController.getUser(),
+      new Position(
+        undefined,
+        this.positionStore.nextId,
+        this.userController.getUser(),
+        xCoordinate, yCoordinate,
+        orientation)
+    );
     room.addRoomObject(chair);
 
     return chair.getId;
+  }
+
+  addTable(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number, length: number,
+           width: number): string | undefined {
+    let room = this.roomStore.getRoom(roomId);
+    if (room == undefined) {
+      return undefined;
+    }
+
+    let table = new Table(
+      undefined,
+      useRoomObjectStore().getNextId(),
+      this.userController.getUser(),
+      new Position(
+        undefined,
+        this.positionStore.nextId,
+        this.userController.getUser(),
+        xCoordinate, yCoordinate,
+        orientation),
+      length,
+      width
+    );
+    room.addRoomObject(table);
+
+    return table.getId;
   }
 
   getRoomObjects(roomId: string): RoomObject[] | undefined {
@@ -92,19 +129,6 @@ export class RoomController {
         return object;
       }
     });
-  }
-
-  addTable(roomId: string, pos: Position, length: number, width: number): string | undefined {
-    let room = this.roomStore.getRoom(roomId);
-    if (room == undefined) {
-      return undefined;
-    }
-
-    let table = new Table(undefined, useRoomObjectStore().getNextId(), this.userController.getUser(), pos, length,
-      width);
-    room.addRoomObject(table);
-
-    return table.getId;
   }
 
   removeRoomObject(roomId: string, objectId: string) {
