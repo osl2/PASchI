@@ -36,40 +36,20 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, ref } from "vue";
 import { RoomObject } from "@/model/userdata/rooms/roomObject";
-import { User } from "@/model/User";
-import { Role } from "@/model/Role";
-import { Position } from "@/model/userdata/rooms/Position";
 import { RoomController } from "@/controller/RoomController";
 
 export default defineComponent({
   name: "RoomEditor.vue",
   setup() {
-    const gregor = new User(
-      "4",
-      4,
-      "Gregor",
-      "Snelting",
-      "f",
-      true,
-      Role.USER,
-      ""
-    );
-    //const room = ref<Room>(new Room("123", 123, gregor, "Test"));
-
     const roomController = RoomController.getRoomController();
 
     const roomId = roomController.createRoom("TestRoom");
 
     onBeforeMount(() => {
-      roomController.addChair(roomId, new Position("0", 0, gregor, 0, 0, 0));
-      roomController.addChair(roomId, new Position("1", 1, gregor, 1000, 0, 0));
-      roomController.addChair(roomId, new Position("2", 2, gregor, 2000, 0, 0));
-      roomController.addTable(
-        roomId,
-        new Position("3", 3, gregor, 3000, 0, 0),
-        500,
-        1000
-      );
+      roomController.addChair(roomId, 0, 0, 0);
+      roomController.addChair(roomId, 1000, 0, 0);
+      roomController.addChair(roomId, 2000, 0, 0);
+      roomController.addTable(roomId, 3000, 0, 0, 1000, 3000);
     });
 
     const roomWidth = 16180;
