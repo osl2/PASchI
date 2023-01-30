@@ -45,13 +45,16 @@
 
 <script lang="ts">
 import { CourseController } from "@/controller/CourseController";
-import { defineComponent, ref } from "vue";
+import { defineComponent, Ref, ref } from "vue";
 import { RoomController } from "@/controller/RoomController";
 import { Room } from "@/model/userdata/rooms/Room";
 import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
-import {Course} from "@/model/userdata/courses/Course";
+import { Course } from "@/model/userdata/courses/Course";
+import { Session } from "@/model/userdata/courses/Session";
+import router from "@/plugins/router";
+import { SeatArrangementController } from "@/controller/SeatArrangementController";
 
 export default defineComponent({
   name: "editCoursePage",
@@ -65,32 +68,59 @@ export default defineComponent({
   setup(props) {
     const courseController = CourseController.getCourseController();
     const roomController = RoomController.getRoomController();
-    const seatArrangements = courseController.getSeatArrangements(
-      props.courseId
-    );
-    const course = ref<Course|undefined>(courseController.getCourse(props.courseId));
-    const courseName = ref<string>(getCourseName());
-    const courseSubject = ref<string>(getCourseSubject());
-    const rooms = roomController.getAllRooms();
-    const seatArrangementDialog = ref<boolean>(false);
-    const roomSelectionDialog = ref<boolean>(false);
+    const seatArrangementController = SeatArrangementController.getSeatArrangementController();
+    const course: Ref<Course | undefined> = ref<Course | undefined>(
+      courseController.getCourse(props.courseId)
+    ) as Ref<Course | undefined>;
+    const courseName: Ref<string> = ref<string>(getCourseName());
+    const courseSubject: Ref<string> = ref<string>(getCourseSubject());
+    const seatArrangements: Ref<SeatArrangement[]> = ref<SeatArrangement[]>(
+      getSeatArrangements()
+    ) as Ref<SeatArrangement[]>;
+    const rooms: Ref<Room[]> = ref<Room[]>(getAllRooms()) as Ref<Room[]>;
+    const seatArrangementDialog: Ref<boolean> = ref<boolean>(false);
+    const roomSelectionDialog: Ref<boolean> = ref<boolean>(false);
 
-
+    //Hilfsmethoden
     function getCourseName(): string {
-      if (typeof (course.value) == typeof Course) {
-        return course.value!.name;
+      if (course.value instanceof Course) {
+        return course.value.name;
       }
       return "";
     }
     function getCourseSubject(): string {
-      if (typeof (course.value) == typeof Course) {
-        return course.value!.subject;
+      if (course.value instanceof Course) {
+        return course.value.subject;
       }
       return "";
     }
+    function getAllRooms(): Room[] {
+      let rooms: undefined | Room[] = roomController.getAllRooms();
+      if (rooms instanceof Array) {
+        return rooms as Room[];
+      }
+      return [];
+    }
+    function getSeatArrangements(): SeatArrangement[] {
+      let seatArrangements: undefined | SeatArrangement[] =
+        courseController.getSeatArrangements(props.courseId);
+      if (seatArrangements instanceof Array) {
+        return seatArrangements as SeatArrangement[];
+      }
+      return [];
+    }
 
+    //normale Methoden
     function saveChangesClick() {
-      courseController.updateCourse(props.courseId, courseName.value, courseSubject.value);
+      courseController.updateCourse(
+        props.courseId,
+        courseName.value,
+        courseSubject.value
+      );
+      router.push({
+        name: "CourseDetailPage",
+        params: { courseId: props.courseId },
+      });
     }
 
     function addSeatArrangementClick() {
@@ -101,9 +131,17 @@ export default defineComponent({
       seatArrangementDialog.value = true;
     }
 
-    function addSeatArrangement(room: Room) {}
+    function addSeatArrangement(room: Room) {
+      let seatArrangementId: string|undefined = seatArrangementController.createSeatArrangement("unbenannt", props.courseId, room.getId);
+       //TODO Name des SeatArrangements hier festlegen?
+      if (typeof seatArrangementId=="string") {
+        //TODO push
+      }
+    }
 
-    function editSeatArrangement(seatArrangement: SeatArrangement) {}
+    function editSeatArrangement(seatArrangement: SeatArrangement) {
+      //TODO push
+    }
 
     return {
       saveChangesClick,
