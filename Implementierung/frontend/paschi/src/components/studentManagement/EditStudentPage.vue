@@ -32,8 +32,10 @@
 <script lang="ts">
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import { StudentController } from "@/controller/StudentController";
-import { defineComponent, ref } from "vue";
+import { defineComponent, Ref, ref } from "vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
+import * as string_decoder from "string_decoder";
+import { Student } from "@/model/userdata/interactions/Student";
 export default defineComponent({
   name: "editStudentPage.vue",
   components: {
@@ -49,14 +51,35 @@ export default defineComponent({
   setup(props) {
     const studentController = StudentController.getStudentConroller();
 
-    const firstName = ref<String>(studentController.getStudent(props.studentId)!.firstName);
-    const lastName = ref<String>(studentController.getStudent(props.studentId)!.lastName);
+    const student: Ref<Student | undefined> = ref<Student | undefined>(
+      studentController.getStudent(props.studentId)
+    ) as Ref<Student | undefined>;
+    const firstName: Ref<string> = ref<string>(getStudentFirstName());
+    const lastName: Ref<string> = ref<string>(getStudentLastName());
+
     const deleteStudentDialog = ref<boolean>(false);
 
+    //Hilfsmethoden
+    function getStudentFirstName(): string {
+      if (student instanceof Student) {
+        return student.firstName;
+      }
+      return "";
+    }
+    function getStudentLastName(): string {
+      if (student instanceof Student) {
+        return student.lastName;
+      }
+      return "";
+    }
+
+    //normale Methoden
     function activateCardClick() {
       deleteStudentDialog.value = true;
     }
-    function saveChangesClick() {}
+    function saveChangesClick() {
+      studentController.updateStudent(props.studentId, firstName.value, lastName.value)
+    }
 
     function deleteStudentClick() {
       studentController.deleteStudent(props.studentId);
