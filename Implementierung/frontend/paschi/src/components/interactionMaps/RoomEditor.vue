@@ -17,12 +17,15 @@
         v-for="roomObject in roomObjects"
         :key="roomObject.getId"
         class="ma-0 v-row align-center justify-center"
+        :class="
+          [(roomObjectErrorStyle && roomObject === selectedRoomObject) ? 'error' : 'notError']"
         color="secondary"
         elevation="0"
         draggable="false"
         :style="getRoomObjectStyle(roomObject)"
         @touchstart="touchStart($event, roomObject)"
         @touchmove="moveTouch($event, roomObject)"
+        @touchend="touchEnd"
         @mousedown="mouseDownRoomObject($event, roomObject)"
       >
         <v-icon
@@ -52,7 +55,7 @@ export default defineComponent({
       roomController.addChair(roomId, 0, 0, 0);
       roomController.addChair(roomId, 1000, 0, 0);
       roomController.addChair(roomId, 2000, 0, 0);
-      roomController.addTable(roomId, 3000, 0, 0, 1000, 3000);
+      roomController.addTable(roomId, 3000, 0, Math.PI / 4, 1000, 3000);
     });
 
     const roomWidth = 16180;
@@ -86,6 +89,8 @@ export default defineComponent({
     };
 
     const selectedRoomObject = ref<RoomObject>();
+
+    const roomObjectErrorStyle = ref(false);
 
     //detects collisions with other room objects using the separating axis theorem
     function roomObjectOverlaps(
@@ -312,81 +317,75 @@ export default defineComponent({
     }
 
     function touchStart(event: TouchEvent, roomObject: RoomObject) {
-      preTranslationRoomObjectScreenCoordinates.value.x =
-        event.touches[0].clientX;
-      preTranslationRoomObjectScreenCoordinates.value.y =
-        event.touches[0].clientY;
-      preTranslationRoomObjectRoomCoordinates.value = displayToRoomCoordinates(
-        preTranslationRoomObjectScreenCoordinates.value.x,
-        preTranslationRoomObjectScreenCoordinates.value.y
+      selectedRoomObject.value = roomObject;
+      const { x, y } = displayToRoomCoordinates(
+        event.touches[0].clientX,
+        event.touches[0].clientY
       );
       translationOffset.value = {
-        x:
-          preTranslationRoomObjectRoomCoordinates.value.x -
-          roomObject.position.xCoordinate,
-        y:
-          preTranslationRoomObjectRoomCoordinates.value.y -
-          roomObject.position.yCoordinate,
+        x: x - roomObject.position.xCoordinate,
+        y: y - roomObject.position.yCoordinate,
+      };
+      preTranslationRoomObjectRoomCoordinates.value = {
+        x: roomObject.position.xCoordinate,
+        y: roomObject.position.yCoordinate,
       };
     }
 
     function moveTouch(event: TouchEvent, roomObject: RoomObject) {
-      const oldPosition = {
-        x: roomObject.position.xCoordinate,
-        y: roomObject.position.yCoordinate,
-      };
-      const newPosition = {
-        x:
-          displayToRoomCoordinates(
-            event.touches[0].clientX,
-            event.touches[0].clientY
-          ).x - translationOffset.value.x,
-        y:
-          displayToRoomCoordinates(
-            event.touches[0].clientX,
-            event.touches[0].clientY
-          ).y - translationOffset.value.y,
-      };
-      roomObject.position.xCoordinate = newPosition.x;
-      roomObject.position.yCoordinate = newPosition.y;
-      if (
-        roomObjectOverlaps(roomObject, roomController.getRoomObjects(roomId)!)
-      ) {
-        roomObject.position.xCoordinate = oldPosition.x;
-        roomObject.position.yCoordinate = oldPosition.y;
+      const { x, y } = displayToRoomCoordinates(
+        event.touches[0].clientX,
+        event.touches[0].clientY
+      );
+      roomObject.position.xCoordinate = x - translationOffset.value.x;
+      roomObject.position.yCoordinate = y - translationOffset.value.y;
+      roomObjectErrorStyle.value = roomObjectOverlaps(roomObject, roomController.getRoomObjects(roomId)!);
+    }
+
+    function touchEnd() {
+      if (roomObjectOverlaps(selectedRoomObject.value!, roomController.getRoomObjects(roomId)!)) {
+        selectedRoomObject.value!.position.xCoordinate = preTranslationRoomObjectRoomCoordinates.value.x;
+        selectedRoomObject.value!.position.yCoordinate = preTranslationRoomObjectRoomCoordinates.value.y;
       }
+      roomObjectErrorStyle.value = false;
+      selectedRoomObject.value = undefined;
     }
 
     function mouseDownRoomObject(event: MouseEvent, roomObject: RoomObject) {
       selectedRoomObject.value = roomObject;
       preTranslationRoomObjectScreenCoordinates.value.x = event.clientX;
       preTranslationRoomObjectScreenCoordinates.value.y = event.clientY;
-      preTranslationRoomObjectRoomCoordinates.value = displayToRoomCoordinates(
-        preTranslationRoomObjectScreenCoordinates.value.x,
-        preTranslationRoomObjectScreenCoordinates.value.y
-      );
+      preTranslationRoomObjectRoomCoordinates.value = {
+        x: roomObject.position.xCoordinate,
+        y: roomObject.position.yCoordinate,
+      }
       translationOffset.value = {
         x:
-          preTranslationRoomObjectRoomCoordinates.value.x -
+          displayToRoomCoordinates(event.clientX, event.clientY).x -
           roomObject.position.xCoordinate,
         y:
-          preTranslationRoomObjectRoomCoordinates.value.y -
+          displayToRoomCoordinates(event.clientX, event.clientY).y -
           roomObject.position.yCoordinate,
       };
     }
 
     function mouseUpRoomObject() {
+      if (!selectedRoomObject.value) {
+        return;
+      }
+
+      if (roomObjectOverlaps(selectedRoomObject.value!, roomController.getRoomObjects(roomId)!)) {
+        selectedRoomObject.value!.position.xCoordinate = preTranslationRoomObjectRoomCoordinates.value.x;
+        selectedRoomObject.value!.position.yCoordinate = preTranslationRoomObjectRoomCoordinates.value.y;
+      }
       selectedRoomObject.value = undefined;
+      roomObjectErrorStyle.value = false;
     }
 
     function mouseMoveRoomObject(event: MouseEvent, roomObject: RoomObject) {
       if (!roomObject) {
         return;
       }
-      const oldPosition = {
-        x: roomObject.position.xCoordinate,
-        y: roomObject.position.yCoordinate,
-      };
       const newPosition = {
         x:
           displayToRoomCoordinates(event.clientX, event.clientY).x -
@@ -397,12 +396,7 @@ export default defineComponent({
       };
       roomObject.position.xCoordinate = newPosition.x;
       roomObject.position.yCoordinate = newPosition.y;
-      if (
-        roomObjectOverlaps(roomObject, roomController.getRoomObjects(roomId)!)
-      ) {
-        roomObject.position.xCoordinate = oldPosition.x;
-        roomObject.position.yCoordinate = oldPosition.y;
-      }
+      roomObjectErrorStyle.value = roomObjectOverlaps(roomObject, roomController.getRoomObjects(roomId)!);
     }
 
     return {
@@ -415,9 +409,20 @@ export default defineComponent({
       mouseMoveRoomObject: mouseMoveRoomObject,
       mouseUpRoomObject,
       selectedRoomObject,
+      roomObjectErrorStyle,
+      touchEnd,
     };
   },
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.error {
+  border: 2px solid red;
+  z-index: 2;
+}
+
+.not-error {
+  z-index: 1;
+}
+</style>
