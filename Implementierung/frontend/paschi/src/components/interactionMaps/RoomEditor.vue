@@ -6,32 +6,21 @@
     style="touch-action: none"
   >
     <v-card
-      @dragover="dragOver"
-      @drop="moveDrag($event, lastUsedRoomObject)"
-
       key="background"
       variant="flat"
       color="white"
       :style="roomDisplayStyle"
-      @mouseup="dragEnd()"
-      @mouseleave="dragEnd()"
     >
       <v-card
         v-for="roomObject in roomObjects"
-        :key="roomObject.id"
+        :key="roomObject.getId"
         class="ma-0 v-row align-center justify-center"
         color="secondary"
         elevation="0"
         draggable="false"
         :style="getRoomObjectStyle(roomObject)"
-        @touchstart="touchStart($event)"
+        @touchstart="touchStart($event, roomObject)"
         @touchmove="moveTouch($event, roomObject)"
-        @dragstart="dragStart($event, roomObject)"
-        @mousedown="dragStart($event, roomObject)"
-        @mousemove="moveDrag($event, roomObject)"
-        @mouseenter="resetMoveStart($event)"
-        @mouseup="dragEnd()"
-        @mouseleave="moveDrag($event, roomObject)"
       >
         <v-icon
           class="v-col-auto"
@@ -47,55 +36,39 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, ref } from "vue";
 import { RoomObject } from "@/model/userdata/rooms/roomObject";
-import { Room } from "@/model/userdata/rooms/Room";
 import { User } from "@/model/User";
 import { Role } from "@/model/Role";
 import { Position } from "@/model/userdata/rooms/Position";
-import { Chair } from "@/model/userdata/rooms/Chair";
-import { Table } from "@/model/userdata/rooms/Table";
-import { Dimensions } from "@/model/userdata/rooms/Dimensions";
+import { RoomController } from "@/controller/RoomController";
 
 export default defineComponent({
   name: "RoomEditor.vue",
   setup() {
-    const gregor =
-      new User("4", 4, "Gregor", "Snelting", "f", true, Role.USER, "")
-    const room = ref<Room>(new Room("123", 123, gregor, "Test"));
+    const gregor = new User(
+      "4",
+      4,
+      "Gregor",
+      "Snelting",
+      "f",
+      true,
+      Role.USER,
+      ""
+    );
+    //const room = ref<Room>(new Room("123", 123, gregor, "Test"));
 
+    const roomController = RoomController.getRoomController();
+
+    const roomId = roomController.createRoom("TestRoom");
 
     onBeforeMount(() => {
-      room.value.addRoomObject(
-        new Chair(
-          "0",
-          0,
-          gregor,
-          new Position("0", 0, gregor, 0, 0, Math.PI / 4)
-        )
-      );
-      room.value.addRoomObject(
-        new Chair(
-          "1",
-          2,
-          gregor,
-          new Position("1", 1, gregor, 700, 100, 0)
-        )
-      );
-      room.value.addRoomObject(
-        new Chair(
-          "2",
-          2,
-          gregor,
-          new Position("2", 2, gregor, 200, 700, 0)
-        )
-      );
-      room.value.addRoomObject(
-        new Table(
-          "3",
-          3,
-          gregor,
-          new Position("3", 3, gregor, 3000, 3000, Math.PI / 4),
-          3000, 1000
-        )
+      roomController.addChair(roomId, new Position("0", 0, gregor, 0, 0, 0));
+      roomController.addChair(roomId, new Position("1", 1, gregor, 1000, 0, 0));
+      roomController.addChair(roomId, new Position("2", 2, gregor, 2000, 0, 0));
+      roomController.addTable(
+        roomId,
+        new Position("3", 3, gregor, 3000, 0, 0),
+        500,
+        1000
       );
     });
 
@@ -116,12 +89,10 @@ export default defineComponent({
     const roomDisplayTopMargin = (window.innerHeight - roomDisplayHeight) / 2;
     const roomDisplayLeftMargin = (window.innerWidth - roomDisplayWidth) / 2;
 
-    const lastUsedRoomObject = ref<RoomObject>();
+    const preTranslationRoomObjectScreenCoordinates = ref({ x: 0, y: 0 });
+    const preTranslationRoomObjectRoomCoordinates = ref({ x: 0, y: 0 });
 
-    const moveXStart = ref(0);
-    const moveYStart = ref(0);
-
-    var mouseDown = false;
+    const translationOffset = ref({ x: 0, y: 0 });
 
     const roomDisplayStyle = {
       position: "absolute",
@@ -140,7 +111,10 @@ export default defineComponent({
         if (roomObjects[i].getId === roomObject.getId) {
           continue;
         }
-        if (separatedAxisCollide(roomObject, roomObjects[i]) && separatedAxisCollide(roomObjects[i], roomObject)) {
+        if (
+          separatedAxisCollide(roomObject, roomObjects[i]) &&
+          separatedAxisCollide(roomObjects[i], roomObject)
+        ) {
           return true;
         }
       }
@@ -276,6 +250,7 @@ export default defineComponent({
           x: roomObject1Vertex2.x - roomObject1Vertex1.x,
           y: roomObject1Vertex2.y - roomObject1Vertex1.y,
         };
+        // noinspection JSSuspiciousNameCombination
         const roomObject1EdgeNormal = {
           x: -roomObject1Edge.y,
           y: roomObject1Edge.x,
@@ -351,95 +326,58 @@ export default defineComponent({
       };
     }
 
-    function touchStart(event: TouchEvent) {
-      moveXStart.value = event.touches[0].clientX;
-      moveYStart.value = event.touches[0].clientY;
-    }
-
-    function screenCoordinatesDeltaToRoomCoordinatesDelta(
-      x: number,
-      y: number
-    ) {
-      return {
-        x: x / roomScale,
-        y: y / roomScale,
+    function touchStart(event: TouchEvent, roomObject: RoomObject) {
+      preTranslationRoomObjectScreenCoordinates.value.x =
+        event.touches[0].clientX;
+      preTranslationRoomObjectScreenCoordinates.value.y =
+        event.touches[0].clientY;
+      preTranslationRoomObjectRoomCoordinates.value = displayToRoomCoordinates(
+        preTranslationRoomObjectScreenCoordinates.value.x,
+        preTranslationRoomObjectScreenCoordinates.value.y
+      );
+      translationOffset.value = {
+        x:
+          preTranslationRoomObjectRoomCoordinates.value.x -
+          roomObject.position.xCoordinate,
+        y:
+          preTranslationRoomObjectRoomCoordinates.value.y -
+          roomObject.position.yCoordinate,
       };
     }
 
     function moveTouch(event: TouchEvent, roomObject: RoomObject) {
-      const delta = screenCoordinatesDeltaToRoomCoordinatesDelta(
-        event.touches[0].clientX - moveXStart.value,
-        event.touches[0].clientY - moveYStart.value
-      );
-      roomObject.position.xCoordinate =
-        roomObject.position.xCoordinate + delta.x;
-      roomObject.position.yCoordinate =
-        roomObject.position.yCoordinate + delta.y;
-      if (roomObjectOverlaps(roomObject, room.value.roomObjects)) {
-        roomObject.position.xCoordinate =
-          roomObject.position.xCoordinate - delta.x;
-        roomObject.position.yCoordinate =
-          roomObject.position.yCoordinate - delta.y;
+      const oldPosition = {
+        x: roomObject.position.xCoordinate,
+        y: roomObject.position.yCoordinate,
+      };
+      const newPosition = {
+        x:
+          displayToRoomCoordinates(
+            event.touches[0].clientX,
+            event.touches[0].clientY
+          ).x - translationOffset.value.x,
+        y:
+          displayToRoomCoordinates(
+            event.touches[0].clientX,
+            event.touches[0].clientY
+          ).y - translationOffset.value.y,
+      };
+      roomObject.position.xCoordinate = newPosition.x;
+      roomObject.position.yCoordinate = newPosition.y;
+      if (
+        roomObjectOverlaps(roomObject, roomController.getRoomObjects(roomId)!)
+      ) {
+        roomObject.position.xCoordinate = oldPosition.x;
+        roomObject.position.yCoordinate = oldPosition.y;
       }
-      moveXStart.value = event.touches[0].clientX;
-      moveYStart.value = event.touches[0].clientY;
-    }
-
-    function dragOver(event: DragEvent) {
-      event.dataTransfer ? (event.dataTransfer.dropEffect = "move") : null;
-      event.preventDefault();
-    }
-
-    function dragStart(event: DragEvent, roomObject: RoomObject) {
-      moveXStart.value = event.clientX;
-      moveYStart.value = event.clientY;
-      lastUsedRoomObject.value = roomObject;
-      mouseDown = true;
-    }
-
-    function moveDrag(event: DragEvent, roomObject: RoomObject) {
-      if (!mouseDown) {
-        return;
-      }
-      const delta = screenCoordinatesDeltaToRoomCoordinatesDelta(
-        event.clientX - moveXStart.value,
-        event.clientY - moveYStart.value
-      );
-      roomObject.position.xCoordinate =
-        roomObject.position.xCoordinate + delta.x;
-      roomObject.position.yCoordinate =
-        roomObject.position.yCoordinate + delta.y;
-      if (roomObjectOverlaps(roomObject, room.value!.roomObjects)) {
-        roomObject.position.xCoordinate =
-          roomObject.position.xCoordinate - delta.x;
-        roomObject.position.yCoordinate =
-          roomObject.position.yCoordinate - delta.y;
-      }
-      moveXStart.value = event.clientX;
-      moveYStart.value = event.clientY;
-    }
-
-    function dragEnd() {
-      mouseDown = false;
-    }
-
-    function resetMoveStart(event: MouseEvent) {
-      moveXStart.value = event.clientX;
-      moveYStart.value = event.clientY;
     }
 
     return {
-      roomObjects: room.value!.roomObjects,
-      dragStart,
-      moveDrag,
-      dragOver,
+      roomObjects: roomController.getRoomObjects(roomId),
       touchStart,
       moveTouch,
       getRoomObjectStyle,
       roomDisplayStyle,
-      lastUsedRoomObject,
-      dragEnd,
-      resetMoveStart
     };
   },
 });
