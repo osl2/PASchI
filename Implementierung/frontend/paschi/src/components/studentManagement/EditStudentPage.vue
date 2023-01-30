@@ -34,7 +34,6 @@ import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import { StudentController } from "@/controller/StudentController";
 import { defineComponent, Ref, ref } from "vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
-import * as string_decoder from "string_decoder";
 import { Student } from "@/model/userdata/interactions/Student";
 export default defineComponent({
   name: "editStudentPage.vue",
@@ -61,14 +60,14 @@ export default defineComponent({
 
     //Hilfsmethoden
     function getStudentFirstName(): string {
-      if (student instanceof Student) {
-        return student.firstName;
+      if (student.value instanceof Student) {
+        return student.value.firstName;
       }
       return "";
     }
     function getStudentLastName(): string {
-      if (student instanceof Student) {
-        return student.lastName;
+      if (student.value instanceof Student) {
+        return student.value.lastName;
       }
       return "";
     }
