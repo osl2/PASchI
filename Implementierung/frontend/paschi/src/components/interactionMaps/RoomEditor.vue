@@ -17,8 +17,11 @@
         v-for="roomObject in roomObjects"
         :key="roomObject.getId"
         class="ma-0 v-row align-center justify-center"
-        :class="
-          [(roomObjectErrorStyle && roomObject === selectedRoomObject) ? 'error' : 'notError']"
+        :class="[
+          roomObjectErrorStyle && roomObject === selectedRoomObject
+            ? 'error'
+            : 'notError',
+        ]"
         color="secondary"
         elevation="0"
         draggable="false"
@@ -234,6 +237,24 @@ export default defineComponent({
         },
       ];
       for (let i = 0; i < 4; i++) {
+        if (
+          roomObject1Vertices[i].x < 0 ||
+          roomObject1Vertices[i].x > roomWidth ||
+          roomObject1Vertices[i].y < 0 ||
+          roomObject1Vertices[i].y > roomHeight
+        ) {
+          return true;
+        }
+        if (
+          roomObject2Vertices[i].x < 0 ||
+          roomObject2Vertices[i].x > roomWidth ||
+          roomObject2Vertices[i].y < 0 ||
+          roomObject2Vertices[i].y > roomHeight
+        ) {
+          return true;
+        }
+      }
+      for (let i = 0; i < 4; i++) {
         const roomObject1Vertex1 = roomObject1Vertices[i];
         const roomObject1Vertex2 = roomObject1Vertices[(i + 1) % 4];
         const roomObject1Edge = {
@@ -339,13 +360,23 @@ export default defineComponent({
       );
       roomObject.position.xCoordinate = x - translationOffset.value.x;
       roomObject.position.yCoordinate = y - translationOffset.value.y;
-      roomObjectErrorStyle.value = roomObjectOverlaps(roomObject, roomController.getRoomObjects(roomId)!);
+      roomObjectErrorStyle.value = roomObjectOverlaps(
+        roomObject,
+        roomController.getRoomObjects(roomId)!
+      );
     }
 
     function touchEnd() {
-      if (roomObjectOverlaps(selectedRoomObject.value!, roomController.getRoomObjects(roomId)!)) {
-        selectedRoomObject.value!.position.xCoordinate = preTranslationRoomObjectRoomCoordinates.value.x;
-        selectedRoomObject.value!.position.yCoordinate = preTranslationRoomObjectRoomCoordinates.value.y;
+      if (
+        roomObjectOverlaps(
+          selectedRoomObject.value!,
+          roomController.getRoomObjects(roomId)!
+        )
+      ) {
+        selectedRoomObject.value!.position.xCoordinate =
+          preTranslationRoomObjectRoomCoordinates.value.x;
+        selectedRoomObject.value!.position.yCoordinate =
+          preTranslationRoomObjectRoomCoordinates.value.y;
       }
       roomObjectErrorStyle.value = false;
       selectedRoomObject.value = undefined;
@@ -358,7 +389,7 @@ export default defineComponent({
       preTranslationRoomObjectRoomCoordinates.value = {
         x: roomObject.position.xCoordinate,
         y: roomObject.position.yCoordinate,
-      }
+      };
       translationOffset.value = {
         x:
           displayToRoomCoordinates(event.clientX, event.clientY).x -
@@ -374,9 +405,16 @@ export default defineComponent({
         return;
       }
 
-      if (roomObjectOverlaps(selectedRoomObject.value!, roomController.getRoomObjects(roomId)!)) {
-        selectedRoomObject.value!.position.xCoordinate = preTranslationRoomObjectRoomCoordinates.value.x;
-        selectedRoomObject.value!.position.yCoordinate = preTranslationRoomObjectRoomCoordinates.value.y;
+      if (
+        roomObjectOverlaps(
+          selectedRoomObject.value!,
+          roomController.getRoomObjects(roomId)!
+        )
+      ) {
+        selectedRoomObject.value!.position.xCoordinate =
+          preTranslationRoomObjectRoomCoordinates.value.x;
+        selectedRoomObject.value!.position.yCoordinate =
+          preTranslationRoomObjectRoomCoordinates.value.y;
       }
       selectedRoomObject.value = undefined;
       roomObjectErrorStyle.value = false;
@@ -396,7 +434,10 @@ export default defineComponent({
       };
       roomObject.position.xCoordinate = newPosition.x;
       roomObject.position.yCoordinate = newPosition.y;
-      roomObjectErrorStyle.value = roomObjectOverlaps(roomObject, roomController.getRoomObjects(roomId)!);
+      roomObjectErrorStyle.value = roomObjectOverlaps(
+        roomObject,
+        roomController.getRoomObjects(roomId)!
+      );
     }
 
     return {
