@@ -10,6 +10,8 @@
       variant="flat"
       color="white"
       :style="roomDisplayStyle"
+      @mousemove="mouseMoveRoomObject($event, selectedRoomObject)"
+      @mouseup="mouseUpRoomObject"
     >
       <v-card
         v-for="roomObject in roomObjects"
@@ -21,6 +23,7 @@
         :style="getRoomObjectStyle(roomObject)"
         @touchstart="touchStart($event, roomObject)"
         @touchmove="moveTouch($event, roomObject)"
+        @mousedown="mouseDownRoomObject($event, roomObject)"
       >
         <v-icon
           class="v-col-auto"
@@ -81,6 +84,8 @@ export default defineComponent({
       width: roomDisplayWidth + "px",
       height: roomDisplayHeight + "px",
     };
+
+    const selectedRoomObject = ref<RoomObject>();
 
     //detects collisions with other room objects using the separating axis theorem
     function roomObjectOverlaps(
@@ -352,12 +357,65 @@ export default defineComponent({
       }
     }
 
+    function mouseDownRoomObject(event: MouseEvent, roomObject: RoomObject) {
+      selectedRoomObject.value = roomObject;
+      preTranslationRoomObjectScreenCoordinates.value.x = event.clientX;
+      preTranslationRoomObjectScreenCoordinates.value.y = event.clientY;
+      preTranslationRoomObjectRoomCoordinates.value = displayToRoomCoordinates(
+        preTranslationRoomObjectScreenCoordinates.value.x,
+        preTranslationRoomObjectScreenCoordinates.value.y
+      );
+      translationOffset.value = {
+        x:
+          preTranslationRoomObjectRoomCoordinates.value.x -
+          roomObject.position.xCoordinate,
+        y:
+          preTranslationRoomObjectRoomCoordinates.value.y -
+          roomObject.position.yCoordinate,
+      };
+    }
+
+    function mouseUpRoomObject() {
+      selectedRoomObject.value = undefined;
+    }
+
+    function mouseMoveRoomObject(event: MouseEvent, roomObject: RoomObject) {
+      const oldPosition = {
+        x: roomObject.position.xCoordinate,
+        y: roomObject.position.yCoordinate,
+      };
+      const newPosition = {
+        x:
+          displayToRoomCoordinates(
+            event.clientX,
+            event.clientY
+          ).x - translationOffset.value.x,
+        y:
+          displayToRoomCoordinates(
+            event.clientX,
+            event.clientY
+          ).y - translationOffset.value.y,
+      };
+      roomObject.position.xCoordinate = newPosition.x;
+      roomObject.position.yCoordinate = newPosition.y;
+      if (
+        roomObjectOverlaps(roomObject, roomController.getRoomObjects(roomId)!)
+      ) {
+        roomObject.position.xCoordinate = oldPosition.x;
+        roomObject.position.yCoordinate = oldPosition.y;
+      }
+    }
+
     return {
       roomObjects: roomController.getRoomObjects(roomId),
       touchStart,
       moveTouch,
       getRoomObjectStyle,
       roomDisplayStyle,
+      mouseDownRoomObject: mouseDownRoomObject,
+      mouseMoveRoomObject: mouseMoveRoomObject,
+      mouseUpRoomObject,
+      selectedRoomObject,
     };
   },
 });
