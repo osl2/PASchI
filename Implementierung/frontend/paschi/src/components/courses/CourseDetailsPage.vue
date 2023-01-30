@@ -24,14 +24,21 @@
     <v-dialog v-model="sessionStatisticDialog">
       <v-card>
         <v-list>
-          <v-list-item v-for="session in sessions"></v-list-item>
+          <v-list-item
+            v-for="session in sessions"
+            @click="navigateToSessionStatistic(session)"
+            >{{ session.date }}</v-list-item
+          >
         </v-list>
       </v-card>
     </v-dialog>
     <v-dialog v-model="interactionMapSelectionDialog">
       <v-card>
         <v-list>
-          <v-list-item v-for="session in sessions">
+          <v-list-item
+            v-for="session in sessions"
+            @click="navigateToInteractionMap(session)"
+          >
             {{ session.date }}
           </v-list-item>
         </v-list>
@@ -40,7 +47,10 @@
     <v-dialog v-model="addStudentSelectionDialog">
       <v-card>
         <v-list>
-          <v-list-item v-for="student in studentsNotInCourse">
+          <v-list-item
+            v-for="student in studentsNotInCourse"
+            @click="addStudent(student)"
+          >
             {{ student.firstName }} {{ student.lastName }}
           </v-list-item>
         </v-list>
@@ -49,7 +59,10 @@
     <v-dialog v-model="seatArrangementSelectionDialog">
       <v-card>
         <v-list>
-          <v-list-item v-for="seatArrangement in seatArrangements">
+          <v-list-item
+            v-for="seatArrangement in seatArrangements"
+            @click="startSessionClick(seatArrangement)"
+          >
             {{ seatArrangement.name }} {{ seatArrangement.room.name }}
           </v-list-item>
         </v-list>
@@ -64,7 +77,7 @@ import SideMenu from "@/components/navigation/SideMenu.vue";
 import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
 import { Session } from "@/model/userdata/courses/Session";
 import { Student } from "@/model/userdata/interactions/Student";
-import { defineComponent, ref } from "vue";
+import { defineComponent, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
 import router from "@/plugins/router";
 
@@ -80,49 +93,117 @@ export default defineComponent({
   setup(props) {
     const courseController = CourseController.getCourseController();
 
-    const sessionStatisticDialog = ref<boolean>(false);
-    const interactionMapSelectionDialog = ref<boolean>(false);
-    const addStudentSelectionDialog = ref<boolean>(false);
-    const seatArrangementSelectionDialog = ref<boolean>(false);
+    const sessionStatisticDialog: Ref<boolean> = ref<boolean>(false);
+    const interactionMapSelectionDialog: Ref<boolean> = ref<boolean>(false);
+    const addStudentSelectionDialog: Ref<boolean> = ref<boolean>(false);
+    const seatArrangementSelectionDialog: Ref<boolean> = ref<boolean>(false);
 
-    const sessions = ref<Session[]>(
-      courseController.getSessions(props.courseId)
-    );
-    const studentsNotInCourse = ref<Student[]>(
-      courseController.getStudents(props.courseId)
-    ); //Ersetzen, wenn Controller fertig!!! courseController.getStudentsNotInCourse(courseid);
-    const studentsInCourse = ref<Student[]>(
-      courseController.getStudents(props.courseId)
-    );
-    const seatArrangements = ref<SeatArrangement[]>(
-      courseController.getSeatArrangements(props.courseId)
-    );
+    const sessions: Ref<Session[]> = ref<Session[]>(getSessions()) as Ref<
+      Session[]
+    >;
+    const studentsNotInCourse: Ref<Student[]> = ref<Student[]>(
+      getStudentsNotInCourse()
+    ) as Ref<Student[]>;
+    const studentsInCourse: Ref<Student[]> = ref<Student[]>(
+      getStudentsOfCourse()
+    ) as Ref<Student[]>;
+    const seatArrangements: Ref<SeatArrangement[]> = ref<SeatArrangement[]>(
+      getSeatArrangements()
+    ) as Ref<SeatArrangement[]>;
 
+    //Hilfsmethoden
+    function getSessions(): Session[] {
+      let sessions: undefined | Session[] = courseController.getSessions(
+        props.courseId
+      );
+      if (sessions instanceof Array) {
+        return sessions as Session[];
+      }
+      return [];
+    }
+    function getStudentsOfCourse(): Student[] {
+      let students: undefined | Student[] =
+        courseController.getStudentsOfCourse(props.courseId);
+      if (students instanceof Array) {
+        return students as Student[];
+      }
+      return [];
+    }
+    function getStudentsNotInCourse(): Student[] {
+      let students: undefined | Student[] =
+        courseController.getStudentsNotInCourse(props.courseId);
+      if (students instanceof Array) {
+        return students as Student[];
+      }
+      return [];
+    }
+    function getSeatArrangements(): SeatArrangement[] {
+      let seatArrangements: undefined | SeatArrangement[] =
+        courseController.getSeatArrangements(props.courseId);
+      if (seatArrangements instanceof Array) {
+        return seatArrangements as SeatArrangement[];
+      }
+      return [];
+    }
+
+    //normale Methoden
     function showCourseStatisticsClick() {
-      router.push({name: 'editCoursePage', params: {courseId: props.courseId}});
+      router.push({
+        name: "CourseStatisticPage",
+        params: { courseId: props.courseId },
+      });
     }
     function editCourseDetailsClick() {
-
+      router.push({
+        name: "EditCoursePage",
+        params: { courseId: props.courseId },
+      });
     }
-    function editStudentClick(student: Student) {}
-    function deleteStudentClick(student: Student) {}
+    function editStudentClick(student: Student) {
+      router.push({
+        name: "EditStudentPage",
+        params: { studentId: student.getId },
+      });
+    }
+    function deleteStudentClick(student: Student) {
+      courseController.removeStudentFromCourse(props.courseId, student.getId);
+    }
     function activateInteractionMapSelection() {
-      interactionMapSelectionDialog.value=true;
+      interactionMapSelectionDialog.value = true;
     }
     function activateSessionStatisticsSelection() {
-      sessionStatisticDialog.value=true;
+      sessionStatisticDialog.value = true;
     }
-    function navigateToSessionStatistic(session: Session) {}
-    function navigateToInteractionMap(session: Session) {}
-    function addStudent(student: Student) {}
+    function navigateToSessionStatistic(session: Session) {
+      router.push({
+        name: "SessionStatisticPage",
+        params: { courseId: props.courseId, sessionId: session.getId },
+      });
+    }
+    function navigateToInteractionMap(session: Session) {
+      router.push({
+        name: "ShowInteractionMapPage",
+        params: { courseId: props.courseId, sessionId: session.getId },
+      })
+    }
+    function addStudent(student: Student) {
+      courseController.addStudentToCourse(props.courseId, student.getId);
+    }
     function activateStudentCard() {
-      addStudentSelectionDialog.value=true;
+      addStudentSelectionDialog.value = true;
     }
     function addSessionClick() {
-      seatArrangementSelectionDialog.value=true;
+      seatArrangementSelectionDialog.value = true;
     }
-    function startSessionClick(seatArrangement: SeatArrangement) {}
-    function studentStatisticClick(student: Student) {}
+    function startSessionClick(seatArrangement: SeatArrangement) {
+      //TODO
+    }
+    function studentStatisticClick(student: Student) {
+      router.push({
+        name:"StudentStatisticPage",
+        params: {studentId: student.getId}
+      })
+    }
 
     return {
       showCourseStatisticsClick,
