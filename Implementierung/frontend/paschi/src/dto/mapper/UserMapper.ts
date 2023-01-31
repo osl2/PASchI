@@ -14,14 +14,16 @@ export class UserMapper implements IModelDtoMapper<User, UserDto> {
     if (user.hasId()) {
       id = user.getId;
     } else {
-      id = undefined;
+      id = "";
     }
 
     return new UserDto(
       id,
       user.firstName,
       user.lastName,
-      user.email, user.auth,
+      user.email,
+      "",
+      user.auth,
       this.roleMapper.modelToDto(user.role),
       user.token
     );
