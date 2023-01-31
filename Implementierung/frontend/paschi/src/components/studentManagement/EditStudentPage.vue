@@ -43,6 +43,7 @@ export default defineComponent({
   },
   props: {
     studentId: {
+      name: "studentId",
       type: String,
       required: true,
     },
@@ -53,8 +54,8 @@ export default defineComponent({
     const student: Ref<Student | undefined> = ref<Student | undefined>(
       studentController.getStudent(props.studentId)
     ) as Ref<Student | undefined>;
-    const firstName: Ref<string> = ref<string>(getStudentFirstName());
-    const lastName: Ref<string> = ref<string>(getStudentLastName());
+    const firstName = ref<string>(getStudentFirstName());
+    const lastName = ref<string>(getStudentLastName());
 
     const deleteStudentDialog = ref<boolean>(false);
 
@@ -77,7 +78,11 @@ export default defineComponent({
       deleteStudentDialog.value = true;
     }
     function saveChangesClick() {
-      studentController.updateStudent(props.studentId, firstName.value, lastName.value)
+      if(!props.studentId) {
+        const studentId = studentController.createStudent(firstName.value, lastName.value);
+      } else {
+        studentController.updateStudent(props.studentId, firstName.value, lastName.value);
+      }
     }
 
     function deleteStudentClick() {
