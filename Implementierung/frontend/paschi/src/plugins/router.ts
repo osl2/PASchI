@@ -24,7 +24,7 @@ const routes = [
   { path: "/admin", name: "AdminPage", component: AdminPage },
   { path: "/dashboard", name: "Dashboard", component: Dashboard },
   {
-    path: "/edit-student",
+    path: "/edit-student/:studentId",
     name: "EditStudentPage",
     component: EditStudentPage,
     props: true,

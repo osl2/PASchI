@@ -58,7 +58,7 @@ export default defineComponent({
       roomController.addChair(roomId, 0, 0, 0);
       roomController.addChair(roomId, 1000, 0, 0);
       roomController.addChair(roomId, 2000, 0, 0);
-      roomController.addTable(roomId, 3000, 0, Math.PI / 4, 1000, 3000);
+      roomController.addTable(roomId, 3000, 0, Math.PI / 2, 1000, 3000);
     });
 
     const roomWidth = 16180;

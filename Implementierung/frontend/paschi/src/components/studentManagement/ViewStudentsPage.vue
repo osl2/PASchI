@@ -18,15 +18,15 @@
     <SideMenu />
     <v-container fluid>
       <v-list density="comfortable" max-width="700">
-        <v-list-item rounded v-for="student in students">
+        <v-list-item rounded v-for="student in students" :key="student.getId">
           <v-list-item-title>
-            {{ student.name }}
+            {{ student.firstName }} {{ student.lastName }}
           </v-list-item-title>
           <template v-slot:append>
             <v-btn
               variant="tonal"
               color="primary"
-              @click="editStudentClick(undefined)"
+              @click="editStudentClick(student.getId)"
               ><v-icon>fas fa-pencil</v-icon></v-btn
             >
             <v-btn
@@ -49,15 +49,15 @@ import { StudentController } from "@/controller/StudentController";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import { Student } from "@/model/userdata/interactions/Student";
-import { defineComponent, Ref, ref } from "vue";
-import router from "@/plugins/router";
+import {defineComponent, Ref, ref, UnwrapRef} from "vue";
+import {useRouter} from "vue-router";
 
 export default defineComponent({
   name: "ViewStudentsPage",
   components: { SideMenu, NavigationBar },
 
   setup() {
-    const students = [
+    /*const students = [
       { name: "Hansi" },
       { name: "Gudrun" },
       { name: "Kunibert" },
@@ -69,23 +69,25 @@ export default defineComponent({
       { name: "Magnus Köder" },
       { name: "Severus Snape" },
       { name: "Christiana Krise" },
-    ];
+    ];*/
 
     const studentController = StudentController.getStudentConroller();
-    //const students: Ref<Student[]> = ref<Student[]>(studentController.getAllStudents()) as Ref<Student[]>;
+    const students: Ref<Student[]> = ref<Student[]>(studentController.getAllStudents()) as Ref<Student[]>;
+
+    const router = useRouter();
 
     function newStudentClick() {
-      let studentId: string = studentController.createStudent("", "");
+      const studentId = studentController.createStudent("", "");
       router.push({
         name: "EditStudentPage",
         params: { studentId: studentId },
       });
     }
 
-    function editStudentClick(student: Student) {
+    function editStudentClick(studentId: string) {
       router.push({
         name: "EditStudentPage",
-        params: { studentId: student.getId },
+        params: { studentId: studentId },
       })
     }
 
