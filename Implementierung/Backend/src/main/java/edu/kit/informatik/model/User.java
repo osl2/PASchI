@@ -5,7 +5,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * Benutzer zur Authentifizierung der Rest-Api
@@ -14,6 +17,9 @@ import lombok.NoArgsConstructor;
  * @author ugqbo
  * @version 1.0
  */
+@ToString
+@EqualsAndHashCode
+@Getter
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
@@ -38,33 +44,7 @@ public class User {
         this.role = role;
     }
 
-    public String getId() {
-        return id;
-    }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public boolean isAuth() {
-        return auth;
-    }
-
-    public Role getRole() {
-        return role;
-    }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
