@@ -6,16 +6,18 @@ export class UserDto {
   firstName: string;
   lastName: string;
   email: string;
+  password: string;
   auth: boolean ;
   role: RoleDto;
   token: string | undefined;
 
-  constructor(id: string | undefined, firstName: string, lastName: string, email: string, auth: boolean, role: RoleDto,
-              token: string | undefined) {
+  constructor(id: string | undefined, firstName: string, lastName: string, email: string, password: string,
+              auth: boolean, role: RoleDto, token: string | undefined) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
+    this.password = password;
     this.auth = auth;
     this.role = role;
     this.token = token;
