@@ -67,7 +67,8 @@ export default defineComponent({
   setup(props) {
     const courseController = CourseController.getCourseController();
     const roomController = RoomController.getRoomController();
-    const seatArrangementController = SeatArrangementController.getSeatArrangementController();
+    const seatArrangementController =
+      SeatArrangementController.getSeatArrangementController();
     const course: Ref<Course | undefined> = ref<Course | undefined>(
       courseController.getCourse(props.courseId)
     ) as Ref<Course | undefined>;
@@ -76,7 +77,9 @@ export default defineComponent({
     const seatArrangements: Ref<SeatArrangement[]> = ref<SeatArrangement[]>(
       getSeatArrangements()
     ) as Ref<SeatArrangement[]>;
-    const rooms: Ref<Room[]> = ref<Room[]>(roomController.getAllRooms()) as Ref<Room[]>;
+    const rooms: Ref<Room[]> = ref<Room[]>(roomController.getAllRooms()) as Ref<
+      Room[]
+    >;
     const seatArrangementDialog: Ref<boolean> = ref<boolean>(false);
     const roomSelectionDialog: Ref<boolean> = ref<boolean>(false);
 
@@ -110,7 +113,7 @@ export default defineComponent({
         courseSubject.value
       );
       router.push({
-        name: "CourseDetailPage",
+        name: "CourseDetailsPage",
         params: { courseId: props.courseId },
       });
     }
@@ -124,15 +127,26 @@ export default defineComponent({
     }
 
     function addSeatArrangement(room: Room) {
-      let seatArrangementId: string|undefined = seatArrangementController.createSeatArrangement("unbenannt", props.courseId, room.getId);
-       //TODO Name des SeatArrangements hier festlegen?
-      if (typeof seatArrangementId=="string") {
-        //TODO push
+      let seatArrangementId: string | undefined =
+        seatArrangementController.createSeatArrangement(
+          "unbenannt",
+          props.courseId,
+          room.getId
+        );
+      //TODO Name des SeatArrangements hier festlegen?
+      if (typeof seatArrangementId == "string") {
+        router.push({
+          name: "SeatArrangementPage",
+          params: { seatArrangementId: seatArrangementId },
+        });
       }
     }
 
     function editSeatArrangement(seatArrangement: SeatArrangement) {
-      //TODO push
+      router.push({
+        name: "SeatArrangementPage",
+        params: { SeatArrangementId: seatArrangement.getId },
+      });
     }
 
     return {
