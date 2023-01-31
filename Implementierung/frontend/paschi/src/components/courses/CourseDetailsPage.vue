@@ -80,6 +80,7 @@ import { Student } from "@/model/userdata/interactions/Student";
 import { defineComponent, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
 import router from "@/plugins/router";
+import { SessionController } from "@/controller/SessionController";
 
 export default defineComponent({
   name: "CourseDetailsPage",
@@ -91,7 +92,8 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const courseController = CourseController.getCourseController();
+    const courseController: CourseController = CourseController.getCourseController();
+    const sessionController: SessionController = SessionController.getSessionController();
 
     const sessionStatisticDialog: Ref<boolean> = ref<boolean>(false);
     const interactionMapSelectionDialog: Ref<boolean> = ref<boolean>(false);
@@ -177,14 +179,14 @@ export default defineComponent({
     function navigateToSessionStatistic(session: Session) {
       router.push({
         name: "SessionStatisticPage",
-        params: { courseId: props.courseId, sessionId: session.getId },
+        params: { sessionId: session.getId },
       });
     }
     function navigateToInteractionMap(session: Session) {
       router.push({
         name: "ShowInteractionMapPage",
-        params: { courseId: props.courseId, sessionId: session.getId },
-      })
+        params: { sessionId: session.getId },
+      });
     }
     function addStudent(student: Student) {
       courseController.addStudentToCourse(props.courseId, student.getId);
@@ -196,13 +198,16 @@ export default defineComponent({
       seatArrangementSelectionDialog.value = true;
     }
     function startSessionClick(seatArrangement: SeatArrangement) {
-      //TODO
+      router.push({
+        name: "SessionPage",
+        params: { sessionId: sessionController.createSession(props.courseId, seatArrangement.getId, "")} //TODO Session name
+      })
     }
     function studentStatisticClick(student: Student) {
       router.push({
-        name:"StudentStatisticPage",
-        params: {studentId: student.getId}
-      })
+        name: "StudentStatisticPage",
+        params: { studentId: student.getId },
+      });
     }
 
     return {
