@@ -22,7 +22,7 @@ import java.io.IOException;
 public abstract class AbstractTest {
     protected MockMvc mvc;
     @Autowired
-    static WebApplicationContext webApplicationContext;
+    WebApplicationContext webApplicationContext;
 
     protected void setUp() {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
