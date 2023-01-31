@@ -67,9 +67,9 @@ export default defineComponent({
 
   setup() {
     const courseController = CourseController.getCourseController();
-    //const courses: Ref<Course[]> = ref<Course[]>(courseController.getAllCourses()) as Ref<Course[]>;
+    const courses: Ref<Course[]> = ref<Course[]>(courseController.getAllCourses()) as Ref<Course[]>;
 
-    const courses: Ref<Course[]> = ref<Course[]>([
+/*    const courses: Ref<Course[]> = ref<Course[]>([
       new Course(
         "asdf",
         new User(1, "", "", "", true, Role.USER, ""),
@@ -94,7 +94,7 @@ export default defineComponent({
         "Informatik 12",
         "Informatik"
       ),
-    ]) as Ref<Course[]>;
+    ]) as Ref<Course[]>;*/
     function editCourseClick(course: Course) {
       router.push({
         name:"EditCoursePage",
