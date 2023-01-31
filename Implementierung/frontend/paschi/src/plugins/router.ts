@@ -14,6 +14,9 @@ import CourseStatisticPage from "@/components/statistics/CourseStatisticPage.vue
 import SessionStatisticPage from "@/components/statistics/SessionStatisticPage.vue";
 import StudentStatisticPage from "@/components/statistics/StudentStatisticPage.vue";
 import ShowInteractionMapPage from "@/components/statistics/ShowInteractionMapPage.vue";
+import RoomArrangementPage from "@/components/room/RoomArrangementPage.vue";
+import SeatArrangementPage from "@/components/room/SeatArrangementPage.vue";
+import ViewRoomsPage from "@/components/room/ViewRoomsPage.vue";
 
 const routes = [
   { path: "/login", name: "Login", component: Login },
@@ -77,6 +80,23 @@ const routes = [
     name: "ShowInteractionMapPage",
     component: ShowInteractionMapPage,
     props: true,
+  },
+  {
+    path: "/room-arrangement",
+    name: "RoomArrangementPage",
+    component: RoomArrangementPage,
+    props: true,
+  },
+  {
+    path: "/seat-arrangement",
+    name: "SeatArrangementPage",
+    component: SeatArrangementPage,
+    props: true,
+  },
+  {
+    path: "/view-rooms",
+    name: "ViewRoomsPage",
+    component: ViewRoomsPage,
   },
 ];
 
