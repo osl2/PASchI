@@ -6,7 +6,7 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
 
   private static readonly CATEGORY_BASE_URL: string = "";
 
-  constructor(base_url: string, CATEGORY_BASE_URL: string) {
+  constructor() {
     super(CategoryService.CATEGORY_BASE_URL);
   }
 

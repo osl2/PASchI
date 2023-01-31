@@ -6,7 +6,7 @@ export class UserService extends BaseService<User, UserDto> {
 
   private static readonly USER_BASE_URL: string = "";
 
-  constructor(base_url: string, USER_BASE_URL: string) {
+  constructor() {
     super(UserService.USER_BASE_URL);
   }
 

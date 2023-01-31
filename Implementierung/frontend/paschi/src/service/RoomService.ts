@@ -6,7 +6,7 @@ export class RoomService extends BaseService<Room, RoomDto> {
 
   private static readonly ROOM_BASE_URL: string = "";
 
-  constructor(base_url: string, ROOM_BASE_URL: string) {
+  constructor() {
     super(RoomService.ROOM_BASE_URL);
   }
 

@@ -6,7 +6,7 @@ export class CourseService extends BaseService<Course, CourseDto> {
 
   private static readonly COURSE_BASE_URL: string = "";
 
-  constructor(base_url: string, COURSE_BASE_URL: string) {
+  constructor() {
     super(CourseService.COURSE_BASE_URL);
   }
 

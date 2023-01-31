@@ -6,7 +6,7 @@ export class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
 
   private static readonly SEAT_ARRANGEMENT_BASE_URL: string = "";
 
-  constructor(base_url: string, SEAT_ARRANGEMENT_BASE_URL: string) {
+  constructor() {
     super(SeatArrangementService.SEAT_ARRANGEMENT_BASE_URL);
   }
 
