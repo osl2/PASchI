@@ -22,7 +22,7 @@ export default defineComponent({
   name: "RecentCoursesCard",
   setup() {
     function navigateToCourses() {
-      router.push("/courses")
+      router.push({name: "ViewCoursesPage"})
     }
     return {
       navigateToCourses
