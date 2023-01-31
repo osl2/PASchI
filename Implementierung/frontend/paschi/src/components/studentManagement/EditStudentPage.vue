@@ -35,6 +35,7 @@ import { StudentController } from "@/controller/StudentController";
 import { defineComponent, Ref, ref } from "vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import { Student } from "@/model/userdata/interactions/Student";
+import router from "@/plugins/router";
 export default defineComponent({
   name: "editStudentPage.vue",
   components: {
@@ -77,17 +78,19 @@ export default defineComponent({
     function activateCardClick() {
       deleteStudentDialog.value = true;
     }
+    
     function saveChangesClick() {
       if(!props.studentId) {
         const studentId = studentController.createStudent(firstName.value, lastName.value);
       } else {
         studentController.updateStudent(props.studentId, firstName.value, lastName.value);
       }
+      router.push({name: "ViewStudentsPage"});
     }
 
     function deleteStudentClick() {
       studentController.deleteStudent(props.studentId);
-      deleteStudentDialog.value = false;
+      router.push({name: "ViewStudentsPage"});
     }
     function cancelDeleteClick() {
       deleteStudentDialog.value = false;
