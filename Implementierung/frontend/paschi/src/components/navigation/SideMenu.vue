@@ -16,7 +16,7 @@
           Kurse
         </v-list-item-title>
       </v-list-item>
-      <v-list-item :active="subRouteOf('ViewRoomsPage')" prepend-icon="fas fa-door-closed" @click="router().push('')"> <!-- TODO: view rooms verlinken wenn implemntiert -->
+      <v-list-item :active="subRouteOf('ViewRoomsPage')" prepend-icon="fas fa-door-closed" @click="router().push('/view-rooms')">
         <v-list-item-title>
           Räume
         </v-list-item-title>
