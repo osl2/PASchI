@@ -1,6 +1,7 @@
 package edu.kit.informatik.unittests.controller;
 
 import com.github.javafaker.Faker;
+import edu.kit.informatik.dto.RoleDto;
 import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.dto.mapper.UserMapper;
 import edu.kit.informatik.model.Role;
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -104,6 +106,64 @@ public class UserControllerTest extends AbstractTest {
         assertEquals(users.get(0).getLastName(), user.getLastName());
         assertEquals(users.get(0).getRole(), user.getRole());
         users.set(0, user);
+        deleteFromDataBase();
+    }
+
+    @Test
+    public void getOneUser() throws Exception {
+        addUserToDatabase();
+
+        for (User user: users) {
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + user.getId())
+                    //.accept(MediaType.APPLICATION_JSON_VALUE)
+            ).andReturn();
+
+            int status = mvcResult.getResponse().getStatus();
+            assertEquals(200, status);
+            String content = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
+            //System.out.println(content);
+            UserDto userdto = super.mapFromJson(content, UserDto.class);
+            User user1 = userMapper.dtoToModel(userdto);
+
+
+            assertEquals(user, user1);
+        }
+
+        deleteFromDataBase();
+    }
+
+    @Test
+    public void getAllUser() throws Exception {
+        addUserToDatabase();
+        User testUser = userMapper.dtoToModel(
+                new UserDto("9e62c86f-945b-497d-93b3-d45b86be9a82", "test2", "user2",
+                        "test2.user@kit.edu", "password2", false, "", RoleDto.USER));
+
+        users.add(testUser);
+
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/admin")
+                //.accept(MediaType.APPLICATION_JSON_VALUE)
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
+        String content = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
+        //System.out.println(content);
+        List<UserDto> userDtos = List.of(super.mapFromJson(content, UserDto[].class));
+        List<User> userList = userMapper.dtoToModel(userDtos);
+
+        assertEquals(userDtos.size(), userList.size());
+
+        userList.sort(Comparator.naturalOrder());
+        users.sort(Comparator.naturalOrder());
+
+
+        for (int i= 0; i < users.size(); i++) {
+            assertEquals(users.get(i), userList.get(i));
+        }
+
+        users.remove(testUser);
+
         deleteFromDataBase();
     }
 
