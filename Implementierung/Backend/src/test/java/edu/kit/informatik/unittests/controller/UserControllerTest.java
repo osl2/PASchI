@@ -1,7 +1,6 @@
 package edu.kit.informatik.unittests.controller;
 
 import com.github.javafaker.Faker;
-import edu.kit.informatik.dto.RoleDto;
 import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.dto.mapper.UserMapper;
 import edu.kit.informatik.model.Role;
@@ -88,25 +87,33 @@ public class UserControllerTest extends AbstractTest {
     public void addUsers() throws Exception {
         //System.out.println(users.get(0).toString());
         //System.out.println(super.mapToJson(userMapper.modelToDto(users.get(0))));
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
-                .content(super.mapToJson(userMapper.modelToDto(users.get(0))))
-                //.accept(MediaType.APPLICATION_JSON_VALUE)
-                ).andReturn();
+        for (int i = 0; i< users.size(); i++){
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                            .content(super.mapToJson(userMapper.modelToDto(users.get(i))))
+                    //.accept(MediaType.APPLICATION_JSON_VALUE)
+            ).andReturn();
 
-        int status = mvcResult.getResponse().getStatus();
-        assertEquals(200, status);
-        String content = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
-        //System.out.println(content);
-        UserDto userdto = super.mapFromJson(content, UserDto.class);
-        User user = userMapper.dtoToModel(userdto);
+            int status = mvcResult.getResponse().getStatus();
+            assertEquals(200, status);
+            String content = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
+            //System.out.println(content);
+            UserDto userdto = super.mapFromJson(content, UserDto.class);
+            User user = userMapper.dtoToModel(userdto);
 
-        assertEquals(users.get(0).getEmail(), user.getEmail());
-        assertEquals(users.get(0).getPassword(), user.getPassword());
-        assertEquals(users.get(0).getFirstName(), user.getFirstName());
-        assertEquals(users.get(0).getLastName(), user.getLastName());
-        assertEquals(users.get(0).getRole(), user.getRole());
-        users.set(0, user);
+            assertEquals(users.get(i).getEmail(), user.getEmail());
+            assertEquals(users.get(i).getPassword(), user.getPassword());
+            assertEquals(users.get(i).getFirstName(), user.getFirstName());
+            assertEquals(users.get(i).getLastName(), user.getLastName());
+            assertEquals(users.get(i).getRole(), user.getRole());
+            users.set(i, user);
+        }
         deleteFromDataBase();
+    }
+
+    @Test
+    public void updateUser() {
+        addUserToDatabase();
+
     }
 
     @Test
@@ -135,11 +142,14 @@ public class UserControllerTest extends AbstractTest {
     @Test
     public void getAllUser() throws Exception {
         addUserToDatabase();
+        /*
         User testUser = userMapper.dtoToModel(
                 new UserDto("9e62c86f-945b-497d-93b3-d45b86be9a82", "test2", "user2",
                         "test2.user@kit.edu", "password2", false, "", RoleDto.USER));
 
-        users.add(testUser);
+         */
+
+        //users.add(testUser);
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/admin")
                 //.accept(MediaType.APPLICATION_JSON_VALUE)
@@ -162,7 +172,7 @@ public class UserControllerTest extends AbstractTest {
             assertEquals(users.get(i), userList.get(i));
         }
 
-        users.remove(testUser);
+        //users.remove(testUser);
 
         deleteFromDataBase();
     }
