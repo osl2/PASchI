@@ -26,14 +26,14 @@
             <v-btn
               variant="tonal"
               color="primary"
-              @click="editStudentClick(student.getId)"
+              @click="editStudentClick(student)"
               ><v-icon>fas fa-pencil</v-icon></v-btn
             >
             <v-btn
               class="ml-2"
               variant="tonal"
               color="primary"
-              @click="showStatisticsClick(undefined)"
+              @click="showStatisticsClick(student)"
             >
               <v-icon> fas fa-chart-line </v-icon>
             </v-btn>
@@ -84,10 +84,10 @@ export default defineComponent({
       });
     }
 
-    function editStudentClick(studentId: string) {
+    function editStudentClick(student: Student) {
       router.push({
         name: "EditStudentPage",
-        params: { studentId: studentId },
+        params: { studentId: student.getId },
       })
     }
 
