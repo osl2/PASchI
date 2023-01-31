@@ -1,3 +1,3 @@
-export class ParticipantTypeDto {
-
+export enum ParticipantTypeDto {
+  STUDENT, TEACHER
 }
