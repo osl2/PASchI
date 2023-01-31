@@ -4,11 +4,10 @@ import {UserDto} from "@/dto/UserDto";
 
 export class UserService extends BaseService<User, UserDto> {
 
-  private readonly USER_BASE_URL: string;
+  private static readonly USER_BASE_URL: string = "";
 
   constructor(base_url: string, USER_BASE_URL: string) {
-    super(base_url);
-    this.USER_BASE_URL = USER_BASE_URL;
+    super(UserService.USER_BASE_URL);
   }
 
   add(user: User) {

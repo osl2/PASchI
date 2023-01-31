@@ -4,11 +4,10 @@ import {SessionDto} from "@/dto/userdata/courses/SessionDto";
 
 export class SessionService extends BaseService<Session, SessionDto> {
 
-  private readonly SESSION_BASE_URL: string;
+  private static readonly SESSION_BASE_URL: string = "";
 
-  constructor(base_url: string, SESSION_BASE_URL: string) {
-    super(base_url);
-    this.SESSION_BASE_URL = SESSION_BASE_URL;
+  constructor() {
+    super(SessionService.SESSION_BASE_URL);
   }
 
   add(e: Session) {
