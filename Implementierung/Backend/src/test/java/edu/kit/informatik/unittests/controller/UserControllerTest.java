@@ -167,56 +167,34 @@ public class UserControllerTest extends AbstractTest {
         deleteFromDataBase();
     }
 
-
-    /*
     @Test
-    public void test() {
-        List<User> users = new ArrayList<>();
-
-        Faker faker = new Faker(new Locale("de"));
-
-        for (int i = 0; i < 10; i++) {
-            users.add(getNewUser(faker));
-        }
+    public void delete() throws Exception {
+        List<User> before = getUserFromDataBase();
+        addUserToDatabase();
 
         for (User user: users) {
-            System.out.println(user.toString());
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL).content(user.getId()).param("id", user.getId())
+                    //.accept(MediaType.APPLICATION_JSON_VALUE)
+            ).andReturn();
+
+            int status = mvcResult.getResponse().getStatus();
+            assertEquals(200, status);
         }
-    }
+        List<User> after = getUserFromDataBase();
 
-     */
+        assertEquals(before.size(), after.size());
 
-    @Test
-    public void getUserList() throws Exception {
-        String uri = "/api/user/admin";
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri)
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
-
-        int status = mvcResult.getResponse().getStatus();
-        assertEquals(200, status);
-        String content = mvcResult.getResponse().getContentAsString();
-
-        List<User> expectedUsers = List.of(getNewUser(new Faker()));
-       // users.add(getNewUser());
-
-        String expected = "[{\"id\":\"9e62c86f-945b-497d-93b3-d45b86be9a82\",\"firstName\":\"test2\",\"lastName\":\"user2\",\"email\":\"test2.user@kit.edu\",\"password\":\"password2\",\"auth\":false,\"token\":null,\"role\":\"USER\"}]";
-
-
-        //assertEquals(super.mapToJson(users), content);
-        List<UserDto> userDtoList = new ArrayList<UserDto>(Arrays.asList(super.mapFromJson(content, UserDto[].class)));
-
-        List<User> userList = userMapper.dtoToModel(userDtoList);
-
-        assertEquals(expectedUsers.size(), userList.size());
-        for (int i = 0; i< expectedUsers.size(); i++) {
-            //userList.get(i).setId(null);
-            assertEquals(expectedUsers.get(i).toString(), userList.get(i).toString());
+        for (int i = 0; i< before.size(); i++) {
+            assertEquals(before.get(i), after.get(i));
         }
 
-        //assertEquals(expectedUsers., userList);
-
-        //assertTrue(userList.length > 0);
     }
+
+    private List<User> getUserFromDataBase() {
+        return this.userRepository.findAll();
+    }
+
+
 
     private User getNewUser(Faker faker) {
         User user = new User();
