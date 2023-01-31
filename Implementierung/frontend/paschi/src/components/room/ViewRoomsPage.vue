@@ -1,14 +1,17 @@
 <template>
-  <navigation-bar></navigation-bar>
+  <navigation-bar />
   <v-main>
-    <side-menu> </side-menu>
+    <side-menu />
   </v-main>
 </template>
 
 <script lang="ts">
 import {defineComponent} from "vue";
+import NavigationBar from "@/components/navigation/NavigationBar.vue";
+import SideMenu from "@/components/navigation/SideMenu.vue";
 export default defineComponent({
   name: "ViewRoomsPage",
+  components: {SideMenu, NavigationBar},
   setup() {
 
   }
