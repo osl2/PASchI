@@ -1,6 +1,6 @@
 export abstract class BaseService<Entity, Dto> {
 
-  private base_url: string;
+  private readonly base_url: string;
 
   protected constructor(base_url: string) {
     this.base_url = base_url;
@@ -18,7 +18,7 @@ export abstract class BaseService<Entity, Dto> {
 
   }
 
-  getAll() {
+  getAll()/*: Entity[]*/ {
 
   }
 
