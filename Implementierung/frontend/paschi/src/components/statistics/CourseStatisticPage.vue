@@ -3,7 +3,9 @@
 </template>
 
 <script lang="ts">
-export default {
+import { CourseController } from "@/controller/CourseController";
+import {defineComponent} from "vue";
+export default defineComponent({
   name: "CourseStatisticPage",
   props: {
     courseId: {
@@ -11,7 +13,9 @@ export default {
       required: true,
     },
   },
-}
+  setup(props) {
+  }
+});
 </script>
 
 <style scoped>

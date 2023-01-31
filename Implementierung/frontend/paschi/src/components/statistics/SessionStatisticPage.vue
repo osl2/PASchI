@@ -1,23 +1,20 @@
-<template>
-
-</template>
+<template></template>
 
 <script lang="ts">
-export default {
+import { defineComponent } from "vue";
+import { SessionController } from "@/controller/SessionController";
+
+export default defineComponent({
   name: "SessionStatisticPage",
   props: {
-    courseId: {
-      type: String,
-      required: true,
-    },
     sessionId: {
       type: String,
       required: true,
-    }
+    },
   },
-}
+  setup(props) {
+  },
+});
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

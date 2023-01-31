@@ -3,19 +3,19 @@
 </template>
 
 <script lang="ts">
-export default {
+import {defineComponent} from "vue";
+export default defineComponent({
   name: "ShowInteractionMapPage",
   props: {
-    courseId: {
-      type: String,
-      required: true,
-    },
     sessionId: {
       type: String,
       required: true,
     }
   },
-}
+  setup(props) {
+
+  }
+});
 </script>
 
 <style scoped>

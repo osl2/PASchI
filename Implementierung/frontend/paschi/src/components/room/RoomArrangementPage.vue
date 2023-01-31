@@ -8,9 +8,8 @@
 <script lang="ts">
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
-import * as string_decoder from "string_decoder";
-
-export default {
+import {defineComponent} from "vue";
+export default defineComponent({
   name: "RoomArrangementPage",
   components: { SideMenu, NavigationBar },
   props: {
@@ -18,8 +17,11 @@ export default {
       type: String,
       required: true
     }
+  },
+  setup(props) {
+
   }
-};
+});
 </script>
 
 <style scoped></style>

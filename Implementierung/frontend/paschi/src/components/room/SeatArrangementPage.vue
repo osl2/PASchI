@@ -6,17 +6,19 @@
 </template>
 
 <script lang="ts">
-export default {
+import { defineComponent } from "vue";
+export default defineComponent({
   name: "SeatArrangementPage",
   props: {
     seatArrangementId: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
+  },
+  setup(props) {
+
   }
-}
+});
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
