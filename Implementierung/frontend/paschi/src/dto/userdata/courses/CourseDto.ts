@@ -1,6 +1,6 @@
 export class CourseDto {
 
-  id: string | undefined;
+  id: string;
   userId: string;
   name: string;
   subject: string;
@@ -8,7 +8,7 @@ export class CourseDto {
   participantIds: string[];
   seatArrangementIds: string[];
 
-  constructor(id: string | undefined, userId: string, name: string, subject: string, sessiondIds: string[],
+  constructor(id: string, userId: string, name: string, subject: string, sessiondIds: string[],
               participantIds: string[], seatArrangementIds: string[]) {
     this.id = id;
     this.userId = userId;

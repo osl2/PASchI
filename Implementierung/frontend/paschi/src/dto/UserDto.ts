@@ -2,7 +2,7 @@ import {RoleDto} from "@/dto/RoleDto";
 
 export class UserDto {
 
-  id: string | undefined;
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -11,7 +11,7 @@ export class UserDto {
   role: RoleDto;
   token: string | undefined;
 
-  constructor(id: string | undefined, firstName: string, lastName: string, email: string, password: string,
+  constructor(id: string, firstName: string, lastName: string, email: string, password: string,
               auth: boolean, role: RoleDto, token: string | undefined) {
     this.id = id;
     this.firstName = firstName;
