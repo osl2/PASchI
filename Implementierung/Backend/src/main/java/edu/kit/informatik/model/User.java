@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.UUID;
+
 /**
  * Benutzer zur Authentifizierung der Rest-Api
  *
@@ -23,7 +25,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Comparable<User> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -66,5 +68,13 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    @Override
+    public int compareTo(User o) {
+        UUID thisUser = UUID.fromString(this.id);
+        UUID oUser = UUID.fromString(o.getId());
+
+        return  thisUser.compareTo(oUser);
     }
 }
