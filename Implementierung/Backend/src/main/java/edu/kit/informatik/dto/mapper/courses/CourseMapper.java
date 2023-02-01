@@ -13,22 +13,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CourseMapper implements IModelDtoMapper<Course, CourseDto, CourseDto> {
 
-    private final CourseRepository courseRepository;
     private final UserRepository userRepository;
     private final ParticipantRepository participantRepository;
     private final SessionRepository sessionRepository;
     private final SeatArrangementRepository seatArrangementRepository;
 
     @Autowired
-    public CourseMapper(CourseRepository courseRepository, UserRepository userRepository,
+    public CourseMapper(UserRepository userRepository,
                         ParticipantRepository participantRepository, SessionRepository sessionRepository,
                         SeatArrangementRepository seatArrangementRepository) {
-        this.courseRepository = courseRepository;
         this.userRepository = userRepository;
         this.participantRepository = participantRepository;
         this.sessionRepository = sessionRepository;
@@ -66,7 +63,7 @@ public class CourseMapper implements IModelDtoMapper<Course, CourseDto, CourseDt
 
     @Override
     public Course dtoToModel(CourseDto courseDto) {
-        Course course = courseRepository.findCourseById(courseDto.getId()).orElseGet(Course::new);
+
         User user = userRepository.findUserById(courseDto.getUserId()).orElse(null);
 
         List<Participant> participants = new ArrayList<>();
@@ -84,10 +81,8 @@ public class CourseMapper implements IModelDtoMapper<Course, CourseDto, CourseDt
                     seatArrangementRepository.findSeatArrangementById(id).ifPresent(seatArrangements::add));
         }
 
+        Course course = new Course(user, courseDto.getName(), courseDto.getSubject());
 
-        course.setUser(user);
-        course.setName(courseDto.getName());
-        course.setSubject(courseDto.getSubject());
         course.setParticipants(participants);
         course.setSessions(sessions);
         course.setSeatArrangements(seatArrangements);
