@@ -18,7 +18,9 @@ export class Room {
   }
 
   addRoomObject(object: RoomObject) {
-    this.roomObjects.push(object);
+    if (this.getRoomObject(object.getId) == undefined) {
+      this.roomObjects.push(object);
+    }
   }
 
   removeRoomObject(objectId: string) {
