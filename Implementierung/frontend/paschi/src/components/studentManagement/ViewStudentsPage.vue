@@ -73,6 +73,8 @@ export default defineComponent({
   components: { SideMenu, NavigationBar },
 
   setup() {
+    const router = useRouter();
+
     const studentController = StudentController.getStudentConroller();
     const students: Ref<Student[]> = ref<Student[]>(
       studentController.getAllStudents()
@@ -81,7 +83,6 @@ export default defineComponent({
     const studentFirstName: Ref<string> = ref("");
     const studentLastName: Ref<string> = ref("");
 
-    const router = useRouter();
 
     function newStudentClick() {
       studentFirstName.value = "";

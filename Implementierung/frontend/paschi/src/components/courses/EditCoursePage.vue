@@ -52,8 +52,8 @@ import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import { Course } from "@/model/userdata/courses/Course";
-import router from "@/plugins/router";
 import { SeatArrangementController } from "@/controller/SeatArrangementController";
+import {useRouter} from "vue-router";
 
 export default defineComponent({
   name: "editCoursePage",
@@ -65,6 +65,8 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const router = useRouter();
+
     const courseController = CourseController.getCourseController();
     const roomController = RoomController.getRoomController();
     const seatArrangementController =

@@ -79,8 +79,8 @@ import { Session } from "@/model/userdata/courses/Session";
 import { Student } from "@/model/userdata/interactions/Student";
 import { computed, defineComponent, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
-import router from "@/plugins/router";
 import { SessionController } from "@/controller/SessionController";
+import {useRouter} from "vue-router";
 
 export default defineComponent({
   name: "CourseDetailsPage",
@@ -92,6 +92,8 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const router = useRouter()
+
     const courseController: CourseController =
       CourseController.getCourseController();
     const sessionController: SessionController =

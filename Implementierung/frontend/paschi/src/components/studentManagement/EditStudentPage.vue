@@ -35,7 +35,7 @@ import { StudentController } from "@/controller/StudentController";
 import { defineComponent, Ref, ref } from "vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import { Student } from "@/model/userdata/interactions/Student";
-import router from "@/plugins/router";
+import {useRouter} from "vue-router";
 export default defineComponent({
   name: "editStudentPage.vue",
   components: {
@@ -50,6 +50,8 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const router = useRouter();
+
     const studentController = StudentController.getStudentConroller();
 
     const student: Ref<Student | undefined> = ref<Student | undefined>(

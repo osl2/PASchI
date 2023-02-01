@@ -49,10 +49,13 @@ import SideMenu from "@/components/navigation/SideMenu.vue";
 import { Room } from "@/model/userdata/rooms/Room";
 import { RoomController } from "@/controller/RoomController";
 import router from "@/plugins/router";
+import {useRouter} from "vue-router";
 export default defineComponent({
   name: "ViewRoomsPage",
   components: { SideMenu, NavigationBar },
   setup() {
+    const router = useRouter();
+
     const roomController: RoomController = RoomController.getRoomController();
     const rooms: Ref<Room[]> = ref(roomController.getAllRooms()) as Ref<Room[]>
     const newRoomName: Ref<string> = ref("");

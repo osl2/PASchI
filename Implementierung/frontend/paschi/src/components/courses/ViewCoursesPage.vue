@@ -74,13 +74,15 @@ import SideMenu from "@/components/navigation/SideMenu.vue";
 import { defineComponent, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
 import { Course } from "@/model/userdata/courses/Course";
-import router from "@/plugins/router";
+import {useRouter} from "vue-router";
 
 export default defineComponent({
   name: "ViewCoursesPage",
   components: { SideMenu, NavigationBar },
 
   setup() {
+    const router = useRouter();
+
     const courseController = CourseController.getCourseController();
     const courses: Ref<Course[]> = ref<Course[]>(courseController.getAllCourses()) as Ref<Course[]>;
     const enterCourseNameDialog: Ref<boolean> = ref(false);
