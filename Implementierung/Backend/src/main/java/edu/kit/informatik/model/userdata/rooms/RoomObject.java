@@ -24,10 +24,10 @@ public abstract class RoomObject {
     private String id;
 
     @ManyToOne
-    protected User user;
+    private User user;
 
     @OneToOne
-    protected Position position;
+    private Position position;
 
     public RoomObject(User user, Position position) {
         this.user = user;
