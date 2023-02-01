@@ -14,6 +14,8 @@ import java.util.Optional;
 /**
  * Service für {@link User Benutzer}
  *
+ * TODO: Fehler werfen, wie Entity schon in DB, Entity nicht vorhanden...
+ *
  * @author ugqbo
  * @version 1.0
  */
@@ -56,17 +58,18 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
 
         if (!newUser.getFirstName().equals(repositoryUser.getFirstName())) {
             repositoryUser.setFirstName(newUser.getFirstName());
-        } else if (!newUser.getLastName().equals(repositoryUser.getLastName())) {
-            repositoryUser.setLastName(repositoryUser.getLastName());
-        } else if (!newUser.getPassword().equals(repositoryUser.getPassword())) {
-            repositoryUser.setPassword(repositoryUser.getPassword());
-        } else if (!newUser.isAuth() == repositoryUser.isAuth()) {
-            repositoryUser.setAuth(repositoryUser.isAuth());
-        } else if (!newUser.getRole().equals(repositoryUser.getRole())) {
-            repositoryUser.setRole(repositoryUser.getRole());
+        }
+        if (!newUser.getLastName().equals(repositoryUser.getLastName())) {
+            repositoryUser.setLastName(newUser.getLastName());
+        }
+        if (!newUser.getPassword().equals(repositoryUser.getPassword())) {
+            repositoryUser.setPassword(newUser.getPassword());
+        }
+        if (!newUser.isAuth() == repositoryUser.isAuth()) {
+            repositoryUser.setAuth(newUser.isAuth());
         }
 
-        return userDto;
+        return mapper.modelToDto(repositoryUser);
     }
 
     @Override
