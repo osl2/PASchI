@@ -145,7 +145,7 @@ export default defineComponent({
     function editSeatArrangement(seatArrangement: SeatArrangement) {
       router.push({
         name: "SeatArrangementPage",
-        params: { SeatArrangementId: seatArrangement.getId },
+        params: { seatArrangementId: seatArrangement.getId },
       });
     }
 
