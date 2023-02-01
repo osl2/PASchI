@@ -16,8 +16,8 @@
 
   <v-main>
     <SideMenu />
-    <v-container fluid>
-      <v-list density="comfortable" max-width="700">
+    <v-container fluid class="v-col-11" style="max-width: 700px">
+      <v-list rounded>
         <v-list-item rounded v-for="student in students" :key="student.getId">
           <v-list-item-title>
             {{ student.firstName }} {{ student.lastName }}
