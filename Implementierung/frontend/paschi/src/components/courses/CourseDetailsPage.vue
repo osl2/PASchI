@@ -200,7 +200,7 @@ export default defineComponent({
     function startSessionClick(seatArrangement: SeatArrangement) {
       router.push({
         name: "SessionPage",
-        params: { sessionId: sessionController.createSession(props.courseId, seatArrangement.getId, "")} //TODO Session name
+        params: { sessionId: sessionController.createSession(props.courseId, seatArrangement.getId, "")} //TODO session name
       })
     }
     function studentStatisticClick(student: Student) {

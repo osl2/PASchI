@@ -17,7 +17,7 @@ import ShowInteractionMapPage from "@/components/statistics/ShowInteractionMapPa
 import RoomArrangementPage from "@/components/room/RoomArrangementPage.vue";
 import SeatArrangementPage from "@/components/room/SeatArrangementPage.vue";
 import ViewRoomsPage from "@/components/room/ViewRoomsPage.vue";
-import SessionPage from "@/components/Session/SessionPage.vue";
+import SessionPage from "@/components/session/SessionPage.vue";
 
 const routes = [
   { path: "/login", name: "Login", component: Login },
