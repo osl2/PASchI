@@ -26,7 +26,9 @@ export class Course {
   }
 
   addParticipant(participant: Participant) {
-    this.participants.push(participant);
+    if (this.getParticipant(participant.getId) == undefined) {
+      this.participants.push(participant);
+    }
   }
 
   removeParticipant(participantId: string) {
@@ -48,7 +50,9 @@ export class Course {
   }
 
   addSession(session: Session) {
-    this.sessions.push(session);
+    if (this.getSession(session.getId) == undefined) {
+      this.sessions.push(session);
+    }
   }
 
   removeSession(sessionId: string) {
@@ -59,8 +63,20 @@ export class Course {
     });
   }
 
+  getSession(sessionId: string): Session | undefined {
+    this.sessions.forEach((element: Session) => {
+      if (element.getId == sessionId) {
+        return element
+      }
+    });
+
+    return undefined;
+  }
+
   addSeatArrangement(seatArrangement: SeatArrangement) {
-    this.seatArrangements.push(seatArrangement);
+    if (this.getSeatArrangement(seatArrangement.getId) == undefined) {
+      this.seatArrangements.push(seatArrangement);
+    }
   }
 
   removeSeatArrangement(arrangementId: string) {
@@ -69,6 +85,16 @@ export class Course {
         this.seatArrangements.splice(index, 1);
       }
     });
+  }
+
+  getSeatArrangement(arrangementId: string): SeatArrangement | undefined {
+    this.seatArrangements.forEach((element: SeatArrangement) => {
+      if (element.getId === arrangementId) {
+        return element;
+      }
+    });
+
+    return undefined;
   }
 
   get getId(): string {
