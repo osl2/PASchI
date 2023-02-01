@@ -28,6 +28,17 @@
         </v-list-item>
       </v-list>
     </v-container>
+    <v-dialog v-model="enterRoomNameDialog">
+      <v-card>
+        <v-text-field
+          v-model="newRoomName"
+          label="Raumname"
+          type="input"
+        ></v-text-field>
+        <v-btn @click="abortNewRoomClick">abbrechen</v-btn>
+        <v-btn @click="confirmNewRoomClick">bestätigen</v-btn>
+      </v-card>
+    </v-dialog>
   </v-main>
 </template>
 
@@ -44,11 +55,21 @@ export default defineComponent({
   setup() {
     const roomController: RoomController = RoomController.getRoomController();
     const rooms: Ref<Room[]> = ref(roomController.getAllRooms()) as Ref<Room[]>
-    function newRoomClick() {
+    const newRoomName: Ref<string> = ref("");
+    const enterRoomNameDialog: Ref<boolean> = ref(false);
+
+    function abortNewRoomClick() {
+      enterRoomNameDialog.value=false;
+    };
+    function confirmNewRoomClick() {
       router.push({
         name: "RoomArrangementPage",
-        params: { roomId: roomController.createRoom("") },
+        params: { roomId: roomController.createRoom(newRoomName.value) },
       });
+    }
+    function newRoomClick() {
+      newRoomName.value="";
+      enterRoomNameDialog.value=true;
     }
     function editRoom(room: Room) {
       router.push({
@@ -59,7 +80,11 @@ export default defineComponent({
     return {
       editRoom,
       newRoomClick,
-      rooms
+      confirmNewRoomClick,
+      abortNewRoomClick,
+      rooms,
+      newRoomName,
+      enterRoomNameDialog
     };
   },
 });
