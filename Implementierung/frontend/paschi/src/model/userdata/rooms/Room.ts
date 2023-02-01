@@ -24,7 +24,7 @@ export class Room {
   }
 
   removeRoomObject(objectId: string) {
-    this.roomObjects.forEach((element, index) => {
+    this.roomObjects.forEach((element: RoomObject, index: number) => {
       if (element.getId == objectId) {
         this.roomObjects.splice(index, 1);
       }
@@ -32,11 +32,11 @@ export class Room {
   }
 
   getRoomObject(objectId: string): RoomObject | undefined {
-    this.roomObjects.forEach((element: RoomObject) => {
-      if (element.getId === objectId) {
-        return element;
+    for (let i = 0; i < this.roomObjects.length; i++) {
+      if (this.roomObjects.at(i)?.getId === objectId) {
+        return this.roomObjects.at(i);
       }
-    });
+    }
 
     return undefined;
   }
