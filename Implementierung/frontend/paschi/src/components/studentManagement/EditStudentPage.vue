@@ -78,13 +78,9 @@ export default defineComponent({
     function activateCardClick() {
       deleteStudentDialog.value = true;
     }
-    
+
     function saveChangesClick() {
-      if(!props.studentId) {
-        const studentId = studentController.createStudent(firstName.value, lastName.value);
-      } else {
-        studentController.updateStudent(props.studentId, firstName.value, lastName.value);
-      }
+      studentController.updateStudent(props.studentId, firstName.value, lastName.value);
       router.push({name: "ViewStudentsPage"});
     }
 

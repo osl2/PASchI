@@ -41,6 +41,22 @@
         </v-list-item>
       </v-list>
     </v-container>
+    <v-dialog v-model="enterStudentNameDialog">
+      <v-card>
+        <v-text-field
+          v-model="studentFirstName"
+          label="Vorname"
+          type="input"
+        ></v-text-field>
+        <v-text-field
+          v-model="studentLastName"
+          label="Nachname"
+          type="input"
+        ></v-text-field>
+        <v-btn @click="abortNewStudentClick">abbrechen</v-btn>
+        <v-btn @click="confirmNewStudentClick">bestätigen</v-btn>
+      </v-card>
+    </v-dialog>
   </v-main>
 </template>
 
@@ -49,60 +65,63 @@ import { StudentController } from "@/controller/StudentController";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import { Student } from "@/model/userdata/interactions/Student";
-import {defineComponent, Ref, ref, UnwrapRef} from "vue";
-import {useRouter} from "vue-router";
+import { defineComponent, Ref, ref } from "vue";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "ViewStudentsPage",
   components: { SideMenu, NavigationBar },
 
   setup() {
-    /*const students = [
-      { name: "Hansi" },
-      { name: "Gudrun" },
-      { name: "Kunibert" },
-      { name: "Melanie" },
-      { name: "Günther" },
-      { name: "Ingo Stolz" },
-      { name: "Peter Petersilie" },
-      { name: "Henrik Olafson" },
-      { name: "Magnus Köder" },
-      { name: "Severus Snape" },
-      { name: "Christiana Krise" },
-    ];*/
-
     const studentController = StudentController.getStudentConroller();
-    const students: Ref<Student[]> = ref<Student[]>(studentController.getAllStudents()) as Ref<Student[]>;
+    const students: Ref<Student[]> = ref<Student[]>(
+      studentController.getAllStudents()
+    ) as Ref<Student[]>;
+    const enterStudentNameDialog: Ref<boolean> = ref(false);
+    const studentFirstName: Ref<string> = ref("");
+    const studentLastName: Ref<string> = ref("");
 
     const router = useRouter();
 
     function newStudentClick() {
-      const studentId = studentController.createStudent("", "");
-      router.push({
-        name: "EditStudentPage",
-        params: { studentId: studentId },
-      });
+      studentFirstName.value = "";
+      studentLastName.value = "";
+      enterStudentNameDialog.value = true;
     }
 
+    function abortNewStudentClick() {
+      enterStudentNameDialog.value = false;
+    }
+    function confirmNewStudentClick() {
+      studentController.createStudent(
+        studentFirstName.value,
+        studentLastName.value
+      );
+    }
     function editStudentClick(student: Student) {
       router.push({
         name: "EditStudentPage",
         params: { studentId: student.getId },
-      })
+      });
     }
 
     function showStatisticsClick(student: Student) {
       router.push({
         name: "StudentStatisticPage",
-        params: {studentId: student.getId},
-      })
+        params: { studentId: student.getId },
+      });
     }
 
     return {
       newStudentClick,
       editStudentClick,
       showStatisticsClick,
+      abortNewStudentClick,
+      confirmNewStudentClick,
       students,
+      enterStudentNameDialog,
+      studentFirstName,
+      studentLastName,
     };
   },
 });
