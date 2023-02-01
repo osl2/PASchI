@@ -14,12 +14,10 @@ import java.util.List;
 @Service
 public class UserMapper implements IModelDtoMapper<User, UserDto, UserDto> {
 
-    private final UserRepository userRepository;
     private final RoleMapper roleMapper;
 
     @Autowired
-    public UserMapper(UserRepository userRepository, RoleMapper roleMapper) {
-        this.userRepository = userRepository;
+    public UserMapper(RoleMapper roleMapper) {
         this.roleMapper = roleMapper;
     }
 
@@ -49,16 +47,9 @@ public class UserMapper implements IModelDtoMapper<User, UserDto, UserDto> {
     @Override
     public User dtoToModel(UserDto userDto) {
         Role role = roleMapper.dtoToModel(userDto.getRole());
-        User user = userRepository.findUserById(userDto.getId()).orElseGet(User::new);
 
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
-        user.setAuth(userDto.isAuth());
-        user.setRole(role);
-
-        return user;
+        return new User(userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(), userDto.getPassword(),
+                userDto.isAuth(), role);
     }
 
     @Override
