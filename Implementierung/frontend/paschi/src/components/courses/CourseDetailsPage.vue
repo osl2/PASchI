@@ -77,7 +77,7 @@ import SideMenu from "@/components/navigation/SideMenu.vue";
 import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
 import { Session } from "@/model/userdata/courses/Session";
 import { Student } from "@/model/userdata/interactions/Student";
-import { defineComponent, Ref, ref } from "vue";
+import { computed, defineComponent, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
 import router from "@/plugins/router";
 import { SessionController } from "@/controller/SessionController";
@@ -92,8 +92,10 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const courseController: CourseController = CourseController.getCourseController();
-    const sessionController: SessionController = SessionController.getSessionController();
+    const courseController: CourseController =
+      CourseController.getCourseController();
+    const sessionController: SessionController =
+      SessionController.getSessionController();
 
     const sessionStatisticDialog: Ref<boolean> = ref<boolean>(false);
     const interactionMapSelectionDialog: Ref<boolean> = ref<boolean>(false);
@@ -103,9 +105,11 @@ export default defineComponent({
     const sessions: Ref<Session[]> = ref<Session[]>(getSessions()) as Ref<
       Session[]
     >;
-    const studentsNotInCourse: Ref<Student[]> = ref<Student[]>(
-      getStudentsNotInCourse()
-    ) as Ref<Student[]>;
+
+    const studentsNotInCourse = computed(
+      () => getStudentsNotInCourse()
+    );
+
     const studentsInCourse: Ref<Student[]> = ref<Student[]>(
       getStudentsOfCourse()
     ) as Ref<Student[]>;
@@ -200,7 +204,7 @@ export default defineComponent({
     function startSessionClick(seatArrangement: SeatArrangement) {
       router.push({
         name: "SessionPage",
-        params: { sessionId: sessionController.createSession(props.courseId, seatArrangement.getId, "")} //TODO Session name
+        params: { sessionId: sessionController.createSession(props.courseId, seatArrangement.getId, "")} //TODO session name
       })
     }
     function studentStatisticClick(student: Student) {
