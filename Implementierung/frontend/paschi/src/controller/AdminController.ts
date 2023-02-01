@@ -23,6 +23,16 @@ export class AdminController {
     return users;
   }
 
+  getUsersNotAuthenticated(): User[] {
+    // nur lokal
+    let users: User[] | undefined = [];
+    let user = useUserStore().getUser();
+    if (user !== undefined && !user.auth) {
+      users.push(user);
+    }
+    return users;
+  }
+
   authUser(userId: string) {
     let users: User[] = this.getUsers();
     users.forEach((user: User) => {
