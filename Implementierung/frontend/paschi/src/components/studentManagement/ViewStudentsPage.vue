@@ -97,6 +97,7 @@ export default defineComponent({
         studentFirstName.value,
         studentLastName.value
       );
+      enterStudentNameDialog.value = false;
     }
     function editStudentClick(student: Student) {
       router.push({
