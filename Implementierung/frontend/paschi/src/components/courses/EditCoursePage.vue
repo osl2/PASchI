@@ -130,8 +130,8 @@ export default defineComponent({
       let seatArrangementId: string | undefined =
         seatArrangementController.createSeatArrangement(
           "unbenannt",
-          props.courseId,
-          room.getId
+          room.getId,
+          props.courseId
         );
       //TODO Name des SeatArrangements hier festlegen?
       if (typeof seatArrangementId == "string") {
