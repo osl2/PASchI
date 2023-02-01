@@ -21,6 +21,7 @@
         <v-list-item
           rounded
           v-for="course in courses"
+          :key="course.getId"
           @click="showCourse(course)"
         >
           <v-list-item-title>
