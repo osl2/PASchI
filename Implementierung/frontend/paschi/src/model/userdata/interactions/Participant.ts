@@ -23,7 +23,9 @@ export abstract class Participant {
   }
 
   addCourse(course: Course) {
-    this.courses.push(course);
+    if (this.getCourse(course.getId) == undefined) {
+      this.courses.push(course);
+    }
   }
 
   removeCourse(courseId: string) {
@@ -34,8 +36,20 @@ export abstract class Participant {
     });
   }
 
+  getCourse(courseId: string): Course | undefined {
+    this.courses.forEach((element: Course) => {
+      if (element.getId === courseId) {
+        return element;
+      }
+    });
+
+    return undefined;
+  }
+
   addInteraction(interaction: Interaction) {
-    this.interactions.push(interaction);
+    if (this.getInteraction(interaction.getId) == undefined) {
+      this.interactions.push(interaction);
+    }
   }
 
   removeInteraction(interactionId: string) {
@@ -44,6 +58,16 @@ export abstract class Participant {
         this.interactions.splice(index, 1);
       }
     });
+  }
+
+  getInteraction(interactionId: string): Interaction | undefined {
+    this.interactions.forEach((element: Interaction) => {
+      if (element.getId === interactionId) {
+        return element;
+      }
+    });
+
+    return undefined;
   }
 
   get getId(): string {
