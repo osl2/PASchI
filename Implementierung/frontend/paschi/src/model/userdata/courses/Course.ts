@@ -40,13 +40,14 @@ export class Course {
   }
 
   getParticipant(participantId: string): Participant | undefined {
-    this.participants.forEach((participant: Participant) => {
-      if (participant.getId === participantId) {
-        return participant;
+    let participant;
+    this.participants.forEach((element: Participant) => {
+      if (element.getId === participantId) {
+        participant = element;
       }
     });
 
-    return undefined;
+    return participant;
   }
 
   addSession(session: Session) {
