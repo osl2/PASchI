@@ -14,6 +14,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -45,7 +47,7 @@ public class CourseControllerTest extends AbstractTest {
         List<CourseDto> courseDtos = new ArrayList<>();
         Faker faker = new Faker(new Locale("de"));
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 10; i++) {
             courseDtos.add(getNewCourse(faker));
         }
 
@@ -88,6 +90,53 @@ public class CourseControllerTest extends AbstractTest {
     }
 
 
+    @Test
+    public void getOneCourse() throws Exception {
+        addCourseToDatabase();
+
+        for (CourseDto courseDto: courses) {
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + courseDto.getId())
+                    //.accept(MediaType.APPLICATION_JSON_VALUE)
+            ).andReturn();
+
+            int status = mvcResult.getResponse().getStatus();
+            assertEquals(200, status);
+            String content = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+            CourseDto courseDtoFromDatabase = super.mapFromJson(content, CourseDto.class);
+
+
+            assertEquals(courseDto, courseDtoFromDatabase);
+        }
+
+        deleteFromDataBase();
+    }
+
+    @Test
+    public void getAllCourse() throws Exception {
+        addCourseToDatabase();
+
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL)
+                //.accept(MediaType.APPLICATION_JSON_VALUE)
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
+        String content = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+        List<CourseDto> courseDtos = Arrays.asList(super.mapFromJson(content, CourseDto[].class));
+
+        courseDtos.sort(Comparator.naturalOrder());
+        courses.sort(Comparator.naturalOrder());
+
+
+        for (int i= 0; i < courses.size(); i++) {
+            assertEquals(courses.get(i), courseDtos.get(i));
+        }
+
+        deleteFromDataBase();
+    }
+
 
     private CourseDto getNewCourse(Faker faker) {
 
@@ -97,7 +146,7 @@ public class CourseControllerTest extends AbstractTest {
 
         courseDto.setName(name + " " + faker.number().randomDigit());
         courseDto.setSubject(name);
-        courseDto.setUserId("6d421cec-d640-414e-a499-c62ead382b04");
+        courseDto.setUserId("4ccc614c-fda8-471d-b444-c70ca756cf0b");
 
         return courseDto;
     }
