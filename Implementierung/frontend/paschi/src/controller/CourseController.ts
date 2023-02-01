@@ -140,17 +140,17 @@ export class CourseController {
 
   addSeatArrangementToCourse(courseId: string, arrangementId: string) {
     let course = this.courseStore.getCourse(courseId);
-    let arrrangement = this.arrangementStore.getSeatArrangement(arrangementId);
-    if (course !== undefined && arrrangement !== undefined) {
-      course.addSeatArrangement(arrrangement);
-      arrrangement.course = course;
+    let arrangement = this.arrangementStore.getSeatArrangement(arrangementId);
+    if (course !== undefined && arrangement !== undefined) {
+      course.addSeatArrangement(arrangement);
+      arrangement.course = course;
     }
   }
 
   deleteSeatArrangement(courseId: string, arrangementId: string) {
     let course = this.courseStore.getCourse(courseId);
-    let arrrangement = this.arrangementStore.getSeatArrangement(arrangementId);
-    if (course !== undefined && arrrangement !== undefined) {
+    let arrangement = this.arrangementStore.getSeatArrangement(arrangementId);
+    if (course !== undefined && arrangement !== undefined) {
       course.removeSeatArrangement(arrangementId);
       this.arrangementStore.deleteSeatArrangement(arrangementId);
     }
