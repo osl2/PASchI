@@ -103,7 +103,7 @@ export default defineComponent({
     }
     function confirmNewCourseClick() {
       router.push({
-        name: "EditCoursePage",
+        name: "CourseDetailsPage",
         params: { courseId: courseController.createCourse(courseName.value, courseSubject.value)},
       });
     }
