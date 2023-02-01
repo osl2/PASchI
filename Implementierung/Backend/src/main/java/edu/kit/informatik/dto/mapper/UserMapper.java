@@ -4,7 +4,6 @@ import edu.kit.informatik.dto.RoleDto;
 import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.model.Role;
 import edu.kit.informatik.model.User;
-import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
