@@ -49,6 +49,22 @@
         </v-list-item>
       </v-list>
     </v-container>
+    <v-dialog v-model="enterCourseNameDialog">
+      <v-card>
+        <v-text-field
+          v-model="courseName"
+          label="Kursname"
+          type="input"
+        ></v-text-field>
+        <v-text-field
+          v-model="courseSubject"
+          label="Kursfach"
+          type="input"
+        ></v-text-field>
+        <v-btn @click="abortNewCourseClick">abbrechen</v-btn>
+        <v-btn @click="confirmNewCourseClick">bestätigen</v-btn>
+      </v-card>
+    </v-dialog>
   </v-main>
 </template>
 
@@ -58,8 +74,6 @@ import SideMenu from "@/components/navigation/SideMenu.vue";
 import { defineComponent, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
 import { Course } from "@/model/userdata/courses/Course";
-import { User } from "@/model/User";
-import { Role } from "@/model/Role";
 import router from "@/plugins/router";
 
 export default defineComponent({
@@ -69,33 +83,10 @@ export default defineComponent({
   setup() {
     const courseController = CourseController.getCourseController();
     const courses: Ref<Course[]> = ref<Course[]>(courseController.getAllCourses()) as Ref<Course[]>;
+    const enterCourseNameDialog: Ref<boolean> = ref(false);
+    const courseName: Ref<string> = ref("");
+    const courseSubject: Ref<string> = ref("");
 
-/*    const courses: Ref<Course[]> = ref<Course[]>([
-      new Course(
-        "asdf",
-        new User(1, "", "", "", true, Role.USER, ""),
-        "Physik 11",
-        "Physik"
-      ),
-      new Course(
-        "asdf",
-        new User(1, "", "", "", true, Role.USER, ""),
-        "Physik 12",
-        "Physik"
-      ),
-      new Course(
-        "asdf",
-        new User(1, "", "", "", true, Role.USER, ""),
-        "Informatik 11",
-        "Informatik"
-      ),
-      new Course(
-        "asdf",
-        new User(1, "", "", "", true, Role.USER, ""),
-        "Informatik 12",
-        "Informatik"
-      ),
-    ]) as Ref<Course[]>;*/
     function editCourseClick(course: Course) {
       router.push({
         name:"EditCoursePage",
@@ -103,10 +94,17 @@ export default defineComponent({
       })
     }
     function newCourseClick() {
-      let courseId: string = courseController.createCourse("", "");
+      courseName.value="";
+      courseSubject.value="";
+      enterCourseNameDialog.value=true;
+    }
+    function abortNewCourseClick() {
+      enterCourseNameDialog.value=false;
+    }
+    function confirmNewCourseClick() {
       router.push({
         name: "EditCoursePage",
-        params: { courseId: courseId },
+        params: { courseId: courseController.createCourse(courseName.value, courseSubject.value)},
       });
     }
     function deleteCourseClick(course: Course) {
@@ -120,11 +118,16 @@ export default defineComponent({
       });
     }
     return {
+      abortNewCourseClick,
+      confirmNewCourseClick,
       editCourseClick,
       newCourseClick,
       deleteCourseClick,
       showCourse,
       courses,
+      enterCourseNameDialog,
+      courseName,
+      courseSubject
     };
   },
 });
