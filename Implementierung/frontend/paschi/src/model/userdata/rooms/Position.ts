@@ -9,7 +9,8 @@ export class Position {
   yCoordinate: number;
   orientation: number;
 
-  constructor(id: string | undefined, localId: number, user: User, xCoordinate: number, yCoordinate: number, orientation: number) {
+  constructor(id: string | undefined, localId: number, user: User, xCoordinate: number, yCoordinate: number,
+              orientation: number) {
     this.id = id;
     this.localId = localId;
     this.user = user;
