@@ -32,7 +32,7 @@ export class Course {
   }
 
   removeParticipant(participantId: string) {
-    this.participants.forEach((element, index) => {
+    this.participants.forEach((element: Participant, index: number) => {
       if (element.getId === participantId) {
         this.participants.splice(index, 1)
       }
@@ -40,14 +40,13 @@ export class Course {
   }
 
   getParticipant(participantId: string): Participant | undefined {
-    let participant;
-    this.participants.forEach((element: Participant) => {
-      if (element.getId === participantId) {
-        participant = element;
+    for (let i = 0; i < this.participants.length; i++) {
+      if (this.participants.at(i)?.getId === participantId) {
+        return this.participants.at(i);
       }
-    });
+    }
 
-    return participant;
+    return undefined;
   }
 
   addSession(session: Session) {
@@ -57,7 +56,7 @@ export class Course {
   }
 
   removeSession(sessionId: string) {
-    this.sessions.forEach((element, index) => {
+    this.sessions.forEach((element: Session, index: number) => {
       if (element.getId === sessionId) {
         this.sessions.splice(index, 1);
       }
@@ -65,11 +64,11 @@ export class Course {
   }
 
   getSession(sessionId: string): Session | undefined {
-    this.sessions.forEach((element: Session) => {
-      if (element.getId === sessionId) {
-        return element
+    for (let i = 0; i < this.sessions.length; i++) {
+      if (this.sessions.at(i)?.getId === sessionId) {
+        return this.sessions.at(i);
       }
-    });
+    }
 
     return undefined;
   }
@@ -81,7 +80,7 @@ export class Course {
   }
 
   removeSeatArrangement(arrangementId: string) {
-    this.seatArrangements.forEach((element, index) => {
+    this.seatArrangements.forEach((element: SeatArrangement, index: number) => {
       if (element.getId === arrangementId) {
         this.seatArrangements.splice(index, 1);
       }
@@ -89,11 +88,11 @@ export class Course {
   }
 
   getSeatArrangement(arrangementId: string): SeatArrangement | undefined {
-    this.seatArrangements.forEach((element: SeatArrangement) => {
-      if (element.getId === arrangementId) {
-        return element;
+    for (let i = 0; i < this.seatArrangements.length; i++) {
+      if (this.seatArrangements.at(i)?.getId === arrangementId) {
+        return this.seatArrangements.at(i);
       }
-    });
+    }
 
     return undefined;
   }
