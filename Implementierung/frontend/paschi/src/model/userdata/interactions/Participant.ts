@@ -29,7 +29,7 @@ export abstract class Participant {
   }
 
   removeCourse(courseId: string) {
-    this.courses.forEach((element, index) => {
+    this.courses.forEach((element: Course, index: number) => {
       if (element.getId === courseId) {
         this.courses.splice(index, 1);
       }
@@ -37,11 +37,11 @@ export abstract class Participant {
   }
 
   getCourse(courseId: string): Course | undefined {
-    this.courses.forEach((element: Course) => {
-      if (element.getId === courseId) {
-        return element;
+    for (let i = 0; i < this.courses.length; i++) {
+      if (this.courses.at(i)?.getId === courseId) {
+        return this.courses.at(i);
       }
-    });
+    }
 
     return undefined;
   }
@@ -53,7 +53,7 @@ export abstract class Participant {
   }
 
   removeInteraction(interactionId: string) {
-    this.interactions.forEach((element, index) => {
+    this.interactions.forEach((element: Interaction, index: number) => {
       if (element.getId === interactionId) {
         this.interactions.splice(index, 1);
       }
@@ -61,11 +61,11 @@ export abstract class Participant {
   }
 
   getInteraction(interactionId: string): Interaction | undefined {
-    this.interactions.forEach((element: Interaction) => {
-      if (element.getId === interactionId) {
-        return element;
+    for (let i = 0; i < this.interactions.length; i++) {
+      if (this.interactions.at(i)?.getId === interactionId) {
+        return this.interactions.at(i);
       }
-    });
+    }
 
     return undefined;
   }
