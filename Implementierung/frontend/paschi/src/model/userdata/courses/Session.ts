@@ -31,19 +31,19 @@ export class Session {
   }
 
   removeInteraction(interactionId: string) {
-    this.interactions.forEach((element, index) => {
-      if (element.getId == interactionId) {
+    this.interactions.forEach((element: Interaction, index: number) => {
+      if (element.getId === interactionId) {
         this.interactions.splice(index, 1);
       }
     });
   }
 
   getInteraction(interactionId: string): Interaction | undefined {
-    this.interactions.forEach((element: Interaction) => {
-      if (element.getId == interactionId) {
-        return element;
+    for (let i = 0; i < this.interactions.length; i++) {
+      if (this.interactions.at(i)?.getId === interactionId) {
+        return this.interactions.at(i);
       }
-    });
+    }
 
     return undefined;
   }
