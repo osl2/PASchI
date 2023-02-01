@@ -17,7 +17,7 @@ export class AdminController {
     // nur lokal
     let users: User[] | undefined = [];
     let user = useUserStore().getUser();
-    if (user !== undefined) {
+    if (user !== undefined && user.auth) {
       users.push(user);
     }
     return users;
