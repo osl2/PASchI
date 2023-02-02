@@ -58,21 +58,21 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, ref, Ref} from "vue";
-import {AdminController} from "@/controller/AdminController";
-import {User} from "@/model/User";
-import {Role} from "@/model/Role";
-import {UserController} from "@/controller/UserController";
+import { computed, defineComponent, ref, Ref } from "vue";
+import { AdminController } from "@/controller/AdminController";
+import { User } from "@/model/User";
+import { Role } from "@/model/Role";
+import { UserController } from "@/controller/UserController";
 
 export default defineComponent({
   name: "RequestListCard",
   setup() {
-      const userController: UserController = UserController.getUserController()
-      userController.register("David", "nachname1", "email1", "", "")
-      userController.register("Cian", "nachname2", "email2", "", "")
-      userController.register("Aaron", "nachname3", "email3", "", "")
-      userController.register("Luka", "nachname4", "email4", "", "")
-      userController.register("Florian", "nachname5", "email5", "", "")
+    const userController: UserController = UserController.getUserController();
+    userController.register("David", "nachname1", "email1", "", "");
+    userController.register("Cian", "nachname2", "email2", "", "");
+    userController.register("Aaron", "nachname3", "email3", "", "");
+    userController.register("Luka", "nachname4", "email4", "", "");
+    userController.register("Florian", "nachname5", "email5", "", "");
     const adminController: AdminController =
       AdminController.getAdminController();
     const requests: Ref<User[]> = ref<User[]>(
@@ -111,19 +111,12 @@ export default defineComponent({
       );
     });
     function includesSearch(request: User): boolean {
-      if (
-        searchParameter.value === "ID" &&
-        request.getId.includes(searchInput.value)
-      ) {
-        return true;
-      }
-      if (
-        searchParameter.value === "E-Mail" &&
-        request.email.includes(searchInput.value)
-      ) {
-        return true;
-      }
-      return false;
+      return (
+        (searchParameter.value === "ID" &&
+          request.getId.includes(searchInput.value)) ||
+        (searchParameter.value === "E-Mail" &&
+          request.email.includes(searchInput.value))
+      );
     }
     function authUser(user: User) {
       adminController.authUser(user.getId);
@@ -154,11 +147,38 @@ export default defineComponent({
       toggleCollapseMessage,
       searchInput,
       requests: [
-        new User(undefined, 0, "David", "nachname1", "email1", false, Role.USER, ""),
-        new User(undefined, 1, "Cian", "nachname2", "email1", false, Role.USER, ""),
-        new User(undefined, 2, "Luka", "nachname3", "email1", false, Role.USER, ""),
-      ]
-  };
+        new User(
+          undefined,
+          0,
+          "David",
+          "nachname1",
+          "email1",
+          false,
+          Role.USER,
+          ""
+        ),
+        new User(
+          undefined,
+          1,
+          "Cian",
+          "nachname2",
+          "email1",
+          false,
+          Role.USER,
+          ""
+        ),
+        new User(
+          undefined,
+          2,
+          "Luka",
+          "nachname3",
+          "email1",
+          false,
+          Role.USER,
+          ""
+        ),
+      ],
+    };
   },
 });
 </script>
