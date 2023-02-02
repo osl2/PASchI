@@ -9,18 +9,29 @@
       <v-row class="ma-2">
         {{ user.name }}
         <v-spacer />
-        <v-btn prepend-icon="fas fa-trash" color="primary" @click="" />
+        <v-btn prepend-icon="fas fa-trash" color="primary" @click="deleteUser(user)" />
       </v-row>
     </v-card-item>
   </v-card>
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
+import { AdminController } from "@/controller/AdminController";
+import { User } from "@/model/User";
+import {defineComponent, ref, Ref} from "vue";
 
 export default defineComponent({
-  data() {
+  name: "UserListCard",
+  setup() {
+    const adminController: AdminController = AdminController.getAdminController();
+    const users: Ref<User[]> = ref<User[]>(adminController.getUsers()) as Ref<User[]>;
+
+    function deleteUser(user: User) {
+      adminController.deleteUser(user.getId);
+    }
     return {
+      deleteUser,
+      //user,
       users: [
         { name: "Hansi"},
         {name: "Gudrun"},
