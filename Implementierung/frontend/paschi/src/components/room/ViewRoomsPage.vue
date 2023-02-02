@@ -29,14 +29,20 @@
       </v-list>
     </v-container>
     <v-dialog v-model="enterRoomNameDialog">
-      <v-card>
-        <v-text-field
-          v-model="newRoomName"
-          label="Raumname"
-          type="input"
-        ></v-text-field>
-        <v-btn @click="abortNewRoomClick">abbrechen</v-btn>
-        <v-btn @click="confirmNewRoomClick">bestätigen</v-btn>
+      <v-card height="160">
+        <v-container >
+          <v-text-field
+            v-model="newRoomName"
+            label="Raumname"
+            type="input"
+          ></v-text-field>
+          <v-row class="align-start">
+            <v-spacer/>
+            <v-btn class="ma-3" @click="abortNewRoomClick" rounded color="red">abbrechen</v-btn>
+            <v-btn class="ma-3" @click="confirmNewRoomClick" rounded color="green">bestätigen</v-btn>
+            <v-spacer/>
+          </v-row>
+        </v-container>
       </v-card>
     </v-dialog>
   </v-main>

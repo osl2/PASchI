@@ -50,19 +50,25 @@
       </v-list>
     </v-container>
     <v-dialog v-model="enterCourseNameDialog">
-      <v-card>
-        <v-text-field
-          v-model="courseName"
-          label="Kursname"
-          type="input"
-        ></v-text-field>
-        <v-text-field
-          v-model="courseSubject"
-          label="Kursfach"
-          type="input"
-        ></v-text-field>
-        <v-btn @click="abortNewCourseClick">abbrechen</v-btn>
-        <v-btn @click="confirmNewCourseClick">bestätigen</v-btn>
+      <v-card height="230">
+        <v-container >
+          <v-text-field
+            v-model="courseName"
+            label="Kursname"
+            type="input"
+          ></v-text-field>
+          <v-text-field
+            v-model="courseSubject"
+            label="Kursfach"
+            type="input"
+          ></v-text-field>
+          <v-row class="align-start">
+            <v-spacer/>
+            <v-btn class="ma-3" @click="abortNewCourseClick" rounded color="red">abbrechen</v-btn>
+            <v-btn class="ma-3" @click="confirmNewCourseClick" rounded color="green">bestätigen</v-btn>
+            <v-spacer/>
+          </v-row>
+        </v-container>
       </v-card>
     </v-dialog>
   </v-main>

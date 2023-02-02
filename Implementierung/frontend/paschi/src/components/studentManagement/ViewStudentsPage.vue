@@ -42,19 +42,25 @@
       </v-list>
     </v-container>
     <v-dialog v-model="enterStudentNameDialog">
-      <v-card>
-        <v-text-field
-          v-model="studentFirstName"
-          label="Vorname"
-          type="input"
-        ></v-text-field>
-        <v-text-field
-          v-model="studentLastName"
-          label="Nachname"
-          type="input"
-        ></v-text-field>
-        <v-btn @click="abortNewStudentClick">abbrechen</v-btn>
-        <v-btn @click="confirmNewStudentClick">bestätigen</v-btn>
+      <v-card height="230">
+        <v-container >
+          <v-text-field
+            v-model="studentFirstName"
+            label="Vorname"
+            type="input"
+          ></v-text-field>
+          <v-text-field
+            v-model="studentLastName"
+            label="Nachname"
+            type="input"
+          ></v-text-field>
+          <v-row class="align-start">
+            <v-spacer/>
+            <v-btn class="ma-3" @click="abortNewStudentClick" rounded color="red">abbrechen</v-btn>
+            <v-btn class="ma-3" @click="confirmNewStudentClick" rounded color="green">bestätigen</v-btn>
+            <v-spacer/>
+          </v-row>
+        </v-container>
       </v-card>
     </v-dialog>
   </v-main>
