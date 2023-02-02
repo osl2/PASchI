@@ -35,9 +35,9 @@
       v-for="request in requests"
       v-show="!collapsed && includesSearch(request)"
     >
-      <v-row class="ma-2" align-content="start">
+      <v-row align="center">
         <v-col v-show="showName">
-          {{ request.firstName }} + {{ request.lastName }}
+          {{ request.firstName }} {{ request.lastName }}
         </v-col>
         <v-col v-show="showEmail">
           {{ request.email }}
@@ -45,7 +45,7 @@
         <v-col>
           {{ request.getId }}
         </v-col>
-        <v-col cols="2">
+        <v-col cols="3">
           <v-btn
             prepend-icon="fas fa-check"
             color="#00ff00"

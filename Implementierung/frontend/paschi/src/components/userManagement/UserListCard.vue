@@ -35,7 +35,7 @@
       v-for="user in users"
       v-show="!collapsed && includesSearch(user)"
     >
-      <v-row class="ma-2" align-content="start">
+      <v-row align="center">
         <v-col v-show="showName">
           {{ user.firstName }} + {{ user.lastName }}
         </v-col>
