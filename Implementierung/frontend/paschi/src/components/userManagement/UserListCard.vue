@@ -15,16 +15,21 @@
       />
     </v-card-item>
     <v-card-item v-show="!collapsed">
-      <v-select
-        label="suchen nach"
-        :items="searchParameters"
-        v-model="searchParameter"
-      />
-      <v-text-field
-        v-model="searchInput"
-        label="Suche"
-        type="input"
-      ></v-text-field>
+      <v-row>
+        <v-col cols="3">
+          <v-select
+          label="suchen nach"
+          :items="searchParameters"
+          v-model="searchParameter"
+        /></v-col>
+        <v-col>
+        <v-text-field
+          v-model="searchInput"
+          label="Suche"
+          type="input"
+        ></v-text-field>
+        </v-col>
+      </v-row>
     </v-card-item>
     <v-card-item
       v-for="user in users"
