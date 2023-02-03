@@ -54,7 +54,7 @@
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, ref } from "vue";
-import { RoomObject } from "@/model/userdata/rooms/roomObject";
+import { RoomObject } from "@/model/userdata/rooms/RoomObject";
 import { RoomController } from "@/controller/RoomController";
 
 export default defineComponent({
