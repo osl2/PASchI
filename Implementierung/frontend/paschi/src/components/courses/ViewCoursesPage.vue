@@ -3,7 +3,6 @@
     <v-app-bar-title> Kurse ansehen </v-app-bar-title>
     <template v-slot:extension>
       <v-btn
-        class="ml-15"
         variant="flat"
         color="green"
         rounded
@@ -61,6 +60,7 @@
             variant="tonal"
             prepend-icon="fas fa-plus"
             color="primary"
+            @click="newCourseClick"
           >Kurs erstellen!
           </v-btn>
         </v-card-item>

@@ -3,7 +3,6 @@
     <v-app-bar-title> Schüler ansehen </v-app-bar-title>
     <template v-slot:extension>
       <v-btn
-        class="ml-15"
         variant="flat"
         color="green"
         rounded
@@ -14,10 +13,10 @@
     </template>
   </navigation-bar>
 
-  <v-main>
+  <v-main class="ma-0 v-row justify-center align-content-xl-space-around">
     <SideMenu />
     <v-container fluid class="v-col-11" style="max-width: 700px">
-      <v-list rounded>
+      <v-list rounded v-if="students.length > 0">
         <v-list-item rounded v-for="student in students" :key="student.getId">
           <v-list-item-title>
             {{ student.firstName }} {{ student.lastName }}
@@ -40,6 +39,24 @@
           </template>
         </v-list-item>
       </v-list>
+      <v-card v-else class="pa-2" variant="text">
+        <v-card-title
+          class="text-h5 text-center text-indigo-darken-4 text-wrap"
+        >
+          Es wurden noch keine Schüler erstellt.
+        </v-card-title>
+        <v-card-item class="justify-center">
+          <v-btn
+            max-width="450"
+            height="50"
+            variant="tonal"
+            prepend-icon="fas fa-plus"
+            color="primary"
+            @click="newStudentClick"
+          >Schüler erstellen!
+          </v-btn>
+        </v-card-item>
+      </v-card>
     </v-container>
     <v-dialog v-model="enterStudentNameDialog">
       <v-card height="230">
