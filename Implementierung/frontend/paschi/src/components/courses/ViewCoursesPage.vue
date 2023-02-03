@@ -61,31 +61,48 @@
             prepend-icon="fas fa-plus"
             color="primary"
             @click="newCourseClick"
-          >Kurs erstellen!
+            >Kurs erstellen!
           </v-btn>
         </v-card-item>
       </v-card>
     </v-container>
-    <v-dialog v-model="enterCourseNameDialog">
-      <v-card height="230">
-        <v-container >
+    <v-dialog max-width="700" v-model="enterCourseNameDialog">
+      <v-card variant="flat" class="pa-2 rounded-lg">
+        <v-card-title class="text-h5 text-center text-indigo-darken-4">
+          Neuen Kurs erstellen
+        </v-card-title>
+        <v-card-item>
           <v-text-field
+            class="mt-1"
             v-model="courseName"
+            variant="outlined"
             label="Kursname"
             type="input"
+            autofocus
           ></v-text-field>
+        </v-card-item>
+        <v-card-item>
           <v-text-field
+            class="mt-1"
             v-model="courseSubject"
+            variant="outlined"
             label="Kursfach"
             type="input"
           ></v-text-field>
-          <v-row class="align-start">
-            <v-spacer/>
-            <v-btn class="ma-3" @click="abortNewCourseClick" rounded color="red">abbrechen</v-btn>
-            <v-btn class="ma-3" @click="confirmNewCourseClick" rounded color="green">bestätigen</v-btn>
-            <v-spacer/>
-          </v-row>
-        </v-container>
+        </v-card-item>
+        <v-card-actions class="row justify-center">
+          <v-btn height="50" width="150" variant="tonal" @click="abortNewCourseClick"
+            >Abbrechen</v-btn
+          >
+          <v-btn
+            height="50"
+            width="150"
+            variant="tonal"
+            @click="confirmNewCourseClick"
+            color="primary"
+            >Bestätigen</v-btn
+          >
+        </v-card-actions>
       </v-card>
     </v-dialog>
   </v-main>

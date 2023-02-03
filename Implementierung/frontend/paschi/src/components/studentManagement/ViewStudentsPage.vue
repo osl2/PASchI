@@ -53,31 +53,50 @@
             prepend-icon="fas fa-plus"
             color="primary"
             @click="newStudentClick"
-          >Schüler erstellen!
+            >Schüler erstellen!
           </v-btn>
         </v-card-item>
       </v-card>
     </v-container>
-    <v-dialog v-model="enterStudentNameDialog">
-      <v-card height="230">
-        <v-container >
+    <v-dialog max-width="700" v-model="enterStudentNameDialog">
+      <v-card variant="flat" class="pa-2 rounded-lg">
+        <v-card-title
+          class="text-h5 text-center text-indigo-darken-4 text-wrap"
+        >
+          Neuen Schüler erstellen
+        </v-card-title>
+        <v-card-item>
           <v-text-field
             v-model="studentFirstName"
+            variant="outlined"
+            class="mt-1"
             label="Vorname"
             type="input"
+            autofocus
           ></v-text-field>
+        </v-card-item>
+        <v-card-item>
           <v-text-field
             v-model="studentLastName"
+            variant="outlined"
+            class="mt-1"
             label="Nachname"
             type="input"
           ></v-text-field>
-          <v-row class="align-start">
-            <v-spacer/>
-            <v-btn class="ma-3" @click="abortNewStudentClick" rounded color="red">abbrechen</v-btn>
-            <v-btn class="ma-3" @click="confirmNewStudentClick" rounded color="green">bestätigen</v-btn>
-            <v-spacer/>
-          </v-row>
-        </v-container>
+        </v-card-item>
+        <v-card-actions class="row justify-center">
+          <v-btn height="50" width="150" @click="abortNewStudentClick" variant="tonal"
+            >Abbrechen</v-btn
+          >
+          <v-btn
+            height="50"
+            width="150"
+            @click="confirmNewStudentClick"
+            variant="tonal"
+            color="primary"
+            >Bestätigen</v-btn
+          >
+        </v-card-actions>
       </v-card>
     </v-dialog>
   </v-main>
@@ -105,7 +124,6 @@ export default defineComponent({
     const enterStudentNameDialog: Ref<boolean> = ref(false);
     const studentFirstName: Ref<string> = ref("");
     const studentLastName: Ref<string> = ref("");
-
 
     function newStudentClick() {
       studentFirstName.value = "";
