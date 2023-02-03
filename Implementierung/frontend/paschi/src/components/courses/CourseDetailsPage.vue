@@ -1,26 +1,78 @@
 <template>
   <navigation-bar></navigation-bar>
+  <side-menu></side-menu>
   <v-main>
-    <side-menu></side-menu>
-    <v-btn @click="addSessionClick">Sitzung starten</v-btn>
-    <v-btn @click="editCourseDetailsClick">Kurs bearbeiten</v-btn>
-    <v-btn @click="showCourseStatisticsClick">Kursstatistiken ansehen</v-btn>
-    <v-btn @click="activateStudentCard">Schüler hinzufügen</v-btn>
-    <v-btn @click="activateSessionStatisticsSelection"
-      >Sitzungsstatistiken ansehen</v-btn
-    >
-    <v-btn @click="activateInteractionMapSelection"
-      >Interaktionskarte ansehen</v-btn
-    >
-    <v-list>
-      <v-list-item v-for="student in studentsInCourse"
-        >{{ student.firstName }} {{ student.lastName }}
-        <v-btn @click="studentStatisticClick(student)"
-          >Statistiken anzeigen</v-btn
+    <v-container fluid class="v-row justify-center">
+      <v-card min-width="640" rounded class="ma-3 v-col-auto">
+        <v-row justify="space-around">
+          <v-btn class="ma-2 v-col-11" @click="addSessionClick"
+            >Sitzung starten</v-btn
+          >
+        </v-row>
+        <v-row justify="space-around">
+          <v-btn class="ma-2 v-col-11" @click="editCourseDetailsClick"
+            >Kurs bearbeiten</v-btn
+          >
+        </v-row>
+        <v-row justify="space-around">
+          <v-btn class="ma-2 v-col-11" @click="showCourseStatisticsClick"
+            >Kursstatistiken ansehen</v-btn
+          >
+        </v-row>
+        <v-row justify="space-around">
+          <v-btn
+            class="ma-2 v-col-11"
+            @click="activateSessionStatisticsSelection"
+            >Sitzungsstatistiken ansehen</v-btn
+          ></v-row
         >
-        <v-btn @click="deleteStudentClick(student)">Schüler entfernen</v-btn>
-      </v-list-item>
-    </v-list>
+        <v-row justify="space-around">
+          <v-btn class="ma-2 v-col-11" @click="activateInteractionMapSelection"
+            >Interaktionskarte ansehen</v-btn
+          ></v-row
+        >
+      </v-card>
+    </v-container>
+    <v-container fluid class="v-row justify-center">
+      <v-card min-width="640" rounded class="ma-3 v-col-auto">
+          <v-row>
+            <h2 class="ma-2">Schülerliste</h2>
+            <v-spacer/>
+            <v-btn
+              class="ml-15 ma-2"
+              variant="flat"
+              color="green"
+              rounded
+              prepend-icon="mdi mdi-plus"
+              @click="activateStudentCard"
+            >Schüler hinzufügen</v-btn>
+          </v-row>
+          <v-row class="v-card justify-center">
+            <v-card class="v-col-12" max-height="1000">
+              <v-list max-height="500">
+              <v-row class="ma-2" v-for="student in studentsInCourse"
+                >{{ student.firstName }} {{ student.lastName }}
+                <v-spacer />
+                <v-btn
+                  variant="tonal"
+                  color="primary"
+                  @click="editStudentClick(student)"
+                ><v-icon>fas fa-pencil</v-icon></v-btn
+                >
+                <v-btn
+                  class="ml-2"
+                  variant="tonal"
+                  color="primary"
+                  @click="studentStatisticClick(student)"
+                >
+                  <v-icon> fas fa-chart-line </v-icon>
+                </v-btn>
+              </v-row>
+              </v-list>
+            </v-card>
+          </v-row>
+      </v-card>
+    </v-container>
     <v-dialog v-model="sessionStatisticDialog">
       <v-card>
         <v-list>
@@ -80,7 +132,7 @@ import { Student } from "@/model/userdata/interactions/Student";
 import { computed, defineComponent, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
 import { SessionController } from "@/controller/SessionController";
-import {useRouter} from "vue-router";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "CourseDetailsPage",
@@ -92,7 +144,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const router = useRouter()
+    const router = useRouter();
 
     const courseController: CourseController =
       CourseController.getCourseController();
@@ -108,9 +160,7 @@ export default defineComponent({
       Session[]
     >;
 
-    const studentsNotInCourse = computed(
-      () => getStudentsNotInCourse()
-    );
+    const studentsNotInCourse = computed(() => getStudentsNotInCourse());
 
     const studentsInCourse: Ref<Student[]> = ref<Student[]>(
       getStudentsOfCourse()
@@ -206,8 +256,14 @@ export default defineComponent({
     function startSessionClick(seatArrangement: SeatArrangement) {
       router.push({
         name: "SessionPage",
-        params: { sessionId: sessionController.createSession(props.courseId, seatArrangement.getId, "")} //TODO session name
-      })
+        params: {
+          sessionId: sessionController.createSession(
+            props.courseId,
+            seatArrangement.getId,
+            ""
+          ),
+        }, //TODO session name
+      });
     }
     function studentStatisticClick(student: Student) {
       router.push({
