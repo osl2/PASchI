@@ -17,7 +17,7 @@
   <SideMenu />
   <v-main class="ma-0 v-row justify-center align-content-xl-space-around">
     <v-container fluid class="v-col-11" style="max-width: 700px">
-      <v-list rounded>
+      <v-list rounded v-if="courses.length > 0">
         <v-list-item
           rounded
           v-for="course in courses"
@@ -48,6 +48,23 @@
           </template>
         </v-list-item>
       </v-list>
+      <v-card v-else class="pa-2" variant="text">
+        <v-card-title
+          class="text-h5 text-center text-indigo-darken-4 text-wrap"
+        >
+          Es wurden noch keine Kurse erstellt.
+        </v-card-title>
+        <v-card-item class="justify-center">
+          <v-btn
+            max-width="450"
+            height="50"
+            variant="tonal"
+            prepend-icon="fas fa-plus"
+            color="primary"
+          >Kurs erstellen!
+          </v-btn>
+        </v-card-item>
+      </v-card>
     </v-container>
     <v-dialog v-model="enterCourseNameDialog">
       <v-card height="230">
@@ -80,7 +97,7 @@ import SideMenu from "@/components/navigation/SideMenu.vue";
 import { defineComponent, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
 import { Course } from "@/model/userdata/courses/Course";
-import {useRouter} from "vue-router";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "ViewCoursesPage",
@@ -90,29 +107,36 @@ export default defineComponent({
     const router = useRouter();
 
     const courseController = CourseController.getCourseController();
-    const courses: Ref<Course[]> = ref<Course[]>(courseController.getAllCourses()) as Ref<Course[]>;
+    const courses: Ref<Course[]> = ref<Course[]>(
+      courseController.getAllCourses()
+    ) as Ref<Course[]>;
     const enterCourseNameDialog: Ref<boolean> = ref(false);
     const courseName: Ref<string> = ref("");
     const courseSubject: Ref<string> = ref("");
 
     function editCourseClick(course: Course) {
       router.push({
-        name:"EditCoursePage",
-        params: { courseId: course.getId }
-      })
+        name: "EditCoursePage",
+        params: { courseId: course.getId },
+      });
     }
     function newCourseClick() {
-      courseName.value="";
-      courseSubject.value="";
-      enterCourseNameDialog.value=true;
+      courseName.value = "";
+      courseSubject.value = "";
+      enterCourseNameDialog.value = true;
     }
     function abortNewCourseClick() {
-      enterCourseNameDialog.value=false;
+      enterCourseNameDialog.value = false;
     }
     function confirmNewCourseClick() {
       router.push({
         name: "CourseDetailsPage",
-        params: { courseId: courseController.createCourse(courseName.value, courseSubject.value)},
+        params: {
+          courseId: courseController.createCourse(
+            courseName.value,
+            courseSubject.value
+          ),
+        },
       });
     }
     function deleteCourseClick(course: Course) {
@@ -135,7 +159,7 @@ export default defineComponent({
       courses,
       enterCourseNameDialog,
       courseName,
-      courseSubject
+      courseSubject,
     };
   },
 });

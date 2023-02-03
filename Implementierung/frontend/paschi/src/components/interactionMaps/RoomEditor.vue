@@ -5,6 +5,16 @@
     class="bg-grey-lighten-3"
     style="touch-action: none"
   >
+    <v-card :style="roomInventoryStyle">
+      <v-card
+        class=""
+        @mousedown="mouseDownInventoryRoomObject"
+        @mouseup="mouseUpInventoryRoomObject"
+        @mousemove="mouseMoveRoomInventoryObject"
+      >
+        <v-icon>mdi mdi-table-furniture</v-icon>
+      </v-card>
+    </v-card>
     <v-card
       key="background"
       variant="flat"
@@ -49,6 +59,12 @@ import { RoomController } from "@/controller/RoomController";
 
 export default defineComponent({
   name: "RoomEditor.vue",
+  props: {
+    roomId: {
+      type: String,
+      required: true,
+    },
+  },
   setup() {
     const roomController = RoomController.getRoomController();
 
@@ -89,6 +105,17 @@ export default defineComponent({
       left: roomDisplayLeftMargin + "px",
       width: roomDisplayWidth + "px",
       height: roomDisplayHeight + "px",
+    };
+
+    const roomInventoryOnBottom = roomDisplayLeftMargin < roomDisplayTopMargin;
+
+    const roomInventoryStyle = {
+      position: "absolute",
+      top: roomInventoryOnBottom ? "auto" : "0px",
+      bottom: roomInventoryOnBottom ? "0px" : "auto",
+      left: "0px",
+      width: roomInventoryOnBottom ? "100%" : roomDisplayLeftMargin - 10 + "px",
+      height: roomInventoryOnBottom ? roomDisplayTopMargin - 10 + "px" : "100%",
     };
 
     const selectedRoomObject = ref<RoomObject>();
@@ -446,6 +473,7 @@ export default defineComponent({
       moveTouch,
       getRoomObjectStyle,
       roomDisplayStyle,
+      roomInventoryStyle,
       mouseDownRoomObject: mouseDownRoomObject,
       mouseMoveRoomObject: mouseMoveRoomObject,
       mouseUpRoomObject,
