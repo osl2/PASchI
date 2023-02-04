@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,13 +35,13 @@ public class CategoryController extends BaseController<Category, RatedCategoryDt
 
     @Override
     @PostMapping
-    public CategoryDto add(RatedCategoryDto categoryDto) {
+    public CategoryDto add(@RequestBody RatedCategoryDto categoryDto) {
         return super.add(categoryDto);
     }
 
     @Override
     @PutMapping
-    public CategoryDto update(RatedCategoryDto categoryDto) {
+    public CategoryDto update(@RequestBody RatedCategoryDto categoryDto) {
         return super.update(categoryDto);
     }
 
