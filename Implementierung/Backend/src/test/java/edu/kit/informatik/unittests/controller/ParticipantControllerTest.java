@@ -158,7 +158,7 @@ public class ParticipantControllerTest extends AbstractTest {
 
     @Test
     public void deleteParticipants() throws Exception {
-        List<ParticipantDto> before = getUserFromDataBase();
+        List<ParticipantDto> before = getParticipantFromDataBase();
         addParticipantToDatabase();
 
         for (ParticipantDto participantDto: participants) {
@@ -169,7 +169,7 @@ public class ParticipantControllerTest extends AbstractTest {
             int status = mvcResult.getResponse().getStatus();
             assertEquals(200, status);
         }
-        List<ParticipantDto> after = getUserFromDataBase();
+        List<ParticipantDto> after = getParticipantFromDataBase();
 
         assertEquals(before.size(), after.size());
 
@@ -179,7 +179,7 @@ public class ParticipantControllerTest extends AbstractTest {
 
     }
 
-    private List<ParticipantDto> getUserFromDataBase() {
+    private List<ParticipantDto> getParticipantFromDataBase() {
         return participantMapper.modelToDto(this.participantRepository.findAll());
     }
 
