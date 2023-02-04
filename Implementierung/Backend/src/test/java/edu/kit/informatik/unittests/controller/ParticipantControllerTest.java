@@ -143,7 +143,6 @@ public class ParticipantControllerTest extends AbstractTest {
         assertEquals(200, status);
         String content = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
 
-        System.out.println(content);
         List<ParticipantDto> participantDtos = Arrays.asList(super.mapFromJson(content, ParticipantDto[].class));
 
         participantDtos.sort(Comparator.naturalOrder());
