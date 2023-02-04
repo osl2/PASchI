@@ -122,26 +122,32 @@ export default defineComponent({
 
     const action = ref<string>("translate");
 
-    let selectFunction = initializeRoomObjectGrabCoordinates;
-
-    let moveFunction = translateRoomObjectToDisplayCoordinates;
-
-    let releaseFunction = endTranslationRoomObject;
-
-    function setAction(action: string) {
-      switch (action) {
+    const selectFunction = computed(() => {
+      switch (action.value) {
         case "translate":
-          selectFunction = initializeRoomObjectGrabCoordinates;
-          moveFunction = translateRoomObjectToDisplayCoordinates;
-          releaseFunction = endTranslationRoomObject;
-          break;
+          return initializeRoomObjectGrabCoordinates;
         case "rotate":
-          selectFunction = initializeRoomObjectRotationCoordinates;
-          moveFunction = rotateRoomObject;
-          releaseFunction = finalizeRoomObjectRotation;
-          break;
+          return initializeRoomObjectRotationCoordinates;
       }
-    }
+    });
+
+    const moveFunction = computed(() => {
+      switch (action.value) {
+        case "translate":
+          return translateRoomObjectToDisplayCoordinates;
+        case "rotate":
+          return rotateRoomObject;
+      }
+    });
+
+    const releaseFunction = computed(() => {
+      switch (action.value) {
+        case "translate":
+          return endTranslationRoomObject;
+        case "rotate":
+          return finalizeRoomObjectRotation;
+      }
+    });
 
     //detects collisions with other room objects using the separating axis theorem
     function roomObjectOverlaps(
@@ -515,7 +521,7 @@ export default defineComponent({
         x: event.touches[0].clientX,
         y: event.touches[0].clientY,
       };
-      selectFunction(displayCoordinates, roomObject);
+      selectFunction.value!(displayCoordinates, roomObject);
     }
 
     function touchMoveRoomObject(event: TouchEvent, roomObject: RoomObject) {
@@ -523,11 +529,11 @@ export default defineComponent({
         x: event.touches[0].clientX,
         y: event.touches[0].clientY,
       };
-      moveFunction(displayCoordinates, roomObject);
+      moveFunction.value!(displayCoordinates, roomObject);
     }
 
     function touchEndRoomObject(event: TouchEvent, roomObject: RoomObject) {
-      releaseFunction(roomObject);
+      releaseFunction.value!(roomObject);
     }
 
     function mouseDownRoomObject(event: MouseEvent, roomObject: RoomObject) {
@@ -536,7 +542,7 @@ export default defineComponent({
         x: event.clientX,
         y: event.clientY,
       };
-      selectFunction(displayCoordinates, roomObject);
+      selectFunction.value!(displayCoordinates, roomObject);
     }
 
     function mouseMoveRoomObject(event: MouseEvent, roomObject: RoomObject) {
@@ -547,11 +553,11 @@ export default defineComponent({
         x: event.clientX,
         y: event.clientY,
       };
-      moveFunction(displayCoordinates, roomObject);
+      moveFunction.value!(displayCoordinates, roomObject);
     }
 
     function mouseUpRoomObject(event: MouseEvent, roomObject: RoomObject) {
-      releaseFunction(roomObject);
+      releaseFunction.value!(roomObject);
     }
 
     function addTable() {
@@ -577,7 +583,6 @@ export default defineComponent({
       addTable,
       action,
       addChair,
-      setAction,
       roomDisplayStyle,
       roomInventoryStyle,
       mouseDownRoomObject: mouseDownRoomObject,
