@@ -11,7 +11,6 @@ import edu.kit.informatik.model.userdata.courses.Session;
 import edu.kit.informatik.model.userdata.interactions.Interaction;
 import edu.kit.informatik.repositories.CourseRepository;
 import edu.kit.informatik.repositories.SeatArrangementRepository;
-import edu.kit.informatik.repositories.SessionRepository;
 import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,17 +21,15 @@ import java.util.List;
 @Service
 public class SessionMapper implements IModelDtoMapper<Session, SessionDto, SessionDto> {
 
-    private final SessionRepository sessionRepository;
     private final InteractionMapper interactionMapper;
     private final UserRepository userRepository;
     private final SeatArrangementRepository seatArrangementRepository;
     private final CourseRepository courseRepository;
 
     @Autowired
-    public SessionMapper(SessionRepository sessionRepository, InteractionMapper interactionMapper,
+    public SessionMapper(InteractionMapper interactionMapper,
                          UserRepository userRepository, SeatArrangementRepository seatArrangementRepository,
                          CourseRepository courseRepository) {
-        this.sessionRepository = sessionRepository;
         this.interactionMapper = interactionMapper;
         this.userRepository = userRepository;
         this.seatArrangementRepository = seatArrangementRepository;
@@ -72,20 +69,16 @@ public class SessionMapper implements IModelDtoMapper<Session, SessionDto, Sessi
                 findSeatArrangementById(sessionDto.getSeatArrangementId()).orElse(null);
 
         List<Interaction> interactions = new ArrayList<>();
+
         if (sessionDto.getInteractions() != null) {
             sessionDto.getInteractions().forEach(interactionDto ->
                     interactions.add(interactionMapper.dtoToModel(interactionDto)));
         }
 
-        Session session = sessionRepository.findSessionById(sessionDto.getId())
-                                    .orElseGet(Session::new);
 
-        session.setUser(user);
-        session.setName(sessionDto.getName());
-        session.setDate(sessionDto.getDate());
-        session.setSeatArrangement(seatArrangement);
+        Session session = new Session(user, sessionDto.getName(), sessionDto.getDate(), course, seatArrangement);
+
         session.setInteractions(interactions);
-        session.setCourse(course);
 
         return session;
     }
