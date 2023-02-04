@@ -3,6 +3,9 @@ package edu.kit.informatik.unittests.controller;
 import com.github.javafaker.Faker;
 import edu.kit.informatik.dto.mapper.courses.SessionMapper;
 import edu.kit.informatik.dto.userdata.courses.SessionDto;
+import edu.kit.informatik.dto.userdata.interactions.InteractionDto;
+import edu.kit.informatik.model.userdata.interactions.Participant;
+import edu.kit.informatik.repositories.ParticipantRepository;
 import edu.kit.informatik.repositories.SessionRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +35,9 @@ public class SessionControllerTest extends AbstractTest {
 
     @Autowired
     private SessionRepository sessionRepository;
+
+    @Autowired
+    private ParticipantRepository participantRepository;
 
     private List<SessionDto> sessions;
 
@@ -193,9 +199,39 @@ public class SessionControllerTest extends AbstractTest {
         sessionDto.setName(faker.funnyName().name());
         sessionDto.setUserId("4ccc614c-fda8-471d-b444-c70ca756cf0b");
         sessionDto.setCourseId("95d40763-b581-4d22-99b7-05dd58b0b3f3");
-        
+
         sessionDto.setDate(Timestamp.from(Instant.now()).toString());
 
         return sessionDto;
+    }
+
+    private List<InteractionDto> addInteractions(Faker faker, String sessionId) {
+
+        List<Participant> participants = participantRepository.findAll();
+
+        List<InteractionDto> interactionDtos = new ArrayList<>();
+
+        for (int i = 0; i < 20; i++) {
+
+            String fromId = participants.get(faker.number().numberBetween(0, participants.size())).getId();
+            String toId = null;
+
+            do {
+                toId = participants.get(faker.number().numberBetween(0, participants.size())).getId();
+            } while (fromId.equals(toId));
+
+            InteractionDto interactionDto = new InteractionDto();
+
+            interactionDto.setSessionId(sessionId);
+            interactionDto.setTimeStamp(Timestamp.from(Instant.now()).toString());
+            interactionDto.setCategoryId("");
+            interactionDto.setUserId("4ccc614c-fda8-471d-b444-c70ca756cf0b");
+            interactionDto.setFromParticipantId(fromId);
+            interactionDto.setToParticipantId(toId);
+
+            interactionDtos.add(interactionDto);
+        }
+
+        return interactionDtos;
     }
 }
