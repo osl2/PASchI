@@ -1,6 +1,7 @@
 package edu.kit.informatik.unittests.controller;
 
 import com.github.javafaker.Faker;
+import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.dto.mapper.interactions.ParticipantMapper;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantTypeDto;
@@ -45,8 +46,8 @@ public class ParticipantControllerTest extends AbstractTest {
         return participantsDtos;
     }
 
-    @Test
-    public void addParticipantToDatabase() {
+
+    private void addParticipantToDatabase() {
         List<ParticipantDto> repositoryUser = new ArrayList<>();
         for (ParticipantDto participantDto: this.participants) {
             repositoryUser.add(participantMapper.modelToDto(this.participantRepository.save(participantMapper.dtoToModel(participantDto))));
@@ -60,6 +61,17 @@ public class ParticipantControllerTest extends AbstractTest {
         }
 
         this.participants = repositoryUser;
+    }
+
+    private void deleteFromDataBase() {
+
+        for (ParticipantDto participantDto: participants) {
+            if (participantDto.getId() != null) {
+                this.participantRepository.deleteById(participantDto.getId());
+            }
+        }
+
+        participants.clear();
     }
 
 
