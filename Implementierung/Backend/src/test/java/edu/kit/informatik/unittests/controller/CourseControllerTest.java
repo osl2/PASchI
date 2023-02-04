@@ -78,10 +78,10 @@ public class CourseControllerTest extends AbstractTest {
         courses.clear();
     }
 
-    private void addCourseToDatabase() throws Exception {
+    private void addCourseToDatabase() {
         List<CourseDto> repositoryCourse = new ArrayList<>();
-        for (CourseDto participantDto: this.courses) {
-            repositoryCourse.add(courseMapper.modelToDto(this.courseRepository.save(courseMapper.dtoToModel(participantDto))));
+        for (CourseDto courseDto: this.courses) {
+            repositoryCourse.add(courseMapper.modelToDto(this.courseRepository.save(courseMapper.dtoToModel(courseDto))));
         }
 
         assertEquals(courses.size(), repositoryCourse.size());
