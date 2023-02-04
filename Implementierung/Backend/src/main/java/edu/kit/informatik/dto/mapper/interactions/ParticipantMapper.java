@@ -68,25 +68,27 @@ public class ParticipantMapper implements IModelDtoMapper<Participant, Participa
 
     @Override
     public Participant dtoToModel(ParticipantDto participantDto) {
-        Participant participant = participantRepository.
-                findParticipantById(participantDto.getId()).orElseGet(Participant::new);
         User user = userRepository.findUserById(participantDto.getUserId()).orElse(null);
         ParticipantType participantType = participantTypeMapper.dtoToModel(participantDto.getParticipantType());
         
         List<Course> courses = new ArrayList<>();
         List<Interaction> interactions = new ArrayList<>();
 
-        participantDto.getCourseIds().forEach(courseId ->
-                courses.add(courseRepository.findCourseById(courseId).orElse(null)));
-        participantDto.getInteractionIds().forEach(interactionId ->
-                interactions.add(interactionRepository.findInteractionById(interactionId).orElse(null)));
 
-        participant.setUser(user);
-        participant.setFirstName(participantDto.getFirstName());
-        participant.setLastName(participantDto.getLastName());
+        if (participantDto.getCourseIds() != null) {
+            participantDto.getCourseIds().forEach(courseId ->
+                    courseRepository.findCourseById(courseId).ifPresent(courses::add));
+        }
+        if (participantDto.getInteractionIds() != null) {
+            participantDto.getInteractionIds().forEach(interactionId ->
+                    interactionRepository.findInteractionById(interactionId).ifPresent(interactions::add));
+        }
+
+        Participant participant = new Participant(user, participantDto.getFirstName(),
+                                                    participantDto.getLastName(), participantType);
+
         participant.setCourses(courses);
         participant.setInteractions(interactions);
-        participant.setParticipantType(participantType);
 
         return participant;
     }
