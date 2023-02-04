@@ -1,18 +1,19 @@
 package edu.kit.informatik.unittests.controller;
 
 import com.github.javafaker.Faker;
-import edu.kit.informatik.dto.RoleDto;
-import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.dto.mapper.interactions.ParticipantMapper;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantTypeDto;
-import edu.kit.informatik.service.ParticipantService;
+import edu.kit.informatik.repositories.ParticipantRepository;
 import org.junit.Before;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import static org.junit.Assert.assertEquals;
 
 public class ParticipantControllerTest extends AbstractTest {
 
@@ -21,7 +22,7 @@ public class ParticipantControllerTest extends AbstractTest {
     private ParticipantMapper participantMapper;
 
     @Autowired
-    private ParticipantService participantService;
+    private ParticipantRepository participantRepository;
 
     private List<ParticipantDto> participants;
 
@@ -42,6 +43,23 @@ public class ParticipantControllerTest extends AbstractTest {
         }
 
         return participantsDtos;
+    }
+
+    @Test
+    public void addParticipantToDatabase() {
+        List<ParticipantDto> repositoryUser = new ArrayList<>();
+        for (ParticipantDto participantDto: this.participants) {
+            repositoryUser.add(participantMapper.modelToDto(this.participantRepository.save(participantMapper.dtoToModel(participantDto))));
+        }
+
+        assertEquals(participants.size(), repositoryUser.size());
+        for (int i= 0; i< participants.size(); i++) {
+            assertEquals(participants.get(i).getFirstName(), repositoryUser.get(i).getFirstName());
+            assertEquals(participants.get(i).getLastName(), repositoryUser.get(i).getLastName());
+            assertEquals(participants.get(i).getUserId(), repositoryUser.get(i).getUserId());
+        }
+
+        this.participants = repositoryUser;
     }
 
 
