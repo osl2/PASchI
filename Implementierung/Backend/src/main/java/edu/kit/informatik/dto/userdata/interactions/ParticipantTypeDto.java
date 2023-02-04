@@ -23,8 +23,4 @@ public enum ParticipantTypeDto {
     ParticipantTypeDto(String string) {
     }
 
-    @Override
-    public String toString() {
-        return this.name();
-    }
 }
