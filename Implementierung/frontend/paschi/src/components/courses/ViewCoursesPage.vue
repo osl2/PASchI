@@ -71,38 +71,43 @@
         <v-card-title class="text-h5 text-center text-indigo-darken-4">
           Neuen Kurs erstellen
         </v-card-title>
-        <v-card-item>
-          <v-text-field
-            class="mt-1"
-            v-model="courseName"
-            variant="outlined"
-            label="Kursname"
-            type="input"
-            autofocus
-          ></v-text-field>
-        </v-card-item>
-        <v-card-item>
-          <v-text-field
-            class="mt-1"
-            v-model="courseSubject"
-            variant="outlined"
-            label="Kursfach"
-            type="input"
-          ></v-text-field>
-        </v-card-item>
-        <v-card-actions class="row justify-center">
-          <v-btn height="50" width="150" variant="tonal" @click="abortNewCourseClick"
-            >Abbrechen</v-btn
-          >
-          <v-btn
-            height="50"
-            width="150"
-            variant="tonal"
-            @click="confirmNewCourseClick"
-            color="primary"
-            >Bestätigen</v-btn
-          >
-        </v-card-actions>
+        <v-form validate-on="submit" @submit.prevent>
+          <v-card-item>
+            <v-text-field
+              class="mt-2"
+              v-model="courseName"
+              variant="outlined"
+              label="Kursname"
+              type="input"
+              autofocus
+            ></v-text-field>
+            <v-text-field
+              class="mt-1"
+              v-model="courseSubject"
+              variant="outlined"
+              label="Kursfach"
+              type="input"
+            ></v-text-field>
+          </v-card-item>
+          <v-card-actions class="row justify-center">
+            <v-btn
+              height="50"
+              width="150"
+              variant="tonal"
+              @click="abortNewCourseClick"
+              >Abbrechen</v-btn
+            >
+            <v-btn
+              type="submit"
+              height="50"
+              width="150"
+              variant="tonal"
+              @click="confirmNewCourseClick"
+              color="primary"
+              >Bestätigen</v-btn
+            >
+          </v-card-actions>
+        </v-form>
       </v-card>
     </v-dialog>
   </v-main>

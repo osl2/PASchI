@@ -65,38 +65,43 @@
         >
           Neuen Schüler erstellen
         </v-card-title>
-        <v-card-item>
-          <v-text-field
-            v-model="studentFirstName"
-            variant="outlined"
-            class="mt-1"
-            label="Vorname"
-            type="input"
-            autofocus
-          ></v-text-field>
-        </v-card-item>
-        <v-card-item>
-          <v-text-field
-            v-model="studentLastName"
-            variant="outlined"
-            class="mt-1"
-            label="Nachname"
-            type="input"
-          ></v-text-field>
-        </v-card-item>
-        <v-card-actions class="row justify-center">
-          <v-btn height="50" width="150" @click="abortNewStudentClick" variant="tonal"
-            >Abbrechen</v-btn
-          >
-          <v-btn
-            height="50"
-            width="150"
-            @click="confirmNewStudentClick"
-            variant="tonal"
-            color="primary"
-            >Bestätigen</v-btn
-          >
-        </v-card-actions>
+        <v-form validate-on="submit" @submit.prevent>
+          <v-card-item>
+            <v-text-field
+              v-model="studentFirstName"
+              variant="outlined"
+              class="mt-2"
+              label="Vorname"
+              type="input"
+              autofocus
+            ></v-text-field>
+            <v-text-field
+              v-model="studentLastName"
+              variant="outlined"
+              class="mt-1"
+              label="Nachname"
+              type="input"
+            ></v-text-field>
+          </v-card-item>
+          <v-card-actions class="row justify-center">
+            <v-btn
+              height="50"
+              width="150"
+              @click="abortNewStudentClick"
+              variant="tonal"
+              >Abbrechen</v-btn
+            >
+            <v-btn
+              type="submit"
+              height="50"
+              width="150"
+              @click="confirmNewStudentClick"
+              variant="tonal"
+              color="primary"
+              >Bestätigen</v-btn
+            >
+          </v-card-actions>
+        </v-form>
       </v-card>
     </v-dialog>
   </v-main>
