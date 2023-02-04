@@ -55,19 +55,19 @@ public class ParticipantControllerTest extends AbstractTest {
 
 
     private void addParticipantToDatabase() {
-        List<ParticipantDto> repositoryUser = new ArrayList<>();
+        List<ParticipantDto> repositoryParticipant = new ArrayList<>();
         for (ParticipantDto participantDto: this.participants) {
-            repositoryUser.add(participantMapper.modelToDto(this.participantRepository.save(participantMapper.dtoToModel(participantDto))));
+            repositoryParticipant.add(participantMapper.modelToDto(this.participantRepository.save(participantMapper.dtoToModel(participantDto))));
         }
 
-        assertEquals(participants.size(), repositoryUser.size());
+        assertEquals(participants.size(), repositoryParticipant.size());
         for (int i= 0; i< participants.size(); i++) {
-            assertEquals(participants.get(i).getFirstName(), repositoryUser.get(i).getFirstName());
-            assertEquals(participants.get(i).getLastName(), repositoryUser.get(i).getLastName());
-            assertEquals(participants.get(i).getUserId(), repositoryUser.get(i).getUserId());
+            assertEquals(participants.get(i).getFirstName(), repositoryParticipant.get(i).getFirstName());
+            assertEquals(participants.get(i).getLastName(), repositoryParticipant.get(i).getLastName());
+            assertEquals(participants.get(i).getUserId(), repositoryParticipant.get(i).getUserId());
         }
 
-        this.participants = repositoryUser;
+        this.participants = repositoryParticipant;
     }
 
     private void deleteFromDataBase() {
