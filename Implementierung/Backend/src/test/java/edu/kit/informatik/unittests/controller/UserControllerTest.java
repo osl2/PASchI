@@ -25,7 +25,6 @@ public class UserControllerTest extends AbstractTest {
 
     private static final String BASE_URL = "/api/user";
 
-
     @Autowired
     private UserMapper userMapper;
 
