@@ -14,6 +14,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -80,7 +82,7 @@ public class ParticipantControllerTest extends AbstractTest {
     }
 
     @Test
-    public void addUsers() throws Exception {
+    public void addParticipants() throws Exception {
 
         for (int i = 0; i< participants.size(); i++) {
             //System.out.println(participants.get(i).getParticipantType());
@@ -107,6 +109,80 @@ public class ParticipantControllerTest extends AbstractTest {
     }
 
 
+    @Test
+    public void getOneParticipant() throws Exception {
+        addParticipantToDatabase();
+
+        for (ParticipantDto participant: participants) {
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + participant.getId())
+                    //.accept(MediaType.APPLICATION_JSON_VALUE)
+            ).andReturn();
+
+            int status = mvcResult.getResponse().getStatus();
+            assertEquals(200, status);
+            String content = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+            ParticipantDto participantDto = super.mapFromJson(content, ParticipantDto.class);
+
+
+            assertEquals(participantDto, participant);
+        }
+
+        deleteFromDataBase();
+    }
+
+    @Test
+    public void getAllParticipants() throws Exception {
+        addParticipantToDatabase();
+
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL)
+                //.accept(MediaType.APPLICATION_JSON_VALUE)
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
+        String content = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+        System.out.println(content);
+        List<ParticipantDto> participantDtos = Arrays.asList(super.mapFromJson(content, ParticipantDto[].class));
+
+        participantDtos.sort(Comparator.naturalOrder());
+        participants.sort(Comparator.naturalOrder());
+
+
+        for (int i= 0; i < participants.size(); i++) {
+            assertEquals(participants.get(i), participantDtos.get(i));
+        }
+
+        deleteFromDataBase();
+    }
+
+    @Test
+    public void deleteParticipants() throws Exception {
+        List<ParticipantDto> before = getUserFromDataBase();
+        addParticipantToDatabase();
+
+        for (ParticipantDto participantDto: participants) {
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL).content(participantDto.getId()).param("id", participantDto.getId())
+                    //.accept(MediaType.APPLICATION_JSON_VALUE)
+            ).andReturn();
+
+            int status = mvcResult.getResponse().getStatus();
+            assertEquals(200, status);
+        }
+        List<ParticipantDto> after = getUserFromDataBase();
+
+        assertEquals(before.size(), after.size());
+
+        for (int i = 0; i< before.size(); i++) {
+            assertEquals(before.get(i), after.get(i));
+        }
+
+    }
+
+    private List<ParticipantDto> getUserFromDataBase() {
+        return participantMapper.modelToDto(this.participantRepository.findAll());
+    }
 
 
     private ParticipantDto getNewParticipant(Faker faker) {
