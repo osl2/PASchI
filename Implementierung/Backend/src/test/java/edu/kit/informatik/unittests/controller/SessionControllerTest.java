@@ -122,8 +122,8 @@ public class SessionControllerTest extends AbstractTest {
     public void getOneSession() throws Exception {
         addSessionToDatabase();
 
-        for (SessionDto participant: sessions) {
-            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + participant.getId())
+        for (SessionDto session: sessions) {
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + session.getId())
                     //.accept(MediaType.APPLICATION_JSON_VALUE)
             ).andReturn();
 
@@ -134,7 +134,7 @@ public class SessionControllerTest extends AbstractTest {
             SessionDto sessionDto = super.mapFromJson(content, SessionDto.class);
 
 
-            assertEquals(sessionDto, participant);
+            assertEquals(sessionDto, session);
         }
 
         deleteFromDataBase();
@@ -152,14 +152,14 @@ public class SessionControllerTest extends AbstractTest {
         assertEquals(200, status);
         String content = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
 
-        List<SessionDto> participantDtos = Arrays.asList(super.mapFromJson(content, SessionDto[].class));
+        List<SessionDto> sessionDto = Arrays.asList(super.mapFromJson(content, SessionDto[].class));
 
-        participantDtos.sort(Comparator.naturalOrder());
+        sessionDto.sort(Comparator.naturalOrder());
         sessions.sort(Comparator.naturalOrder());
 
 
         for (int i= 0; i < sessions.size(); i++) {
-            assertEquals(sessions.get(i), participantDtos.get(i));
+            assertEquals(sessions.get(i), sessionDto.get(i));
         }
 
         deleteFromDataBase();
