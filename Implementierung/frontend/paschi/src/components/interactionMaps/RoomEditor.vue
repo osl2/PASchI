@@ -19,7 +19,8 @@
       color="white"
       :style="roomDisplayStyle"
       @mousemove="mouseMoveRoomObject($event, selectedRoomObject)"
-      @mouseup="mouseUpRoomObject"
+      @mouseup="mouseUpRoomObject($event, selectedRoomObject)"
+      @mouseleave="mouseUpRoomObject($event, selectedRoomObject)"
     >
       <v-card
         v-for="roomObject in roomObjects"
@@ -36,7 +37,7 @@
         :style="getRoomObjectStyle(roomObject)"
         @touchstart="touchStart($event, roomObject)"
         @touchmove="moveTouch($event, roomObject)"
-        @touchend="touchEnd"
+        @touchend="touchEnd($event, roomObject)"
         @mousedown="mouseDownRoomObject($event, roomObject)"
       >
         <v-icon
@@ -94,7 +95,6 @@ export default defineComponent({
     const roomDisplayTopMargin = (window.innerHeight - roomDisplayHeight) / 2;
     const roomDisplayLeftMargin = (window.innerWidth - roomDisplayWidth) / 2;
 
-    const preTranslationRoomObjectScreenCoordinates = ref({ x: 0, y: 0 });
     const preTranslationRoomObjectRoomCoordinates = ref({ x: 0, y: 0 });
 
     const translationOffset = ref({ x: 0, y: 0 });
@@ -397,20 +397,8 @@ export default defineComponent({
       translateRoomObjectToDisplayCoordinates(displayCoordinates, roomObject);
     }
 
-    function touchEnd() {
-      if (
-        roomObjectOverlaps(
-          selectedRoomObject.value!,
-          roomController.getRoomObjects(roomId)!
-        )
-      ) {
-        selectedRoomObject.value!.position.xCoordinate =
-          preTranslationRoomObjectRoomCoordinates.value.x;
-        selectedRoomObject.value!.position.yCoordinate =
-          preTranslationRoomObjectRoomCoordinates.value.y;
-      }
-      roomObjectErrorStyle.value = false;
-      selectedRoomObject.value = undefined;
+    function touchEnd(event: TouchEvent, roomObject: RoomObject) {
+      endTranslation(roomObject);
     }
 
     function mouseDownRoomObject(event: MouseEvent, roomObject: RoomObject) {
@@ -422,24 +410,25 @@ export default defineComponent({
       initializeRoomObjectGrabCoordinates(displayCoordinates, roomObject);
     }
 
-    function mouseUpRoomObject() {
-      if (!selectedRoomObject.value) {
-        return;
-      }
-
+    function endTranslation(roomObject: RoomObject) {
       if (
         roomObjectOverlaps(
-          selectedRoomObject.value!,
+          roomObject,
           roomController.getRoomObjects(roomId)!
         )
       ) {
-        selectedRoomObject.value!.position.xCoordinate =
+        roomObject.position.xCoordinate =
           preTranslationRoomObjectRoomCoordinates.value.x;
-        selectedRoomObject.value!.position.yCoordinate =
+        roomObject.position.yCoordinate =
           preTranslationRoomObjectRoomCoordinates.value.y;
       }
       selectedRoomObject.value = undefined;
       roomObjectErrorStyle.value = false;
+    }
+
+    function mouseUpRoomObject(event: MouseEvent, roomObject: RoomObject) {
+
+      endTranslation(roomObject);
     }
 
     function translateRoomObjectToDisplayCoordinates(
