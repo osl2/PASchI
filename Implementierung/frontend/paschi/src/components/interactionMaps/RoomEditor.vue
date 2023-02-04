@@ -380,57 +380,6 @@ export default defineComponent({
       };
     }
 
-    function touchStart(event: TouchEvent, roomObject: RoomObject) {
-      selectedRoomObject.value = roomObject;
-      const displayCoordinates: { x: number; y: number } = {
-        x: event.touches[0].clientX,
-        y: event.touches[0].clientY,
-      }
-      initializeRoomObjectGrabCoordinates(displayCoordinates, roomObject);
-    }
-
-    function touchMoveRoomObject(event: TouchEvent, roomObject: RoomObject) {
-      const displayCoordinates = {
-        x: event.touches[0].clientX,
-        y: event.touches[0].clientY,
-      };
-      translateRoomObjectToDisplayCoordinates(displayCoordinates, roomObject);
-    }
-
-    function touchEnd(event: TouchEvent, roomObject: RoomObject) {
-      endTranslation(roomObject);
-    }
-
-    function mouseDownRoomObject(event: MouseEvent, roomObject: RoomObject) {
-      selectedRoomObject.value = roomObject;
-      const displayCoordinates: { x: number; y: number } = {
-        x: event.clientX,
-        y: event.clientY,
-      }
-      initializeRoomObjectGrabCoordinates(displayCoordinates, roomObject);
-    }
-
-    function endTranslation(roomObject: RoomObject) {
-      if (
-        roomObjectOverlaps(
-          roomObject,
-          roomController.getRoomObjects(roomId)!
-        )
-      ) {
-        roomObject.position.xCoordinate =
-          preTranslationRoomObjectRoomCoordinates.value.x;
-        roomObject.position.yCoordinate =
-          preTranslationRoomObjectRoomCoordinates.value.y;
-      }
-      selectedRoomObject.value = undefined;
-      roomObjectErrorStyle.value = false;
-    }
-
-    function mouseUpRoomObject(event: MouseEvent, roomObject: RoomObject) {
-
-      endTranslation(roomObject);
-    }
-
     function translateRoomObjectToDisplayCoordinates(
       displayCoordinates: { x: number; y: number },
       roomObject: RoomObject
@@ -451,6 +400,52 @@ export default defineComponent({
       );
     }
 
+    function endTranslationRoomObject(roomObject: RoomObject) {
+      if (
+        roomObjectOverlaps(
+          roomObject,
+          roomController.getRoomObjects(roomId)!
+        )
+      ) {
+        roomObject.position.xCoordinate =
+          preTranslationRoomObjectRoomCoordinates.value.x;
+        roomObject.position.yCoordinate =
+          preTranslationRoomObjectRoomCoordinates.value.y;
+      }
+      selectedRoomObject.value = undefined;
+      roomObjectErrorStyle.value = false;
+    }
+
+    function touchStartRoomObject(event: TouchEvent, roomObject: RoomObject) {
+      selectedRoomObject.value = roomObject;
+      const displayCoordinates: { x: number; y: number } = {
+        x: event.touches[0].clientX,
+        y: event.touches[0].clientY,
+      }
+      initializeRoomObjectGrabCoordinates(displayCoordinates, roomObject);
+    }
+
+    function touchMoveRoomObject(event: TouchEvent, roomObject: RoomObject) {
+      const displayCoordinates = {
+        x: event.touches[0].clientX,
+        y: event.touches[0].clientY,
+      };
+      translateRoomObjectToDisplayCoordinates(displayCoordinates, roomObject);
+    }
+
+    function touchEndRoomObject(event: TouchEvent, roomObject: RoomObject) {
+      endTranslationRoomObject(roomObject);
+    }
+
+    function mouseDownRoomObject(event: MouseEvent, roomObject: RoomObject) {
+      selectedRoomObject.value = roomObject;
+      const displayCoordinates: { x: number; y: number } = {
+        x: event.clientX,
+        y: event.clientY,
+      }
+      initializeRoomObjectGrabCoordinates(displayCoordinates, roomObject);
+    }
+
     function mouseMoveRoomObject(event: MouseEvent, roomObject: RoomObject) {
       if (!roomObject) {
         return;
@@ -460,6 +455,11 @@ export default defineComponent({
         y: event.clientY,
       };
       translateRoomObjectToDisplayCoordinates(displayCoordinates, roomObject);
+    }
+
+    function mouseUpRoomObject(event: MouseEvent, roomObject: RoomObject) {
+
+      endTranslationRoomObject(roomObject);
     }
 
     function addTable() {
@@ -479,7 +479,7 @@ export default defineComponent({
 
     return {
       roomObjects,
-      touchStart,
+      touchStart: touchStartRoomObject,
       moveTouch: touchMoveRoomObject,
       getRoomObjectStyle,
       addTable,
@@ -491,7 +491,7 @@ export default defineComponent({
       mouseUpRoomObject,
       selectedRoomObject,
       roomObjectErrorStyle,
-      touchEnd,
+      touchEnd: touchEndRoomObject,
       stuff: roomController.getRoom(roomId)!,
       roomId,
     };
