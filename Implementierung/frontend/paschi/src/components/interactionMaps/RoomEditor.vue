@@ -12,6 +12,10 @@
       <v-card class="" @click="addChair">
         <v-icon>mdi mdi-seat-outline</v-icon>
       </v-card>
+      <v-btn-toggle v-model="action" @update:model-value="setAction" color="primary" mandatory >
+        <v-btn icon="mdi mdi-cursor-move" value="translate" />
+        <v-btn icon="mdi mdi-rotate-left" value="rotate" />
+      </v-btn-toggle>
     </v-card>
     <v-card
       key="background"
@@ -55,6 +59,7 @@
 import { computed, defineComponent, onBeforeMount, ref } from "vue";
 import { RoomObject } from "@/model/userdata/rooms/RoomObject";
 import { RoomController } from "@/controller/RoomController";
+import { Coordinate } from "@/components/interactionMaps/Coordinate";
 
 export default defineComponent({
   name: "RoomEditor.vue",
@@ -70,13 +75,6 @@ export default defineComponent({
     const roomId = roomController.createRoom("TestRoom");
 
     const roomObjects = computed(() => roomController.getRoomObjects(roomId));
-
-    onBeforeMount(() => {
-      roomController.addChair(roomId, 0, 0, 0);
-      roomController.addChair(roomId, 1000, 0, 0);
-      roomController.addChair(roomId, 2000, 0, 0);
-      roomController.addTable(roomId, 3000, 0, Math.PI / 2, 1000, 3000);
-    });
 
     const roomWidth = 16180;
     const roomHeight = 10000;
@@ -122,6 +120,29 @@ export default defineComponent({
 
     const roomObjectErrorStyle = ref(false);
 
+    const action = ref<string>("translate");
+
+    let selectFunction = initializeRoomObjectGrabCoordinates;
+
+    let moveFunction = translateRoomObjectToDisplayCoordinates;
+
+    let releaseFunction = endTranslationRoomObject;
+
+    function setAction(action: string) {
+      switch (action) {
+        case "translate":
+          selectFunction = initializeRoomObjectGrabCoordinates;
+          moveFunction = translateRoomObjectToDisplayCoordinates;
+          releaseFunction = endTranslationRoomObject;
+          break;
+        case "rotate":
+          selectFunction = initializeRoomObjectRotationCoordinates;
+          moveFunction = rotateRoomObject;
+          releaseFunction = finalizeRoomObjectRotation;
+          break;
+      }
+    }
+
     //detects collisions with other room objects using the separating axis theorem
     function roomObjectOverlaps(
       roomObject: RoomObject,
@@ -141,15 +162,19 @@ export default defineComponent({
       return false;
     }
 
+    function getRoomObjectOrigin(roomObject: RoomObject): Coordinate {
+      return {
+        x: roomObject.position.xCoordinate + roomObject.dimensions.width / 2,
+        y: roomObject.position.yCoordinate + roomObject.dimensions.length / 2,
+      };
+    }
+
     function separatedAxisCollide(
       roomObject1: RoomObject,
       roomObject2: RoomObject
     ) {
       const roomObject1Orientation = roomObject1.position.orientation;
-      const roomObject1Origin = {
-        x: roomObject1.position.xCoordinate + roomObject1.dimensions.width / 2,
-        y: roomObject1.position.yCoordinate + roomObject1.dimensions.length / 2,
-      };
+      const roomObject1Origin = getRoomObjectOrigin(roomObject1);
       //describes the vector from the origin to the top right corner of the roomObject1
       const roomObject1TopRightDiagonal = {
         x:
@@ -205,10 +230,7 @@ export default defineComponent({
         },
       ];
       const roomObject2Orientation = roomObject2.position.orientation;
-      const roomObject2Origin = {
-        x: roomObject2.position.xCoordinate + roomObject2.dimensions.width / 2,
-        y: roomObject2.position.yCoordinate + roomObject2.dimensions.length / 2,
-      };
+      const roomObject2Origin = getRoomObjectOrigin(roomObject2);
       //describes the vector from the origin to the top right corner of the roomObject2
       const roomObject2TopRightDiagonal = {
         x:
@@ -335,6 +357,80 @@ export default defineComponent({
       return true;
     }
 
+    let previousRotationCoordinate: Coordinate = { x: 0, y: 0 };
+
+    let lastValidRotation = 0;
+
+    function calculateRoomObjectRotation(
+      roomObject: RoomObject,
+      currentCoordinate: Coordinate
+    ) {
+      const origin = getRoomObjectOrigin(roomObject);
+      const previousCoordinateFromOrigin = {
+        x: previousRotationCoordinate.x - origin.x,
+        y: previousRotationCoordinate.y - origin.y,
+      };
+      const currentCoordinateFromOrigin = {
+        x: currentCoordinate.x - origin.x,
+        y: currentCoordinate.y - origin.y,
+      };
+      const direction = Math.sign(
+        previousCoordinateFromOrigin.x * currentCoordinateFromOrigin.y -
+          previousCoordinateFromOrigin.y * currentCoordinateFromOrigin.x
+      );
+      const rotationDelta =
+        direction *
+        Math.acos(
+          (previousCoordinateFromOrigin.x * currentCoordinateFromOrigin.x +
+            previousCoordinateFromOrigin.y * currentCoordinateFromOrigin.y) /
+            (Math.sqrt(
+              previousCoordinateFromOrigin.x ** 2 +
+                previousCoordinateFromOrigin.y ** 2
+            ) *
+              Math.sqrt(
+                currentCoordinateFromOrigin.x ** 2 +
+                  currentCoordinateFromOrigin.y ** 2
+              ))
+        );
+      previousRotationCoordinate = currentCoordinate;
+      return rotationDelta;
+    }
+
+    function initializeRoomObjectRotationCoordinates(
+      displayCoordinates: Coordinate,
+      roomObject: RoomObject
+    ) {
+      previousRotationCoordinate = displayToRoomCoordinates(
+        displayCoordinates.x,
+        displayCoordinates.y
+      );
+      lastValidRotation = roomObject.position.orientation;
+    }
+
+    function rotateRoomObject(
+      displayCoordinates: Coordinate,
+      roomObject: RoomObject
+    ) {
+      const angle = calculateRoomObjectRotation(
+        roomObject,
+        displayToRoomCoordinates(displayCoordinates.x, displayCoordinates.y)
+      );
+      roomObject.position.orientation =
+        (roomObject.position.orientation + angle) % (2 * Math.PI);
+      if (!roomObjectOverlaps(roomObject, roomObjects.value!)) {
+        lastValidRotation = roomObject.position.orientation;
+        roomObjectErrorStyle.value = false;
+      } else {
+        roomObjectErrorStyle.value = true;
+      }
+    }
+
+    function finalizeRoomObjectRotation(roomObject: RoomObject) {
+      roomObject.position.orientation = lastValidRotation;
+      selectedRoomObject.value = undefined;
+      roomObjectErrorStyle.value = false;
+    }
+
     function roomToDisplayCoordinates(x: number, y: number) {
       return {
         x: x * roomScale,
@@ -364,12 +460,12 @@ export default defineComponent({
       };
     }
 
-    function initializeRoomObjectGrabCoordinates(displayCoordinates: { x: number; y: number }, roomObject: RoomObject) {
+    function initializeRoomObjectGrabCoordinates(
+      displayCoordinates: { x: number; y: number },
+      roomObject: RoomObject
+    ) {
       const roomCoordinates: { x: number; y: number } =
-        displayToRoomCoordinates(
-          displayCoordinates.x,
-          displayCoordinates.y
-        );
+        displayToRoomCoordinates(displayCoordinates.x, displayCoordinates.y);
       translationOffset.value = {
         x: roomCoordinates.x - roomObject.position.xCoordinate,
         y: roomCoordinates.y - roomObject.position.yCoordinate,
@@ -402,10 +498,7 @@ export default defineComponent({
 
     function endTranslationRoomObject(roomObject: RoomObject) {
       if (
-        roomObjectOverlaps(
-          roomObject,
-          roomController.getRoomObjects(roomId)!
-        )
+        roomObjectOverlaps(roomObject, roomController.getRoomObjects(roomId)!)
       ) {
         roomObject.position.xCoordinate =
           preTranslationRoomObjectRoomCoordinates.value.x;
@@ -421,8 +514,8 @@ export default defineComponent({
       const displayCoordinates: { x: number; y: number } = {
         x: event.touches[0].clientX,
         y: event.touches[0].clientY,
-      }
-      initializeRoomObjectGrabCoordinates(displayCoordinates, roomObject);
+      };
+      selectFunction(displayCoordinates, roomObject);
     }
 
     function touchMoveRoomObject(event: TouchEvent, roomObject: RoomObject) {
@@ -430,11 +523,11 @@ export default defineComponent({
         x: event.touches[0].clientX,
         y: event.touches[0].clientY,
       };
-      translateRoomObjectToDisplayCoordinates(displayCoordinates, roomObject);
+      moveFunction(displayCoordinates, roomObject);
     }
 
     function touchEndRoomObject(event: TouchEvent, roomObject: RoomObject) {
-      endTranslationRoomObject(roomObject);
+      releaseFunction(roomObject);
     }
 
     function mouseDownRoomObject(event: MouseEvent, roomObject: RoomObject) {
@@ -442,8 +535,8 @@ export default defineComponent({
       const displayCoordinates: { x: number; y: number } = {
         x: event.clientX,
         y: event.clientY,
-      }
-      initializeRoomObjectGrabCoordinates(displayCoordinates, roomObject);
+      };
+      selectFunction(displayCoordinates, roomObject);
     }
 
     function mouseMoveRoomObject(event: MouseEvent, roomObject: RoomObject) {
@@ -454,12 +547,11 @@ export default defineComponent({
         x: event.clientX,
         y: event.clientY,
       };
-      translateRoomObjectToDisplayCoordinates(displayCoordinates, roomObject);
+      moveFunction(displayCoordinates, roomObject);
     }
 
     function mouseUpRoomObject(event: MouseEvent, roomObject: RoomObject) {
-
-      endTranslationRoomObject(roomObject);
+      releaseFunction(roomObject);
     }
 
     function addTable() {
@@ -483,7 +575,9 @@ export default defineComponent({
       moveTouch: touchMoveRoomObject,
       getRoomObjectStyle,
       addTable,
+      action,
       addChair,
+      setAction,
       roomDisplayStyle,
       roomInventoryStyle,
       mouseDownRoomObject: mouseDownRoomObject,
