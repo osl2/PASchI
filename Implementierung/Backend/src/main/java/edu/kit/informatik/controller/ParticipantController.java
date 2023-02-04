@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,13 +34,13 @@ public class ParticipantController extends BaseController<Participant, Participa
 
     @Override
     @PostMapping
-    public ParticipantDto add(ParticipantDto participantDto) {
+    public ParticipantDto add(@RequestBody ParticipantDto participantDto) {
         return super.add(participantDto);
     }
 
     @Override
     @PutMapping
-    public ParticipantDto update(ParticipantDto participantDto) {
+    public ParticipantDto update(@RequestBody ParticipantDto participantDto) {
         return super.update(participantDto);
     }
 
