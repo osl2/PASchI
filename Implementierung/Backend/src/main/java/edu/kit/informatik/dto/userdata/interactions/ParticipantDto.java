@@ -1,6 +1,5 @@
 package edu.kit.informatik.dto.userdata.interactions;
 
-import edu.kit.informatik.dto.userdata.courses.CourseDto;
 import edu.kit.informatik.model.userdata.interactions.Participant;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
