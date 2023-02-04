@@ -6,13 +6,11 @@
     style="touch-action: none"
   >
     <v-card :style="roomInventoryStyle">
-      <v-card
-        class=""
-        @mousedown="mouseDownInventoryRoomObject"
-        @mouseup="mouseUpInventoryRoomObject"
-        @mousemove="mouseMoveRoomInventoryObject"
-      >
+      <v-card class="" @click="addTable">
         <v-icon>mdi mdi-table-furniture</v-icon>
+      </v-card>
+      <v-card class="" @click="addChair">
+        <v-icon>mdi mdi-seat-outline</v-icon>
       </v-card>
     </v-card>
     <v-card
@@ -53,7 +51,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, ref } from "vue";
+import { computed, defineComponent, onBeforeMount, ref } from "vue";
 import { RoomObject } from "@/model/userdata/rooms/RoomObject";
 import { RoomController } from "@/controller/RoomController";
 
@@ -69,6 +67,8 @@ export default defineComponent({
     const roomController = RoomController.getRoomController();
 
     const roomId = roomController.createRoom("TestRoom");
+
+    const roomObjects = computed(() => roomController.getRoomObjects(roomId));
 
     onBeforeMount(() => {
       roomController.addChair(roomId, 0, 0, 0);
@@ -364,15 +364,15 @@ export default defineComponent({
       };
     }
 
-    function touchStart(event: TouchEvent, roomObject: RoomObject) {
-      selectedRoomObject.value = roomObject;
-      const { x, y } = displayToRoomCoordinates(
-        event.touches[0].clientX,
-        event.touches[0].clientY
-      );
+    function initializeRoomObjectGrabCoordinates(displayCoordinates: { x: number; y: number }, roomObject: RoomObject) {
+      const roomCoordinates: { x: number; y: number } =
+        displayToRoomCoordinates(
+          displayCoordinates.x,
+          displayCoordinates.y
+        );
       translationOffset.value = {
-        x: x - roomObject.position.xCoordinate,
-        y: y - roomObject.position.yCoordinate,
+        x: roomCoordinates.x - roomObject.position.xCoordinate,
+        y: roomCoordinates.y - roomObject.position.yCoordinate,
       };
       preTranslationRoomObjectRoomCoordinates.value = {
         x: roomObject.position.xCoordinate,
@@ -380,17 +380,21 @@ export default defineComponent({
       };
     }
 
-    function moveTouch(event: TouchEvent, roomObject: RoomObject) {
-      const { x, y } = displayToRoomCoordinates(
-        event.touches[0].clientX,
-        event.touches[0].clientY
-      );
-      roomObject.position.xCoordinate = x - translationOffset.value.x;
-      roomObject.position.yCoordinate = y - translationOffset.value.y;
-      roomObjectErrorStyle.value = roomObjectOverlaps(
-        roomObject,
-        roomController.getRoomObjects(roomId)!
-      );
+    function touchStart(event: TouchEvent, roomObject: RoomObject) {
+      selectedRoomObject.value = roomObject;
+      const displayCoordinates: { x: number; y: number } = {
+        x: event.touches[0].clientX,
+        y: event.touches[0].clientY,
+      }
+      initializeRoomObjectGrabCoordinates(displayCoordinates, roomObject);
+    }
+
+    function touchMoveRoomObject(event: TouchEvent, roomObject: RoomObject) {
+      const displayCoordinates = {
+        x: event.touches[0].clientX,
+        y: event.touches[0].clientY,
+      };
+      translateRoomObjectToDisplayCoordinates(displayCoordinates, roomObject);
     }
 
     function touchEnd() {
@@ -411,20 +415,11 @@ export default defineComponent({
 
     function mouseDownRoomObject(event: MouseEvent, roomObject: RoomObject) {
       selectedRoomObject.value = roomObject;
-      preTranslationRoomObjectScreenCoordinates.value.x = event.clientX;
-      preTranslationRoomObjectScreenCoordinates.value.y = event.clientY;
-      preTranslationRoomObjectRoomCoordinates.value = {
-        x: roomObject.position.xCoordinate,
-        y: roomObject.position.yCoordinate,
-      };
-      translationOffset.value = {
-        x:
-          displayToRoomCoordinates(event.clientX, event.clientY).x -
-          roomObject.position.xCoordinate,
-        y:
-          displayToRoomCoordinates(event.clientX, event.clientY).y -
-          roomObject.position.yCoordinate,
-      };
+      const displayCoordinates: { x: number; y: number } = {
+        x: event.clientX,
+        y: event.clientY,
+      }
+      initializeRoomObjectGrabCoordinates(displayCoordinates, roomObject);
     }
 
     function mouseUpRoomObject() {
@@ -447,17 +442,17 @@ export default defineComponent({
       roomObjectErrorStyle.value = false;
     }
 
-    function mouseMoveRoomObject(event: MouseEvent, roomObject: RoomObject) {
-      if (!roomObject) {
-        return;
-      }
+    function translateRoomObjectToDisplayCoordinates(
+      displayCoordinates: { x: number; y: number },
+      roomObject: RoomObject
+    ) {
       const newPosition = {
         x:
-          displayToRoomCoordinates(event.clientX, event.clientY).x -
-          translationOffset.value.x,
+          displayToRoomCoordinates(displayCoordinates.x, displayCoordinates.y)
+            .x - translationOffset.value.x,
         y:
-          displayToRoomCoordinates(event.clientX, event.clientY).y -
-          translationOffset.value.y,
+          displayToRoomCoordinates(displayCoordinates.x, displayCoordinates.y)
+            .y - translationOffset.value.y,
       };
       roomObject.position.xCoordinate = newPosition.x;
       roomObject.position.yCoordinate = newPosition.y;
@@ -467,11 +462,39 @@ export default defineComponent({
       );
     }
 
+    function mouseMoveRoomObject(event: MouseEvent, roomObject: RoomObject) {
+      if (!roomObject) {
+        return;
+      }
+      const displayCoordinates = {
+        x: event.clientX,
+        y: event.clientY,
+      };
+      translateRoomObjectToDisplayCoordinates(displayCoordinates, roomObject);
+    }
+
+    function addTable() {
+      const table = roomController.addTable(
+        roomId,
+        roomWidth / 2,
+        roomHeight / 2,
+        0,
+        500,
+        2000
+      );
+    }
+
+    function addChair() {
+      roomController.addChair(roomId, roomWidth / 2, roomHeight / 2, 0);
+    }
+
     return {
-      roomObjects: roomController.getRoomObjects(roomId),
+      roomObjects,
       touchStart,
-      moveTouch,
+      moveTouch: touchMoveRoomObject,
       getRoomObjectStyle,
+      addTable,
+      addChair,
       roomDisplayStyle,
       roomInventoryStyle,
       mouseDownRoomObject: mouseDownRoomObject,
@@ -480,6 +503,8 @@ export default defineComponent({
       selectedRoomObject,
       roomObjectErrorStyle,
       touchEnd,
+      stuff: roomController.getRoom(roomId)!,
+      roomId,
     };
   },
 });
