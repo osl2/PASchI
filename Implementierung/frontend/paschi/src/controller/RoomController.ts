@@ -1,33 +1,37 @@
-import {Room} from "@/model/userdata/rooms/Room";
-import {Position} from "@/model/userdata/rooms/Position";
-import {useRoomStore} from "@/store/RoomStore";
-import {UserController} from "@/controller/UserController";
-import {Chair} from "@/model/userdata/rooms/Chair";
-import {useRoomObjectStore} from "@/store/RoomObjectStore";
-import {Table} from "@/model/userdata/rooms/Table";
-import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
-import {RoomObject} from "@/model/userdata/rooms/RoomObject";
-import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
-import {usePositionStore} from "@/store/PositionStore";
+import { Room } from "@/model/userdata/rooms/Room";
+import { Position } from "@/model/userdata/rooms/Position";
+import { useRoomStore } from "@/store/RoomStore";
+import { UserController } from "@/controller/UserController";
+import { Chair } from "@/model/userdata/rooms/Chair";
+import { useRoomObjectStore } from "@/store/RoomObjectStore";
+import { Table } from "@/model/userdata/rooms/Table";
+import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
+import { RoomObject } from "@/model/userdata/rooms/RoomObject";
+import { useSeatArrangementStore } from "@/store/SeatArrangementStore";
+import { usePositionStore } from "@/store/PositionStore";
 
 // TODO: Backend Service einbinden
 export class RoomController {
-
   private static controller: RoomController = new RoomController();
   private userController = UserController.getUserController();
   private roomStore = useRoomStore();
+  private roomObjectStore = useRoomObjectStore();
   private arrangementStore = useSeatArrangementStore();
   private positionStore = usePositionStore();
 
-  private constructor() {
-  }
+  private constructor() {}
 
   static getRoomController(): RoomController {
     return RoomController.controller;
   }
 
   createRoom(name: string): string {
-    let room = new Room(undefined, this.roomStore.getNextId(), this.userController.getUser(), name);
+    let room = new Room(
+      undefined,
+      this.roomStore.getNextId(),
+      this.userController.getUser(),
+      name
+    );
     this.roomStore.addRoom(room);
 
     return room.getId;
@@ -43,11 +47,13 @@ export class RoomController {
   deleteRoom(id: string) {
     let room = this.roomStore.getRoom(id);
     if (room !== undefined) {
-      this.arrangementStore.getAllSeatArrangements().forEach((arrangement: SeatArrangement) => {
-        if (arrangement.room.getId === id) {
-          this.arrangementStore.deleteSeatArrangement(arrangement.getId);
-        }
-      });
+      this.arrangementStore
+        .getAllSeatArrangements()
+        .forEach((arrangement: SeatArrangement) => {
+          if (arrangement.room.getId === id) {
+            this.arrangementStore.deleteSeatArrangement(arrangement.getId);
+          }
+        });
     }
   }
 
@@ -63,7 +69,12 @@ export class RoomController {
     return this.roomStore.getAllRooms();
   }
 
-  addChair(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number): string | undefined {
+  addChair(
+    roomId: string,
+    xCoordinate: number,
+    yCoordinate: number,
+    orientation: number
+  ): string | undefined {
     let room = this.roomStore.getRoom(roomId);
     if (room == undefined) {
       return undefined;
@@ -71,22 +82,30 @@ export class RoomController {
 
     let chair = new Chair(
       undefined,
-      useRoomObjectStore().getNextId(),
+      this.roomObjectStore.getNextId(),
       this.userController.getUser(),
       new Position(
         undefined,
         this.positionStore.nextId,
         this.userController.getUser(),
-        xCoordinate, yCoordinate,
-        orientation)
+        xCoordinate,
+        yCoordinate,
+        orientation
+      )
     );
     room.addRoomObject(chair);
 
     return chair.getId;
   }
 
-  addTable(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number, length: number,
-           width: number): string | undefined {
+  addTable(
+    roomId: string,
+    xCoordinate: number,
+    yCoordinate: number,
+    orientation: number,
+    length: number,
+    width: number
+  ): string | undefined {
     let room = this.roomStore.getRoom(roomId);
     if (room == undefined) {
       return undefined;
@@ -94,14 +113,16 @@ export class RoomController {
 
     let table = new Table(
       undefined,
-      useRoomObjectStore().getNextId(),
+      this.roomObjectStore.getNextId(),
       this.userController.getUser(),
       new Position(
         undefined,
         this.positionStore.nextId,
         this.userController.getUser(),
-        xCoordinate, yCoordinate,
-        orientation),
+        xCoordinate,
+        yCoordinate,
+        orientation
+      ),
       length,
       width
     );
