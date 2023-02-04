@@ -42,6 +42,12 @@ public class SessionMapper implements IModelDtoMapper<Session, SessionDto, Sessi
         session.getInteractions().
                 forEach(interaction -> interactionDtos.add(interactionMapper.modelToDto(interaction)));
 
+        String seatArrangementId = null;
+
+        if (session.getSeatArrangement() != null) {
+            seatArrangementId = session.getSeatArrangement().getId();
+        }
+
         return new SessionDto(
                 interactionDtos,
                 session.getId(),
@@ -49,7 +55,7 @@ public class SessionMapper implements IModelDtoMapper<Session, SessionDto, Sessi
                 session.getName(),
                 session.getDate(),
                 session.getCourse().getId(),
-                session.getSeatArrangement().getId()
+                seatArrangementId
         );
     }
 
