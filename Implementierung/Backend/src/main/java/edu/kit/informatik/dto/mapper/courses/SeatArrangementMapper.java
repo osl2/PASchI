@@ -20,7 +20,6 @@ import java.util.Map;
 @Service
 public class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, SeatArrangementDto, SeatArrangementDto> {
 
-    private final SeatArrangementRepository seatArrangementRepository;
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
     private final RoomRepository roomRepository;
@@ -28,10 +27,9 @@ public class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, S
     private final ChairRepository chairRepository;
 
     @Autowired
-    public SeatArrangementMapper(SeatArrangementRepository seatArrangementRepository, UserRepository userRepository,
+    public SeatArrangementMapper(UserRepository userRepository,
                                  CourseRepository courseRepository, RoomRepository roomRepository,
                                  ParticipantRepository participantRepository, ChairRepository chairRepository) {
-        this.seatArrangementRepository = seatArrangementRepository;
         this.userRepository = userRepository;
         this.courseRepository = courseRepository;
         this.roomRepository = roomRepository;
@@ -64,26 +62,19 @@ public class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, S
 
     @Override
     public SeatArrangement dtoToModel(SeatArrangementDto seatArrangementDto) {
-        SeatArrangement seatArrangement = seatArrangementRepository.
-                findSeatArrangementById(seatArrangementDto.getId()).orElseGet(SeatArrangement::new);
         User user = userRepository.findUserById(seatArrangementDto.getUserId()).orElse(null);
         Course course = courseRepository.findCourseById(seatArrangementDto.getCourseId()).orElse(null);
         Room room = roomRepository.findRoomById(seatArrangementDto.getRoomId()).orElse(null);
 
         Map<Chair, Participant> seatMap = new HashMap<>();
+
         seatArrangementDto.getSeatMap().forEach((chairId, participantId) -> {
             Participant participant = participantRepository.findParticipantById(participantId).orElse(null);
             Chair chair = chairRepository.findChairById(chairId).orElse(null);
             seatMap.put(chair, participant);
         });
 
-        seatArrangement.setName(seatArrangementDto.getName());
-        seatArrangement.setUser(user);
-        seatArrangement.setCourse(course);
-        seatArrangement.setRoom(room);
-        seatArrangement.setSeatMap(seatMap);
-
-        return seatArrangement;
+        return new SeatArrangement(user, seatArrangementDto.getName(), room, course, seatMap);
     }
 
     @Override
