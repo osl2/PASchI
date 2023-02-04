@@ -73,10 +73,12 @@ public class CourseMapper implements IModelDtoMapper<Course, CourseDto, CourseDt
         if (courseDto.getParticipantIds() != null) {
             courseDto.getParticipantIds().forEach(id ->
                     participantRepository.findParticipantById(id).ifPresent(participants::add));
-        } else if (courseDto.getSessionIds() != null) {
+        }
+        if (courseDto.getSessionIds() != null) {
             courseDto.getSessionIds().forEach(id ->
                     sessionRepository.findSessionById(id).ifPresent(sessions::add));
-        } else if (courseDto.getSeatArrangementIds() != null) {
+        }
+        if (courseDto.getSeatArrangementIds() != null) {
             courseDto.getSeatArrangementIds().forEach(id ->
                     seatArrangementRepository.findSeatArrangementById(id).ifPresent(seatArrangements::add));
         }
