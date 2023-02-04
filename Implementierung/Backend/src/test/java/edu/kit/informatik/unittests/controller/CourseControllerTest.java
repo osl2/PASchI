@@ -3,8 +3,13 @@ package edu.kit.informatik.unittests.controller;
 
 import com.github.javafaker.Faker;
 import edu.kit.informatik.dto.mapper.courses.CourseMapper;
+import edu.kit.informatik.dto.mapper.interactions.ParticipantMapper;
 import edu.kit.informatik.dto.userdata.courses.CourseDto;
+import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
+import edu.kit.informatik.dto.userdata.interactions.ParticipantTypeDto;
+import edu.kit.informatik.model.userdata.interactions.Participant;
 import edu.kit.informatik.repositories.CourseRepository;
+import edu.kit.informatik.repositories.ParticipantRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +36,14 @@ public class CourseControllerTest extends AbstractTest {
     private CourseMapper courseMapper;
 
     @Autowired
+    private ParticipantMapper participantMapper;
+
+
+    @Autowired
     private CourseRepository courseRepository;
+
+    @Autowired
+    private ParticipantRepository participantRepository;
 
     private List<CourseDto> courses;
 
@@ -66,9 +78,25 @@ public class CourseControllerTest extends AbstractTest {
         courses.clear();
     }
 
+    private void addCourseToDatabase() throws Exception {
+        List<CourseDto> repositoryCourse = new ArrayList<>();
+        for (CourseDto participantDto: this.courses) {
+            repositoryCourse.add(courseMapper.modelToDto(this.courseRepository.save(courseMapper.dtoToModel(participantDto))));
+        }
+
+        assertEquals(courses.size(), repositoryCourse.size());
+        for (int i= 0; i< courses.size(); i++) {
+            assertEquals(courses.get(i).getUserId(), repositoryCourse.get(i).getUserId());
+            assertEquals(courses.get(i).getName(), repositoryCourse.get(i).getName());
+            assertEquals(courses.get(i).getSubject(), repositoryCourse.get(i).getSubject());
+            assertNotNull(repositoryCourse.get(i).getId());
+        }
+
+        this.courses = repositoryCourse;
+    }
 
     @Test
-    public void addCourseToDatabase() throws Exception {
+    public void addCourses() throws Exception{
         for (CourseDto courseDto: courses) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
                             .content(super.mapToJson(courseDto))
@@ -137,6 +165,33 @@ public class CourseControllerTest extends AbstractTest {
         deleteFromDataBase();
     }
 
+    @Test
+    public void deleteCourses() throws Exception {
+        List<CourseDto> before = getCoursesFromDataBase();
+        addCourseToDatabase();
+
+        for (CourseDto courseDto: courses) {
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL).content(courseDto.getId()).param("id", courseDto.getId())
+                    //.accept(MediaType.APPLICATION_JSON_VALUE)
+            ).andReturn();
+
+            int status = mvcResult.getResponse().getStatus();
+            assertEquals(200, status);
+        }
+        List<CourseDto> after = getCoursesFromDataBase();
+
+        assertEquals(before.size(), after.size());
+
+        for (int i = 0; i< before.size(); i++) {
+            assertEquals(before.get(i), after.get(i));
+        }
+
+    }
+
+    private List<CourseDto> getCoursesFromDataBase() {
+        return courseMapper.modelToDto(this.courseRepository.findAll());
+    }
+
 
     private CourseDto getNewCourse(Faker faker) {
 
@@ -148,6 +203,28 @@ public class CourseControllerTest extends AbstractTest {
         courseDto.setSubject(name);
         courseDto.setUserId("4ccc614c-fda8-471d-b444-c70ca756cf0b");
 
+        List<String> participantIds = new ArrayList<>();
+
+
+        for (int i = 0; i < 10; i++) {
+            Participant participant = participantRepository.save(participantMapper.dtoToModel(getNewParticipant(faker)));
+
+            participantIds.add(participant.getId());
+        }
+
+        courseDto.setParticipantIds(participantIds);
+
         return courseDto;
+    }
+
+    private ParticipantDto getNewParticipant(Faker faker) {
+        ParticipantDto participantDto = new ParticipantDto();
+
+        participantDto.setParticipantType(ParticipantTypeDto.Student);
+        participantDto.setUserId("4ccc614c-fda8-471d-b444-c70ca756cf0b");
+        participantDto.setFirstName(faker.name().firstName());
+        participantDto.setLastName(faker.name().lastName());
+
+        return participantDto;
     }
 }
