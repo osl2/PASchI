@@ -3,23 +3,24 @@
     <v-app-bar-title> Räume ansehen </v-app-bar-title>
     <template v-slot:extension>
       <v-btn
-        class="ml-15"
         variant="flat"
         color="green"
         rounded
         prepend-icon="mdi mdi-plus"
         @click="newRoomClick"
-        >Raum erstellen</v-btn
+      >Raum erstellen</v-btn
       >
     </template>
   </navigation-bar>
-  <v-main>
-    <side-menu />
+
+  <SideMenu />
+  <v-main class="ma-0 v-row justify-center align-content-xl-space-around">
     <v-container fluid class="v-col-11" style="max-width: 700px">
-      <v-list rounded>
+      <v-list rounded v-if="rooms.length > 0">
         <v-list-item
           rounded
           v-for="room in rooms"
+          :key="room.getId"
           @click="editRoom(room)"
         >
           <v-list-item-title>
@@ -27,22 +28,60 @@
           </v-list-item-title>
         </v-list-item>
       </v-list>
+      <v-card v-else class="pa-2" variant="text">
+        <v-card-title
+          class="text-h5 text-center text-indigo-darken-4 text-wrap"
+        >
+          Es wurden noch keine Räume erstellt.
+        </v-card-title>
+        <v-card-item class="justify-center">
+          <v-btn
+            max-width="450"
+            height="50"
+            variant="tonal"
+            prepend-icon="fas fa-plus"
+            color="primary"
+            @click="newRoomClick"
+          >Raum erstellen!
+          </v-btn>
+        </v-card-item>
+      </v-card>
     </v-container>
-    <v-dialog v-model="enterRoomNameDialog">
-      <v-card height="160">
-        <v-container >
-          <v-text-field
-            v-model="newRoomName"
-            label="Raumname"
-            type="input"
-          ></v-text-field>
-          <v-row class="align-start">
-            <v-spacer/>
-            <v-btn class="ma-3" @click="abortNewRoomClick" rounded color="red">abbrechen</v-btn>
-            <v-btn class="ma-3" @click="confirmNewRoomClick" rounded color="green">bestätigen</v-btn>
-            <v-spacer/>
-          </v-row>
-        </v-container>
+    <v-dialog max-width="700" v-model="enterRoomNameDialog">
+      <v-card variant="flat" class="pa-2 rounded-lg">
+        <v-card-title class="text-h5 text-center text-indigo-darken-4">
+          Neuen Raum erstellen
+        </v-card-title>
+        <v-form validate-on="submit" @submit.prevent>
+          <v-card-item>
+            <v-text-field
+              class="mt-2"
+              v-model="newRoomName"
+              variant="outlined"
+              label="Raumname"
+              type="input"
+              autofocus
+            ></v-text-field>
+          </v-card-item>
+          <v-card-actions class="row justify-center">
+            <v-btn
+              height="50"
+              width="150"
+              variant="tonal"
+              @click="abortNewRoomClick"
+            >Abbrechen</v-btn
+            >
+            <v-btn
+              type="submit"
+              height="50"
+              width="150"
+              variant="tonal"
+              @click="confirmNewRoomClick"
+              color="primary"
+            >Bestätigen</v-btn
+            >
+          </v-card-actions>
+        </v-form>
       </v-card>
     </v-dialog>
   </v-main>
