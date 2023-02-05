@@ -19,11 +19,28 @@
         type="input"
       ></v-text-field>
     </v-container>
-    <v-dialog v-model="deleteStudentDialog">
-      <v-card>
-        "Delete student?"
-        <v-btn @click="cancelDeleteClick">cancel</v-btn>
-        <v-btn @click="deleteStudentClick">confirm</v-btn>
+    <v-dialog max-width="700" v-model="deleteStudentDialog">
+      <v-card variant="flat" class="pa-2 rounded-lg">
+        <v-card-title class="text-h5 text-center text-indigo-darken-4">
+          Schüler unwiederruflich löschen?
+        </v-card-title>
+        <v-card-actions class="row justify-center">
+          <v-btn
+            height="50"
+            width="150"
+            variant="tonal"
+            @click="cancelDeleteClick"
+          >Abbrechen</v-btn
+          >
+          <v-btn
+            height="50"
+            width="150"
+            variant="tonal"
+            @click="deleteStudentClick"
+            color="primary"
+          >Bestätigen</v-btn
+          >
+        </v-card-actions>
       </v-card>
     </v-dialog>
   </v-main>
