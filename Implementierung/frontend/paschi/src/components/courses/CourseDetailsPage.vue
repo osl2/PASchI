@@ -247,6 +247,9 @@ export default defineComponent({
     }
     function addStudent(student: Student) {
       courseController.addStudentToCourse(props.courseId, student.getId);
+      if (studentsNotInCourse.value.length==0) {
+        addStudentSelectionDialog.value=false;
+      }
     }
     function activateStudentCard() {
       addStudentSelectionDialog.value = true;
