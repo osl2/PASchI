@@ -1,6 +1,7 @@
 import {BaseService} from "@/service/BaseService";
 import {Participant} from "@/model/userdata/interactions/Participant";
 import {ParticipantDto} from "@/dto/userdata/interactions/ParticipantDto";
+import {ParticipantMapper} from "@/dto/mapper/interactions/ParticipantMapper";
 
 const PARTICIPANT_BASE_URL: string = '';
 
