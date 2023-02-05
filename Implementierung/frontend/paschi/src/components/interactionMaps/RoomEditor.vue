@@ -5,16 +5,60 @@
     class="bg-grey-lighten-3"
     style="touch-action: none"
   >
-    <v-card :style="roomInventoryStyle">
-      <v-card class="" @click="addTable">
-        <v-icon>mdi mdi-table-furniture</v-icon>
-      </v-card>
-      <v-card class="" @click="addChair">
-        <v-icon>mdi mdi-seat-outline</v-icon>
-      </v-card>
-      <v-btn-toggle v-model="action" @update:model-value="setAction" color="primary" mandatory >
-        <v-btn icon="mdi mdi-cursor-move" value="translate" />
-        <v-btn icon="mdi mdi-rotate-left" value="rotate" />
+    <v-card :style="roomInventoryStyle" :class="roomInventoryClass">
+      <v-btn
+        width="70"
+        height="70"
+        class="ma-1"
+        variant="tonal"
+        color="secondary"
+        @click="addTable"
+      >
+        <v-badge icon="mdi mdi-plus" color="green">
+          <v-icon size="30">mdi mdi-table-furniture</v-icon>
+        </v-badge>
+      </v-btn>
+      <v-btn
+        width="70"
+        height="70"
+        class="ma-1"
+        variant="tonal"
+        color="secondary"
+        @click="addChair"
+      >
+        <v-badge icon="mdi mdi-plus" color="green">
+          <v-icon size="30">mdi mdi-seat-outline</v-icon>
+        </v-badge>
+      </v-btn>
+      <v-btn-toggle
+        class="ma-1"
+        v-model="action"
+        color="primary"
+        mandatory
+        :style="toggleActionStyle"
+      >
+        <v-btn
+          :style="toggleButton1Style"
+          width="70"
+          height="70"
+          variant="tonal"
+          icon="mdi mdi-cursor-move"
+          value="translate"
+        /> <v-btn
+          width="70"
+          height="70"
+          variant="tonal"
+          icon="mdi mdi-close"
+          value="delete"
+        />
+        <v-btn
+          :style="toggleButton2Style"
+          width="70"
+          height="70"
+          variant="tonal"
+          icon="mdi mdi-rotate-left"
+          value="rotate"
+        />
       </v-btn-toggle>
     </v-card>
     <v-card
@@ -112,8 +156,35 @@ export default defineComponent({
       top: roomInventoryOnBottom ? "auto" : "0px",
       bottom: roomInventoryOnBottom ? "0px" : "auto",
       left: "0px",
-      width: roomInventoryOnBottom ? "100%" : roomDisplayLeftMargin - 10 + "px",
-      height: roomInventoryOnBottom ? roomDisplayTopMargin - 10 + "px" : "100%",
+      width: roomInventoryOnBottom ? "100%" : "80px",
+      height: roomInventoryOnBottom ? "80px" : "100%",
+    };
+
+    const roomInventoryClass = {
+      "d-flex": true,
+      "flex-column": !roomInventoryOnBottom,
+      "flex-row": roomInventoryOnBottom,
+      "justify-center": true,
+      "align-center": true,
+    };
+
+    const toggleActionStyle = {
+      flexDirection: roomInventoryOnBottom ? "row" : "column",
+      height: roomInventoryOnBottom ? "70px" : "auto",
+    };
+
+    const toggleButton1Style = {
+      borderTopLeftRadius: "5px",
+      borderTopRightRadius: roomInventoryOnBottom ? "0px" : "5px",
+      borderBottomLeftRadius: roomInventoryOnBottom ? "5px" : "0px",
+      borderBottomRightRadius: "0px",
+    };
+
+    const toggleButton2Style = {
+      borderTopLeftRadius: "0px",
+      borderTopRightRadius: roomInventoryOnBottom ? "5px" : "0px",
+      borderBottomLeftRadius: roomInventoryOnBottom ? "0px" : "5px",
+      borderBottomRightRadius: "5px",
     };
 
     const selectedRoomObject = ref<RoomObject>();
@@ -128,6 +199,8 @@ export default defineComponent({
           return initializeRoomObjectGrabCoordinates;
         case "rotate":
           return initializeRoomObjectRotationCoordinates;
+        case "delete":
+          return deleteRoomObject;
       }
     });
 
@@ -137,6 +210,8 @@ export default defineComponent({
           return translateRoomObjectToDisplayCoordinates;
         case "rotate":
           return rotateRoomObject;
+        case "delete":
+          return () => {}
       }
     });
 
@@ -146,6 +221,8 @@ export default defineComponent({
           return endTranslationRoomObject;
         case "rotate":
           return finalizeRoomObjectRotation;
+        case "delete":
+          return () => {}
       }
     });
 
@@ -402,6 +479,13 @@ export default defineComponent({
       return rotationDelta;
     }
 
+    function deleteRoomObject(
+      displayCoordinates: Coordinate,
+      roomObject: RoomObject
+    ) {
+      roomController.removeRoomObject(roomId, roomObject.getId)
+    }
+
     function initializeRoomObjectRotationCoordinates(
       displayCoordinates: Coordinate,
       roomObject: RoomObject
@@ -593,6 +677,10 @@ export default defineComponent({
       touchEnd: touchEndRoomObject,
       stuff: roomController.getRoom(roomId)!,
       roomId,
+      toggleActionStyle,
+      toggleButton1Style,
+      toggleButton2Style,
+      roomInventoryClass,
     };
   },
 });
