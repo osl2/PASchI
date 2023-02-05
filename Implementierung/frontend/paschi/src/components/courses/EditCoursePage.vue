@@ -139,6 +139,9 @@ export default defineComponent({
     }
     function deleteCourseClick() {
       courseController.deleteCourse(props.courseId);
+      router.push({
+        name:"ViewCoursesPage"
+      })
     }
     function cancelDeleteClick() {
       deleteCourseDialog.value = false;
