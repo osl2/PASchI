@@ -68,6 +68,14 @@
                 >
                   <v-icon> fas fa-chart-line </v-icon>
                 </v-btn>
+                <v-btn
+                  class="ml-2"
+                  variant="tonal"
+                  color="red"
+                  @click="removeStudentFromCourse(student)"
+                >
+                  <v-icon>mdi mdi-minus</v-icon>
+                </v-btn>
               </v-row>
             </v-list>
           </v-card>
@@ -206,6 +214,9 @@ export default defineComponent({
     }
 
     //normale Methoden
+    function removeStudentFromCourse(student: Student) {
+      courseController.removeStudentFromCourse(props.courseId, student.getId)
+    }
     function showCourseStatisticsClick() {
       router.push({
         name: "CourseStatisticPage",
@@ -290,7 +301,7 @@ export default defineComponent({
       addSessionClick,
       startSessionClick,
       studentStatisticClick,
-
+      removeStudentFromCourse,
       sessionStatisticDialog,
       interactionMapSelectionDialog,
       addStudentSelectionDialog,
