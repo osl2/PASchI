@@ -2,6 +2,7 @@
   <navigation-bar extended>
     <template v-slot:extension>
       <v-btn @click="saveChangesClick">speichern</v-btn>
+      <v-btn @click="activateDeleteCardClick">löschen</v-btn>
     </template>
   </navigation-bar>
 
@@ -38,6 +39,30 @@
             {{ room.name }}
           </v-list-item>
         </v-list>
+      </v-card>
+    </v-dialog>
+    <v-dialog max-width="700" v-model="deleteCourseDialog">
+      <v-card variant="flat" class="pa-2 rounded-lg">
+        <v-card-title class="text-h5 text-center text-indigo-darken-4">
+          Kurs unwiederruflich löschen?
+        </v-card-title>
+        <v-card-actions class="row justify-center">
+          <v-btn
+            height="50"
+            width="150"
+            variant="tonal"
+            @click="cancelDeleteClick"
+            >Abbrechen</v-btn
+          >
+          <v-btn
+            height="50"
+            width="150"
+            variant="tonal"
+            @click="deleteCourseClick"
+            color="primary"
+            >Bestätigen</v-btn
+          >
+        </v-card-actions>
       </v-card>
     </v-dialog>
   </v-main>
@@ -84,6 +109,7 @@ export default defineComponent({
     >;
     const seatArrangementDialog: Ref<boolean> = ref<boolean>(false);
     const roomSelectionDialog: Ref<boolean> = ref<boolean>(false);
+    const deleteCourseDialog: Ref<boolean> = ref<boolean>(false);
 
     //Hilfsmethoden
     function getCourseName(): string {
@@ -108,6 +134,15 @@ export default defineComponent({
     }
 
     //normale Methoden
+    function activateDeleteCardClick() {
+      deleteCourseDialog.value = false;
+    }
+    function deleteCourseClick() {
+      courseController.deleteCourse(props.courseId);
+    }
+    function cancelDeleteClick() {
+      deleteCourseDialog.value = true;
+    }
     function saveChangesClick() {
       courseController.updateCourse(
         props.courseId,
@@ -153,10 +188,14 @@ export default defineComponent({
 
     return {
       saveChangesClick,
+      deleteCourseClick,
+      cancelDeleteClick,
+      activateDeleteCardClick,
       addSeatArrangementClick,
       editSeatArrangementClick,
       addSeatArrangement,
       editSeatArrangement,
+      deleteCourseDialog,
       seatArrangementDialog,
       roomSelectionDialog,
       seatArrangements,
