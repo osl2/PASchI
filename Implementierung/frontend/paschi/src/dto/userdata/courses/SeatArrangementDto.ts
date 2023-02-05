@@ -7,7 +7,8 @@ export class SeatArrangementDto {
   roomId: string;
   courseId: string;
 
-  constructor(id: string, userId: string, name: string, seatMap: Map<string, string>, roomId: string, courseId: string) {
+  constructor(id: string, userId: string, name: string, seatMap: Map<string, string>, roomId: string,
+              courseId: string) {
     this.id = id;
     this.userId = userId;
     this.name = name;

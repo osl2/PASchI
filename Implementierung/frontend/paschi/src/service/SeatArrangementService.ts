@@ -1,6 +1,7 @@
 import {BaseService} from "@/service/BaseService";
 import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {SeatArrangementDto} from "@/dto/userdata/courses/SeatArrangementDto";
+import {SeatArrangementMapper} from "@/dto/mapper/courses/SeatArrangementMapper";
 
 const SEAT_ARRANGEMENT_BASE_URL: string = '';
 
@@ -16,7 +17,7 @@ export class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
   update(e: SeatArrangement) {
   }
 
-  getById(id: string): SeatArrangement {
+  getById(id: string): SeatArrangement | undefined {
   }
 
   getAll(): SeatArrangement[] {
