@@ -135,13 +135,13 @@ export default defineComponent({
 
     //normale Methoden
     function activateDeleteCardClick() {
-      deleteCourseDialog.value = false;
+      deleteCourseDialog.value = true;
     }
     function deleteCourseClick() {
       courseController.deleteCourse(props.courseId);
     }
     function cancelDeleteClick() {
-      deleteCourseDialog.value = true;
+      deleteCourseDialog.value = false;
     }
     function saveChangesClick() {
       courseController.updateCourse(
