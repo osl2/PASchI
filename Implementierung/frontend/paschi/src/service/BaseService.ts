@@ -16,7 +16,7 @@ export abstract class BaseService<Entity, Dto> {
 
   abstract update(e: Entity): void;
 
-  abstract getById(id: string): Entity;
+  abstract getById(id: string): Entity | undefined;
 
   abstract getAll(): Entity[];
 

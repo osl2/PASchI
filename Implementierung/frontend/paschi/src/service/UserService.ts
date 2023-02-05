@@ -2,7 +2,7 @@ import {BaseService} from "@/service/BaseService";
 import {User} from "@/model/User";
 import {UserDto} from "@/dto/UserDto";
 
-const USER_BASE_URL: string = "";
+const USER_BASE_URL: string = '';
 
 export class UserService extends BaseService<User, UserDto> {
 
