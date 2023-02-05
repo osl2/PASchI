@@ -49,16 +49,24 @@
           width="70"
           height="70"
           variant="tonal"
-          icon="mdi mdi-close"
-          value="delete"
+          icon="mdi mdi-rotate-left"
+          value="rotate"
+        />
+        <v-btn
+          width="70"
+          height="70"
+          variant="tonal"
+          icon="mdi mdi-resize"
+          value="resize"
         />
         <v-btn
           :style="toggleButton2Style"
           width="70"
           height="70"
           variant="tonal"
-          icon="mdi mdi-rotate-left"
-          value="rotate"
+          color="red"
+          icon="mdi mdi-close"
+          value="delete"
         />
       </v-btn-toggle>
     </v-card>
@@ -101,7 +109,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onBeforeMount, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { RoomObject } from "@/model/userdata/rooms/RoomObject";
 import { RoomController } from "@/controller/RoomController";
 import { Coordinate } from "@/components/interactionMaps/Coordinate";
@@ -137,9 +145,7 @@ export default defineComponent({
 
     const roomDisplayTopMargin = (window.innerHeight - roomDisplayHeight) / 2;
     const roomDisplayLeftMargin = (window.innerWidth - roomDisplayWidth) / 2;
-
-    const preTranslationRoomObjectRoomCoordinates = ref({ x: 0, y: 0 });
-
+    
     const translationOffset = ref({ x: 0, y: 0 });
 
     const roomDisplayStyle = {
@@ -200,6 +206,8 @@ export default defineComponent({
           return initializeRoomObjectGrabCoordinates;
         case "rotate":
           return initializeRoomObjectRotationCoordinates;
+        case "resize":
+          return initializeRoomObjectResizeCoordinates;
         case "delete":
           return deleteRoomObject;
       }
@@ -211,6 +219,8 @@ export default defineComponent({
           return translateRoomObjectToDisplayCoordinates;
         case "rotate":
           return rotateRoomObject;
+        case "resize":
+          return resizeRoomObject;
         case "delete":
           return () => {};
       }
@@ -222,6 +232,8 @@ export default defineComponent({
           return endTranslationRoomObject;
         case "rotate":
           return finalizeRoomObjectRotation;
+        case "resize":
+          return finalizeRoomObjectResize;
         case "delete":
           return () => {};
       }
@@ -253,122 +265,61 @@ export default defineComponent({
       };
     }
 
+    function getRoomObjectVertices(roomObject: RoomObject): Coordinate[] {
+      const roomObjectOrigin = getRoomObjectOrigin(roomObject);
+      const roomObjectOrientation = roomObject.position.orientation;
+      const roomObjectTopRightDiagonal = {
+        x:
+          (roomObject.dimensions.width / 2) * Math.cos(roomObjectOrientation) +
+          (roomObject.dimensions.length / 2) * Math.sin(roomObjectOrientation),
+        y:
+          (roomObject.dimensions.width / 2) * Math.sin(roomObjectOrientation) -
+          (roomObject.dimensions.length / 2) * Math.cos(roomObjectOrientation),
+      };
+      //describes the vector from the origin to the top left corner of the roomObject1
+      const roomObjectTopLeftDiagonal = {
+        x:
+          -(roomObject.dimensions.width / 2) * Math.cos(roomObjectOrientation) +
+          (roomObject.dimensions.length / 2) * Math.sin(roomObjectOrientation),
+        y:
+          -(roomObject.dimensions.width / 2) * Math.sin(roomObjectOrientation) -
+          (roomObject.dimensions.length / 2) * Math.cos(roomObjectOrientation),
+      };
+      const roomObjectBottomRightDiagonal = {
+        x: -roomObjectTopLeftDiagonal.x,
+        y: -roomObjectTopLeftDiagonal.y,
+      };
+      //describes the vector from the origin to the bottom left corner of the roomObject1
+      const roomObjectBottomLeftDiagonal = {
+        x: -roomObjectTopRightDiagonal.x,
+        y: -roomObjectTopRightDiagonal.y,
+      };
+      return [
+        {
+          x: roomObjectOrigin.x + roomObjectTopRightDiagonal.x,
+          y: roomObjectOrigin.y + roomObjectTopRightDiagonal.y,
+        },
+        {
+          x: roomObjectOrigin.x + roomObjectBottomRightDiagonal.x,
+          y: roomObjectOrigin.y + roomObjectBottomRightDiagonal.y,
+        },
+        {
+          x: roomObjectOrigin.x + roomObjectBottomLeftDiagonal.x,
+          y: roomObjectOrigin.y + roomObjectBottomLeftDiagonal.y,
+        },
+        {
+          x: roomObjectOrigin.x + roomObjectTopLeftDiagonal.x,
+          y: roomObjectOrigin.y + roomObjectTopLeftDiagonal.y,
+        },
+      ];
+    }
+
     function separatedAxisCollide(
       roomObject1: RoomObject,
       roomObject2: RoomObject
     ) {
-      const roomObject1Orientation = roomObject1.position.orientation;
-      const roomObject1Origin = getRoomObjectOrigin(roomObject1);
-      //describes the vector from the origin to the top right corner of the roomObject1
-      const roomObject1TopRightDiagonal = {
-        x:
-          (roomObject1.dimensions.width / 2) *
-            Math.cos(roomObject1Orientation) +
-          (roomObject1.dimensions.length / 2) *
-            Math.sin(roomObject1Orientation),
-        y:
-          (roomObject1.dimensions.width / 2) *
-            Math.sin(roomObject1Orientation) -
-          (roomObject1.dimensions.length / 2) *
-            Math.cos(roomObject1Orientation),
-      };
-      //describes the vector from the origin to the top left corner of the roomObject1
-      const roomObject1TopLeftDiagonal = {
-        x:
-          -(roomObject1.dimensions.width / 2) *
-            Math.cos(roomObject1Orientation) +
-          (roomObject1.dimensions.length / 2) *
-            Math.sin(roomObject1Orientation),
-        y:
-          -(roomObject1.dimensions.width / 2) *
-            Math.sin(roomObject1Orientation) -
-          (roomObject1.dimensions.length / 2) *
-            Math.cos(roomObject1Orientation),
-      };
-      //describes the vector from the origin to the bottom right corner of the roomObject1
-      const roomObject1BottomRightDiagonal = {
-        x: -roomObject1TopLeftDiagonal.x,
-        y: -roomObject1TopLeftDiagonal.y,
-      };
-      //describes the vector from the origin to the bottom left corner of the roomObject1
-      const roomObject1BottomLeftDiagonal = {
-        x: -roomObject1TopRightDiagonal.x,
-        y: -roomObject1TopRightDiagonal.y,
-      };
-      const roomObject1Vertices = [
-        {
-          x: roomObject1Origin.x + roomObject1TopRightDiagonal.x,
-          y: roomObject1Origin.y + roomObject1TopRightDiagonal.y,
-        },
-        {
-          x: roomObject1Origin.x + roomObject1BottomRightDiagonal.x,
-          y: roomObject1Origin.y + roomObject1BottomRightDiagonal.y,
-        },
-        {
-          x: roomObject1Origin.x + roomObject1BottomLeftDiagonal.x,
-          y: roomObject1Origin.y + roomObject1BottomLeftDiagonal.y,
-        },
-        {
-          x: roomObject1Origin.x + roomObject1TopLeftDiagonal.x,
-          y: roomObject1Origin.y + roomObject1TopLeftDiagonal.y,
-        },
-      ];
-      const roomObject2Orientation = roomObject2.position.orientation;
-      const roomObject2Origin = getRoomObjectOrigin(roomObject2);
-      //describes the vector from the origin to the top right corner of the roomObject2
-      const roomObject2TopRightDiagonal = {
-        x:
-          (roomObject2.dimensions.width / 2) *
-            Math.cos(roomObject2Orientation) +
-          (roomObject2.dimensions.length / 2) *
-            Math.sin(roomObject2Orientation),
-        y:
-          (roomObject2.dimensions.width / 2) *
-            Math.sin(roomObject2Orientation) -
-          (roomObject2.dimensions.length / 2) *
-            Math.cos(roomObject2Orientation),
-      };
-      //describes the vector from the origin to the top left corner of the roomObject2
-      const roomObject2TopLeftDiagonal = {
-        x:
-          -(roomObject2.dimensions.width / 2) *
-            Math.cos(roomObject2Orientation) +
-          (roomObject2.dimensions.length / 2) *
-            Math.sin(roomObject2Orientation),
-        y:
-          -(roomObject2.dimensions.width / 2) *
-            Math.sin(roomObject2Orientation) -
-          (roomObject2.dimensions.length / 2) *
-            Math.cos(roomObject2Orientation),
-      };
-      //describes the vector from the origin to the bottom right corner of the roomObject2
-      const roomObject2BottomRightDiagonal = {
-        x: -roomObject2TopLeftDiagonal.x,
-        y: -roomObject2TopLeftDiagonal.y,
-      };
-      //describes the vector from the origin to the bottom left corner of the roomObject2
-      const roomObject2BottomLeftDiagonal = {
-        x: -roomObject2TopRightDiagonal.x,
-        y: -roomObject2TopRightDiagonal.y,
-      };
-      const roomObject2Vertices = [
-        {
-          x: roomObject2Origin.x + roomObject2TopRightDiagonal.x,
-          y: roomObject2Origin.y + roomObject2TopRightDiagonal.y,
-        },
-        {
-          x: roomObject2Origin.x + roomObject2BottomRightDiagonal.x,
-          y: roomObject2Origin.y + roomObject2BottomRightDiagonal.y,
-        },
-        {
-          x: roomObject2Origin.x + roomObject2BottomLeftDiagonal.x,
-          y: roomObject2Origin.y + roomObject2BottomLeftDiagonal.y,
-        },
-        {
-          x: roomObject2Origin.x + roomObject2TopLeftDiagonal.x,
-          y: roomObject2Origin.y + roomObject2TopLeftDiagonal.y,
-        },
-      ];
+      const roomObject1Vertices = getRoomObjectVertices(roomObject1);
+      const roomObject2Vertices = getRoomObjectVertices(roomObject2);
       for (let i = 0; i < 4; i++) {
         if (
           roomObject1Vertices[i].x < 0 ||
@@ -441,9 +392,93 @@ export default defineComponent({
       return true;
     }
 
+    let lastValidTranslationCoordinate: Coordinate = { x: 0, y: 0 };
+
     let previousRotationCoordinate: Coordinate = { x: 0, y: 0 };
 
     let lastValidRotation = 0;
+
+    let previousResizeCoordinate: Coordinate = { x: 0, y: 0 };
+
+    let lastValidResize: Coordinate = { x: 0, y: 0 };
+
+    function calculateRoomObjectResize(
+      roomObject: RoomObject,
+      currentCoordinate: Coordinate
+    ) {
+      const origin = getRoomObjectOrigin(roomObject);
+      const previousCoordinateFromOrigin = {
+        x: previousResizeCoordinate.x - origin.x,
+        y: previousResizeCoordinate.y - origin.y,
+      };
+      const currentCoordinateFromOrigin = {
+        x: currentCoordinate.x - origin.x,
+        y: currentCoordinate.y - origin.y,
+      };
+
+      const roomObjectVertices = getRoomObjectVertices(roomObject);
+
+      const normalizedRoomObjectVertical = {
+        x:
+          (roomObjectVertices[1].x - roomObjectVertices[0].x) /
+          Math.sqrt(
+            Math.pow(roomObjectVertices[1].x - roomObjectVertices[0].x, 2) +
+              Math.pow(roomObjectVertices[1].y - roomObjectVertices[0].y, 2)
+          ),
+        y:
+          (roomObjectVertices[1].y - roomObjectVertices[0].y) /
+          Math.sqrt(
+            Math.pow(roomObjectVertices[1].x - roomObjectVertices[0].x, 2) +
+              Math.pow(roomObjectVertices[1].y - roomObjectVertices[0].y, 2)
+          ),
+      };
+
+      const normalizedRoomObjectHorizontal = {
+        x:
+          (roomObjectVertices[0].x - roomObjectVertices[3].x) /
+          Math.sqrt(
+            Math.pow(roomObjectVertices[0].x - roomObjectVertices[3].x, 2) +
+              Math.pow(roomObjectVertices[0].y - roomObjectVertices[3].y, 2)
+          ),
+        y:
+          (roomObjectVertices[0].y - roomObjectVertices[3].y) /
+          Math.sqrt(
+            Math.pow(roomObjectVertices[0].x - roomObjectVertices[3].x, 2) +
+              Math.pow(roomObjectVertices[0].y - roomObjectVertices[3].y, 2)
+          ),
+      };
+
+      const directionVertical = Math.sign(
+          ((currentCoordinateFromOrigin.x) *
+            normalizedRoomObjectVertical.x +
+            (currentCoordinateFromOrigin.y) *
+              normalizedRoomObjectVertical.y)
+      );
+
+      const directionHorizontal = Math.sign(
+          ((currentCoordinateFromOrigin.x) *
+            normalizedRoomObjectHorizontal.x +
+            (currentCoordinateFromOrigin.y) *
+              normalizedRoomObjectHorizontal.y)
+      );
+
+      const resizeDelta: Coordinate = {
+        x:
+          directionHorizontal *
+          ((currentCoordinateFromOrigin.x - previousCoordinateFromOrigin.x) *
+            normalizedRoomObjectHorizontal.x +
+            (currentCoordinateFromOrigin.y - previousCoordinateFromOrigin.y) *
+              normalizedRoomObjectHorizontal.y),
+        y:
+          directionVertical *
+          ((currentCoordinateFromOrigin.x - previousCoordinateFromOrigin.x) *
+            normalizedRoomObjectVertical.x +
+            (currentCoordinateFromOrigin.y - previousCoordinateFromOrigin.y) *
+              normalizedRoomObjectVertical.y),
+      };
+
+      return resizeDelta;
+    }
 
     function calculateRoomObjectRotation(
       roomObject: RoomObject,
@@ -478,6 +513,68 @@ export default defineComponent({
         );
       previousRotationCoordinate = currentCoordinate;
       return rotationDelta;
+    }
+
+    function resizeRoomObject(
+      displayCoordinates: Coordinate,
+      roomObject: RoomObject
+    ) {
+      const resizeDelta = calculateRoomObjectResize(
+        roomObject,
+        displayToRoomCoordinates(displayCoordinates.x, displayCoordinates.y)
+      );
+      roomObject.dimensions.width += resizeDelta.x * 2;
+      roomObject.dimensions.length += resizeDelta.y * 2;
+      roomObject.position.xCoordinate -= resizeDelta.x;
+      roomObject.position.yCoordinate -= resizeDelta.y;
+      if (roomObject.dimensions.width < 300) {
+        roomObject.dimensions.width = lastValidResize.x;
+        roomObject.position.xCoordinate = lastValidTranslationCoordinate.x;
+      }
+      if (roomObject.dimensions.length < 300) {
+        roomObject.dimensions.length = lastValidResize.y;
+        roomObject.position.yCoordinate = lastValidTranslationCoordinate.y;
+      }
+      if (!roomObjectOverlaps(roomObject, roomObjects.value!)) {
+        lastValidResize = {
+          x: roomObject.dimensions.width,
+          y: roomObject.dimensions.length,
+        };
+        lastValidTranslationCoordinate = {
+          x: roomObject.position.xCoordinate,
+          y: roomObject.position.yCoordinate,
+        };
+        roomObjectErrorStyle.value = false;
+      } else {
+        roomObjectErrorStyle.value = true;
+      }
+      previousResizeCoordinate = displayToRoomCoordinates(
+        displayCoordinates.x,
+        displayCoordinates.y
+      );
+    }
+
+    function initializeRoomObjectResizeCoordinates(
+      displayCoordinates: Coordinate,
+      roomObject: RoomObject
+    ) {
+      previousResizeCoordinate = displayToRoomCoordinates(
+        displayCoordinates.x,
+        displayCoordinates.y
+      );
+      lastValidResize = {
+        x: roomObject.dimensions.width,
+        y: roomObject.dimensions.length,
+      };
+    }
+
+    function finalizeRoomObjectResize(roomObject: RoomObject) {
+      roomObject.dimensions.width = lastValidResize.x;
+      roomObject.dimensions.length = lastValidResize.y;
+      roomObject.position.xCoordinate = lastValidTranslationCoordinate.x;
+      roomObject.position.yCoordinate = lastValidTranslationCoordinate.y;
+      roomObjectErrorStyle.value = false;
+      selectedRoomObject.value = undefined;
     }
 
     function deleteRoomObject(
@@ -561,10 +658,11 @@ export default defineComponent({
         x: roomCoordinates.x - roomObject.position.xCoordinate,
         y: roomCoordinates.y - roomObject.position.yCoordinate,
       };
-      preTranslationRoomObjectRoomCoordinates.value = {
+      lastValidTranslationCoordinate = {
         x: roomObject.position.xCoordinate,
         y: roomObject.position.yCoordinate,
       };
+
     }
 
     function translateRoomObjectToDisplayCoordinates(
@@ -581,20 +679,20 @@ export default defineComponent({
       };
       roomObject.position.xCoordinate = newPosition.x;
       roomObject.position.yCoordinate = newPosition.y;
-      roomObjectErrorStyle.value = roomObjectOverlaps(
-        roomObject,
-        roomController.getRoomObjects(roomId)!
-      );
+      if (!roomObjectOverlaps(roomObject, roomObjects.value!)) {
+        lastValidTranslationCoordinate = newPosition;
+        roomObjectErrorStyle.value = false;
+      } else {
+        roomObjectErrorStyle.value = true;
+      }
     }
 
     function endTranslationRoomObject(roomObject: RoomObject) {
       if (
         roomObjectOverlaps(roomObject, roomController.getRoomObjects(roomId)!)
       ) {
-        roomObject.position.xCoordinate =
-          preTranslationRoomObjectRoomCoordinates.value.x;
-        roomObject.position.yCoordinate =
-          preTranslationRoomObjectRoomCoordinates.value.y;
+        roomObject.position.xCoordinate = lastValidTranslationCoordinate.x;
+        roomObject.position.yCoordinate = lastValidTranslationCoordinate.y;
       }
       selectedRoomObject.value = undefined;
       roomObjectErrorStyle.value = false;
