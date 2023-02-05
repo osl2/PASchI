@@ -37,13 +37,6 @@
               @click="editCourseClick(course)"
               ><v-icon>fas fa-pencil</v-icon></v-btn
             >
-            <v-btn
-              class="ml-2"
-              variant="tonal"
-              color="red"
-              @click="deleteCourseClick(course)"
-              ><v-icon>far fa-trash-can</v-icon></v-btn
-            >
           </template>
         </v-list-item>
       </v-list>
