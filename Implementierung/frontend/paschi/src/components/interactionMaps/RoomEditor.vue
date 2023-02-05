@@ -145,7 +145,7 @@ export default defineComponent({
 
     const roomDisplayTopMargin = (window.innerHeight - roomDisplayHeight) / 2;
     const roomDisplayLeftMargin = (window.innerWidth - roomDisplayWidth) / 2;
-    
+
     const translationOffset = ref({ x: 0, y: 0 });
 
     const roomDisplayStyle = {
@@ -565,6 +565,10 @@ export default defineComponent({
       lastValidResize = {
         x: roomObject.dimensions.width,
         y: roomObject.dimensions.length,
+      };
+      lastValidTranslationCoordinate = {
+        x: roomObject.position.xCoordinate,
+        y: roomObject.position.yCoordinate,
       };
     }
 
