@@ -44,7 +44,8 @@
           variant="tonal"
           icon="mdi mdi-cursor-move"
           value="translate"
-        /> <v-btn
+        />
+        <v-btn
           width="70"
           height="70"
           variant="tonal"
@@ -211,7 +212,7 @@ export default defineComponent({
         case "rotate":
           return rotateRoomObject;
         case "delete":
-          return () => {}
+          return () => {};
       }
     });
 
@@ -222,7 +223,7 @@ export default defineComponent({
         case "rotate":
           return finalizeRoomObjectRotation;
         case "delete":
-          return () => {}
+          return () => {};
       }
     });
 
@@ -483,7 +484,7 @@ export default defineComponent({
       displayCoordinates: Coordinate,
       roomObject: RoomObject
     ) {
-      roomController.removeRoomObject(roomId, roomObject.getId)
+      roomController.removeRoomObject(roomId, roomObject.getId);
     }
 
     function initializeRoomObjectRotationCoordinates(
