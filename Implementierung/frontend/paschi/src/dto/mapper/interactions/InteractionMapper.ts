@@ -13,11 +13,11 @@ export class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
     return InteractionMapper.mapper;
   }
 
-  dtoToModel(d: InteractionDto): Interaction {
+  dtoToModel(interactionDto: InteractionDto): Interaction {
     return undefined;
   }
 
-  modelToDto(e: Interaction): InteractionDto {
+  modelToDto(interaction: Interaction): InteractionDto {
     return undefined;
   }
 

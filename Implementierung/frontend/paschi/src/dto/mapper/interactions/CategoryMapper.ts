@@ -13,11 +13,11 @@ export class CategoryMapper implements IModelDtoMapper<Category, CategoryDto> {
     return CategoryMapper.mapper;
   }
 
-  dtoToModel(d: CategoryDto): Category {
+  dtoToModel(categoryDto: CategoryDto): Category {
     return undefined;
   }
 
-  modelToDto(e: Category): CategoryDto {
+  modelToDto(category: Category): CategoryDto {
     return undefined;
   }
 

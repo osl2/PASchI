@@ -13,11 +13,11 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
     return ParticipantMapper.mapper;
   }
 
-  dtoToModel(d: ParticipantDto): Participant {
+  dtoToModel(participantDto: ParticipantDto): Participant {
     return undefined;
   }
 
-  modelToDto(e: Participant): ParticipantDto {
+  modelToDto(participant: Participant): ParticipantDto {
     return undefined;
   }
 

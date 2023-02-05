@@ -19,11 +19,11 @@ export class SessionMapper implements IModelDtoMapper<Session, SessionDto> {
     return SessionMapper.mapper;
   }
 
-  modelToDto(e: Session): SessionDto {
+  modelToDto(session: Session): SessionDto {
     return undefined;
   }
 
-  dtoToModel(d: SessionDto): Session {
+  dtoToModel(sessionDto: SessionDto): Session {
     return undefined;
   }
 }

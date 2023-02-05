@@ -15,11 +15,11 @@ export class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, S
     return SeatArrangementMapper.mapper;
   }
 
-  dtoToModel(d: SeatArrangementDto): SeatArrangement {
+  dtoToModel(arrangementDto: SeatArrangementDto): SeatArrangement {
     return undefined;
   }
 
-  modelToDto(e: SeatArrangement): SeatArrangementDto {
+  modelToDto(arrangement: SeatArrangement): SeatArrangementDto {
     return undefined;
   }
 
