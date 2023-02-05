@@ -2,31 +2,26 @@ import {BaseService} from "@/service/BaseService";
 import {Category} from "@/model/userdata/interactions/Category";
 import {CategoryDto} from "@/dto/userdata/interactions/CategoryDto";
 
-const CATEGORY_BASE_URL: string = "";
+const CATEGORY_BASE_URL: string = '';
 
 export class CategoryService extends BaseService<Category, CategoryDto> {
 
   constructor() {
-    super(CATEGORY_BASE_URL);
+    super(CategoryMapper.getMapper());
   }
 
   add(e: Category) {
-    super.add(e);
   }
 
   update(e: Category) {
-    super.update(e);
   }
 
-  getById(id: string) {
-    super.getById(id);
+  getById(id: string): Category {
   }
 
-  getAll() {
-    super.getAll();
+  getAll(): Category[] {
   }
 
   delete(id: string) {
-    super.delete(id);
   }
 }

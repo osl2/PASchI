@@ -7,27 +7,22 @@ const USER_BASE_URL: string = "";
 export class UserService extends BaseService<User, UserDto> {
 
   constructor() {
-    super(USER_BASE_URL);
+    super(UserMapper.getMapper());
   }
 
   add(user: User) {
-    super.add(user);
   }
 
   update(user: User) {
-    super.update(user);
   }
 
-  getById(id: string)/*: User*/ {
-    super.getById(id);
+  getById(id: string): User {
   }
 
-  getAll() {
-    super.getAll();
+  getAll(): User[] {
   }
 
   delete(id: string) {
-    super.delete(id);
   }
 
   // TODO: login

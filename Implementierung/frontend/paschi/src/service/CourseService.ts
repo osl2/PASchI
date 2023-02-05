@@ -1,32 +1,28 @@
 import {BaseService} from "@/service/BaseService";
 import {Course} from "@/model/userdata/courses/Course";
 import {CourseDto} from "@/dto/userdata/courses/CourseDto";
+import {CourseMapper} from "@/dto/mapper/courses/CourseMapper";
 
-const COURSE_BASE_URL: string = "";
+const COURSE_BASE_URL: string = '';
 
 export class CourseService extends BaseService<Course, CourseDto> {
 
   constructor() {
-    super(COURSE_BASE_URL);
+    super(CourseMapper.getMapper());
   }
 
   add(e: Course) {
-    super.add(e);
   }
 
   update(e: Course) {
-    super.update(e);
   }
 
-  getById(id: string) {
-    super.getById(id);
+  getById(id: string): Course {
   }
 
-  getAll() {
-    super.getAll();
+  getAll(): Course[] {
   }
 
   delete(id: string) {
-    super.delete(id);
   }
 }

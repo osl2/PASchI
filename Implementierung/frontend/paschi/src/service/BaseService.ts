@@ -12,13 +12,13 @@ export abstract class BaseService<Entity, Dto> {
     return this.mapper;
   }
 
-  abstract add(e: Entity): Entity;
+  abstract add(e: Entity): void;
 
-  abstract update(e: Entity): Entity;
+  abstract update(e: Entity): void;
 
   abstract getById(id: string): Entity;
 
   abstract getAll(): Entity[];
 
-  abstract delete(id: string): string;
+  abstract delete(id: string): void;
 }
