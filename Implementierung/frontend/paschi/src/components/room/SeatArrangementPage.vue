@@ -1,7 +1,7 @@
 <template>
-  <navigation-bar/>
+  <navigation-bar />
   <v-main>
-    <side-menu/>
+    <side-menu />
   </v-main>
 </template>
 
@@ -10,16 +10,14 @@ import { defineComponent } from "vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 export default defineComponent({
   name: "SeatArrangementPage",
-  components: {NavigationBar},
+  components: { NavigationBar },
   props: {
     seatArrangementId: {
       type: String,
       required: true,
     },
   },
-  setup(props) {
-
-  }
+  setup(props) {},
 });
 </script>
 

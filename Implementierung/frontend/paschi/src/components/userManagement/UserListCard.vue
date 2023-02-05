@@ -18,16 +18,16 @@
       <v-row>
         <v-col cols="3">
           <v-select
-          label="suchen nach"
-          :items="searchParameters"
-          v-model="searchParameter"
+            label="suchen nach"
+            :items="searchParameters"
+            v-model="searchParameter"
         /></v-col>
         <v-col>
-        <v-text-field
-          v-model="searchInput"
-          label="Suche"
-          type="input"
-        ></v-text-field>
+          <v-text-field
+            v-model="searchInput"
+            label="Suche"
+            type="input"
+          ></v-text-field>
         </v-col>
       </v-row>
     </v-card-item>
@@ -46,11 +46,8 @@
           {{ user.getId }}
         </v-col>
         <v-col cols="2">
-          <v-btn
-            color="#ff0000"
-            @click="deleteUser(user)"
-          >
-            <v-icon  icon="fas fa-trash"></v-icon>
+          <v-btn color="#ff0000" @click="deleteUser(user)">
+            <v-icon icon="fas fa-trash"></v-icon>
           </v-btn>
         </v-col>
       </v-row>

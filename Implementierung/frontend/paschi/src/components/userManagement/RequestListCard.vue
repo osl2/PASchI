@@ -21,7 +21,7 @@
             label="suchen nach"
             :items="searchParameters"
             v-model="searchParameter"
-          /></v-col>
+        /></v-col>
         <v-col>
           <v-text-field
             v-model="searchInput"
@@ -46,16 +46,10 @@
           {{ request.getId }}
         </v-col>
         <v-col cols="3">
-          <v-btn
-            color="#00ff00"
-            @click="authUser(request)"
-          >
+          <v-btn color="#00ff00" @click="authUser(request)">
             <v-icon icon="fas fa-check"></v-icon>
           </v-btn>
-          <v-btn
-            color="#ff0000"
-            @click="deleteUser(request)"
-          >
+          <v-btn color="#ff0000" @click="deleteUser(request)">
             <v-icon icon="fas fa-xmark"></v-icon>
           </v-btn>
         </v-col>

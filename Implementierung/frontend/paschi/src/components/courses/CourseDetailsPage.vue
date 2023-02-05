@@ -35,21 +35,22 @@
     </v-container>
     <v-container fluid class="v-row justify-center">
       <v-card min-width="640" rounded class="ma-3 v-col-auto">
-          <v-row>
-            <h2 class="ma-2">Schülerliste</h2>
-            <v-spacer/>
-            <v-btn
-              class="ml-15 ma-2"
-              variant="flat"
-              color="green"
-              rounded
-              prepend-icon="mdi mdi-plus"
-              @click="activateStudentCard"
-            >Schüler hinzufügen</v-btn>
-          </v-row>
-          <v-row class="v-card justify-center">
-            <v-card class="v-col-12" max-height="1000">
-              <v-list max-height="500">
+        <v-row>
+          <h2 class="ma-2">Schülerliste</h2>
+          <v-spacer />
+          <v-btn
+            class="ml-15 ma-2"
+            variant="flat"
+            color="green"
+            rounded
+            prepend-icon="mdi mdi-plus"
+            @click="activateStudentCard"
+            >Schüler hinzufügen</v-btn
+          >
+        </v-row>
+        <v-row class="v-card justify-center">
+          <v-card class="v-col-12" max-height="1000">
+            <v-list max-height="500">
               <v-row class="ma-2" v-for="student in studentsInCourse"
                 >{{ student.firstName }} {{ student.lastName }}
                 <v-spacer />
@@ -57,7 +58,7 @@
                   variant="tonal"
                   color="primary"
                   @click="editStudentClick(student)"
-                ><v-icon>fas fa-pencil</v-icon></v-btn
+                  ><v-icon>fas fa-pencil</v-icon></v-btn
                 >
                 <v-btn
                   class="ml-2"
@@ -68,9 +69,9 @@
                   <v-icon> fas fa-chart-line </v-icon>
                 </v-btn>
               </v-row>
-              </v-list>
-            </v-card>
-          </v-row>
+            </v-list>
+          </v-card>
+        </v-row>
       </v-card>
     </v-container>
     <v-dialog v-model="sessionStatisticDialog">

@@ -1,7 +1,7 @@
 <template>
-  <navigation-bar/>
+  <navigation-bar />
   <v-main>
-    <side-menu/>
+    <side-menu />
   </v-main>
 </template>
 
@@ -13,15 +13,14 @@ import SideMenu from "@/components/navigation/SideMenu.vue";
 
 export default defineComponent({
   name: "SessionStatisticPage",
-  components: {SideMenu, NavigationBar},
+  components: { SideMenu, NavigationBar },
   props: {
     sessionId: {
       type: String,
       required: true,
     },
   },
-  setup(props) {
-  },
+  setup(props) {},
 });
 </script>
 

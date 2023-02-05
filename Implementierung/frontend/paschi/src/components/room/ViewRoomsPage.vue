@@ -8,7 +8,7 @@
         rounded
         prepend-icon="mdi mdi-plus"
         @click="newRoomClick"
-      >Raum erstellen</v-btn
+        >Raum erstellen</v-btn
       >
     </template>
   </navigation-bar>
@@ -42,7 +42,7 @@
             prepend-icon="fas fa-plus"
             color="primary"
             @click="newRoomClick"
-          >Raum erstellen!
+            >Raum erstellen!
           </v-btn>
         </v-card-item>
       </v-card>
@@ -69,7 +69,7 @@
               width="150"
               variant="tonal"
               @click="abortNewRoomClick"
-            >Abbrechen</v-btn
+              >Abbrechen</v-btn
             >
             <v-btn
               type="submit"
@@ -78,7 +78,7 @@
               variant="tonal"
               @click="confirmNewRoomClick"
               color="primary"
-            >Bestätigen</v-btn
+              >Bestätigen</v-btn
             >
           </v-card-actions>
         </v-form>
@@ -88,13 +88,13 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, Ref} from "vue";
+import { defineComponent, ref, Ref } from "vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import { Room } from "@/model/userdata/rooms/Room";
 import { RoomController } from "@/controller/RoomController";
 import router from "@/plugins/router";
-import {useRouter} from "vue-router";
+import { useRouter } from "vue-router";
 export default defineComponent({
   name: "ViewRoomsPage",
   components: { SideMenu, NavigationBar },
@@ -102,13 +102,13 @@ export default defineComponent({
     const router = useRouter();
 
     const roomController: RoomController = RoomController.getRoomController();
-    const rooms: Ref<Room[]> = ref(roomController.getAllRooms()) as Ref<Room[]>
+    const rooms: Ref<Room[]> = ref(roomController.getAllRooms()) as Ref<Room[]>;
     const newRoomName: Ref<string> = ref("");
     const enterRoomNameDialog: Ref<boolean> = ref(false);
 
     function abortNewRoomClick() {
-      enterRoomNameDialog.value=false;
-    };
+      enterRoomNameDialog.value = false;
+    }
     function confirmNewRoomClick() {
       router.push({
         name: "RoomArrangementPage",
@@ -116,8 +116,8 @@ export default defineComponent({
       });
     }
     function newRoomClick() {
-      newRoomName.value="";
-      enterRoomNameDialog.value=true;
+      newRoomName.value = "";
+      enterRoomNameDialog.value = true;
     }
     function editRoom(room: Room) {
       router.push({
@@ -132,7 +132,7 @@ export default defineComponent({
       abortNewRoomClick,
       rooms,
       newRoomName,
-      enterRoomNameDialog
+      enterRoomNameDialog,
     };
   },
 });
