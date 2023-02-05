@@ -5,6 +5,21 @@
     class="bg-grey-lighten-3"
     style="touch-action: none"
   >
+    <v-snackbar
+      width="1000"
+      variant="tonal"
+      v-model="easterEgg"
+      color="primary"
+      timeout="4000"
+    >
+      <v-icon>mdi mdi-egg</v-icon>
+      Snelting glaubt nicht, dass du so große Tische hast. <br />
+      Lügen = Betrug = Strafe = 0 Punkte = Exmatrikulation
+      <template v-slot:actions>
+        <v-icon>fas fa-person-military-pointing</v-icon>
+        <v-icon>fas fa-otter</v-icon>
+      </template>
+    </v-snackbar>
     <v-card :style="roomInventoryStyle" :class="roomInventoryClass">
       <v-btn
         width="70"
@@ -449,17 +464,13 @@ export default defineComponent({
       };
 
       const directionVertical = Math.sign(
-          ((currentCoordinateFromOrigin.x) *
-            normalizedRoomObjectVertical.x +
-            (currentCoordinateFromOrigin.y) *
-              normalizedRoomObjectVertical.y)
+        currentCoordinateFromOrigin.x * normalizedRoomObjectVertical.x +
+          currentCoordinateFromOrigin.y * normalizedRoomObjectVertical.y
       );
 
       const directionHorizontal = Math.sign(
-          ((currentCoordinateFromOrigin.x) *
-            normalizedRoomObjectHorizontal.x +
-            (currentCoordinateFromOrigin.y) *
-              normalizedRoomObjectHorizontal.y)
+        currentCoordinateFromOrigin.x * normalizedRoomObjectHorizontal.x +
+          currentCoordinateFromOrigin.y * normalizedRoomObjectHorizontal.y
       );
 
       const resizeDelta: Coordinate = {
@@ -515,6 +526,8 @@ export default defineComponent({
       return rotationDelta;
     }
 
+    const easterEgg = ref<boolean>(false);
+
     function resizeRoomObject(
       displayCoordinates: Coordinate,
       roomObject: RoomObject
@@ -534,6 +547,12 @@ export default defineComponent({
       if (roomObject.dimensions.length < 300) {
         roomObject.dimensions.length = lastValidResize.y;
         roomObject.position.yCoordinate = lastValidTranslationCoordinate.y;
+      }
+      if (
+        roomObject.dimensions.width > 7000 &&
+        roomObject.dimensions.length > 7000
+      ) {
+        easterEgg.value = true;
       }
       if (!roomObjectOverlaps(roomObject, roomObjects.value!)) {
         lastValidResize = {
@@ -666,7 +685,6 @@ export default defineComponent({
         x: roomObject.position.xCoordinate,
         y: roomObject.position.yCoordinate,
       };
-
     }
 
     function translateRoomObjectToDisplayCoordinates(
@@ -784,6 +802,7 @@ export default defineComponent({
       toggleButton1Style,
       toggleButton2Style,
       roomInventoryClass,
+      easterEgg,
     };
   },
 });
