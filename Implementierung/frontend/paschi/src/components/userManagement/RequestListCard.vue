@@ -47,15 +47,17 @@
         </v-col>
         <v-col cols="3">
           <v-btn
-            prepend-icon="fas fa-check"
             color="#00ff00"
             @click="authUser(request)"
-          />
+          >
+            <v-icon icon="fas fa-check"></v-icon>
+          </v-btn>
           <v-btn
-            prepend-icon="fas fa-xmark"
             color="#ff0000"
             @click="deleteUser(request)"
-          />
+          >
+            <v-icon icon="fas fa-xmark"></v-icon>
+          </v-btn>
         </v-col>
       </v-row>
     </v-card-item>

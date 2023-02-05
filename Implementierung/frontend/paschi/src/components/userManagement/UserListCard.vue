@@ -47,10 +47,11 @@
         </v-col>
         <v-col cols="2">
           <v-btn
-            prepend-icon="fas fa-trash"
             color="#ff0000"
             @click="deleteUser(user)"
-          />
+          >
+            <v-icon  icon="fas fa-trash"></v-icon>
+          </v-btn>
         </v-col>
       </v-row>
     </v-card-item>
