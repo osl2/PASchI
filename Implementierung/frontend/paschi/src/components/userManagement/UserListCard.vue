@@ -37,7 +37,7 @@
     >
       <v-row align="center">
         <v-col v-show="showName">
-          {{ user.firstName }} + {{ user.lastName }}
+          {{ user.firstName }} {{ user.lastName }}
         </v-col>
         <v-col v-show="showEmail">
           {{ user.email }}
