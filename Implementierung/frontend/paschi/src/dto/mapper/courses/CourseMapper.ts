@@ -11,10 +11,18 @@ import {SeatArrangementService} from "@/service/SeatArrangementService";
 
 export class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
 
+  private static mapper: CourseMapper = new CourseMapper();
   private userController = UserController.getUserController();
   private sessionService = new SessionService();
   private participantService = new ParticipantService();
   private arrangementService = new SeatArrangementService();
+
+  private constructor() {
+  }
+
+  static getMapper(): IModelDtoMapper<Course, CourseDto> {
+    return CourseMapper.mapper;
+  }
 
   modelToDto(course: Course): CourseDto {
     let sessionIds: string[] = [];
