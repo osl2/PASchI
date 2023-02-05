@@ -2,12 +2,12 @@ import {BaseService} from "@/service/BaseService";
 import {Category} from "@/model/userdata/interactions/Category";
 import {CategoryDto} from "@/dto/userdata/interactions/CategoryDto";
 
+const CATEGORY_BASE_URL: string = "";
+
 export class CategoryService extends BaseService<Category, CategoryDto> {
 
-  private static readonly CATEGORY_BASE_URL: string = "";
-
   constructor() {
-    super(CategoryService.CATEGORY_BASE_URL);
+    super(CATEGORY_BASE_URL);
   }
 
   add(e: Category) {

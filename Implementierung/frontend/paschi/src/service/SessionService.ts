@@ -2,12 +2,12 @@ import {BaseService} from "@/service/BaseService";
 import {Session} from "@/model/userdata/courses/Session";
 import {SessionDto} from "@/dto/userdata/courses/SessionDto";
 
+const SESSION_BASE_URL: string = "";
+
 export class SessionService extends BaseService<Session, SessionDto> {
 
-  private static readonly SESSION_BASE_URL: string = "";
-
   constructor() {
-    super(SessionService.SESSION_BASE_URL);
+    super(SESSION_BASE_URL);
   }
 
   add(e: Session) {

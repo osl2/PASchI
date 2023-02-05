@@ -2,12 +2,12 @@ import {BaseService} from "@/service/BaseService";
 import {Room} from "@/model/userdata/rooms/Room";
 import {RoomDto} from "@/dto/userdata/rooms/RoomDto";
 
+const ROOM_BASE_URL: string = "";
+
 export class RoomService extends BaseService<Room, RoomDto> {
 
-  private static readonly ROOM_BASE_URL: string = "";
-
   constructor() {
-    super(RoomService.ROOM_BASE_URL);
+    super(ROOM_BASE_URL);
   }
 
   add(e: Room) {

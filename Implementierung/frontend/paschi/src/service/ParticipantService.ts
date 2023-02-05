@@ -2,12 +2,12 @@ import {BaseService} from "@/service/BaseService";
 import {Participant} from "@/model/userdata/interactions/Participant";
 import {ParticipantDto} from "@/dto/userdata/interactions/ParticipantDto";
 
+const PARTICIPANT_BASE_URL: string = "";
+
 export class ParticipantService extends BaseService<Participant, ParticipantDto> {
 
-  private static readonly PARTICIPANT_BASE_URL: string = "";
-
   constructor() {
-    super(ParticipantService.PARTICIPANT_BASE_URL);
+    super(PARTICIPANT_BASE_URL);
   }
 
   add(e: Participant) {
