@@ -10,12 +10,14 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
+@Getter
 @Entity
 @Table(name = "courses")
 public class Course {
@@ -45,34 +47,6 @@ public class Course {
         this.participants = new ArrayList<>();
         this.sessions = new ArrayList<>();
         this.seatArrangements = new ArrayList<>();
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public List<Participant> getParticipants() {
-        return participants;
-    }
-
-    public List<Session> getSessions() {
-        return sessions;
-    }
-
-    public List<SeatArrangement> getSeatArrangements() {
-        return seatArrangements;
     }
 
     public void setUser(User user) {
