@@ -70,6 +70,10 @@ public class Participant {
         this.interactions = interactions;
     }
 
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
+    }
+
     public void setParticipantType(ParticipantType participantType) {
         this.participantType = participantType;
     }

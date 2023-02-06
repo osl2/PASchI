@@ -49,6 +49,10 @@ public class Course {
         this.seatArrangements = new ArrayList<>();
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void setSubject(String subject) {
         this.subject = subject;
     }

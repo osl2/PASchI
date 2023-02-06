@@ -43,6 +43,9 @@ public class Room {
         this.tables = tables;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public void setChairs(List<Chair> chairs) {
         this.chairs = chairs;

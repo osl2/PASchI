@@ -68,6 +68,10 @@ public class SeatArrangement {
         this.seatMap = seatMap;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void setSeat(Chair seat, Participant participant) {
         this.seatMap.put(seat, participant);
     }

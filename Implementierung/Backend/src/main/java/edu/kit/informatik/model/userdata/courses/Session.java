@@ -47,6 +47,10 @@ public class Session {
         this.interactions = new ArrayList<>();
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void setSeatArrangement(SeatArrangement seatArrangement) {
         this.seatArrangement = seatArrangement;
     }
