@@ -2,6 +2,7 @@ package edu.kit.informatik.service;
 
 
 import edu.kit.informatik.dto.mapper.interactions.CategoryMapper;
+import edu.kit.informatik.dto.mapper.interactions.RatedCategoryMapper;
 import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
 import edu.kit.informatik.dto.userdata.interactions.RatedCategoryDto;
 import edu.kit.informatik.model.userdata.interactions.Category;
@@ -27,25 +28,39 @@ import java.util.Optional;
 public class CategoryService extends BaseService<Category, RatedCategoryDto, CategoryDto> {
 
     private final CategoryBaseRepository<Category, String> categoryBaseRepository;
+    private final RatedCategoryMapper ratedCategoryMapper;
 
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
+     *
      * @param categoryBaseRepository {@link CategoryBaseRepository}
-     * @param categoryMapper {@link CategoryMapper}
+     * @param categoryMapper         {@link CategoryMapper}
+     * @param ratedCategoryMapper    {@link RatedCategoryMapper}
      */
     public CategoryService(CategoryBaseRepository<Category, String> categoryBaseRepository,
-                           CategoryMapper categoryMapper) {
+                           CategoryMapper categoryMapper, RatedCategoryMapper ratedCategoryMapper) {
         super(categoryMapper);
         this.categoryBaseRepository = categoryBaseRepository;
+        this.ratedCategoryMapper = ratedCategoryMapper;
     }
 
     @Override
     public CategoryDto add(@RequestBody RatedCategoryDto categoryDto) {
+
+        if (categoryDto.getQuality() == null) {
+            Category newCategory = this.categoryBaseRepository.save(this.mapper.dtoToModel(categoryDto));
+            return this.mapper.modelToDto(newCategory);
+        } else {
+            RatedCategory newCategory = this.categoryBaseRepository.save(
+                                                this.ratedCategoryMapper.dtoToModel(categoryDto));
+            return this.ratedCategoryMapper.modelToDto(newCategory);
+        }
+
         //System.out.println(categoryDto.getId());
-        Category newCategory = this.categoryBaseRepository.save(this.mapper.dtoToModel(categoryDto));
+
         //this.mapper.dtoToModel(categoryDto);
         //this.categoryBaseRepository.save(new Category());
-        return this.mapper.modelToDto(newCategory);
+
     }
 
     @Transactional
