@@ -14,14 +14,4 @@ public enum Quality {
     public String toString() {
         return this.name();
     }
-
-    public static Quality getQualityByString(String string) {
-        for (Quality quality: Quality.values()) {
-            if (quality.toString().toLowerCase().equals(string)) {
-                return quality;
-            }
-        }
-
-        return null;
-    }
 }

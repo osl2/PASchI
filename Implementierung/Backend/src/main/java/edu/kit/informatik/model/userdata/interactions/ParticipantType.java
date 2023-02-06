@@ -12,14 +12,4 @@ public enum ParticipantType {
     public String toString() {
         return this.name();
     }
-
-    public static ParticipantType getQualityByString(String string) {
-        for (ParticipantType participantType: ParticipantType.values()) {
-            if (participantType.toString().toLowerCase().equals(string)) {
-                return participantType;
-            }
-        }
-
-        return null;
-    }
 }
