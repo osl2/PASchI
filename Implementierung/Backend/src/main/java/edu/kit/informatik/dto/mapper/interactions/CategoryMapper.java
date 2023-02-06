@@ -61,13 +61,9 @@ public class CategoryMapper implements IModelDtoMapper<Category, CategoryDto> {
     public Category dtoToModel(CategoryDto categoryDto) {
 
         User user = userRepository.findUserById(categoryDto.getUserId()).orElse(null);
-        Category category = new Category(user, categoryDto.getName());
 
 
-        category.setUser(user);
-        category.setName(categoryDto.getName());
-
-        return category;
+        return new Category(user, categoryDto.getName());
     }
 
     @Override
