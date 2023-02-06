@@ -46,27 +46,4 @@ public class Interaction {
         this.to = to;
         this.category = category;
     }
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public void setTimeStamp(String timeStamp) {
-        this.timeStamp = timeStamp;
-    }
-
-    public void setSession(Session session) {
-        this.session = session;
-    }
-
-    public void setFrom(Participant from) {
-        this.from = from;
-    }
-
-    public void setTo(Participant to) {
-        this.to = to;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
 }

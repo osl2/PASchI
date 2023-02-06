@@ -52,9 +52,6 @@ public class Participant {
         return this.participantType.equals(ParticipantType.Student);
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
 
     public ParticipantType getParticipantType() {
         return participantType;
@@ -68,9 +65,6 @@ public class Participant {
         this.lastName = lastName;
     }
 
-    public void setCourses(List<Course> courses) {
-        this.courses = courses;
-    }
 
     public void setInteractions(List<Interaction> interactions) {
         this.interactions = interactions;

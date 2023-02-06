@@ -64,22 +64,6 @@ public class SeatArrangement {
         return seatMap.get(seat);
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
-    }
-
-    public void setCourse(Course course) {
-        this.course = course;
-    }
-
     public void setSeatMap(Map<Chair, Participant> seatMap) {
         this.seatMap = seatMap;
     }

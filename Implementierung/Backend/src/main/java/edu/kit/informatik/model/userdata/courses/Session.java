@@ -47,22 +47,6 @@ public class Session {
         this.interactions = new ArrayList<>();
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public void setCourse(Course course) {
-        this.course = course;
-    }
-
     public void setSeatArrangement(SeatArrangement seatArrangement) {
         this.seatArrangement = seatArrangement;
     }
