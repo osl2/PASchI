@@ -25,14 +25,14 @@ public abstract class BaseService<Entity, ParameterDto, ReturnDto> {
      * Allgemeiner {@link IModelDtoMapper Mapper} zum Abbilden einer Entität auf das dazugehörige Dto und
      * Abbilden eines Dto auf die dazugehörige Entität.
      */
-    protected final IModelDtoMapper<Entity, ParameterDto, ReturnDto> mapper;
+    protected final IModelDtoMapper<Entity, ReturnDto, ReturnDto> mapper;
 
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse. Wir durch die Unterklassen aufgerufen um dem
      * {@link IModelDtoMapper} du initialisieren.
      * @param mapper {@link IModelDtoMapper}
      */
-    public BaseService(IModelDtoMapper<Entity, ParameterDto, ReturnDto> mapper) {
+    public BaseService(IModelDtoMapper<Entity, ReturnDto, ReturnDto> mapper) {
         this.mapper = mapper;
     }
 
