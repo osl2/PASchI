@@ -23,33 +23,10 @@ public class Position {
     private double yCoordinate;
     private double orientation;
 
-    public Position(double xCoordinate, double yCoordinate, double orientation) {
+    public Position(double xCoordinate, double yCoordinate, double orientation, User user) {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
         this.orientation = orientation;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
         this.user = user;
-    }
-
-    public void setXCoordinate(double xCoordinate) {
-        this.xCoordinate = xCoordinate;
-    }
-
-    public void setYCoordinate(double yCoordinate) {
-        this.yCoordinate = yCoordinate;
-    }
-
-    public void setOrientation(double orientation) {
-        this.orientation = orientation;
     }
 }
