@@ -13,12 +13,24 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * {@link IModelDtoMapper} für {@link RoomObject} and {@link RoomObjectDto}
+ *
+ * @author uekai
+ * @author ugqbo
+ * @version 1.0
+ */
 @Service
 public class RoomObjectMapper implements IModelDtoMapper<RoomObject, RoomObjectDto> {
 
     private final TableMapper tableMapper;
     private final ChairMapper chairMapper;
 
+    /**
+     * Konstruktor zum Erstellen eines Objektes der Klasse
+     * @param tableMapper {@link TableMapper}
+     * @param chairMapper {@link ChairMapper}
+     */
     @Autowired
     public RoomObjectMapper(TableMapper tableMapper, ChairMapper chairMapper) {
         this.tableMapper = tableMapper;

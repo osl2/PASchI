@@ -12,12 +12,24 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * {@link IModelDtoMapper} für {@link Position} and {@link PositionDto}
+ *
+ * @author uekai
+ * @author ugqbo
+ * @version 1.0
+ */
 @Service
 public class PositionMapper implements IModelDtoMapper<Position, PositionDto> {
 
     private final PositionRepository positionRepository;
     private final UserRepository userRepository;
 
+    /**
+     * Konstruktor zum Erstellen eines Objektes der Klasse
+     * @param positionRepository {@link PositionRepository}
+     * @param userRepository {@link UserRepository}
+     */
     @Autowired
     public PositionMapper(PositionRepository positionRepository, UserRepository userRepository) {
         this.positionRepository = positionRepository;

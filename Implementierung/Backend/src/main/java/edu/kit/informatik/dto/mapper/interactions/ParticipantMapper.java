@@ -1,10 +1,12 @@
 package edu.kit.informatik.dto.mapper.interactions;
 
 import edu.kit.informatik.dto.mapper.IModelDtoMapper;
+import edu.kit.informatik.dto.userdata.courses.SessionDto;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantTypeDto;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.courses.Course;
+import edu.kit.informatik.model.userdata.courses.Session;
 import edu.kit.informatik.model.userdata.interactions.Interaction;
 import edu.kit.informatik.model.userdata.interactions.Participant;
 import edu.kit.informatik.model.userdata.interactions.ParticipantType;
@@ -18,6 +20,13 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * {@link IModelDtoMapper} für {@link Session} and {@link SessionDto}
+ *
+ * @author uekai
+ * @author ugqbo
+ * @version 1.0
+ */
 @Service
 public class ParticipantMapper implements IModelDtoMapper<Participant, ParticipantDto> {
 
@@ -27,6 +36,14 @@ public class ParticipantMapper implements IModelDtoMapper<Participant, Participa
     private final CourseRepository courseRepository;
     private final InteractionRepository interactionRepository;
 
+    /**
+     * Konstruktor zum Erstellen eines Objektes der Klasse
+     * @param participantRepository {@link ParticipantRepository}
+     * @param participantTypeMapper {@link ParticipantTypeMapper}
+     * @param userRepository {@link UserRepository}
+     * @param courseRepository {@link CourseRepository}
+     * @param interactionRepository {@link InteractionRepository}
+     */
     @Autowired
     public ParticipantMapper(ParticipantRepository participantRepository, ParticipantTypeMapper participantTypeMapper,
                              UserRepository userRepository, CourseRepository courseRepository,

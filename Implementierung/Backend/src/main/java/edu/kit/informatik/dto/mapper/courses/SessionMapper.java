@@ -18,6 +18,13 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * {@link IModelDtoMapper} für {@link Session} and {@link SessionDto}
+ *
+ * @author uekai
+ * @author ugqbo
+ * @version 1.0
+ */
 @Service
 public class SessionMapper implements IModelDtoMapper<Session, SessionDto> {
 
@@ -26,6 +33,13 @@ public class SessionMapper implements IModelDtoMapper<Session, SessionDto> {
     private final SeatArrangementRepository seatArrangementRepository;
     private final CourseRepository courseRepository;
 
+    /**
+     * Konstruktor zum Erstellen eines Objektes der Klasse
+     * @param interactionMapper {@link InteractionMapper}
+     * @param userRepository {@link UserRepository}
+     * @param seatArrangementRepository {@link SeatArrangementRepository}
+     * @param courseRepository {@link CourseRepository}
+     */
     @Autowired
     public SessionMapper(InteractionMapper interactionMapper,
                          UserRepository userRepository, SeatArrangementRepository seatArrangementRepository,

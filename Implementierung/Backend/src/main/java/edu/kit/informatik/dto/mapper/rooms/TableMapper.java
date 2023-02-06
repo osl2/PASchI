@@ -14,6 +14,14 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * {@link IModelDtoMapper} für {@link Table} and {@link TableDto}
+ *
+ * @author uekai
+ * @author ugqbo
+ * @version 1.0
+ */
 @Service
 public class TableMapper implements IModelDtoMapper<Table, TableDto> {
 
@@ -21,6 +29,12 @@ public class TableMapper implements IModelDtoMapper<Table, TableDto> {
     private final UserRepository userRepository;
     private final PositionMapper positionMapper;
 
+    /**
+     * Konstruktor zum Erstellen eines Objektes der Klasse
+     * @param tableRepository {@link TableRepository}
+     * @param userRepository {@link UserRepository}
+     * @param positionMapper {@link PositionMapper}
+     */
     @Autowired
     public TableMapper(TableRepository tableRepository, UserRepository userRepository, PositionMapper positionMapper) {
         this.tableRepository = tableRepository;

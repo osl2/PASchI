@@ -17,6 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * {@link IModelDtoMapper} für {@link SeatArrangement} and {@link SeatArrangementDto}
+ *
+ * @author uekai
+ * @author ugqbo
+ * @version 1.0
+ */
 @Service
 public class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, SeatArrangementDto> {
 
@@ -26,6 +33,14 @@ public class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, S
     private final ParticipantRepository participantRepository;
     private final ChairRepository chairRepository;
 
+    /**
+     * Konstruktor zum Erstellen eines Objektes der Klasse
+     * @param userRepository {@link UserRepository}
+     * @param courseRepository {@link CourseRepository}
+     * @param roomRepository {@link RoomRepository}
+     * @param participantRepository {@link ParticipantRepository}
+     * @param chairRepository {@link ChairRepository}
+     */
     @Autowired
     public SeatArrangementMapper(UserRepository userRepository,
                                  CourseRepository courseRepository, RoomRepository roomRepository,

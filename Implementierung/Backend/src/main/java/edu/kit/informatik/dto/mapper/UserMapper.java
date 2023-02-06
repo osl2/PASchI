@@ -10,11 +10,22 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * {@link IModelDtoMapper} für {@link User} and {@link UserDto}
+ *
+ * @author uekai
+ * @author ugqbo
+ * @version 1.0
+ */
 @Service
 public class UserMapper implements IModelDtoMapper<User, UserDto> {
 
     private final RoleMapper roleMapper;
 
+    /**
+     * Konstruktor zum Erstellen eines Objektes der Klasse
+     * @param roleMapper {@link RoleMapper}
+     */
     @Autowired
     public UserMapper(RoleMapper roleMapper) {
         this.roleMapper = roleMapper;

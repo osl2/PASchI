@@ -1,9 +1,11 @@
 package edu.kit.informatik.dto.mapper.interactions;
 
 import edu.kit.informatik.dto.mapper.IModelDtoMapper;
+import edu.kit.informatik.dto.userdata.courses.SessionDto;
 import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
 import edu.kit.informatik.dto.userdata.interactions.RatedCategoryDto;
 import edu.kit.informatik.model.User;
+import edu.kit.informatik.model.userdata.courses.Session;
 import edu.kit.informatik.model.userdata.interactions.Category;
 import edu.kit.informatik.model.userdata.interactions.RatedCategory;
 import edu.kit.informatik.repositories.UserRepository;
@@ -13,12 +15,24 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * {@link IModelDtoMapper} für {@link Session} and {@link SessionDto}
+ *
+ * @author uekai
+ * @author ugqbo
+ * @version 1.0
+ */
 @Service
 public class CategoryMapper implements IModelDtoMapper<Category, CategoryDto> {
 
     private final UserRepository userRepository;
     private final QualityMapper qualityMapper;
 
+    /**
+     * Konstruktor zum Erstellen eines Objektes der Klasse
+     * @param userRepository {@link UserRepository}
+     * @param qualityMapper {@link QualityMapper}
+     */
     @Autowired
     public CategoryMapper(UserRepository userRepository, QualityMapper qualityMapper) {
         this.userRepository = userRepository;

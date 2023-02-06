@@ -1,6 +1,7 @@
 package edu.kit.informatik.dto.mapper.interactions;
 
 import edu.kit.informatik.dto.mapper.IModelDtoMapper;
+import edu.kit.informatik.dto.userdata.courses.SessionDto;
 import edu.kit.informatik.dto.userdata.interactions.InteractionDto;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.courses.Session;
@@ -14,6 +15,13 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * {@link IModelDtoMapper} für {@link Session} and {@link SessionDto}
+ *
+ * @author uekai
+ * @author ugqbo
+ * @version 1.0
+ */
 @Service
 public class InteractionMapper implements IModelDtoMapper<Interaction, InteractionDto> {
 
@@ -23,6 +31,14 @@ public class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
     private final SessionRepository sessionRepository;
     private final CategoryBaseRepository<Category, String> categoryBaseRepository;
 
+    /**
+     * Konstruktor zum Erstellen eines Objektes der Klasse
+     * @param interactionRepository {@link InteractionRepository}
+     * @param userRepository {@link UserRepository}
+     * @param participantRepository {@link ParticipantRepository}
+     * @param sessionRepository {@link SessionRepository}
+     * @param categoryBaseRepository {@link CategoryBaseRepository}
+     */
     @Autowired
     public InteractionMapper(InteractionRepository interactionRepository, UserRepository userRepository,
                              ParticipantRepository participantRepository, SessionRepository sessionRepository,
