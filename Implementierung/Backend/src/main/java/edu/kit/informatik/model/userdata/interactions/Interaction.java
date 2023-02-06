@@ -8,8 +8,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @NoArgsConstructor
 @Entity
 @Table(name = "interactions")
@@ -44,35 +46,6 @@ public class Interaction {
         this.to = to;
         this.category = category;
     }
-
-    public String getId() {
-        return id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public String getTimeStamp() {
-        return timeStamp;
-    }
-
-    public Session getSession() {
-        return session;
-    }
-
-    public Participant getFrom() {
-        return from;
-    }
-
-    public Participant getTo() {
-        return to;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
     public void setUser(User user) {
         this.user = user;
     }

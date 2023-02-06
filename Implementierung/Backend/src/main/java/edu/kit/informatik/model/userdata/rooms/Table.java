@@ -5,7 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Getter;
 
+@Getter
 @Entity
 @jakarta.persistence.Table(name = "tables")
 public class Table extends RoomObject {
@@ -31,14 +33,6 @@ public class Table extends RoomObject {
 
     public boolean isTable() {
         return true;
-    }
-
-    public double getLength() {
-        return length;
-    }
-
-    public double getWidth() {
-        return width;
     }
 
     public void setLength(double length) {

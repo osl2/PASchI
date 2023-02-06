@@ -10,11 +10,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 @NoArgsConstructor
 @Entity
 @Table(name = "participants")
@@ -48,30 +50,6 @@ public class Participant {
 
     public boolean isStudent() {
         return this.participantType.equals(ParticipantType.Student);
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public List<Course> getCourses() {
-        return courses;
-    }
-
-    public List<Interaction> getInteractions() {
-        return interactions;
     }
 
     public void setUser(User user) {

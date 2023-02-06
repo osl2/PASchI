@@ -7,11 +7,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 @NoArgsConstructor
 @Entity
 public class Room {
@@ -37,18 +39,6 @@ public class Room {
         this.chairs = new ArrayList<>();
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public String getName() {
-        return name;
-    }
-
     public void setUser(User user) {
         this.user = user;
     }
@@ -57,17 +47,10 @@ public class Room {
         this.name = name;
     }
 
-    public List<Table> getTables() {
-        return tables;
-    }
-
     public void setTables(List<Table> tables) {
         this.tables = tables;
     }
 
-    public List<Chair> getChairs() {
-        return chairs;
-    }
 
     public void setChairs(List<Chair> chairs) {
         this.chairs = chairs;

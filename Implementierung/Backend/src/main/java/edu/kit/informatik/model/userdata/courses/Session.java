@@ -9,11 +9,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 @NoArgsConstructor
 @Entity
 @Table(name = "sessions")
@@ -43,34 +45,6 @@ public class Session {
         this.course = course;
         this.seatArrangement = seatArrangement;
         this.interactions = new ArrayList<>();
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public Course getCourse() {
-        return course;
-    }
-
-    public List<Interaction> getInteractions() {
-        return interactions;
-    }
-
-    public SeatArrangement getSeatArrangement() {
-        return seatArrangement;
     }
 
     public void setUser(User user) {

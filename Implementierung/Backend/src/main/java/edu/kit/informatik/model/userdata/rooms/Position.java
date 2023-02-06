@@ -6,8 +6,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @NoArgsConstructor
 @Entity
 public class Position {
@@ -33,18 +35,6 @@ public class Position {
 
     public User getUser() {
         return user;
-    }
-
-    public double getXCoordinate() {
-        return xCoordinate;
-    }
-
-    public double getYCoordinate() {
-        return yCoordinate;
-    }
-
-    public double getOrientation() {
-        return orientation;
     }
 
     public void setUser(User user) {

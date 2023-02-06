@@ -4,9 +4,12 @@ import edu.kit.informatik.model.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 //@Table(name = "ratedcategories")
@@ -17,14 +20,6 @@ public class RatedCategory extends Category {
 
     public RatedCategory(User user, String name, Quality quality) {
         super(user, name);
-        this.quality = quality;
-    }
-
-    public Quality getQuality() {
-        return quality;
-    }
-
-    public void setQuality(Quality quality) {
         this.quality = quality;
     }
 }
