@@ -6,7 +6,6 @@ import edu.kit.informatik.dto.userdata.interactions.RatedCategoryDto;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.interactions.Quality;
 import edu.kit.informatik.model.userdata.interactions.RatedCategory;
-import edu.kit.informatik.repositories.CategoryBaseRepository;
 import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,14 +16,12 @@ import java.util.List;
 @Service
 public class RatedCategoryMapper implements IModelDtoMapper<RatedCategory, RatedCategoryDto, RatedCategoryDto> {
 
-    private final CategoryBaseRepository<RatedCategory, String> categoryRepository;
     private final QualityMapper qualityMapper;
     private final UserRepository userRepository;
 
     @Autowired
-    public RatedCategoryMapper(CategoryBaseRepository<RatedCategory, String> categoryRepository, QualityMapper qualityMapper,
+    public RatedCategoryMapper(QualityMapper qualityMapper,
                                UserRepository userRepository) {
-        this.categoryRepository = categoryRepository;
         this.qualityMapper = qualityMapper;
         this.userRepository = userRepository;
     }
@@ -51,15 +48,11 @@ public class RatedCategoryMapper implements IModelDtoMapper<RatedCategory, Rated
 
     @Override
     public RatedCategory dtoToModel(RatedCategoryDto categoryDto) {
-        RatedCategory category = categoryRepository.findCategoryById(categoryDto.getId()).orElseGet(RatedCategory::new);
+
         User user = userRepository.findUserById(categoryDto.getUserId()).orElse(null);
         Quality quality = qualityMapper.dtoToModel(categoryDto.getQuality());
 
-        category.setUser(user);
-        category.setName(categoryDto.getName());
-        category.setQuality(quality);
-
-        return category;
+        return new RatedCategory(user, categoryDto.getName(), quality);
     }
 
     @Override
