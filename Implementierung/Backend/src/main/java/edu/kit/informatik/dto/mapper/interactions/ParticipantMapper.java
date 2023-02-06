@@ -12,7 +12,6 @@ import edu.kit.informatik.model.userdata.interactions.Participant;
 import edu.kit.informatik.model.userdata.interactions.ParticipantType;
 import edu.kit.informatik.repositories.CourseRepository;
 import edu.kit.informatik.repositories.InteractionRepository;
-import edu.kit.informatik.repositories.ParticipantRepository;
 import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,8 +28,6 @@ import java.util.List;
  */
 @Service
 public class ParticipantMapper implements IModelDtoMapper<Participant, ParticipantDto> {
-
-    private final ParticipantRepository participantRepository;
     private final ParticipantTypeMapper participantTypeMapper;
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
@@ -38,17 +35,14 @@ public class ParticipantMapper implements IModelDtoMapper<Participant, Participa
 
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
-     * @param participantRepository {@link ParticipantRepository}
      * @param participantTypeMapper {@link ParticipantTypeMapper}
      * @param userRepository {@link UserRepository}
      * @param courseRepository {@link CourseRepository}
      * @param interactionRepository {@link InteractionRepository}
      */
     @Autowired
-    public ParticipantMapper(ParticipantRepository participantRepository, ParticipantTypeMapper participantTypeMapper,
-                             UserRepository userRepository, CourseRepository courseRepository,
-                             InteractionRepository interactionRepository) {
-        this.participantRepository = participantRepository;
+    public ParticipantMapper(ParticipantTypeMapper participantTypeMapper, UserRepository userRepository,
+                             CourseRepository courseRepository, InteractionRepository interactionRepository) {
         this.participantTypeMapper = participantTypeMapper;
         this.userRepository = userRepository;
         this.courseRepository = courseRepository;

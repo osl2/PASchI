@@ -4,7 +4,6 @@ import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import edu.kit.informatik.dto.userdata.rooms.PositionDto;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.rooms.Position;
-import edu.kit.informatik.repositories.PositionRepository;
 import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,18 +20,14 @@ import java.util.List;
  */
 @Service
 public class PositionMapper implements IModelDtoMapper<Position, PositionDto> {
-
-    private final PositionRepository positionRepository;
     private final UserRepository userRepository;
 
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
-     * @param positionRepository {@link PositionRepository}
      * @param userRepository {@link UserRepository}
      */
     @Autowired
-    public PositionMapper(PositionRepository positionRepository, UserRepository userRepository) {
-        this.positionRepository = positionRepository;
+    public PositionMapper(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -57,15 +52,10 @@ public class PositionMapper implements IModelDtoMapper<Position, PositionDto> {
 
     @Override
     public Position dtoToModel(PositionDto positionDto) {
-        Position position = positionRepository.findPositionById(positionDto.getId()).orElseGet(Position::new);
         User user = userRepository.findUserById(positionDto.getUserId()).orElse(null);
 
-        position.setUser(user);
-        position.setYCoordinate(positionDto.getYCoordinate());
-        position.setXCoordinate(positionDto.getXCoordinate());
-        position.setOrientation(positionDto.getOrientation());
-
-        return position;
+        return new Position(positionDto.getXCoordinate(), positionDto.getYCoordinate(),
+                                positionDto.getOrientation(), user);
     }
 
     @Override

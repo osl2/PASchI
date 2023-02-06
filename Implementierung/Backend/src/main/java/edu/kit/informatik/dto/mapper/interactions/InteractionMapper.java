@@ -24,8 +24,6 @@ import java.util.List;
  */
 @Service
 public class InteractionMapper implements IModelDtoMapper<Interaction, InteractionDto> {
-
-    private final InteractionRepository interactionRepository;
     private final UserRepository userRepository;
     private final ParticipantRepository participantRepository;
     private final SessionRepository sessionRepository;
@@ -33,17 +31,15 @@ public class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
 
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
-     * @param interactionRepository {@link InteractionRepository}
      * @param userRepository {@link UserRepository}
      * @param participantRepository {@link ParticipantRepository}
      * @param sessionRepository {@link SessionRepository}
      * @param categoryBaseRepository {@link CategoryBaseRepository}
      */
     @Autowired
-    public InteractionMapper(InteractionRepository interactionRepository, UserRepository userRepository,
+    public InteractionMapper(UserRepository userRepository,
                              ParticipantRepository participantRepository, SessionRepository sessionRepository,
                              CategoryBaseRepository<Category, String> categoryBaseRepository) {
-        this.interactionRepository = interactionRepository;
         this.userRepository = userRepository;
         this.participantRepository = participantRepository;
         this.sessionRepository = sessionRepository;
@@ -73,8 +69,6 @@ public class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
 
     @Override
     public Interaction dtoToModel(InteractionDto interactionDto) {
-        Interaction interaction = interactionRepository.
-                findInteractionById(interactionDto.getId()).orElseGet(Interaction::new);
         User user = userRepository.findUserById(interactionDto.getUserId()).orElse(null);
         Session session = sessionRepository.findSessionById(interactionDto.getSessionId()).orElse(null);
         Participant fromParticipant = participantRepository.
@@ -83,14 +77,8 @@ public class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
                 findParticipantById(interactionDto.getToParticipantId()).orElse(null);
         Category category = categoryBaseRepository.findCategoryById(interactionDto.getCategoryId()).orElse(null);
 
-        interaction.setUser(user);
-        interaction.setFrom(fromParticipant);
-        interaction.setTo(toParticipant);
-        interaction.setSession(session);
-        interaction.setCategory(category);
-        interaction.setTimeStamp(interactionDto.getTimeStamp());
-
-        return interaction;
+        return new Interaction(user, interactionDto.getTimeStamp(), session,
+                                                    fromParticipant, toParticipant, category);
     }
 
     @Override
