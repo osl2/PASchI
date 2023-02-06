@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class QualityMapper implements IModelDtoMapper<Quality, QualityDto, QualityDto> {
+public class QualityMapper implements IModelDtoMapper<Quality, QualityDto> {
 
     @Override
     public QualityDto modelToDto(Quality quality) {

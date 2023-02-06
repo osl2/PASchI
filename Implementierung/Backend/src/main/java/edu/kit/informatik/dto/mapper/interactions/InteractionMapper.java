@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class InteractionMapper implements IModelDtoMapper<Interaction, InteractionDto, InteractionDto> {
+public class InteractionMapper implements IModelDtoMapper<Interaction, InteractionDto> {
 
     private final InteractionRepository interactionRepository;
     private final UserRepository userRepository;

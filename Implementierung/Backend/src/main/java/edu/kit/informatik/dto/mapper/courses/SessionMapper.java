@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class SessionMapper implements IModelDtoMapper<Session, SessionDto, SessionDto> {
+public class SessionMapper implements IModelDtoMapper<Session, SessionDto> {
 
     private final InteractionMapper interactionMapper;
     private final UserRepository userRepository;

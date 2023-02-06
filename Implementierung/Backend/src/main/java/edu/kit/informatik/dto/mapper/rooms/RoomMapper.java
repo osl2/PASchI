@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class RoomMapper implements IModelDtoMapper<Room, RoomDto, RoomDto> {
+public class RoomMapper implements IModelDtoMapper<Room, RoomDto> {
 
     private final UserRepository userRepository;
     private final RoomObjectMapper roomObjectMapper;

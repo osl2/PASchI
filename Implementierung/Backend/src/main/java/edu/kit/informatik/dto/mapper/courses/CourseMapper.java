@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CourseMapper implements IModelDtoMapper<Course, CourseDto, CourseDto> {
+public class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
 
     private final UserRepository userRepository;
     private final ParticipantRepository participantRepository;

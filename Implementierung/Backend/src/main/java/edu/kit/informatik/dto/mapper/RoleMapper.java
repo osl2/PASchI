@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class RoleMapper implements IModelDtoMapper<Role, RoleDto, RoleDto> {
+public class RoleMapper implements IModelDtoMapper<Role, RoleDto> {
 
     @Override
     public RoleDto modelToDto(Role role) {

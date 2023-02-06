@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class UserMapper implements IModelDtoMapper<User, UserDto, UserDto> {
+public class UserMapper implements IModelDtoMapper<User, UserDto> {
 
     private final RoleMapper roleMapper;
 

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ParticipantMapper implements IModelDtoMapper<Participant, ParticipantDto, ParticipantDto> {
+public class ParticipantMapper implements IModelDtoMapper<Participant, ParticipantDto> {
 
     private final ParticipantRepository participantRepository;
     private final ParticipantTypeMapper participantTypeMapper;

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class RatedCategoryMapper implements IModelDtoMapper<RatedCategory, RatedCategoryDto, RatedCategoryDto> {
+public class RatedCategoryMapper implements IModelDtoMapper<RatedCategory, RatedCategoryDto> {
 
     private final QualityMapper qualityMapper;
     private final UserRepository userRepository;

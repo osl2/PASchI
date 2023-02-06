@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class TableMapper implements IModelDtoMapper<Table, TableDto, TableDto> {
+public class TableMapper implements IModelDtoMapper<Table, TableDto> {
 
     private final TableRepository tableRepository;
     private final UserRepository userRepository;
