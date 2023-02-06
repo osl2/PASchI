@@ -6,7 +6,6 @@ import edu.kit.informatik.dto.userdata.interactions.RatedCategoryDto;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.interactions.Category;
 import edu.kit.informatik.model.userdata.interactions.RatedCategory;
-import edu.kit.informatik.repositories.CategoryBaseRepository;
 import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,15 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CategoryMapper implements IModelDtoMapper<Category, RatedCategoryDto, CategoryDto> {
+public class CategoryMapper implements IModelDtoMapper<Category, CategoryDto, CategoryDto> {
 
-    private final CategoryBaseRepository<Category, String> categoryRepository;
     private final UserRepository userRepository;
     private final QualityMapper qualityMapper;
 
     @Autowired
-    public CategoryMapper(CategoryBaseRepository<Category, String> categoryRepository, UserRepository userRepository, QualityMapper qualityMapper) {
-        this.categoryRepository = categoryRepository;
+    public CategoryMapper(UserRepository userRepository, QualityMapper qualityMapper) {
         this.userRepository = userRepository;
         this.qualityMapper = qualityMapper;
     }
@@ -32,7 +29,7 @@ public class CategoryMapper implements IModelDtoMapper<Category, RatedCategoryDt
     public CategoryDto modelToDto(Category category) {
         if (category instanceof RatedCategory ratedCategory) {
             return new RatedCategoryDto(ratedCategory.getId(), ratedCategory.getUser().getId(),
-                                        ratedCategory.getName(), this.qualityMapper.modelToDto(ratedCategory.getQuality()));
+                                    ratedCategory.getName(), this.qualityMapper.modelToDto(ratedCategory.getQuality()));
         } else {
             return new CategoryDto(category.getId(), category.getUser().getId(), category.getName());
         }
@@ -47,15 +44,11 @@ public class CategoryMapper implements IModelDtoMapper<Category, RatedCategoryDt
     }
 
     @Override
-    public Category dtoToModel(RatedCategoryDto categoryDto) {
-        Category category;
+    public Category dtoToModel(CategoryDto categoryDto) {
 
-        if (categoryDto.getQuality() == null) {
-            category = categoryRepository.findCategoryById(categoryDto.getId()).orElseGet(Category::new);
-        } else {
-            category = categoryRepository.findCategoryById(categoryDto.getId()).orElseGet(RatedCategory::new);
-        }
         User user = userRepository.findUserById(categoryDto.getUserId()).orElse(null);
+        Category category = new Category(user, categoryDto.getName());
+
 
         category.setUser(user);
         category.setName(categoryDto.getName());
@@ -64,7 +57,7 @@ public class CategoryMapper implements IModelDtoMapper<Category, RatedCategoryDt
     }
 
     @Override
-    public List<Category> dtoToModel(List<RatedCategoryDto> categoryDtos) {
+    public List<Category> dtoToModel(List<CategoryDto> categoryDtos) {
         List<Category> categories = new ArrayList<>();
         categoryDtos.forEach(categoryDto -> categories.add(dtoToModel(categoryDto)));
 
