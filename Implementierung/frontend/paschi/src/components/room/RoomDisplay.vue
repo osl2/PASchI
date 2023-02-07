@@ -18,68 +18,69 @@
       @mouseup="mouseUp"
       @mouseleave="mouseUp"
     >
-      <v-card
-        v-for="chair in chairs"
-        :key="chair.getId"
-        class="ma-0 v-row align-center justify-center"
-        :class="[
-          roomObjectErrorStyle && chair === selectedRoomObject
-            ? 'error'
-            : 'notError',
-        ]"
-        color="secondary-lighten-2"
-        elevation="0"
-        draggable="false"
-        :style="getRoomObjectStyle(chair)"
-        @mousedown="mouseDown($event, chair)"
-        @touchstart="touchStart($event, chair)"
-        @touchmove="touchMove"
-        @touchend="touchEnd"
-      >
-        <v-icon
-          class="v-col-auto"
-          size="25px"
-          color="white"
-          icon="fas fa-chair"
-        ></v-icon>
-      </v-card>
-      <v-card
-        v-for="table in tables"
-        :key="table.getId"
-        class="ma-0 v-row align-center justify-center"
-        :class="[
-          roomObjectErrorStyle && table === selectedRoomObject
-            ? 'error'
-            : 'notError',
-        ]"
-        color="secondary-lighten-1"
-        elevation="0"
-        draggable="false"
-        :style="getRoomObjectStyle(table)"
-        @mousedown="mouseDown($event, table)"
-        @touchstart="touchStart($event, table)"
-        @touchmove="touchMove"
-        @touchend="touchEnd"
-      >
-        <v-icon
-          class="v-col-auto"
-          size="25px"
-          color="white"
-          icon="mdi mdi-desk"
-        ></v-icon>
-      </v-card>
+      <slot name="chair" v-for="chair in chairs" :key="chair.getId">
+        <v-card
+          class="ma-0 v-row align-center justify-center"
+          :class="[
+            chair === selectedRoomObject && roomObjectOverlaps
+              ? 'error'
+              : 'notError',
+          ]"
+          color="secondary-lighten-2"
+          elevation="0"
+          draggable="false"
+          :style="getRoomObjectStyle(chair)"
+          @mousedown="mouseDown($event, chair)"
+          @touchstart="touchStart($event, chair)"
+          @touchmove="touchMove"
+          @touchend="touchEnd"
+        >
+          <v-icon
+            class="v-col-auto"
+            size="25px"
+            color="white"
+            icon="fas fa-chair"
+          ></v-icon>
+        </v-card>
+      </slot>
+      <slot name="table" v-for="table in tables" :key="table.getId">
+        <v-card
+          class="ma-0 v-row align-center justify-center"
+          :class="[
+            table === selectedRoomObject && roomObjectOverlaps
+              ? 'error'
+              : 'notError',
+          ]"
+          color="secondary-lighten-1"
+          elevation="0"
+          draggable="false"
+          :style="getRoomObjectStyle(table)"
+          @mousedown="mouseDown($event, table)"
+          @touchstart="touchStart($event, table)"
+          @touchmove="touchMove"
+          @touchend="touchEnd"
+        >
+          <v-icon
+            class="v-col-auto"
+            size="25px"
+            color="white"
+            icon="mdi mdi-desk"
+          ></v-icon>
+        </v-card>
+      </slot>
     </v-card>
   </v-main>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { RoomObject } from "@/model/userdata/rooms/RoomObject";
 import { RoomController } from "@/controller/RoomController";
 import { Coordinate } from "@/components/room/Coordinate";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import { Chair } from "@/model/userdata/rooms/Chair";
 import { Table } from "@/model/userdata/rooms/Table";
+import {useRoomObjectUtilities} from "@/components/room/RoomObjectUtilities";
 
 export default defineComponent({
   name: "RoomDisplay.vue",
@@ -89,10 +90,16 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    roomObjectOverlaps: {
+      type: Boolean,
+      required: false,
+    },
   },
   emits: ["selectRoomObject", "dragRoomObject", "deselectRoomObject"],
   setup(props, { emit }) {
     const roomController = RoomController.getRoomController();
+
+    const roomObjectUtilities = useRoomObjectUtilities();
 
     const roomId = props.roomId;
 
@@ -105,8 +112,8 @@ export default defineComponent({
       roomObjects.value?.filter((roomObject) => roomObject instanceof Table)
     );
 
-    const roomWidth = 16180;
-    const roomHeight = 10000;
+    const roomWidth = roomObjectUtilities.roomWidth;
+    const roomHeight = roomObjectUtilities.roomHeight;
 
     const maxRoomDisplayWidth = 0.9 * window.innerWidth;
     const maxRoomDisplayHeight = 0.9 * window.innerHeight;
@@ -130,7 +137,7 @@ export default defineComponent({
       height: roomDisplayHeight + "px",
     };
 
-    let selectedRoomObject: RoomObject | undefined = undefined;
+    const selectedRoomObject = ref<RoomObject | undefined>(undefined);
     function roomToDisplayCoordinates(x: number, y: number) {
       return {
         x: x * roomScale,
@@ -161,7 +168,7 @@ export default defineComponent({
     }
 
     function mouseDown(event: MouseEvent, roomObject: RoomObject) {
-      selectedRoomObject = roomObject;
+      selectedRoomObject.value = roomObject;
       const displayCoordinate: Coordinate = {
         x: event.clientX,
         y: event.clientY,
@@ -174,7 +181,7 @@ export default defineComponent({
     }
 
     function mouseMove(event: MouseEvent) {
-      if (!selectedRoomObject) {
+      if (!selectedRoomObject.value) {
         return;
       }
       const displayCoordinate: Coordinate = {
@@ -187,14 +194,14 @@ export default defineComponent({
       );
       emit(
         "dragRoomObject",
-        selectedRoomObject,
+        selectedRoomObject.value,
         roomCoordinate,
         displayCoordinate
       );
     }
 
     function mouseUp(event: MouseEvent) {
-      if (!selectedRoomObject) {
+      if (!selectedRoomObject.value) {
         return;
       }
       const displayCoordinate: Coordinate = {
@@ -207,15 +214,15 @@ export default defineComponent({
       );
       emit(
         "deselectRoomObject",
-        selectedRoomObject,
+        selectedRoomObject.value,
         roomCoordinate,
         displayCoordinate
       );
-      selectedRoomObject = undefined;
+      selectedRoomObject.value = undefined;
     }
 
     function touchStart(event: TouchEvent, roomObject: RoomObject) {
-      selectedRoomObject = roomObject;
+      selectedRoomObject.value = roomObject;
       const displayCoordinate: Coordinate = {
         x: event.touches[0].clientX,
         y: event.touches[0].clientY,
@@ -238,7 +245,7 @@ export default defineComponent({
       );
       emit(
         "dragRoomObject",
-        selectedRoomObject,
+        selectedRoomObject.value,
         roomCoordinate,
         displayCoordinate
       );
@@ -255,11 +262,11 @@ export default defineComponent({
       );
       emit(
         "deselectRoomObject",
-        selectedRoomObject,
+        selectedRoomObject.value,
         roomCoordinate,
         displayCoordinate
       );
-      selectedRoomObject = undefined;
+      selectedRoomObject.value = undefined;
     }
 
     return {

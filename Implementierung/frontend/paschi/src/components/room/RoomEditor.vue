@@ -14,6 +14,7 @@
   </NavigationBar>
   <RoomDisplay
     :room-id="roomId"
+    :room-object-overlaps="roomObjectErrorStyle"
     @select-room-object="selectRoomObject"
     @drag-room-object="dragRoomObject"
     @deselectRoomObject="releaseRoomObject"
@@ -109,6 +110,7 @@ import { RoomObject } from "@/model/userdata/rooms/RoomObject";
 import { RoomController } from "@/controller/RoomController";
 import { Coordinate } from "@/components/room/Coordinate";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
+import { useRoomObjectUtilities } from "@/components/room/RoomObjectUtilities";
 import { useRouter } from "vue-router";
 import { Chair } from "@/model/userdata/rooms/Chair";
 import RoomDisplay from "@/components/room/RoomDisplay.vue";
@@ -127,12 +129,14 @@ export default defineComponent({
 
     const roomController = RoomController.getRoomController();
 
+    const roomObjectUtilities = useRoomObjectUtilities();
+
     const roomId = props.roomId;
 
     const roomObjects = computed(() => roomController.getRoomObjects(roomId));
 
-    const roomWidth = 16180;
-    const roomHeight = 10000;
+    const roomWidth = roomObjectUtilities.roomWidth;
+    const roomHeight = roomObjectUtilities.roomHeight;
 
     let translationOffset: Coordinate = { x: 0, y: 0 };
 
@@ -217,152 +221,6 @@ export default defineComponent({
       }
     });
 
-    //detects collisions with other room objects using the separating axis theorem
-    function roomObjectOverlaps(
-      roomObject: RoomObject,
-      roomObjects: RoomObject[]
-    ) {
-      const roomObjectVertices = getRoomObjectVertices(roomObject);
-      for (let i = 0; i < 4; i++) {
-        if (
-          roomObjectVertices[i].x < 0 ||
-          roomObjectVertices[i].x > roomWidth ||
-          roomObjectVertices[i].y < 0 ||
-          roomObjectVertices[i].y > roomHeight
-        ) {
-          return true;
-        }
-      }
-      for (let i = 0; i < roomObjects.length; i++) {
-        if (roomObjects[i].getId === roomObject.getId) {
-          continue;
-        }
-        if (
-          separatedAxisCollide(roomObject, roomObjects[i]) &&
-          separatedAxisCollide(roomObjects[i], roomObject)
-        ) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    function getRoomObjectOrigin(roomObject: RoomObject): Coordinate {
-      return {
-        x: roomObject.position.xCoordinate + roomObject.dimensions.width / 2,
-        y: roomObject.position.yCoordinate + roomObject.dimensions.length / 2,
-      };
-    }
-
-    function getRoomObjectVertices(roomObject: RoomObject): Coordinate[] {
-      const roomObjectOrigin = getRoomObjectOrigin(roomObject);
-      const roomObjectOrientation = roomObject.position.orientation;
-      const roomObjectTopRightDiagonal = {
-        x:
-          (roomObject.dimensions.width / 2) * Math.cos(roomObjectOrientation) +
-          (roomObject.dimensions.length / 2) * Math.sin(roomObjectOrientation),
-        y:
-          (roomObject.dimensions.width / 2) * Math.sin(roomObjectOrientation) -
-          (roomObject.dimensions.length / 2) * Math.cos(roomObjectOrientation),
-      };
-      //describes the vector from the origin to the top left corner of the roomObject1
-      const roomObjectTopLeftDiagonal = {
-        x:
-          -(roomObject.dimensions.width / 2) * Math.cos(roomObjectOrientation) +
-          (roomObject.dimensions.length / 2) * Math.sin(roomObjectOrientation),
-        y:
-          -(roomObject.dimensions.width / 2) * Math.sin(roomObjectOrientation) -
-          (roomObject.dimensions.length / 2) * Math.cos(roomObjectOrientation),
-      };
-      const roomObjectBottomRightDiagonal = {
-        x: -roomObjectTopLeftDiagonal.x,
-        y: -roomObjectTopLeftDiagonal.y,
-      };
-      //describes the vector from the origin to the bottom left corner of the roomObject1
-      const roomObjectBottomLeftDiagonal = {
-        x: -roomObjectTopRightDiagonal.x,
-        y: -roomObjectTopRightDiagonal.y,
-      };
-      return [
-        {
-          x: roomObjectOrigin.x + roomObjectTopRightDiagonal.x,
-          y: roomObjectOrigin.y + roomObjectTopRightDiagonal.y,
-        },
-        {
-          x: roomObjectOrigin.x + roomObjectBottomRightDiagonal.x,
-          y: roomObjectOrigin.y + roomObjectBottomRightDiagonal.y,
-        },
-        {
-          x: roomObjectOrigin.x + roomObjectBottomLeftDiagonal.x,
-          y: roomObjectOrigin.y + roomObjectBottomLeftDiagonal.y,
-        },
-        {
-          x: roomObjectOrigin.x + roomObjectTopLeftDiagonal.x,
-          y: roomObjectOrigin.y + roomObjectTopLeftDiagonal.y,
-        },
-      ];
-    }
-
-    function separatedAxisCollide(
-      roomObject1: RoomObject,
-      roomObject2: RoomObject
-    ) {
-      const roomObject1Vertices = getRoomObjectVertices(roomObject1);
-      const roomObject2Vertices = getRoomObjectVertices(roomObject2);
-      for (let i = 0; i < 4; i++) {
-        const roomObject1Vertex1 = roomObject1Vertices[i];
-        const roomObject1Vertex2 = roomObject1Vertices[(i + 1) % 4];
-        const roomObject1Edge = {
-          x: roomObject1Vertex2.x - roomObject1Vertex1.x,
-          y: roomObject1Vertex2.y - roomObject1Vertex1.y,
-        };
-        // noinspection JSSuspiciousNameCombination
-        const roomObject1EdgeNormal = {
-          x: -roomObject1Edge.y,
-          y: roomObject1Edge.x,
-        };
-
-        function projectVertexOntoEdgeNormal(vertex: Coordinate) {
-          return (
-            vertex.x * roomObject1EdgeNormal.x +
-            vertex.y * roomObject1EdgeNormal.y
-          );
-        }
-        const roomObject1Min = Math.min(
-          projectVertexOntoEdgeNormal(roomObject1Vertices[0]),
-          projectVertexOntoEdgeNormal(roomObject1Vertices[1]),
-          projectVertexOntoEdgeNormal(roomObject1Vertices[2]),
-          projectVertexOntoEdgeNormal(roomObject1Vertices[3])
-        );
-        const roomObject1Max = Math.max(
-          projectVertexOntoEdgeNormal(roomObject1Vertices[0]),
-          projectVertexOntoEdgeNormal(roomObject1Vertices[1]),
-          projectVertexOntoEdgeNormal(roomObject1Vertices[2]),
-          projectVertexOntoEdgeNormal(roomObject1Vertices[3])
-        );
-        const roomObject2Min = Math.min(
-          projectVertexOntoEdgeNormal(roomObject2Vertices[0]),
-          projectVertexOntoEdgeNormal(roomObject2Vertices[1]),
-          projectVertexOntoEdgeNormal(roomObject2Vertices[2]),
-          projectVertexOntoEdgeNormal(roomObject2Vertices[3])
-        );
-        const roomObject2Max = Math.max(
-          projectVertexOntoEdgeNormal(roomObject2Vertices[0]),
-          projectVertexOntoEdgeNormal(roomObject2Vertices[1]),
-          projectVertexOntoEdgeNormal(roomObject2Vertices[2]),
-          projectVertexOntoEdgeNormal(roomObject2Vertices[3])
-        );
-
-        if (
-          roomObject1Max < roomObject2Min ||
-          roomObject2Max < roomObject1Min
-        ) {
-          return false;
-        }
-      }
-      return true;
-    }
-
     let lastValidTranslationCoordinate: Coordinate = { x: 0, y: 0 };
 
     let previousRotationCoordinate: Coordinate = { x: 0, y: 0 };
@@ -377,7 +235,7 @@ export default defineComponent({
       roomObject: RoomObject,
       currentCoordinate: Coordinate
     ) {
-      const origin = getRoomObjectOrigin(roomObject);
+      const origin = roomObjectUtilities.getRoomObjectOrigin(roomObject);
       const previousCoordinateFromOrigin = {
         x: previousResizeCoordinate.x - origin.x,
         y: previousResizeCoordinate.y - origin.y,
@@ -387,7 +245,8 @@ export default defineComponent({
         y: currentCoordinate.y - origin.y,
       };
 
-      const roomObjectVertices = getRoomObjectVertices(roomObject);
+      const roomObjectVertices =
+        roomObjectUtilities.getRoomObjectVertices(roomObject);
 
       const normalizedRoomObjectVertical = {
         x:
@@ -451,7 +310,7 @@ export default defineComponent({
       roomObject: RoomObject,
       currentCoordinate: Coordinate
     ) {
-      const origin = getRoomObjectOrigin(roomObject);
+      const origin = roomObjectUtilities.getRoomObjectOrigin(roomObject);
       const previousCoordinateFromOrigin = {
         x: previousRotationCoordinate.x - origin.x,
         y: previousRotationCoordinate.y - origin.y,
@@ -514,7 +373,9 @@ export default defineComponent({
         //uncomment to activate Easter egg
         //easterEgg.value = true;
       }
-      if (!roomObjectOverlaps(roomObject, roomObjects.value!)) {
+      if (
+        !roomObjectUtilities.roomObjectOverlaps(roomObject, roomObjects.value!)
+      ) {
         lastValidResize = {
           x: roomObject.dimensions.width,
           y: roomObject.dimensions.length,
@@ -575,7 +436,9 @@ export default defineComponent({
       const angle = calculateRoomObjectRotation(roomObject, roomCoordinates);
       roomObject.position.orientation =
         (roomObject.position.orientation + angle) % (2 * Math.PI);
-      if (!roomObjectOverlaps(roomObject, roomObjects.value!)) {
+      if (
+        !roomObjectUtilities.roomObjectOverlaps(roomObject, roomObjects.value!)
+      ) {
         lastValidRotation = roomObject.position.orientation;
         roomObjectErrorStyle.value = false;
       } else {
@@ -612,7 +475,9 @@ export default defineComponent({
       };
       roomObject.position.xCoordinate = newPosition.x;
       roomObject.position.yCoordinate = newPosition.y;
-      if (!roomObjectOverlaps(roomObject, roomObjects.value!)) {
+      if (
+        !roomObjectUtilities.roomObjectOverlaps(roomObject, roomObjects.value!)
+      ) {
         lastValidTranslationCoordinate = newPosition;
         roomObjectErrorStyle.value = false;
       } else {
@@ -622,7 +487,10 @@ export default defineComponent({
 
     function endTranslationRoomObject(roomObject: RoomObject) {
       if (
-        roomObjectOverlaps(roomObject, roomController.getRoomObjects(roomId)!)
+        roomObjectUtilities.roomObjectOverlaps(
+          roomObject,
+          roomController.getRoomObjects(roomId)!
+        )
       ) {
         roomObject.position.xCoordinate = lastValidTranslationCoordinate.x;
         roomObject.position.yCoordinate = lastValidTranslationCoordinate.y;
@@ -645,15 +513,27 @@ export default defineComponent({
       roomController.addChair(roomId, roomWidth / 2, roomHeight / 2, 0);
     }
 
-    function selectRoomObject(roomObject: RoomObject, roomCoordinates: Coordinate, displayCoordinates: Coordinate) {
+    function selectRoomObject(
+      roomObject: RoomObject,
+      roomCoordinates: Coordinate,
+      displayCoordinates: Coordinate
+    ) {
       selectFunction.value!(roomCoordinates, roomObject);
     }
 
-    function dragRoomObject(roomObject: RoomObject, roomCoordinates: Coordinate, displayCoordinates: Coordinate) {
+    function dragRoomObject(
+      roomObject: RoomObject,
+      roomCoordinates: Coordinate,
+      displayCoordinates: Coordinate
+    ) {
       moveFunction.value!(roomCoordinates, roomObject);
     }
 
-    function releaseRoomObject(roomObject: RoomObject, roomCoordinates: Coordinate, displayCoordinates: Coordinate) {
+    function releaseRoomObject(
+      roomObject: RoomObject,
+      roomCoordinates: Coordinate,
+      displayCoordinates: Coordinate
+    ) {
       releaseFunction.value!(roomObject);
     }
 
