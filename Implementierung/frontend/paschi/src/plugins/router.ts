@@ -14,7 +14,6 @@ import CourseStatisticPage from "@/components/statistics/CourseStatisticPage.vue
 import SessionStatisticPage from "@/components/statistics/SessionStatisticPage.vue";
 import StudentStatisticPage from "@/components/statistics/StudentStatisticPage.vue";
 import ShowInteractionMapPage from "@/components/statistics/ShowInteractionMapPage.vue";
-import RoomArrangementPage from "@/components/room/RoomArrangementPage.vue";
 import SeatArrangementPage from "@/components/room/SeatArrangementPage.vue";
 import ViewRoomsPage from "@/components/room/ViewRoomsPage.vue";
 import SessionPage from "@/components/session/SessionPage.vue";
@@ -86,12 +85,6 @@ const routes = [
     path: "/show-interaction-map/:sessionId",
     name: "ShowInteractionMapPage",
     component: ShowInteractionMapPage,
-    props: true,
-  },
-  {
-    path: "/room-arrangement/:roomId",
-    name: "RoomArrangementPage",
-    component: RoomArrangementPage,
     props: true,
   },
   {
