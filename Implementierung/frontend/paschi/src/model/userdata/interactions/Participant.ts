@@ -1,11 +1,10 @@
 import {User} from "@/model/User";
 import {Course} from "@/model/userdata/courses/Course";
 import {Interaction} from "@/model/userdata/interactions/Interaction";
+import {DataObject} from "@/model/DataObject";
 
-export abstract class Participant {
+export abstract class Participant extends DataObject {
 
-  private id: string | undefined;
-  private localId: number;
   user: User;
   firstName: string;
   lastName: string;
@@ -13,8 +12,7 @@ export abstract class Participant {
   interactions: Interaction[];
 
   protected constructor(id: string | undefined, localId: number, user: User, firstName: string, lastName: string) {
-    this.id = id;
-    this.localId = localId;
+    super(id, localId);
     this.user = user;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -44,16 +42,5 @@ export abstract class Participant {
         this.interactions.splice(index, 1);
       }
     });
-  }
-
-  get getId(): string {
-    if (this.id == undefined) {
-      return this.localId.toString();
-    }
-    return this.id;
-  }
-
-  set setId(id: string) {
-    this.id = id;
   }
 }

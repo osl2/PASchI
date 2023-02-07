@@ -1,17 +1,15 @@
 import {User} from "@/model/User";
 import {RoomObject} from "@/model/userdata/rooms/RoomObject";
+import {DataObject} from "@/model/DataObject";
 
-export class Room {
+export class Room extends DataObject {
 
-  private id: string | undefined;
-  private localId: number;
   user: User;
   name: string;
   roomObjects: RoomObject[];
 
   constructor(id: string | undefined, localId: number, user: User, name: string) {
-    this.id = id;
-    this.localId = localId;
+    super(id, localId);
     this.user = user;
     this.name = name;
     this.roomObjects = [];
@@ -37,16 +35,5 @@ export class Room {
     });
 
     return undefined;
-  }
-
-  get getId(): string {
-    if (this.id == undefined) {
-      return this.localId.toString();
-    }
-    return this.id;
-  }
-
-  set setId(id: string) {
-    this.id = id;
   }
 }

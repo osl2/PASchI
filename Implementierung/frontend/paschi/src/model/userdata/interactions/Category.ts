@@ -1,16 +1,14 @@
 import {User} from "@/model/User";
 import {Quality} from "@/model/userdata/interactions/Quality";
+import {DataObject} from "@/model/DataObject";
 
-export class Category {
+export class Category extends DataObject {
 
-  private id: string | undefined;
-  private localId: number;
   user: User;
   name: string;
 
   constructor(id: string | undefined, localId: number, user: User, name: string) {
-    this.id = id;
-    this.localId = localId;
+    super(id, localId);
     this.user = user;
     this.name = name;
   }
@@ -19,17 +17,10 @@ export class Category {
     return false;
   }
 
-  get getId(): string {
-    if (this.id == undefined) {
-      return this.localId.toString();
-    }
-    return this.id;
-  }
-
-  set setId(id: string) {
-    this.id = id;
-  }
-
   set setQuality(quality: Quality) {
+  }
+
+  getQuality(): Quality | undefined {
+    return undefined;
   }
 }

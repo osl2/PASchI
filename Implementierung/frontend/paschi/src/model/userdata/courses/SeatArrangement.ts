@@ -3,11 +3,10 @@ import {RoomObject} from "@/model/userdata/rooms/RoomObject";
 import {Participant} from "@/model/userdata/interactions/Participant";
 import {Course} from "@/model/userdata/courses/Course";
 import {Room} from "@/model/userdata/rooms/Room";
+import {DataObject} from "@/model/DataObject";
 
-export class SeatArrangement {
+export class SeatArrangement extends DataObject {
 
-  private id: string | undefined;
-  private localId: number;
   user: User
   name: string;
   seatMap: Map<RoomObject, Participant>;
@@ -15,8 +14,7 @@ export class SeatArrangement {
   room: Room;
 
   constructor(id: string | undefined, localId: number, user: User, name: string, course: Course, room: Room) {
-    this.id = id;
-    this.localId = localId;
+    super(id, localId);
     this.user = user;
     this.name = name;
     this.seatMap = new Map<RoomObject, Participant>();
@@ -34,16 +32,5 @@ export class SeatArrangement {
 
   removeSeat(seat: RoomObject) {
     this.seatMap.delete(seat);
-  }
-
-  get getId(): string {
-    if (this.id == undefined) {
-      return this.localId.toString();
-    }
-    return this.id;
-  }
-
-  set setId(id: string) {
-    this.id = id;
   }
 }

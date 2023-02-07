@@ -2,11 +2,10 @@ import {Participant} from "@/model/userdata/interactions/Participant";
 import {Session} from "@/model/userdata/courses/Session";
 import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {User} from "@/model/User";
+import {DataObject} from "@/model/DataObject";
 
-export class Course {
+export class Course extends DataObject {
 
-  private id: string | undefined;
-  private localId: number;
   user: User
   name: string;
   subject: string;
@@ -15,8 +14,7 @@ export class Course {
   seatArrangements: SeatArrangement[];
 
   constructor(id: string | undefined, localId: number, user: User, name: string, subject: string) {
-    this.id = id;
-    this.localId = localId;
+    super(id, localId);
     this.user = user;
     this.name = name;
     this.subject = subject;
@@ -69,16 +67,5 @@ export class Course {
         this.seatArrangements.splice(index, 1);
       }
     });
-  }
-
-  get getId(): string {
-    if (this.id == undefined) {
-      return this.localId.toString();
-    }
-    return this.id;
-  }
-
-  set setId(id: string) {
-    this.id = id;
   }
 }
