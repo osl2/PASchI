@@ -4,22 +4,23 @@ import {User} from "@/model/User";
 
 export class RatedCategory extends Category {
 
-  quality: Quality;
+  private _quality: Quality;
 
   constructor(id: string | undefined, localId: number, user: User, name: string, quality: Quality) {
     super(id, localId, user, name);
-    this.quality = quality;
+    this._quality = quality;
   }
 
   hasQuality(): boolean {
     return true;
   }
 
-  set setQuality(quality: Quality) {
-    this.quality = quality;
+  getQuality(): Quality | undefined {
+    return this._quality;
   }
 
-  getQuality(): Quality | undefined {
-    return this.quality;
+  set setQuality(quality: Quality) {
+    this._quality = quality;
+    this.update();
   }
 }
