@@ -108,28 +108,53 @@
       @mouseleave="mouseUpRoomObject($event, selectedRoomObject)"
     >
       <v-card
-        v-for="roomObject in roomObjects"
-        :key="roomObject.getId"
+        v-for="chair in chairs"
+        :key="chair.getId"
         class="ma-0 v-row align-center justify-center"
         :class="[
-          roomObjectErrorStyle && roomObject === selectedRoomObject
+          roomObjectErrorStyle && chair === selectedRoomObject
             ? 'error'
             : 'notError',
         ]"
-        color="secondary"
+        color="secondary-lighten-2"
         elevation="0"
         draggable="false"
-        :style="getRoomObjectStyle(roomObject)"
-        @touchstart="touchStart($event, roomObject)"
-        @touchmove="moveTouch($event, roomObject)"
-        @touchend="touchEnd($event, roomObject)"
-        @mousedown="mouseDownRoomObject($event, roomObject)"
+        :style="getRoomObjectStyle(chair)"
+        @touchstart="touchStart($event, chair)"
+        @touchmove="moveTouch($event, chair)"
+        @touchend="touchEnd($event, chair)"
+        @mousedown="mouseDownRoomObject($event, chair)"
       >
         <v-icon
           class="v-col-auto"
           size="25px"
           color="white"
           icon="fas fa-chair"
+        ></v-icon>
+      </v-card>
+      <v-card
+        v-for="table in tables"
+        :key="table.getId"
+        class="ma-0 v-row align-center justify-center"
+        :class="[
+          roomObjectErrorStyle && table === selectedRoomObject
+            ? 'error'
+            : 'notError',
+        ]"
+        color="secondary-lighten-1"
+        elevation="0"
+        draggable="false"
+        :style="getRoomObjectStyle(table)"
+        @touchstart="touchStart($event, table)"
+        @touchmove="moveTouch($event, table)"
+        @touchend="touchEnd($event, table)"
+        @mousedown="mouseDownRoomObject($event, table)"
+      >
+        <v-icon
+          class="v-col-auto"
+          size="25px"
+          color="white"
+          icon="mdi mdi-desk"
         ></v-icon>
       </v-card>
     </v-card>
@@ -143,6 +168,8 @@ import { RoomController } from "@/controller/RoomController";
 import { Coordinate } from "@/components/room/Coordinate";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import { useRouter } from "vue-router";
+import {Chair} from "@/model/userdata/rooms/Chair";
+import {Table} from "@/model/userdata/rooms/Table";
 
 export default defineComponent({
   name: "RoomEditor.vue",
@@ -161,6 +188,9 @@ export default defineComponent({
     const roomId = props.roomId;
 
     const roomObjects = computed(() => roomController.getRoomObjects(roomId));
+
+    const chairs = computed(() => roomObjects.value?.filter((roomObject) => roomObject instanceof Chair));
+    const tables = computed(() => roomObjects.value?.filter((roomObject) => roomObject instanceof Table));
 
     const roomWidth = 16180;
     const roomHeight = 10000;
@@ -550,6 +580,9 @@ export default defineComponent({
       displayCoordinates: Coordinate,
       roomObject: RoomObject
     ) {
+      if (roomObject instanceof Chair) {
+        return;
+      }
       const resizeDelta = calculateRoomObjectResize(
         roomObject,
         displayToRoomCoordinates(displayCoordinates.x, displayCoordinates.y)
@@ -804,7 +837,8 @@ export default defineComponent({
     }
 
     return {
-      roomObjects,
+      chairs,
+      tables,
       touchStart: touchStartRoomObject,
       moveTouch: touchMoveRoomObject,
       getRoomObjectStyle,
