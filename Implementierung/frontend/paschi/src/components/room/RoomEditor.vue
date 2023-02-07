@@ -12,153 +12,95 @@
       >
     </template>
   </NavigationBar>
-  <v-main
-    fluid
-    :scrollable="false"
-    class="bg-grey-lighten-3"
-    style="touch-action: none"
+  <RoomDisplay
+    :room-id="roomId"
+    @select-room-object="selectRoomObject"
+    @drag-room-object="dragRoomObject"
+    @deselectRoomObject="releaseRoomObject"
   >
-    <v-snackbar
-      width="1000"
-      variant="tonal"
-      v-model="easterEgg"
-      color="primary"
-      timeout="4000"
-    >
-      <v-icon>mdi mdi-egg</v-icon>
-      Snelting glaubt nicht, dass du so große Tische hast. <br />
-      Lügen = Betrug = Strafe = 0 Punkte = Exmatrikulation
-      <template v-slot:actions>
-        <v-icon>fas fa-person-military-pointing</v-icon>
-        <v-icon>fas fa-otter</v-icon>
-      </template>
-    </v-snackbar>
-    <v-card :style="roomInventoryStyle" :class="roomInventoryClass">
-      <v-btn
-        width="70"
-        height="70"
-        class="ma-1"
+    <template v-slot:left>
+      <v-snackbar
+        width="1000"
         variant="tonal"
-        color="secondary"
-        @click="addTable"
-      >
-        <v-badge icon="mdi mdi-plus" color="green">
-          <v-icon size="30">mdi mdi-table-furniture</v-icon>
-        </v-badge>
-      </v-btn>
-      <v-btn
-        width="70"
-        height="70"
-        class="ma-1"
-        variant="tonal"
-        color="secondary"
-        @click="addChair"
-      >
-        <v-badge icon="mdi mdi-plus" color="green">
-          <v-icon size="30">mdi mdi-seat-outline</v-icon>
-        </v-badge>
-      </v-btn>
-      <v-btn-toggle
-        class="ma-1"
-        v-model="action"
+        v-model="easterEgg"
         color="primary"
-        mandatory
-        :style="toggleActionStyle"
+        timeout="4000"
       >
-        <v-btn
-          :style="toggleButton1Style"
-          width="70"
-          height="70"
-          variant="tonal"
-          icon="mdi mdi-cursor-move"
-          value="translate"
-        />
-        <v-btn
-          width="70"
-          height="70"
-          variant="tonal"
-          icon="mdi mdi-rotate-left"
-          value="rotate"
-        />
+        <v-icon>mdi mdi-egg</v-icon>
+        Snelting glaubt nicht, dass du so große Tische hast. <br />
+        Lügen = Betrug = Strafe = 0 Punkte = Exmatrikulation
+        <template v-slot:actions>
+          <v-icon>fas fa-person-military-pointing</v-icon>
+          <v-icon>fas fa-otter</v-icon>
+        </template>
+      </v-snackbar>
+      <v-card :style="roomInventoryStyle" :class="roomInventoryClass">
         <v-btn
           width="70"
           height="70"
+          class="ma-1"
           variant="tonal"
-          icon="mdi mdi-resize"
-          value="resize"
-        />
+          color="secondary"
+          @click="addTable"
+        >
+          <v-badge icon="mdi mdi-plus" color="green">
+            <v-icon size="30">mdi mdi-table-furniture</v-icon>
+          </v-badge>
+        </v-btn>
         <v-btn
-          :style="toggleButton2Style"
           width="70"
           height="70"
+          class="ma-1"
           variant="tonal"
-          color="red"
-          icon="mdi mdi-close"
-          value="delete"
-        />
-      </v-btn-toggle>
-    </v-card>
-    <v-card
-      key="background"
-      variant="flat"
-      color="white"
-      :style="roomDisplayStyle"
-      @mousemove="mouseMoveRoomObject($event, selectedRoomObject)"
-      @mouseup="mouseUpRoomObject($event, selectedRoomObject)"
-      @mouseleave="mouseUpRoomObject($event, selectedRoomObject)"
-    >
-      <v-card
-        v-for="chair in chairs"
-        :key="chair.getId"
-        class="ma-0 v-row align-center justify-center"
-        :class="[
-          roomObjectErrorStyle && chair === selectedRoomObject
-            ? 'error'
-            : 'notError',
-        ]"
-        color="secondary-lighten-2"
-        elevation="0"
-        draggable="false"
-        :style="getRoomObjectStyle(chair)"
-        @touchstart="touchStart($event, chair)"
-        @touchmove="moveTouch($event, chair)"
-        @touchend="touchEnd($event, chair)"
-        @mousedown="mouseDownRoomObject($event, chair)"
-      >
-        <v-icon
-          class="v-col-auto"
-          size="25px"
-          color="white"
-          icon="fas fa-chair"
-        ></v-icon>
+          color="secondary"
+          @click="addChair"
+        >
+          <v-badge icon="mdi mdi-plus" color="green">
+            <v-icon size="30">mdi mdi-seat-outline</v-icon>
+          </v-badge>
+        </v-btn>
+        <v-btn-toggle
+          class="ma-1"
+          v-model="action"
+          color="primary"
+          mandatory
+          :style="toggleActionStyle"
+        >
+          <v-btn
+            :style="toggleButton1Style"
+            width="70"
+            height="70"
+            variant="tonal"
+            icon="mdi mdi-cursor-move"
+            value="translate"
+          />
+          <v-btn
+            width="70"
+            height="70"
+            variant="tonal"
+            icon="mdi mdi-rotate-left"
+            value="rotate"
+          />
+          <v-btn
+            width="70"
+            height="70"
+            variant="tonal"
+            icon="mdi mdi-resize"
+            value="resize"
+          />
+          <v-btn
+            :style="toggleButton2Style"
+            width="70"
+            height="70"
+            variant="tonal"
+            color="red"
+            icon="mdi mdi-close"
+            value="delete"
+          />
+        </v-btn-toggle>
       </v-card>
-      <v-card
-        v-for="table in tables"
-        :key="table.getId"
-        class="ma-0 v-row align-center justify-center"
-        :class="[
-          roomObjectErrorStyle && table === selectedRoomObject
-            ? 'error'
-            : 'notError',
-        ]"
-        color="secondary-lighten-1"
-        elevation="0"
-        draggable="false"
-        :style="getRoomObjectStyle(table)"
-        @touchstart="touchStart($event, table)"
-        @touchmove="moveTouch($event, table)"
-        @touchend="touchEnd($event, table)"
-        @mousedown="mouseDownRoomObject($event, table)"
-      >
-        <v-icon
-          class="v-col-auto"
-          size="25px"
-          color="white"
-          icon="mdi mdi-desk"
-        ></v-icon>
-      </v-card>
-    </v-card>
-  </v-main>
+    </template>
+  </RoomDisplay>
 </template>
 
 <script lang="ts">
@@ -168,12 +110,12 @@ import { RoomController } from "@/controller/RoomController";
 import { Coordinate } from "@/components/room/Coordinate";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import { useRouter } from "vue-router";
-import {Chair} from "@/model/userdata/rooms/Chair";
-import {Table} from "@/model/userdata/rooms/Table";
+import { Chair } from "@/model/userdata/rooms/Chair";
+import RoomDisplay from "@/components/room/RoomDisplay.vue";
 
 export default defineComponent({
   name: "RoomEditor.vue",
-  components: { NavigationBar },
+  components: { RoomDisplay, NavigationBar },
   props: {
     roomId: {
       type: String,
@@ -189,37 +131,12 @@ export default defineComponent({
 
     const roomObjects = computed(() => roomController.getRoomObjects(roomId));
 
-    const chairs = computed(() => roomObjects.value?.filter((roomObject) => roomObject instanceof Chair));
-    const tables = computed(() => roomObjects.value?.filter((roomObject) => roomObject instanceof Table));
-
     const roomWidth = 16180;
     const roomHeight = 10000;
 
-    const maxRoomDisplayWidth = 0.9 * window.innerWidth;
-    const maxRoomDisplayHeight = 0.9 * window.innerHeight;
+    let translationOffset: Coordinate = { x: 0, y: 0 };
 
-    const roomScale = Math.min(
-      maxRoomDisplayWidth / roomWidth,
-      maxRoomDisplayHeight / roomHeight
-    );
-
-    const roomDisplayWidth = roomWidth * roomScale;
-    const roomDisplayHeight = roomHeight * roomScale;
-
-    const roomDisplayTopMargin = 70;
-    const roomDisplayLeftMargin = (window.innerWidth - roomDisplayWidth) / 2;
-
-    const translationOffset = ref({ x: 0, y: 0 });
-
-    const roomDisplayStyle = {
-      position: "absolute",
-      top: roomDisplayTopMargin + "px",
-      left: roomDisplayLeftMargin + "px",
-      width: roomDisplayWidth + "px",
-      height: roomDisplayHeight + "px",
-    };
-
-    const roomInventoryOnBottom = roomDisplayLeftMargin < roomDisplayTopMargin;
+    const roomInventoryOnBottom = false;
 
     const roomInventoryStyle = {
       position: "absolute",
@@ -256,8 +173,6 @@ export default defineComponent({
       borderBottomLeftRadius: roomInventoryOnBottom ? "0px" : "5px",
       borderBottomRightRadius: "5px",
     };
-
-    const selectedRoomObject = ref<RoomObject>();
 
     const roomObjectErrorStyle = ref(false);
 
@@ -307,6 +222,17 @@ export default defineComponent({
       roomObject: RoomObject,
       roomObjects: RoomObject[]
     ) {
+      const roomObjectVertices = getRoomObjectVertices(roomObject);
+      for (let i = 0; i < 4; i++) {
+        if (
+          roomObjectVertices[i].x < 0 ||
+          roomObjectVertices[i].x > roomWidth ||
+          roomObjectVertices[i].y < 0 ||
+          roomObjectVertices[i].y > roomHeight
+        ) {
+          return true;
+        }
+      }
       for (let i = 0; i < roomObjects.length; i++) {
         if (roomObjects[i].getId === roomObject.getId) {
           continue;
@@ -384,24 +310,6 @@ export default defineComponent({
       const roomObject1Vertices = getRoomObjectVertices(roomObject1);
       const roomObject2Vertices = getRoomObjectVertices(roomObject2);
       for (let i = 0; i < 4; i++) {
-        if (
-          roomObject1Vertices[i].x < 0 ||
-          roomObject1Vertices[i].x > roomWidth ||
-          roomObject1Vertices[i].y < 0 ||
-          roomObject1Vertices[i].y > roomHeight
-        ) {
-          return true;
-        }
-        if (
-          roomObject2Vertices[i].x < 0 ||
-          roomObject2Vertices[i].x > roomWidth ||
-          roomObject2Vertices[i].y < 0 ||
-          roomObject2Vertices[i].y > roomHeight
-        ) {
-          return true;
-        }
-      }
-      for (let i = 0; i < 4; i++) {
         const roomObject1Vertex1 = roomObject1Vertices[i];
         const roomObject1Vertex2 = roomObject1Vertices[(i + 1) % 4];
         const roomObject1Edge = {
@@ -414,7 +322,7 @@ export default defineComponent({
           y: roomObject1Edge.x,
         };
 
-        function projectVertexOntoEdgeNormal(vertex: { x: number; y: number }) {
+        function projectVertexOntoEdgeNormal(vertex: Coordinate) {
           return (
             vertex.x * roomObject1EdgeNormal.x +
             vertex.y * roomObject1EdgeNormal.y
@@ -577,7 +485,7 @@ export default defineComponent({
     const easterEgg = ref<boolean>(false);
 
     function resizeRoomObject(
-      displayCoordinates: Coordinate,
+      roomCoordinates: Coordinate,
       roomObject: RoomObject
     ) {
       if (roomObject instanceof Chair) {
@@ -585,7 +493,7 @@ export default defineComponent({
       }
       const resizeDelta = calculateRoomObjectResize(
         roomObject,
-        displayToRoomCoordinates(displayCoordinates.x, displayCoordinates.y)
+        roomCoordinates
       );
       roomObject.dimensions.width += resizeDelta.x * 2;
       roomObject.dimensions.length += resizeDelta.y * 2;
@@ -619,20 +527,14 @@ export default defineComponent({
       } else {
         roomObjectErrorStyle.value = true;
       }
-      previousResizeCoordinate = displayToRoomCoordinates(
-        displayCoordinates.x,
-        displayCoordinates.y
-      );
+      previousResizeCoordinate = roomCoordinates;
     }
 
     function initializeRoomObjectResizeCoordinates(
-      displayCoordinates: Coordinate,
+      roomCoordinates: Coordinate,
       roomObject: RoomObject
     ) {
-      previousResizeCoordinate = displayToRoomCoordinates(
-        displayCoordinates.x,
-        displayCoordinates.y
-      );
+      previousResizeCoordinate = roomCoordinates;
       lastValidResize = {
         x: roomObject.dimensions.width,
         y: roomObject.dimensions.length,
@@ -649,7 +551,6 @@ export default defineComponent({
       roomObject.position.xCoordinate = lastValidTranslationCoordinate.x;
       roomObject.position.yCoordinate = lastValidTranslationCoordinate.y;
       roomObjectErrorStyle.value = false;
-      selectedRoomObject.value = undefined;
     }
 
     function deleteRoomObject(
@@ -660,24 +561,18 @@ export default defineComponent({
     }
 
     function initializeRoomObjectRotationCoordinates(
-      displayCoordinates: Coordinate,
+      roomCoordinate: Coordinate,
       roomObject: RoomObject
     ) {
-      previousRotationCoordinate = displayToRoomCoordinates(
-        displayCoordinates.x,
-        displayCoordinates.y
-      );
+      previousRotationCoordinate = roomCoordinate;
       lastValidRotation = roomObject.position.orientation;
     }
 
     function rotateRoomObject(
-      displayCoordinates: Coordinate,
+      roomCoordinates: Coordinate,
       roomObject: RoomObject
     ) {
-      const angle = calculateRoomObjectRotation(
-        roomObject,
-        displayToRoomCoordinates(displayCoordinates.x, displayCoordinates.y)
-      );
+      const angle = calculateRoomObjectRotation(roomObject, roomCoordinates);
       roomObject.position.orientation =
         (roomObject.position.orientation + angle) % (2 * Math.PI);
       if (!roomObjectOverlaps(roomObject, roomObjects.value!)) {
@@ -690,46 +585,14 @@ export default defineComponent({
 
     function finalizeRoomObjectRotation(roomObject: RoomObject) {
       roomObject.position.orientation = lastValidRotation;
-      selectedRoomObject.value = undefined;
       roomObjectErrorStyle.value = false;
     }
 
-    function roomToDisplayCoordinates(x: number, y: number) {
-      return {
-        x: x * roomScale,
-        y: y * roomScale,
-      };
-    }
-
-    function displayToRoomCoordinates(x: number, y: number) {
-      return {
-        x: (x - roomDisplayLeftMargin) / roomScale,
-        y: (y - roomDisplayTopMargin) / roomScale,
-      };
-    }
-
-    function getRoomObjectStyle(roomObject: RoomObject) {
-      const { x, y } = roomToDisplayCoordinates(
-        roomObject.position.xCoordinate,
-        roomObject.position.yCoordinate
-      );
-      return {
-        position: "absolute",
-        top: y + "px",
-        left: x + "px",
-        width: roomObject.dimensions.width * roomScale + "px",
-        height: roomObject.dimensions.length * roomScale + "px",
-        transform: `rotate(${roomObject.position.orientation}rad)`,
-      };
-    }
-
     function initializeRoomObjectGrabCoordinates(
-      displayCoordinates: { x: number; y: number },
+      roomCoordinates: Coordinate,
       roomObject: RoomObject
     ) {
-      const roomCoordinates: { x: number; y: number } =
-        displayToRoomCoordinates(displayCoordinates.x, displayCoordinates.y);
-      translationOffset.value = {
+      translationOffset = {
         x: roomCoordinates.x - roomObject.position.xCoordinate,
         y: roomCoordinates.y - roomObject.position.yCoordinate,
       };
@@ -740,16 +603,12 @@ export default defineComponent({
     }
 
     function translateRoomObjectToDisplayCoordinates(
-      displayCoordinates: { x: number; y: number },
+      roomCoordinates: Coordinate,
       roomObject: RoomObject
     ) {
       const newPosition = {
-        x:
-          displayToRoomCoordinates(displayCoordinates.x, displayCoordinates.y)
-            .x - translationOffset.value.x,
-        y:
-          displayToRoomCoordinates(displayCoordinates.x, displayCoordinates.y)
-            .y - translationOffset.value.y,
+        x: roomCoordinates.x - translationOffset.x,
+        y: roomCoordinates.y - translationOffset.y,
       };
       roomObject.position.xCoordinate = newPosition.x;
       roomObject.position.yCoordinate = newPosition.y;
@@ -768,57 +627,11 @@ export default defineComponent({
         roomObject.position.xCoordinate = lastValidTranslationCoordinate.x;
         roomObject.position.yCoordinate = lastValidTranslationCoordinate.y;
       }
-      selectedRoomObject.value = undefined;
       roomObjectErrorStyle.value = false;
     }
 
-    function touchStartRoomObject(event: TouchEvent, roomObject: RoomObject) {
-      selectedRoomObject.value = roomObject;
-      const displayCoordinates: { x: number; y: number } = {
-        x: event.touches[0].clientX,
-        y: event.touches[0].clientY,
-      };
-      selectFunction.value!(displayCoordinates, roomObject);
-    }
-
-    function touchMoveRoomObject(event: TouchEvent, roomObject: RoomObject) {
-      const displayCoordinates = {
-        x: event.touches[0].clientX,
-        y: event.touches[0].clientY,
-      };
-      moveFunction.value!(displayCoordinates, roomObject);
-    }
-
-    function touchEndRoomObject(event: TouchEvent, roomObject: RoomObject) {
-      releaseFunction.value!(roomObject);
-    }
-
-    function mouseDownRoomObject(event: MouseEvent, roomObject: RoomObject) {
-      selectedRoomObject.value = roomObject;
-      const displayCoordinates: { x: number; y: number } = {
-        x: event.clientX,
-        y: event.clientY,
-      };
-      selectFunction.value!(displayCoordinates, roomObject);
-    }
-
-    function mouseMoveRoomObject(event: MouseEvent, roomObject: RoomObject) {
-      if (!roomObject) {
-        return;
-      }
-      const displayCoordinates = {
-        x: event.clientX,
-        y: event.clientY,
-      };
-      moveFunction.value!(displayCoordinates, roomObject);
-    }
-
-    function mouseUpRoomObject(event: MouseEvent, roomObject: RoomObject) {
-      releaseFunction.value!(roomObject);
-    }
-
     function addTable() {
-      const table = roomController.addTable(
+      roomController.addTable(
         roomId,
         roomWidth / 2,
         roomHeight / 2,
@@ -832,28 +645,31 @@ export default defineComponent({
       roomController.addChair(roomId, roomWidth / 2, roomHeight / 2, 0);
     }
 
+    function selectRoomObject(roomObject: RoomObject, roomCoordinates: Coordinate, displayCoordinates: Coordinate) {
+      selectFunction.value!(roomCoordinates, roomObject);
+    }
+
+    function dragRoomObject(roomObject: RoomObject, roomCoordinates: Coordinate, displayCoordinates: Coordinate) {
+      moveFunction.value!(roomCoordinates, roomObject);
+    }
+
+    function releaseRoomObject(roomObject: RoomObject, roomCoordinates: Coordinate, displayCoordinates: Coordinate) {
+      releaseFunction.value!(roomObject);
+    }
+
     function saveClick() {
       router.back();
     }
 
     return {
-      chairs,
-      tables,
-      touchStart: touchStartRoomObject,
-      moveTouch: touchMoveRoomObject,
-      getRoomObjectStyle,
       addTable,
-      action,
       addChair,
-      roomDisplayStyle,
+      selectRoomObject,
+      dragRoomObject,
+      releaseRoomObject,
+      action,
       roomInventoryStyle,
-      mouseDownRoomObject: mouseDownRoomObject,
-      mouseMoveRoomObject: mouseMoveRoomObject,
-      mouseUpRoomObject,
-      selectedRoomObject,
       roomObjectErrorStyle,
-      touchEnd: touchEndRoomObject,
-      stuff: roomController.getRoom(roomId)!,
       roomId,
       toggleActionStyle,
       toggleButton1Style,
