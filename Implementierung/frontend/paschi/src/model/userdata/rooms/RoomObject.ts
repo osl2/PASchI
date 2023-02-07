@@ -5,15 +5,37 @@ import {DataObject} from "@/model/DataObject";
 
 export abstract class RoomObject extends DataObject {
 
-  user: User;
-  position: Position;
-  dimensions: Dimensions;
+  private readonly _user: User;
+  private _position: Position;
+  private _dimensions: Dimensions;
 
   protected constructor(id: string | undefined, localId: number, user: User, position: Position,
                         dimensions: Dimensions) {
     super(id, localId);
-    this.user = user;
-    this.position = position;
-    this.dimensions = dimensions;
+    this._user = user;
+    this._position = position;
+    this._dimensions = dimensions;
+  }
+
+  get user(): User {
+    return this._user;
+  }
+
+  get position(): Position {
+    return this._position;
+  }
+
+  get dimensions(): Dimensions {
+    return this._dimensions;
+  }
+
+  set position(value: Position) {
+    this._position = value;
+    this.update();
+  }
+
+  set dimensions(value: Dimensions) {
+    this._dimensions = value;
+    this.update();
   }
 }
