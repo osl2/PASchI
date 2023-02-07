@@ -20,6 +20,7 @@ import ViewRoomsPage from "@/components/room/ViewRoomsPage.vue";
 import SessionPage from "@/components/session/SessionPage.vue";
 
 const routes = [
+  { path: "/", redirect: "/login" },
   { path: "/login", name: "Login", component: Login },
   { path: "/register", name: "Register", component: Register },
   { path: "/admin", name: "AdminPage", component: AdminPage },
