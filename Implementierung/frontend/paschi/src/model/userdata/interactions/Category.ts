@@ -4,23 +4,36 @@ import {DataObject} from "@/model/DataObject";
 
 export class Category extends DataObject {
 
-  user: User;
-  name: string;
+  private readonly _user: User;
+  private _name: string;
 
   constructor(id: string | undefined, localId: number, user: User, name: string) {
     super(id, localId);
-    this.user = user;
-    this.name = name;
+    this._user = user;
+    this._name = name;
   }
 
   hasQuality(): boolean {
     return false;
   }
 
-  set setQuality(quality: Quality) {
-  }
-
   getQuality(): Quality | undefined {
     return undefined;
+  }
+
+  get user(): User {
+    return this._user;
+  }
+
+  get name(): string {
+    return this._name;
+  }
+
+  set name(value: string) {
+    this._name = value;
+    this.update();
+  }
+
+  set setQuality(quality: Quality) {
   }
 }
