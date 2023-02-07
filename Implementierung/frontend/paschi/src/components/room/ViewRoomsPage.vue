@@ -111,7 +111,7 @@ export default defineComponent({
     }
     function confirmNewRoomClick() {
       router.push({
-        name: "RoomArrangementPage",
+        name: "RoomEditor",
         params: { roomId: roomController.createRoom(newRoomName.value) },
       });
     }
@@ -121,7 +121,7 @@ export default defineComponent({
     }
     function editRoom(room: Room) {
       router.push({
-        name: "RoomArrangementPage",
+        name: "RoomEditor",
         params: { roomId: room.getId },
       });
     }

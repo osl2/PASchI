@@ -1,4 +1,17 @@
 <template>
+  <NavigationBar>
+    <template v-slot:prepend> Raum bearbeiten </template>
+    <template v-slot:default class="row justify-center w-100">
+      <v-app-bar-title class="v-col-auto">
+        {{ roomName }}
+      </v-app-bar-title>
+    </template>
+    <template v-slot:append>
+      <v-btn color="green" variant="flat" rounded @click="saveClick()"
+        >speichern</v-btn
+      >
+    </template>
+  </NavigationBar>
   <v-main
     fluid
     :scrollable="false"
@@ -127,20 +140,25 @@
 import { computed, defineComponent, ref } from "vue";
 import { RoomObject } from "@/model/userdata/rooms/RoomObject";
 import { RoomController } from "@/controller/RoomController";
-import { Coordinate } from "@/components/interactionMaps/Coordinate";
+import { Coordinate } from "@/components/room/Coordinate";
+import NavigationBar from "@/components/navigation/NavigationBar.vue";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "RoomEditor.vue",
+  components: { NavigationBar },
   props: {
     roomId: {
       type: String,
       required: true,
     },
   },
-  setup() {
+  setup(props) {
+    const router = useRouter();
+
     const roomController = RoomController.getRoomController();
 
-    const roomId = roomController.createRoom("TestRoom");
+    const roomId = props.roomId;
 
     const roomObjects = computed(() => roomController.getRoomObjects(roomId));
 
@@ -158,7 +176,7 @@ export default defineComponent({
     const roomDisplayWidth = roomWidth * roomScale;
     const roomDisplayHeight = roomHeight * roomScale;
 
-    const roomDisplayTopMargin = (window.innerHeight - roomDisplayHeight) / 2;
+    const roomDisplayTopMargin = 70;
     const roomDisplayLeftMargin = (window.innerWidth - roomDisplayWidth) / 2;
 
     const translationOffset = ref({ x: 0, y: 0 });
@@ -552,7 +570,8 @@ export default defineComponent({
         roomObject.dimensions.width > 7000 &&
         roomObject.dimensions.length > 7000
       ) {
-        easterEgg.value = true;
+        //uncomment to activate Easter egg
+        //easterEgg.value = true;
       }
       if (!roomObjectOverlaps(roomObject, roomObjects.value!)) {
         lastValidResize = {
@@ -780,6 +799,10 @@ export default defineComponent({
       roomController.addChair(roomId, roomWidth / 2, roomHeight / 2, 0);
     }
 
+    function saveClick() {
+      router.back();
+    }
+
     return {
       roomObjects,
       touchStart: touchStartRoomObject,
@@ -803,6 +826,8 @@ export default defineComponent({
       toggleButton2Style,
       roomInventoryClass,
       easterEgg,
+      roomName: roomController.getRoom(roomId)!.name,
+      saveClick,
     };
   },
 });
