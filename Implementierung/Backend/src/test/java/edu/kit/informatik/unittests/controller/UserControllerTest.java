@@ -5,6 +5,7 @@ import edu.kit.informatik.dto.RoleDto;
 import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.dto.mapper.UserMapper;
 import edu.kit.informatik.repositories.UserRepository;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;;
@@ -38,6 +39,12 @@ public class UserControllerTest extends AbstractTest {
     public void setUp() {
         super.setUp();
         this.users = addSomeUsers();
+    }
+
+    @After
+    @Override
+    public void setDown() {
+        this.userRepository.deleteAll();
     }
 
 

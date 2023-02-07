@@ -2,17 +2,23 @@ package edu.kit.informatik.unittests.controller;
 
 
 import com.github.javafaker.Faker;
+import edu.kit.informatik.dto.RoleDto;
+import edu.kit.informatik.dto.UserDto;
+import edu.kit.informatik.dto.mapper.UserMapper;
 import edu.kit.informatik.dto.mapper.courses.CourseMapper;
 import edu.kit.informatik.dto.mapper.courses.SeatArrangementMapper;
 import edu.kit.informatik.dto.mapper.rooms.RoomMapper;
 import edu.kit.informatik.dto.userdata.courses.CourseDto;
 import edu.kit.informatik.dto.userdata.courses.SeatArrangementDto;
 import edu.kit.informatik.dto.userdata.rooms.RoomDto;
+import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.courses.Course;
 import edu.kit.informatik.model.userdata.rooms.Room;
 import edu.kit.informatik.repositories.CourseRepository;
 import edu.kit.informatik.repositories.RoomRepository;
 import edu.kit.informatik.repositories.SeatArrangementRepository;
+import edu.kit.informatik.repositories.UserRepository;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +59,12 @@ public class SeatArrangementControllerTest extends AbstractTest {
     @Autowired
     private RoomMapper roomMapper;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserMapper userMapper;
+
 
     private List<SeatArrangementDto> seatArrangements;
 
@@ -61,6 +73,15 @@ public class SeatArrangementControllerTest extends AbstractTest {
     public void setUp() {
         super.setUp();
         this.seatArrangements = addSomeSeatArrangements();
+    }
+
+    @After
+    @Override
+    public void setDown() {
+        this.courseRepository.deleteAll();
+        this.seatArrangementRepository.deleteAll();
+        this.roomRepository.deleteAll();
+        this.userRepository.deleteAll();
     }
 
     private List<SeatArrangementDto> addSomeSeatArrangements() {
@@ -213,38 +234,56 @@ public class SeatArrangementControllerTest extends AbstractTest {
 
         seatArrangementDto.setName(name + " " + faker.number().randomDigit());
 
-        seatArrangementDto.setUserId("4ccc614c-fda8-471d-b444-c70ca756cf0b");
+        User user = userRepository.save(userMapper.dtoToModel(getNewUser(faker)));
+
+        seatArrangementDto.setUserId(user.getId());
         seatArrangementDto.setSeatMap(new HashMap<>());
 
-
-        Course course = courseRepository.save(courseMapper.dtoToModel(getNewCourse(faker)));
+        Course course = courseRepository.save(courseMapper.dtoToModel(getNewCourse(faker, user.getId())));
         seatArrangementDto.setCourseId(course.getId());
 
-        Room room = roomRepository.save(roomMapper.dtoToModel(getNewRoom(faker)));
+        Room room = roomRepository.save(roomMapper.dtoToModel(getNewRoom(faker, user.getId())));
         seatArrangementDto.setRoomId(room.getId());
 
         return seatArrangementDto;
     }
 
-    private CourseDto getNewCourse(Faker faker) {
+    private CourseDto getNewCourse(Faker faker, String userId) {
         CourseDto courseDto = new CourseDto();
 
         String name = faker.team().name();
 
         courseDto.setName(name + " " + faker.number().randomDigit());
         courseDto.setSubject(name);
-        courseDto.setUserId("4ccc614c-fda8-471d-b444-c70ca756cf0b");
+        courseDto.setUserId(userId);
 
         return courseDto;
     }
 
-    private RoomDto getNewRoom(Faker faker) {
+    private RoomDto getNewRoom(Faker faker, String userId) {
         RoomDto roomDto = new RoomDto();
 
         roomDto.setName(String.valueOf(faker.number().randomDigit()));
-        roomDto.setUserId("4ccc614c-fda8-471d-b444-c70ca756cf0b");
+
+        roomDto.setUserId(userId);
         roomDto.setRoomObjects(new ArrayList<>());
 
         return roomDto;
+    }
+
+    private UserDto getNewUser(Faker faker) {
+        UserDto userDto = new UserDto();
+        userDto.setRole(RoleDto.USER);
+
+        String firstName = faker.name().firstName();
+        String lastName = faker.name().lastName();
+
+        userDto.setEmail(firstName + "." + lastName +  "@kit.edu");
+        userDto.setFirstName(firstName);
+        userDto.setLastName(lastName);
+        userDto.setPassword(faker.crypto().md5());
+
+
+        return userDto;
     }
 }

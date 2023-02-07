@@ -2,14 +2,20 @@ package edu.kit.informatik.unittests.controller;
 
 
 import com.github.javafaker.Faker;
+import edu.kit.informatik.dto.RoleDto;
+import edu.kit.informatik.dto.UserDto;
+import edu.kit.informatik.dto.mapper.UserMapper;
 import edu.kit.informatik.dto.mapper.courses.CourseMapper;
 import edu.kit.informatik.dto.mapper.interactions.ParticipantMapper;
 import edu.kit.informatik.dto.userdata.courses.CourseDto;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantTypeDto;
+import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.interactions.Participant;
 import edu.kit.informatik.repositories.CourseRepository;
 import edu.kit.informatik.repositories.ParticipantRepository;
+import edu.kit.informatik.repositories.UserRepository;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,18 +38,24 @@ public class CourseControllerTest extends AbstractTest {
 
     private static final String BASE_URL = "/api/course";
 
+
+    @Autowired
+    private CourseRepository courseRepository;
+
     @Autowired
     private CourseMapper courseMapper;
 
     @Autowired
     private ParticipantMapper participantMapper;
 
-
-    @Autowired
-    private CourseRepository courseRepository;
-
     @Autowired
     private ParticipantRepository participantRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserMapper userMapper;
 
     private List<CourseDto> courses;
 
@@ -52,6 +64,14 @@ public class CourseControllerTest extends AbstractTest {
     public void setUp() {
         super.setUp();
         this.courses = addSomeCourses();
+    }
+
+    @After
+    @Override
+    public void setDown() {
+        this.courseRepository.deleteAll();
+        this.participantRepository.deleteAll();
+        this.userRepository.deleteAll();
     }
 
     private List<CourseDto> addSomeCourses() {
@@ -201,13 +221,15 @@ public class CourseControllerTest extends AbstractTest {
 
         courseDto.setName(name + " " + faker.number().randomDigit());
         courseDto.setSubject(name);
-        courseDto.setUserId("4ccc614c-fda8-471d-b444-c70ca756cf0b");
+        User user = this.userRepository.save(userMapper.dtoToModel(getNewUser(faker)));
+        courseDto.setUserId(user.getId());
 
         List<String> participantIds = new ArrayList<>();
 
 
         for (int i = 0; i < 10; i++) {
-            Participant participant = participantRepository.save(participantMapper.dtoToModel(getNewParticipant(faker)));
+            Participant participant = participantRepository.save(participantMapper.dtoToModel(
+                                                                    getNewParticipant(faker, user.getId())));
 
             participantIds.add(participant.getId());
         }
@@ -217,14 +239,31 @@ public class CourseControllerTest extends AbstractTest {
         return courseDto;
     }
 
-    private ParticipantDto getNewParticipant(Faker faker) {
+    private ParticipantDto getNewParticipant(Faker faker, String userId) {
         ParticipantDto participantDto = new ParticipantDto();
 
         participantDto.setParticipantType(ParticipantTypeDto.Student);
-        participantDto.setUserId("4ccc614c-fda8-471d-b444-c70ca756cf0b");
+
+        participantDto.setUserId(userId);
         participantDto.setFirstName(faker.name().firstName());
         participantDto.setLastName(faker.name().lastName());
 
         return participantDto;
+    }
+
+    private UserDto getNewUser(Faker faker) {
+        UserDto userDto = new UserDto();
+        userDto.setRole(RoleDto.USER);
+
+        String firstName = faker.name().firstName();
+        String lastName = faker.name().lastName();
+
+        userDto.setEmail(firstName + "." + lastName +  "@kit.edu");
+        userDto.setFirstName(firstName);
+        userDto.setLastName(lastName);
+        userDto.setPassword(faker.crypto().md5());
+
+
+        return userDto;
     }
 }

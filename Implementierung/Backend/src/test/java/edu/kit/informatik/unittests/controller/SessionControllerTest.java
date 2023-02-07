@@ -1,12 +1,22 @@
 package edu.kit.informatik.unittests.controller;
 
 import com.github.javafaker.Faker;
+import edu.kit.informatik.dto.RoleDto;
+import edu.kit.informatik.dto.UserDto;
+import edu.kit.informatik.dto.mapper.UserMapper;
+import edu.kit.informatik.dto.mapper.courses.CourseMapper;
 import edu.kit.informatik.dto.mapper.courses.SessionMapper;
+import edu.kit.informatik.dto.userdata.courses.CourseDto;
 import edu.kit.informatik.dto.userdata.courses.SessionDto;
 import edu.kit.informatik.dto.userdata.interactions.InteractionDto;
+import edu.kit.informatik.model.User;
+import edu.kit.informatik.model.userdata.courses.Course;
 import edu.kit.informatik.model.userdata.interactions.Participant;
+import edu.kit.informatik.repositories.CourseRepository;
 import edu.kit.informatik.repositories.ParticipantRepository;
 import edu.kit.informatik.repositories.SessionRepository;
+import edu.kit.informatik.repositories.UserRepository;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +49,18 @@ public class SessionControllerTest extends AbstractTest {
     @Autowired
     private ParticipantRepository participantRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private CourseRepository courseRepository;
+
+    @Autowired
+    private CourseMapper courseMapper;
+
     private List<SessionDto> sessions;
 
     @Before
@@ -46,6 +68,15 @@ public class SessionControllerTest extends AbstractTest {
     public void setUp() {
         super.setUp();
         this.sessions = addSomeSessions();
+    }
+
+    @After
+    @Override
+    public void setDown() {
+        this.sessionRepository.deleteAll();
+        this.participantRepository.deleteAll();
+        this.courseRepository.deleteAll();
+        this.userRepository.deleteAll();
     }
 
     private List<SessionDto> addSomeSessions() {
@@ -197,15 +228,17 @@ public class SessionControllerTest extends AbstractTest {
         SessionDto sessionDto = new SessionDto();
 
         sessionDto.setName(faker.funnyName().name());
-        sessionDto.setUserId("4ccc614c-fda8-471d-b444-c70ca756cf0b");
-        sessionDto.setCourseId("95d40763-b581-4d22-99b7-05dd58b0b3f3");
+        User user = userRepository.save(userMapper.dtoToModel(getNewUser(faker)));
+        sessionDto.setUserId(user.getId());
+        Course course = courseRepository.save(courseMapper.dtoToModel(getNewCourse(faker, user.getId())));
+        sessionDto.setCourseId(course.getId());
 
         sessionDto.setDate(Timestamp.from(Instant.now()).toString());
 
         return sessionDto;
     }
 
-    private List<InteractionDto> addInteractions(Faker faker, String sessionId) {
+    private List<InteractionDto> addInteractions(Faker faker, String sessionId, String userId) {
 
         List<Participant> participants = participantRepository.findAll();
 
@@ -225,7 +258,7 @@ public class SessionControllerTest extends AbstractTest {
             interactionDto.setSessionId(sessionId);
             interactionDto.setTimeStamp(Timestamp.from(Instant.now()).toString());
             interactionDto.setCategoryId("");
-            interactionDto.setUserId("4ccc614c-fda8-471d-b444-c70ca756cf0b");
+            interactionDto.setUserId(userId);
             interactionDto.setFromParticipantId(fromId);
             interactionDto.setToParticipantId(toId);
 
@@ -233,5 +266,34 @@ public class SessionControllerTest extends AbstractTest {
         }
 
         return interactionDtos;
+    }
+
+    private UserDto getNewUser(Faker faker) {
+        UserDto userDto = new UserDto();
+        userDto.setRole(RoleDto.USER);
+
+        String firstName = faker.name().firstName();
+        String lastName = faker.name().lastName();
+
+        userDto.setEmail(firstName + "." + lastName +  "@kit.edu");
+        userDto.setFirstName(firstName);
+        userDto.setLastName(lastName);
+        userDto.setPassword(faker.crypto().md5());
+
+
+        return userDto;
+    }
+
+    private CourseDto getNewCourse(Faker faker, String userId) {
+
+        CourseDto courseDto = new CourseDto();
+
+        String name = faker.team().name();
+
+        courseDto.setName(name + " " + faker.number().randomDigit());
+        courseDto.setSubject(name);
+        courseDto.setUserId(userId);
+
+        return courseDto;
     }
 }

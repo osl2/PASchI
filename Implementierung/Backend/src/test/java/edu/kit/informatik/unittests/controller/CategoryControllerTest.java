@@ -1,6 +1,9 @@
 package edu.kit.informatik.unittests.controller;
 
 import com.github.javafaker.Faker;
+import edu.kit.informatik.dto.RoleDto;
+import edu.kit.informatik.dto.UserDto;
+import edu.kit.informatik.dto.mapper.UserMapper;
 import edu.kit.informatik.dto.mapper.courses.CourseMapper;
 import edu.kit.informatik.dto.mapper.interactions.CategoryMapper;
 import edu.kit.informatik.dto.mapper.interactions.RatedCategoryMapper;
@@ -8,10 +11,13 @@ import edu.kit.informatik.dto.mapper.rooms.RoomMapper;
 import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
 import edu.kit.informatik.dto.userdata.interactions.QualityDto;
 import edu.kit.informatik.dto.userdata.interactions.RatedCategoryDto;
+import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.interactions.RatedCategory;
 import edu.kit.informatik.repositories.CategoryBaseRepository;
 import edu.kit.informatik.repositories.CourseRepository;
 import edu.kit.informatik.repositories.RoomRepository;
+import edu.kit.informatik.repositories.UserRepository;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +49,12 @@ public class CategoryControllerTest extends AbstractTest {
     private CategoryBaseRepository<RatedCategory, String> categoryRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
     private CourseRepository courseRepository;
 
     @Autowired
@@ -62,6 +74,13 @@ public class CategoryControllerTest extends AbstractTest {
     public void setUp() {
         super.setUp();
         this.categories = addSomeCategories();
+    }
+
+    @After
+    @Override
+    public void setDown() {
+        this.userRepository.deleteAll();
+        this.categoryRepository.deleteAll();
     }
 
     private List<RatedCategoryDto> addSomeCategories() {
@@ -223,9 +242,26 @@ public class CategoryControllerTest extends AbstractTest {
         String name = faker.team().name();
 
         categoryDto.setName(name + " " + faker.number().randomDigit());
-        categoryDto.setUserId("4ccc614c-fda8-471d-b444-c70ca756cf0b");
+
+        User user = userRepository.save(userMapper.dtoToModel(getNewUser(faker)));
+        categoryDto.setUserId(user.getId());
         categoryDto.setQuality(QualityDto.FIVE_STAR);
 
         return categoryDto;
+    }
+
+    private UserDto getNewUser(Faker faker) {
+        UserDto userDto = new UserDto();
+        userDto.setRole(RoleDto.USER);
+
+        String firstName = faker.name().firstName();
+        String lastName = faker.name().lastName();
+
+        userDto.setEmail(firstName + "." + lastName +  "@kit.edu");
+        userDto.setFirstName(firstName);
+        userDto.setLastName(lastName);
+        userDto.setPassword(faker.crypto().md5());
+
+        return userDto;
     }
 }

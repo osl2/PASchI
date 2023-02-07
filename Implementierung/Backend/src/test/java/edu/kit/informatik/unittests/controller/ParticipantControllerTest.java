@@ -1,10 +1,16 @@
 package edu.kit.informatik.unittests.controller;
 
 import com.github.javafaker.Faker;
+import edu.kit.informatik.dto.RoleDto;
+import edu.kit.informatik.dto.UserDto;
+import edu.kit.informatik.dto.mapper.UserMapper;
 import edu.kit.informatik.dto.mapper.interactions.ParticipantMapper;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantTypeDto;
+import edu.kit.informatik.model.User;
 import edu.kit.informatik.repositories.ParticipantRepository;
+import edu.kit.informatik.repositories.UserRepository;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +38,12 @@ public class ParticipantControllerTest extends AbstractTest {
     @Autowired
     private ParticipantRepository participantRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserMapper userMapper;
+
     private List<ParticipantDto> participants;
 
     @Before
@@ -39,6 +51,13 @@ public class ParticipantControllerTest extends AbstractTest {
     public void setUp() {
         super.setUp();
         this.participants = addSomeParticipants();
+    }
+
+    @After
+    @Override
+    public void setDown() {
+        this.participantRepository.deleteAll();
+        this.userRepository.deleteAll();
     }
 
     private List<ParticipantDto> addSomeParticipants() {
@@ -188,12 +207,28 @@ public class ParticipantControllerTest extends AbstractTest {
         ParticipantDto participantDto = new ParticipantDto();
 
         participantDto.setParticipantType(ParticipantTypeDto.Student);
-        participantDto.setUserId("4ccc614c-fda8-471d-b444-c70ca756cf0b");
+        User user = this.userRepository.save(userMapper.dtoToModel(getNewUser(faker)));
+        participantDto.setUserId(user.getId());
         participantDto.setFirstName(faker.name().firstName());
         participantDto.setLastName(faker.name().lastName());
 
         return participantDto;
     }
 
+    private UserDto getNewUser(Faker faker) {
+        UserDto userDto = new UserDto();
+        userDto.setRole(RoleDto.USER);
+
+        String firstName = faker.name().firstName();
+        String lastName = faker.name().lastName();
+
+        userDto.setEmail(firstName + "." + lastName +  "@kit.edu");
+        userDto.setFirstName(firstName);
+        userDto.setLastName(lastName);
+        userDto.setPassword(faker.crypto().md5());
+
+
+        return userDto;
+    }
 
 }

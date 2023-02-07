@@ -1,9 +1,15 @@
 package edu.kit.informatik.unittests.controller;
 
 import com.github.javafaker.Faker;
+import edu.kit.informatik.dto.RoleDto;
+import edu.kit.informatik.dto.UserDto;
+import edu.kit.informatik.dto.mapper.UserMapper;
 import edu.kit.informatik.dto.mapper.rooms.RoomMapper;
 import edu.kit.informatik.dto.userdata.rooms.RoomDto;
+import edu.kit.informatik.model.User;
 import edu.kit.informatik.repositories.RoomRepository;
+import edu.kit.informatik.repositories.UserRepository;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +37,12 @@ public class RoomControllerTest extends AbstractTest {
     @Autowired
     private RoomRepository roomRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserMapper userMapper;
+
 
     private List<RoomDto> rooms;
 
@@ -39,6 +51,12 @@ public class RoomControllerTest extends AbstractTest {
     public void setUp() {
         super.setUp();
         this.rooms = addSomeRooms();
+    }
+
+    @After
+    @Override
+    public void setDown() {
+        this.roomRepository.deleteAll();
     }
 
     private List<RoomDto> addSomeRooms() {
@@ -186,9 +204,26 @@ public class RoomControllerTest extends AbstractTest {
         RoomDto roomDto = new RoomDto();
 
         roomDto.setName(faker.funnyName().name());
-        roomDto.setUserId("4ccc614c-fda8-471d-b444-c70ca756cf0b");
+        User user = this.userRepository.save(userMapper.dtoToModel(getNewUser(faker)));
+        roomDto.setUserId(user.getId());
         roomDto.setRoomObjects(new ArrayList<>());
 
         return roomDto;
+    }
+
+    private UserDto getNewUser(Faker faker) {
+        UserDto userDto = new UserDto();
+        userDto.setRole(RoleDto.USER);
+
+        String firstName = faker.name().firstName();
+        String lastName = faker.name().lastName();
+
+        userDto.setEmail(firstName + "." + lastName +  "@kit.edu");
+        userDto.setFirstName(firstName);
+        userDto.setLastName(lastName);
+        userDto.setPassword(faker.crypto().md5());
+
+
+        return userDto;
     }
 }
