@@ -1,11 +1,21 @@
 export class DataObject {
 
   private id: string | undefined;
-  private localId: number;
+  private readonly localId: number;
+  private readonly createdAt: string;
+  private updatedAt: string;
 
   constructor(id: string | undefined, localId: number) {
     this.id = id;
     this.localId = localId;
+    const date = new Date();
+    this.createdAt = date.toString();
+    this.updatedAt = date.toString();
+  }
+
+  update() {
+    const date = new Date();
+    this.updatedAt = date.toString();
   }
 
   hasId(): boolean {
@@ -21,5 +31,13 @@ export class DataObject {
 
   set setId(id: string) {
     this.id = id;
+  }
+
+  get created(): string {
+    return this.createdAt;
+  }
+
+  get lastUpdate(): string {
+    return this.updatedAt;
   }
 }
