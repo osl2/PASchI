@@ -162,10 +162,10 @@ export default defineComponent({
 
     function mouseDown(event: MouseEvent, roomObject: RoomObject) {
       selectedRoomObject = roomObject;
-      const displayCoordinate: Coordinate = roomToDisplayCoordinates(
-        event.clientX,
-        event.clientY
-      );
+      const displayCoordinate: Coordinate = {
+        x: event.clientX,
+        y: event.clientY,
+      };
       const roomCoordinate: Coordinate = displayToRoomCoordinates(
         displayCoordinate.x,
         displayCoordinate.y
@@ -177,10 +177,10 @@ export default defineComponent({
       if (!selectedRoomObject) {
         return;
       }
-      const displayCoordinate: Coordinate = roomToDisplayCoordinates(
-        event.clientX,
-        event.clientY
-      );
+      const displayCoordinate: Coordinate = {
+        x: event.clientX,
+        y: event.clientY,
+      };
       const roomCoordinate: Coordinate = displayToRoomCoordinates(
         displayCoordinate.x,
         displayCoordinate.y
@@ -197,10 +197,10 @@ export default defineComponent({
       if (!selectedRoomObject) {
         return;
       }
-      const displayCoordinate: Coordinate = roomToDisplayCoordinates(
-        event.clientX,
-        event.clientY
-      );
+      const displayCoordinate: Coordinate = {
+        x: event.clientX,
+        y: event.clientY,
+      };
       const roomCoordinate: Coordinate = displayToRoomCoordinates(
         displayCoordinate.x,
         displayCoordinate.y
@@ -216,10 +216,10 @@ export default defineComponent({
 
     function touchStart(event: TouchEvent, roomObject: RoomObject) {
       selectedRoomObject = roomObject;
-      const displayCoordinate: Coordinate = roomToDisplayCoordinates(
-        event.touches[0].clientX,
-        event.touches[0].clientY
-      );
+      const displayCoordinate: Coordinate = {
+        x: event.touches[0].clientX,
+        y: event.touches[0].clientY,
+      };
       const roomCoordinate: Coordinate = displayToRoomCoordinates(
         displayCoordinate.x,
         displayCoordinate.y
@@ -228,10 +228,10 @@ export default defineComponent({
     }
 
     function touchMove(event: TouchEvent) {
-      const displayCoordinate: Coordinate = roomToDisplayCoordinates(
-        event.touches[0].clientX,
-        event.touches[0].clientY
-      );
+      const displayCoordinate: Coordinate = {
+        x: event.touches[0].clientX,
+        y: event.touches[0].clientY,
+      };
       const roomCoordinate: Coordinate = displayToRoomCoordinates(
         displayCoordinate.x,
         displayCoordinate.y
@@ -245,10 +245,10 @@ export default defineComponent({
     }
 
     function touchEnd(event: TouchEvent) {
-      const displayCoordinate: Coordinate = roomToDisplayCoordinates(
-        event.touches[0].clientX,
-        event.touches[0].clientY
-      );
+      const displayCoordinate: Coordinate = {
+        x: event.touches[0].clientX,
+        y: event.touches[0].clientY,
+      };
       const roomCoordinate: Coordinate = displayToRoomCoordinates(
         displayCoordinate.x,
         displayCoordinate.y
