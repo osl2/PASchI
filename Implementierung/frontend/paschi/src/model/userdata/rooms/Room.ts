@@ -4,36 +4,55 @@ import {DataObject} from "@/model/DataObject";
 
 export class Room extends DataObject {
 
-  user: User;
-  name: string;
-  roomObjects: RoomObject[];
+  private readonly _user: User;
+  private _name: string;
+  private readonly _roomObjects: RoomObject[];
 
   constructor(id: string | undefined, localId: number, user: User, name: string) {
     super(id, localId);
-    this.user = user;
-    this.name = name;
-    this.roomObjects = [];
+    this._user = user;
+    this._name = name;
+    this._roomObjects = [];
   }
 
   addRoomObject(object: RoomObject) {
-    this.roomObjects.push(object);
+    this._roomObjects.push(object);
+    this.update();
   }
 
   removeRoomObject(objectId: string) {
-    this.roomObjects.forEach((element, index) => {
+    this._roomObjects.forEach((element, index) => {
       if (element.getId == objectId) {
-        this.roomObjects.splice(index, 1);
+        this._roomObjects.splice(index, 1);
       }
     });
+    this.update();
   }
 
   getRoomObject(objectId: string): RoomObject | undefined {
-    this.roomObjects.forEach((element: RoomObject) => {
+    this._roomObjects.forEach((element: RoomObject) => {
       if (element.getId === objectId) {
         return element;
       }
     });
 
     return undefined;
+  }
+
+  get user(): User {
+    return this._user;
+  }
+
+  get name(): string {
+    return this._name;
+  }
+
+  get roomObjects(): RoomObject[] {
+    return this._roomObjects;
+  }
+
+  set name(value: string) {
+    this._name = value;
+    this.update();
   }
 }
