@@ -1,8 +1,9 @@
 <template>
   <v-app-bar elevation="12" class="ml-0 text-blue-grey-lighten-5">
     <template v-slot:prepend>
-      <slot name="prepend" />
-      <v-app-bar-nav-icon icon="fas fa-arrow-left" @click="router.back()" />
+      <slot name="prepend">
+        <v-app-bar-nav-icon icon="fas fa-arrow-left" @click="router.back()" />
+      </slot>
     </template>
     <slot name="default"> </slot>
     <template v-slot:append>

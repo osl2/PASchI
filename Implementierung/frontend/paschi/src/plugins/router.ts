@@ -4,7 +4,7 @@ import Dashboard from "@/components/dashboard/Dashboard.vue";
 import EditStudentPage from "@/components/studentManagement/EditStudentPage.vue";
 import Register from "@/components/userManagement/Register.vue";
 import AdminPage from "@/components/userManagement/AdminPage.vue";
-import RoomEditor from "@/components/interactionMaps/RoomEditor.vue";
+import RoomEditor from "@/components/room/RoomEditor.vue";
 import ViewStudentsPage from "@/components/studentManagement/ViewStudentsPage.vue";
 import ViewCoursesPage from "@/components/courses/ViewCoursesPage.vue";
 import EditCoursePage from "@/components/courses/EditCoursePage.vue";
@@ -46,7 +46,12 @@ const routes = [
     name: "ViewCoursesPage",
     component: ViewCoursesPage,
   },
-  { path: "/room-editor", name: "InteractionMap", component: RoomEditor },
+  {
+    path: "/room-editor/:roomId",
+    name: "RoomEditor",
+    component: RoomEditor,
+    props: true,
+  },
   {
     path: "/edit-account",
     name: "EditAccountPage",
