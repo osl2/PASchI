@@ -1,11 +1,11 @@
-export class DataObject {
+export abstract class DataObject {
 
   private id: string | undefined;
   private readonly localId: number;
   private readonly createdAt: string;
   private updatedAt: string;
 
-  constructor(id: string | undefined, localId: number) {
+  protected constructor(id: string | undefined, localId: number) {
     this.id = id;
     this.localId = localId;
     const date = new Date();

@@ -2,6 +2,7 @@ import {Participant} from "@/model/userdata/interactions/Participant";
 import {Session} from "@/model/userdata/courses/Session";
 import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {User} from "@/model/User";
+import {DataObject} from "@/model/DataObject";
 
 export class Course extends DataObject {
 
@@ -43,7 +44,7 @@ export class Course extends DataObject {
       if (this._participants.at(i)?.getId === participantId) {
         return this._participants.at(i);
       }
-    });
+    }
 
     return undefined;
   }

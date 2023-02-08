@@ -11,7 +11,7 @@ export class Session extends DataObject {
   private _date: string;
   private readonly _interactions: Interaction[];
   private readonly _course: Course;
-  private readonly _seatArrangement: SeatArrangement | undefined;
+  private _seatArrangement: SeatArrangement | undefined;
 
   constructor(id: string | undefined, localId: number, user: User, name: string, date: string, course: Course,
               seatArrangement: SeatArrangement | undefined) {
@@ -25,7 +25,9 @@ export class Session extends DataObject {
   }
 
   addInteraction(interaction: Interaction) {
-    this._interactions.push(interaction);
+    if (this.getInteraction(interaction.getId) == undefined) {
+      this._interactions.push(interaction);
+    }
     this.update();
   }
 
@@ -79,6 +81,11 @@ export class Session extends DataObject {
 
   set date(value: string) {
     this._date = value;
+    this.update();
+  }
+
+  set seatArrangement(value: SeatArrangement | undefined) {
+    this._seatArrangement = value;
     this.update();
   }
 }

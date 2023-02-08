@@ -138,14 +138,14 @@ export class CourseController {
     return course.seatArrangements;
   }
 
-  addSeatArrangementToCourse(courseId: string, arrangementId: string) {
-    let course = this.courseStore.getCourse(courseId);
-    let arrangement = this.arrangementStore.getSeatArrangement(arrangementId);
-    if (course !== undefined && arrangement !== undefined) {
-      course.addSeatArrangement(arrangement);
-      arrangement.course = course;
-    }
-  }
+  // addSeatArrangementToCourse(courseId: string, arrangementId: string) {
+  //   let course = this.courseStore.getCourse(courseId);
+  //   let arrangement = this.arrangementStore.getSeatArrangement(arrangementId);
+  //   if (course !== undefined && arrangement !== undefined) {
+  //     course.addSeatArrangement(arrangement);
+  //     arrangement.course = course;
+  //   }
+  // }
 
   deleteSeatArrangement(courseId: string, arrangementId: string) {
     let course = this.courseStore.getCourse(courseId);

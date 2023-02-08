@@ -36,8 +36,4 @@ export class Category extends DataObject {
 
   set setQuality(quality: Quality) {
   }
-
-  getQuality(): Quality | undefined {
-    return undefined;
-  }
 }
