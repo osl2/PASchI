@@ -1,7 +1,6 @@
 import {Session} from "@/model/userdata/courses/Session";
 import {Course} from "@/model/userdata/courses/Course";
 import {Interaction} from "@/model/userdata/interactions/Interaction";
-import {Participant} from "@/model/userdata/interactions/Participant";
 import {useSessionStore} from "@/store/SessionStore";
 import {UserController} from "@/controller/UserController";
 import {useInteractionStore} from "@/store/InteractionStore";
