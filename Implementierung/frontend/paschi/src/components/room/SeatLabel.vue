@@ -11,18 +11,24 @@
   </v-avatar>
 </template>
 
-<script>
+<script lang="ts">
 import { Participant } from "@/model/userdata/interactions/Participant";
-import { defineComponent } from "vue";
+import {computed, defineComponent, ref} from "vue";
+import {Ref} from "vue";
 
 export default defineComponent({
   name: "SeatLabel",
   props: {
-    participant: Participant,
+    participant: {
+      type: Object as () => Participant,
+      required: false,
+    },
   },
   setup(props) {
+    const participant = computed(() => props.participant);
+
     return {
-      participant: props.participant,
+      participant
     };
   },
 });

@@ -2,7 +2,7 @@
   <navigation-bar />
   <RoomDisplay :room-id="seatArrangement.room.getId">
     <template v-slot:chair="chair">
-      <SeatLabel :participant="seatArrangement.getParticipantForSeat(chair.chair)">
+      <SeatLabel :participant="getParticipant(chair.chair)">
         <v-menu activator="parent" transition="slide-x-transition">
           <v-card>
             <v-list>
@@ -13,7 +13,7 @@
             <v-divider />
             <v-list>
               <v-list-item
-                v-for="participant in seatArrangement.participants"
+                v-for="participant in seatArrangement.course.participants"
                 :key="participant.getId"
                 prepend-icon="fas fa-circle-user"
                 @click="seatArrangement.setSeat(chair.chair, participant)"
@@ -32,12 +32,13 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, Ref, ref} from "vue";
+import {computed, defineComponent, Ref, ref} from "vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import RoomDisplay from "@/components/room/RoomDisplay.vue";
 import SeatLabel from "@/components/room/SeatLabel.vue";
 import { SeatArrangementController } from "@/controller/SeatArrangementController";
 import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
+import {Chair} from "@/model/userdata/rooms/Chair";
 export default defineComponent({
   name: "SeatArrangementPage",
   components: { SeatLabel, RoomDisplay, NavigationBar },
@@ -56,7 +57,11 @@ export default defineComponent({
         props.seatArrangementId
       )
     ) as Ref<SeatArrangement>;
-    return { seatArrangement };
+
+    function getParticipant(chair: Chair) {
+        return seatArrangement.value?.getParticipantForSeat(chair);
+      };
+    return { seatArrangement, getParticipant };
   },
 });
 </script>
