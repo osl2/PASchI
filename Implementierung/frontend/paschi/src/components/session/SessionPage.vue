@@ -33,7 +33,6 @@
         >
           <v-divider />
           <v-list-item
-            border="2px dashed orange"
             @click="setParticipant(participant)"
           >
             {{ participant.firstName }} {{ participant.lastName }}
