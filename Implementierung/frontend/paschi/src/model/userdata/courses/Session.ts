@@ -30,8 +30,8 @@ export class Session extends DataObject {
   }
 
   removeInteraction(interactionId: string) {
-    this._interactions.forEach((element, index) => {
-      if (element.getId == interactionId) {
+    this._interactions.forEach((element: Interaction, index: number) => {
+      if (element.getId === interactionId) {
         this._interactions.splice(index, 1);
       }
     });
@@ -39,11 +39,11 @@ export class Session extends DataObject {
   }
 
   getInteraction(interactionId: string): Interaction | undefined {
-    this._interactions.forEach((element: Interaction) => {
-      if (element.getId == interactionId) {
-        return element;
+    for (let i = 0; i < this._interactions.length; i++) {
+      if (this._interactions.at(i)?.getId === interactionId) {
+        return this._interactions.at(i);
       }
-    });
+    }
 
     return undefined;
   }

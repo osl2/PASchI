@@ -36,6 +36,7 @@ export class SeatArrangementController {
     let arrangement = new SeatArrangement(undefined, this.seatArrangementStore.getNextId(),
       this.userController.getUser(), name, course, room);
     this.seatArrangementStore.addSeatArrangement(arrangement);
+    course.addSeatArrangement(arrangement);
 
     return arrangement.getId;
   }

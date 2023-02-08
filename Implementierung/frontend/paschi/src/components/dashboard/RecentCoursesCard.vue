@@ -4,33 +4,33 @@
       <v-row class="ma-2">
         Kürzlich verwendete Kurse
         <v-spacer />
-        <v-btn variant="tonal" color="white" @click="navigateToCourses()"  >Alle anzeigen</v-btn>
+        <v-btn variant="tonal" color="white" @click="navigateToCourses()"
+          >Alle anzeigen</v-btn
+        >
       </v-row>
     </v-card-title>
     <v-card-item v-for="course in courses">
-      {{course.name}}
+      {{ course.name }}
       <v-btn @click="navigateTo(course)"></v-btn>
     </v-card-item>
   </v-card>
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
+import { defineComponent } from "vue";
 import router from "@/plugins/router";
 
 export default defineComponent({
   name: "RecentCoursesCard",
   setup() {
     function navigateToCourses() {
-      router.push({name: "ViewCoursesPage"})
+      router.push({ name: "ViewCoursesPage" });
     }
     return {
-      navigateToCourses
-    }
-  }
-})
+      navigateToCourses,
+    };
+  },
+});
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -2,6 +2,7 @@
   <navigation-bar extended>
     <template v-slot:extension>
       <v-btn @click="saveChangesClick">speichern</v-btn>
+      <v-btn @click="activateDeleteCardClick">löschen</v-btn>
     </template>
   </navigation-bar>
 
@@ -40,6 +41,30 @@
         </v-list>
       </v-card>
     </v-dialog>
+    <v-dialog max-width="700" v-model="deleteCourseDialog">
+      <v-card variant="flat" class="pa-2 rounded-lg">
+        <v-card-title class="text-h5 text-center text-indigo-darken-4">
+          Kurs unwiederruflich löschen?
+        </v-card-title>
+        <v-card-actions class="row justify-center">
+          <v-btn
+            height="50"
+            width="150"
+            variant="tonal"
+            @click="cancelDeleteClick"
+            >Abbrechen</v-btn
+          >
+          <v-btn
+            height="50"
+            width="150"
+            variant="tonal"
+            @click="deleteCourseClick"
+            color="primary"
+            >Bestätigen</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-main>
 </template>
 
@@ -52,8 +77,8 @@ import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import { Course } from "@/model/userdata/courses/Course";
-import router from "@/plugins/router";
 import { SeatArrangementController } from "@/controller/SeatArrangementController";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "editCoursePage",
@@ -65,9 +90,12 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const router = useRouter();
+
     const courseController = CourseController.getCourseController();
     const roomController = RoomController.getRoomController();
-    const seatArrangementController = SeatArrangementController.getSeatArrangementController();
+    const seatArrangementController =
+      SeatArrangementController.getSeatArrangementController();
     const course: Ref<Course | undefined> = ref<Course | undefined>(
       courseController.getCourse(props.courseId)
     ) as Ref<Course | undefined>;
@@ -76,9 +104,12 @@ export default defineComponent({
     const seatArrangements: Ref<SeatArrangement[]> = ref<SeatArrangement[]>(
       getSeatArrangements()
     ) as Ref<SeatArrangement[]>;
-    const rooms: Ref<Room[]> = ref<Room[]>(roomController.getAllRooms()) as Ref<Room[]>;
+    const rooms: Ref<Room[]> = ref<Room[]>(roomController.getAllRooms()) as Ref<
+      Room[]
+    >;
     const seatArrangementDialog: Ref<boolean> = ref<boolean>(false);
     const roomSelectionDialog: Ref<boolean> = ref<boolean>(false);
+    const deleteCourseDialog: Ref<boolean> = ref<boolean>(false);
 
     //Hilfsmethoden
     function getCourseName(): string {
@@ -103,6 +134,18 @@ export default defineComponent({
     }
 
     //normale Methoden
+    function activateDeleteCardClick() {
+      deleteCourseDialog.value = true;
+    }
+    function deleteCourseClick() {
+      courseController.deleteCourse(props.courseId);
+      router.push({
+        name:"ViewCoursesPage"
+      })
+    }
+    function cancelDeleteClick() {
+      deleteCourseDialog.value = false;
+    }
     function saveChangesClick() {
       courseController.updateCourse(
         props.courseId,
@@ -110,7 +153,7 @@ export default defineComponent({
         courseSubject.value
       );
       router.push({
-        name: "CourseDetailPage",
+        name: "CourseDetailsPage",
         params: { courseId: props.courseId },
       });
     }
@@ -124,23 +167,38 @@ export default defineComponent({
     }
 
     function addSeatArrangement(room: Room) {
-      let seatArrangementId: string|undefined = seatArrangementController.createSeatArrangement("unbenannt", props.courseId, room.getId);
-       //TODO Name des SeatArrangements hier festlegen?
-      if (typeof seatArrangementId=="string") {
-        //TODO push
+      let seatArrangementId: string | undefined =
+        seatArrangementController.createSeatArrangement(
+          "unbenannt",
+          room.getId,
+          props.courseId
+        );
+      //TODO Name des SeatArrangements hier festlegen?
+      if (typeof seatArrangementId == "string") {
+        router.push({
+          name: "SeatArrangementPage",
+          params: { seatArrangementId: seatArrangementId },
+        });
       }
     }
 
     function editSeatArrangement(seatArrangement: SeatArrangement) {
-      //TODO push
+      router.push({
+        name: "SeatArrangementPage",
+        params: { seatArrangementId: seatArrangement.getId },
+      });
     }
 
     return {
       saveChangesClick,
+      deleteCourseClick,
+      cancelDeleteClick,
+      activateDeleteCardClick,
       addSeatArrangementClick,
       editSeatArrangementClick,
       addSeatArrangement,
       editSeatArrangement,
+      deleteCourseDialog,
       seatArrangementDialog,
       roomSelectionDialog,
       seatArrangements,

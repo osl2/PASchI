@@ -21,12 +21,14 @@ export abstract class Participant extends DataObject {
   }
 
   addCourse(course: Course) {
-    this._courses.push(course);
+    if (this.getCourse(course.getId) == undefined) {
+      this.courses.push(course);
+    }
     this.update();
   }
 
   removeCourse(courseId: string) {
-    this._courses.forEach((element, index) => {
+    this._courses.forEach((element: Course, index: number) => {
       if (element.getId === courseId) {
         this._courses.splice(index, 1);
       }
@@ -34,18 +36,40 @@ export abstract class Participant extends DataObject {
     this.update();
   }
 
+  getCourse(courseId: string): Course | undefined {
+    for (let i = 0; i < this._courses.length; i++) {
+      if (this._courses.at(i)?.getId === courseId) {
+        return this._courses.at(i);
+      }
+    }
+
+    return undefined;
+  }
+
   addInteraction(interaction: Interaction) {
-    this._interactions.push(interaction);
+    if (this.getInteraction(interaction.getId) == undefined) {
+      this._interactions.push(interaction);
+    }
     this.update();
   }
 
   removeInteraction(interactionId: string) {
-    this._interactions.forEach((element, index) => {
+    this._interactions.forEach((element: Interaction, index: number) => {
       if (element.getId === interactionId) {
         this._interactions.splice(index, 1);
       }
     });
     this.update();
+  }
+
+  getInteraction(interactionId: string): Interaction | undefined {
+    for (let i = 0; i < this._interactions.length; i++) {
+      if (this._interactions.at(i)?.getId === interactionId) {
+        return this._interactions.at(i);
+      }
+    }
+
+    return undefined;
   }
 
   get user(): User {

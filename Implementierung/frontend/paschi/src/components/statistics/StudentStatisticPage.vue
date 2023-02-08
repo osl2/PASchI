@@ -1,9 +1,13 @@
 <template>
-
+  <navigation-bar />
+  <v-main>
+    <side-menu />
+  </v-main>
 </template>
 
 <script lang="ts">
-export default {
+import { defineComponent } from "vue";
+export default defineComponent({
   name: "StudentStatisticPage",
   props: {
     studentId: {
@@ -11,9 +15,8 @@ export default {
       required: true,
     },
   },
-}
+  setup(props) {},
+});
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

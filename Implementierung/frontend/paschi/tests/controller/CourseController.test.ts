@@ -1,10 +1,12 @@
 import {CourseController} from "@/controller/CourseController";
 import {setActivePinia, createPinia} from "pinia";
 import {UserController} from "@/controller/UserController";
+import {StudentController} from "@/controller/StudentController";
 
 setActivePinia(createPinia());
 const courseController = CourseController.getCourseController();
 const userController = UserController.getUserController();
+const studentController = StudentController.getStudentConroller();
 
 const _firstName = "Gregor";
 const _lastName = "Snelting";
@@ -16,6 +18,11 @@ let name = "PSE";
 let subject = "Praktische Informatik";
 const id = courseController.createCourse(name, subject);
 const course = courseController.getCourse(id)!;
+
+let studentFirstName = "Luka";
+let studentLastName = "Kosak";
+const studentId = studentController.createStudent(studentFirstName, studentLastName);
+const student = studentController.getStudent(studentId);
 
 test("create", () => {
   expect(course.getId).toBe(id);
@@ -47,4 +54,12 @@ test("delete", () => {
 test("getAll", () => {
   const courses = courseController.getAllCourses();
   expect(courses.at(0)!.getId).toBe(id);
+});
+
+test("addStudent", () => {
+  courseController.addStudentToCourse(id, studentId);
+  expect(courseController.getStudentsOfCourse(id)!.at(0)!.getId).toBe(studentId);
+  expect(course.getParticipant(studentId)).toBeDefined();
+  courseController.addStudentToCourse(id, studentId);
+  expect(courseController.getStudentsOfCourse(id)?.length).toBe(1);
 });

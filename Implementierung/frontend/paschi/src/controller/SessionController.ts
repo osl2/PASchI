@@ -1,13 +1,13 @@
 import {Session} from "@/model/userdata/courses/Session";
 import {Course} from "@/model/userdata/courses/Course";
 import {Interaction} from "@/model/userdata/interactions/Interaction";
-import {Participant} from "@/model/userdata/interactions/Participant";
 import {useSessionStore} from "@/store/SessionStore";
 import {UserController} from "@/controller/UserController";
 import {useInteractionStore} from "@/store/InteractionStore";
 import {useCourseStore} from "@/store/CourseStore";
 import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 import {useCategoryStore} from "@/store/CategoryStore";
+import {useStudentStore} from "@/store/StudentStore";
 
 // TODO: Backend Service einbinden
 // TODO: Standard Sitzordnung
@@ -19,6 +19,7 @@ export class SessionController {
   private courseStore = useCourseStore();
   private arrangementStore = useSeatArrangementStore();
   private categoryStore = useCategoryStore();
+  private studentStore = useStudentStore();
 
   private constructor() {
   }
@@ -89,11 +90,13 @@ export class SessionController {
     return session.interactions;
   }
 
-  createInteraction(sessionId: string, fromParticipant: Participant, toParticipant: Participant,
+  createInteraction(sessionId: string, fromParticipantId: string, toParticipantId: string,
                     categoryId: string): string | undefined {
     let session = this.sessionStore.getSession(sessionId);
     let category = this.categoryStore.getCategory(categoryId);
-    if (session == undefined || category == undefined) {
+    let fromParticipant = this.studentStore.getStudent(fromParticipantId);
+    let toParticipant = this.studentStore.getStudent(toParticipantId);
+    if (session == undefined || category == undefined || fromParticipant == undefined || toParticipant == undefined) {
       return undefined;
     }
 

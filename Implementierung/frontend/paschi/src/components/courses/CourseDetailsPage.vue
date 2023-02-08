@@ -1,49 +1,145 @@
 <template>
-  <navigation-bar></navigation-bar>
+  <navigation-bar extended>
+    <v-app-bar-title> Kursdetails </v-app-bar-title>
+    <template v-slot:extension>
+      <v-btn @click="showCourseStatisticsClick">Kursstatistiken ansehen</v-btn>
+      <v-btn @click="editCourseDetailsClick">Kurs bearbeiten</v-btn>
+    </template>
+  </navigation-bar>
+  <side-menu></side-menu>
   <v-main>
-    <side-menu></side-menu>
-    <v-btn @click="addSessionClick">Sitzung starten</v-btn>
-    <v-btn @click="editCourseDetailsClick">Kurs bearbeiten</v-btn>
-    <v-btn @click="showCourseStatisticsClick">Kursstatistiken ansehen</v-btn>
-    <v-btn @click="activateStudentCard">Schüler hinzufügen</v-btn>
-    <v-btn @click="activateSessionStatisticsSelection"
-      >Sitzungsstatistiken ansehen</v-btn
-    >
-    <v-btn @click="activateInteractionMapSelection"
-      >Interaktionskarte ansehen</v-btn
-    >
-    <v-list>
-      <v-list-item v-for="student in studentsInCourse"
-        >{{ student.firstName }} {{ student.lastName }}
-        <v-btn @click="studentStatisticClick(student)"
-          >Statistiken anzeigen</v-btn
-        >
-        <v-btn @click="deleteStudentClick(student)">Schüler entfernen</v-btn>
-      </v-list-item>
-    </v-list>
-    <v-dialog v-model="sessionStatisticDialog">
-      <v-card>
-        <v-list>
-          <v-list-item
-            v-for="session in sessions"
-            @click="navigateToSessionStatistic(session)"
-            >{{ session.date }}</v-list-item
+    <v-container fluid class="v-row justify-center">
+      <v-card min-width="640" rounded class="ma-3 v-col-auto">
+        <v-row>
+          <h2 class="ma-2">Sitzungsliste</h2>
+          <v-spacer />
+          <v-btn
+            min-width="228"
+            class="ml-15 ma-2"
+            variant="flat"
+            color="green"
+            rounded
+            prepend-icon="mdi mdi-plus"
+            @click="addSessionClick"
+          >Sitzung starten</v-btn
           >
-        </v-list>
+          <v-icon
+            v-if="sessionListCollapsed"
+            icon="mdi mdi-arrow-up-drop-circle"
+            size="40"
+            @click="toggleSessionListCollapsed"
+            class="ma-2"
+            color="primary"
+          />
+          <v-icon
+            v-if="!sessionListCollapsed"
+            icon="mdi mdi-arrow-down-drop-circle"
+            size="40"
+            @click="toggleSessionListCollapsed"
+            class="ma-2"
+            color="primary"
+          />
+        </v-row>
+        <v-row class="v-card justify-center" v-if="!sessionListCollapsed">
+          <v-card class="v-col-12" max-height="1000">
+            <v-list max-height="500">
+              <v-row class="ma-2" v-for="session in sessions"
+                >{{ session.name }} {{ session.date }}
+                <v-spacer />
+                <v-btn
+                  variant="tonal"
+                  color="primary"
+                  @click="interactionMapClick(session)"
+                  >InteraktionsKarte</v-btn
+                >
+                <v-btn
+                  class="ml-2"
+                  variant="tonal"
+                  color="primary"
+                  @click="sessionStatisticClick(session)"
+                >
+                  <v-icon> fas fa-chart-line </v-icon>
+                </v-btn>
+                <v-btn
+                  class="ml-2"
+                  variant="tonal"
+                  color="red"
+                  @click="deleteSessionClick(session)"
+                >
+                  <v-icon>mdi mdi-minus</v-icon>
+                </v-btn>
+              </v-row>
+            </v-list>
+          </v-card>
+        </v-row>
       </v-card>
-    </v-dialog>
-    <v-dialog v-model="interactionMapSelectionDialog">
-      <v-card>
-        <v-list>
-          <v-list-item
-            v-for="session in sessions"
-            @click="navigateToInteractionMap(session)"
+    </v-container>
+    <v-container fluid class="v-row justify-center">
+      <v-card min-width="640" rounded class="ma-3 v-col-auto">
+        <v-row>
+          <h2 class="ma-2">Schülerliste</h2>
+          <v-spacer />
+          <v-btn
+            class="ml-15 ma-2"
+            variant="flat"
+            color="green"
+            rounded
+            prepend-icon="mdi mdi-plus"
+            min-width="228"
+            @click="activateStudentCard"
+            >Schüler hinzufügen</v-btn
           >
-            {{ session.date }}
-          </v-list-item>
-        </v-list>
+          <v-icon
+            v-if="studentListCollapsed"
+            icon="mdi mdi-arrow-up-drop-circle"
+            size="40"
+            @click="toggleStudentListCollapsed"
+            class="ma-2"
+            color="primary"
+          />
+          <v-icon
+            v-if="!studentListCollapsed"
+            icon="mdi mdi-arrow-down-drop-circle"
+            size="40"
+            @click="toggleStudentListCollapsed"
+            class="ma-2"
+            color="primary"
+          />
+        </v-row>
+        <v-row class="v-card justify-center" v-if="!studentListCollapsed">
+          <v-card class="v-col-12" max-height="1000">
+            <v-list max-height="500">
+              <v-row class="ma-2" v-for="student in studentsInCourse"
+                >{{ student.firstName }} {{ student.lastName }}
+                <v-spacer />
+                <v-btn
+                  variant="tonal"
+                  color="primary"
+                  @click="editStudentClick(student)"
+                  ><v-icon>fas fa-pencil</v-icon></v-btn
+                >
+                <v-btn
+                  class="ml-2"
+                  variant="tonal"
+                  color="primary"
+                  @click="studentStatisticClick(student)"
+                >
+                  <v-icon> fas fa-chart-line </v-icon>
+                </v-btn>
+                <v-btn
+                  class="ml-2"
+                  variant="tonal"
+                  color="red"
+                  @click="removeStudentFromCourse(student)"
+                >
+                  <v-icon>mdi mdi-minus</v-icon>
+                </v-btn>
+              </v-row>
+            </v-list>
+          </v-card>
+        </v-row>
       </v-card>
-    </v-dialog>
+    </v-container>
     <v-dialog v-model="addStudentSelectionDialog">
       <v-card>
         <v-list>
@@ -77,9 +173,10 @@ import SideMenu from "@/components/navigation/SideMenu.vue";
 import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
 import { Session } from "@/model/userdata/courses/Session";
 import { Student } from "@/model/userdata/interactions/Student";
-import { defineComponent, Ref, ref } from "vue";
+import { computed, defineComponent, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
-import router from "@/plugins/router";
+import { SessionController } from "@/controller/SessionController";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "CourseDetailsPage",
@@ -91,7 +188,15 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const courseController = CourseController.getCourseController();
+    const router = useRouter();
+
+    const courseController: CourseController =
+      CourseController.getCourseController();
+    const sessionController: SessionController =
+      SessionController.getSessionController();
+
+    const studentListCollapsed: Ref<boolean> = ref<boolean>(true);
+    const sessionListCollapsed: Ref<boolean> = ref<boolean>(true);
 
     const sessionStatisticDialog: Ref<boolean> = ref<boolean>(false);
     const interactionMapSelectionDialog: Ref<boolean> = ref<boolean>(false);
@@ -101,9 +206,9 @@ export default defineComponent({
     const sessions: Ref<Session[]> = ref<Session[]>(getSessions()) as Ref<
       Session[]
     >;
-    const studentsNotInCourse: Ref<Student[]> = ref<Student[]>(
-      getStudentsNotInCourse()
-    ) as Ref<Student[]>;
+
+    const studentsNotInCourse = computed(() => getStudentsNotInCourse());
+
     const studentsInCourse: Ref<Student[]> = ref<Student[]>(
       getStudentsOfCourse()
     ) as Ref<Student[]>;
@@ -147,6 +252,18 @@ export default defineComponent({
     }
 
     //normale Methoden
+    function deleteSessionClick(session: Session) {
+      courseController.deleteSession(props.courseId, session.getId);
+    }
+    function toggleSessionListCollapsed() {
+      sessionListCollapsed.value = !sessionListCollapsed.value;
+    }
+    function toggleStudentListCollapsed() {
+      studentListCollapsed.value = !studentListCollapsed.value;
+    }
+    function removeStudentFromCourse(student: Student) {
+      courseController.removeStudentFromCourse(props.courseId, student.getId);
+    }
     function showCourseStatisticsClick() {
       router.push({
         name: "CourseStatisticPage",
@@ -168,26 +285,23 @@ export default defineComponent({
     function deleteStudentClick(student: Student) {
       courseController.removeStudentFromCourse(props.courseId, student.getId);
     }
-    function activateInteractionMapSelection() {
-      interactionMapSelectionDialog.value = true;
-    }
-    function activateSessionStatisticsSelection() {
-      sessionStatisticDialog.value = true;
-    }
-    function navigateToSessionStatistic(session: Session) {
+    function sessionStatisticClick(session: Session) {
       router.push({
         name: "SessionStatisticPage",
-        params: { courseId: props.courseId, sessionId: session.getId },
+        params: { sessionId: session.getId },
       });
     }
-    function navigateToInteractionMap(session: Session) {
+    function interactionMapClick(session: Session) {
       router.push({
         name: "ShowInteractionMapPage",
-        params: { courseId: props.courseId, sessionId: session.getId },
-      })
+        params: { sessionId: session.getId },
+      });
     }
     function addStudent(student: Student) {
       courseController.addStudentToCourse(props.courseId, student.getId);
+      if (studentsNotInCourse.value.length == 0) {
+        addStudentSelectionDialog.value = false;
+      }
     }
     function activateStudentCard() {
       addStudentSelectionDialog.value = true;
@@ -196,13 +310,22 @@ export default defineComponent({
       seatArrangementSelectionDialog.value = true;
     }
     function startSessionClick(seatArrangement: SeatArrangement) {
-      //TODO
+      router.push({
+        name: "SessionPage",
+        params: {
+          sessionId: sessionController.createSession(
+            props.courseId,
+            seatArrangement.getId,
+            ""
+          ),
+        }, //TODO session name
+      });
     }
     function studentStatisticClick(student: Student) {
       router.push({
-        name:"StudentStatisticPage",
-        params: {studentId: student.getId}
-      })
+        name: "StudentStatisticPage",
+        params: { studentId: student.getId },
+      });
     }
 
     return {
@@ -210,16 +333,17 @@ export default defineComponent({
       editCourseDetailsClick,
       editStudentClick,
       deleteStudentClick,
-      activateInteractionMapSelection,
-      activateSessionStatisticsSelection,
-      navigateToSessionStatistic,
-      navigateToInteractionMap,
+      sessionStatisticClick,
+      interactionMapClick,
       addStudent,
       activateStudentCard,
       addSessionClick,
       startSessionClick,
       studentStatisticClick,
-
+      removeStudentFromCourse,
+      toggleStudentListCollapsed,
+      toggleSessionListCollapsed,
+      deleteSessionClick,
       sessionStatisticDialog,
       interactionMapSelectionDialog,
       addStudentSelectionDialog,
@@ -228,6 +352,8 @@ export default defineComponent({
       studentsInCourse,
       sessions,
       seatArrangements,
+      studentListCollapsed,
+      sessionListCollapsed,
     };
   },
 });

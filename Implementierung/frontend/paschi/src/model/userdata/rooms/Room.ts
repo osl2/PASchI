@@ -16,12 +16,14 @@ export class Room extends DataObject {
   }
 
   addRoomObject(object: RoomObject) {
-    this._roomObjects.push(object);
+    if (this.getRoomObject(object.getId) == undefined) {
+      this._roomObjects.push(object);
+    }
     this.update();
   }
 
   removeRoomObject(objectId: string) {
-    this._roomObjects.forEach((element, index) => {
+    this.roomObjects.forEach((element: RoomObject, index: number) => {
       if (element.getId == objectId) {
         this._roomObjects.splice(index, 1);
       }
@@ -30,11 +32,11 @@ export class Room extends DataObject {
   }
 
   getRoomObject(objectId: string): RoomObject | undefined {
-    this._roomObjects.forEach((element: RoomObject) => {
-      if (element.getId === objectId) {
-        return element;
+    for (let i = 0; i < this._roomObjects.length; i++) {
+      if (this._roomObjects.at(i)?.getId === objectId) {
+        return this._roomObjects.at(i);
       }
-    });
+    }
 
     return undefined;
   }

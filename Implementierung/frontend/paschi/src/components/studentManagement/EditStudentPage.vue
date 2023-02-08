@@ -19,11 +19,28 @@
         type="input"
       ></v-text-field>
     </v-container>
-    <v-dialog v-model="deleteStudentDialog">
-      <v-card>
-        "Delete student?"
-        <v-btn @click="cancelDeleteClick">cancel</v-btn>
-        <v-btn @click="deleteStudentClick">confirm</v-btn>
+    <v-dialog max-width="700" v-model="deleteStudentDialog">
+      <v-card variant="flat" class="pa-2 rounded-lg">
+        <v-card-title class="text-h5 text-center text-indigo-darken-4">
+          Schüler unwiederruflich löschen?
+        </v-card-title>
+        <v-card-actions class="row justify-center">
+          <v-btn
+            height="50"
+            width="150"
+            variant="tonal"
+            @click="cancelDeleteClick"
+          >Abbrechen</v-btn
+          >
+          <v-btn
+            height="50"
+            width="150"
+            variant="tonal"
+            @click="deleteStudentClick"
+            color="primary"
+          >Bestätigen</v-btn
+          >
+        </v-card-actions>
       </v-card>
     </v-dialog>
   </v-main>
@@ -35,6 +52,7 @@ import { StudentController } from "@/controller/StudentController";
 import { defineComponent, Ref, ref } from "vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import { Student } from "@/model/userdata/interactions/Student";
+import { useRouter } from "vue-router";
 export default defineComponent({
   name: "editStudentPage.vue",
   components: {
@@ -49,6 +67,8 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const router = useRouter();
+
     const studentController = StudentController.getStudentConroller();
 
     const student: Ref<Student | undefined> = ref<Student | undefined>(
@@ -77,17 +97,19 @@ export default defineComponent({
     function activateCardClick() {
       deleteStudentDialog.value = true;
     }
+
     function saveChangesClick() {
-      if(!props.studentId) {
-        const studentId = studentController.createStudent(firstName.value, lastName.value);
-      } else {
-        studentController.updateStudent(props.studentId, firstName.value, lastName.value);
-      }
+      studentController.updateStudent(
+        props.studentId,
+        firstName.value,
+        lastName.value
+      );
+      router.push({ name: "ViewStudentsPage" });
     }
 
     function deleteStudentClick() {
       studentController.deleteStudent(props.studentId);
-      deleteStudentDialog.value = false;
+      router.push({ name: "ViewStudentsPage" });
     }
     function cancelDeleteClick() {
       deleteStudentDialog.value = false;

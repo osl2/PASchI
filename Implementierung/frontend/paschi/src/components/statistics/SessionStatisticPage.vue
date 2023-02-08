@@ -1,23 +1,27 @@
 <template>
-
+  <navigation-bar />
+  <v-main>
+    <side-menu />
+  </v-main>
 </template>
 
 <script lang="ts">
-export default {
+import { defineComponent } from "vue";
+import { SessionController } from "@/controller/SessionController";
+import NavigationBar from "@/components/navigation/NavigationBar.vue";
+import SideMenu from "@/components/navigation/SideMenu.vue";
+
+export default defineComponent({
   name: "SessionStatisticPage",
+  components: { SideMenu, NavigationBar },
   props: {
-    courseId: {
-      type: String,
-      required: true,
-    },
     sessionId: {
       type: String,
       required: true,
-    }
+    },
   },
-}
+  setup(props) {},
+});
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

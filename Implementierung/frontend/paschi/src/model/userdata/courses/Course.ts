@@ -2,7 +2,6 @@ import {Participant} from "@/model/userdata/interactions/Participant";
 import {Session} from "@/model/userdata/courses/Session";
 import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {User} from "@/model/User";
-import {DataObject} from "@/model/DataObject";
 
 export class Course extends DataObject {
 
@@ -24,13 +23,15 @@ export class Course extends DataObject {
   }
 
   addParticipant(participant: Participant) {
-    this._participants.push(participant);
+    if (this.getParticipant(participant.getId) == undefined) {
+      this._participants.push(participant);
+    }
     this.update();
   }
 
   removeParticipant(participantId: string) {
-    this._participants.forEach((element, index) => {
-      if (element.getId == participantId) {
+    this._participants.forEach((element: Participant, index: number) => {
+      if (element.getId === participantId) {
         this._participants.splice(index, 1)
       }
     });
@@ -38,9 +39,9 @@ export class Course extends DataObject {
   }
 
   getParticipant(participantId: string): Participant | undefined {
-    this._participants.forEach((participant: Participant) => {
-      if (participant.getId === participantId) {
-        return participant;
+    for (let i = 0; i < this._participants.length; i++) {
+      if (this._participants.at(i)?.getId === participantId) {
+        return this._participants.at(i);
       }
     });
 
@@ -48,26 +49,40 @@ export class Course extends DataObject {
   }
 
   addSession(session: Session) {
-    this._sessions.push(session);
+    if (this.getSession(session.getId) == undefined) {
+      this._sessions.push(session);
+    }
     this.update();
   }
 
   removeSession(sessionId: string) {
-    this._sessions.forEach((element, index) => {
-      if (element.getId == sessionId) {
+    this._sessions.forEach((element: Session, index: number) => {
+      if (element.getId === sessionId) {
         this._sessions.splice(index, 1);
       }
     });
     this.update();
   }
 
+  getSession(sessionId: string): Session | undefined {
+    for (let i = 0; i < this._sessions.length; i++) {
+      if (this._sessions.at(i)?.getId === sessionId) {
+        return this._sessions.at(i);
+      }
+    }
+
+    return undefined;
+  }
+
   addSeatArrangement(seatArrangement: SeatArrangement) {
-    this._seatArrangements.push(seatArrangement);
+    if (this.getSeatArrangement(seatArrangement.getId) == undefined) {
+      this._seatArrangements.push(seatArrangement);
+    }
     this.update();
   }
 
   removeSeatArrangement(arrangementId: string) {
-    this._seatArrangements.forEach((element, index) => {
+    this.seatArrangements.forEach((element: SeatArrangement, index: number) => {
       if (element.getId === arrangementId) {
         this._seatArrangements.splice(index, 1);
       }
@@ -81,6 +96,16 @@ export class Course extends DataObject {
 
   get name(): string {
     return this._name;
+  }
+
+  getSeatArrangement(arrangementId: string): SeatArrangement | undefined {
+    for (let i = 0; i < this._seatArrangements.length; i++) {
+      if (this._seatArrangements.at(i)?.getId === arrangementId) {
+        return this._seatArrangements.at(i);
+      }
+    }
+
+    return undefined;
   }
 
   get subject(): string {

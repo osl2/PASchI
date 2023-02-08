@@ -3,7 +3,6 @@
     <v-app-bar-title> Schüler ansehen </v-app-bar-title>
     <template v-slot:extension>
       <v-btn
-        class="ml-15"
         variant="flat"
         color="green"
         rounded
@@ -14,10 +13,10 @@
     </template>
   </navigation-bar>
 
-  <v-main>
+  <v-main class="ma-0 v-row justify-center align-content-xl-space-around">
     <SideMenu />
-    <v-container fluid>
-      <v-list density="comfortable" max-width="700">
+    <v-container fluid class="v-col-11" style="max-width: 700px">
+      <v-list rounded v-if="students.length > 0">
         <v-list-item rounded v-for="student in students" :key="student.getId">
           <v-list-item-title>
             {{ student.firstName }} {{ student.lastName }}
@@ -26,21 +25,85 @@
             <v-btn
               variant="tonal"
               color="primary"
-              @click="editStudentClick(student.getId)"
+              @click="editStudentClick(student)"
               ><v-icon>fas fa-pencil</v-icon></v-btn
             >
             <v-btn
               class="ml-2"
               variant="tonal"
               color="primary"
-              @click="showStatisticsClick(undefined)"
+              @click="showStatisticsClick(student)"
             >
               <v-icon> fas fa-chart-line </v-icon>
             </v-btn>
           </template>
         </v-list-item>
       </v-list>
+      <v-card v-else class="pa-2" variant="text">
+        <v-card-title
+          class="text-h5 text-center text-indigo-darken-4 text-wrap"
+        >
+          Es wurden noch keine Schüler erstellt.
+        </v-card-title>
+        <v-card-item class="justify-center">
+          <v-btn
+            max-width="450"
+            height="50"
+            variant="tonal"
+            prepend-icon="fas fa-plus"
+            color="primary"
+            @click="newStudentClick"
+            >Schüler erstellen!
+          </v-btn>
+        </v-card-item>
+      </v-card>
     </v-container>
+    <v-dialog max-width="700" v-model="enterStudentNameDialog">
+      <v-card variant="flat" class="pa-2 rounded-lg">
+        <v-card-title
+          class="text-h5 text-center text-indigo-darken-4 text-wrap"
+        >
+          Neuen Schüler erstellen
+        </v-card-title>
+        <v-form validate-on="submit" @submit.prevent>
+          <v-card-item>
+            <v-text-field
+              v-model="studentFirstName"
+              variant="outlined"
+              class="mt-2"
+              label="Vorname"
+              type="input"
+              autofocus
+            ></v-text-field>
+            <v-text-field
+              v-model="studentLastName"
+              variant="outlined"
+              class="mt-1"
+              label="Nachname"
+              type="input"
+            ></v-text-field>
+          </v-card-item>
+          <v-card-actions class="row justify-center">
+            <v-btn
+              height="50"
+              width="150"
+              @click="abortNewStudentClick"
+              variant="tonal"
+              >Abbrechen</v-btn
+            >
+            <v-btn
+              type="submit"
+              height="50"
+              width="150"
+              @click="confirmNewStudentClick"
+              variant="tonal"
+              color="primary"
+              >Bestätigen</v-btn
+            >
+          </v-card-actions>
+        </v-form>
+      </v-card>
+    </v-dialog>
   </v-main>
 </template>
 
@@ -49,60 +112,64 @@ import { StudentController } from "@/controller/StudentController";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import { Student } from "@/model/userdata/interactions/Student";
-import {defineComponent, Ref, ref, UnwrapRef} from "vue";
-import {useRouter} from "vue-router";
+import { defineComponent, Ref, ref } from "vue";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "ViewStudentsPage",
   components: { SideMenu, NavigationBar },
 
   setup() {
-    /*const students = [
-      { name: "Hansi" },
-      { name: "Gudrun" },
-      { name: "Kunibert" },
-      { name: "Melanie" },
-      { name: "Günther" },
-      { name: "Ingo Stolz" },
-      { name: "Peter Petersilie" },
-      { name: "Henrik Olafson" },
-      { name: "Magnus Köder" },
-      { name: "Severus Snape" },
-      { name: "Christiana Krise" },
-    ];*/
-
-    const studentController = StudentController.getStudentConroller();
-    const students: Ref<Student[]> = ref<Student[]>(studentController.getAllStudents()) as Ref<Student[]>;
-
     const router = useRouter();
 
+    const studentController = StudentController.getStudentConroller();
+    const students: Ref<Student[]> = ref<Student[]>(
+      studentController.getAllStudents()
+    ) as Ref<Student[]>;
+    const enterStudentNameDialog: Ref<boolean> = ref(false);
+    const studentFirstName: Ref<string> = ref("");
+    const studentLastName: Ref<string> = ref("");
+
     function newStudentClick() {
-      const studentId = studentController.createStudent("", "");
-      router.push({
-        name: "EditStudentPage",
-        params: { studentId: studentId },
-      });
+      studentFirstName.value = "";
+      studentLastName.value = "";
+      enterStudentNameDialog.value = true;
     }
 
-    function editStudentClick(studentId: string) {
+    function abortNewStudentClick() {
+      enterStudentNameDialog.value = false;
+    }
+    function confirmNewStudentClick() {
+      studentController.createStudent(
+        studentFirstName.value,
+        studentLastName.value
+      );
+      enterStudentNameDialog.value = false;
+    }
+    function editStudentClick(student: Student) {
       router.push({
         name: "EditStudentPage",
-        params: { studentId: studentId },
-      })
+        params: { studentId: student.getId },
+      });
     }
 
     function showStatisticsClick(student: Student) {
       router.push({
         name: "StudentStatisticPage",
-        params: {studentId: student.getId},
-      })
+        params: { studentId: student.getId },
+      });
     }
 
     return {
       newStudentClick,
       editStudentClick,
       showStatisticsClick,
+      abortNewStudentClick,
+      confirmNewStudentClick,
       students,
+      enterStudentNameDialog,
+      studentFirstName,
+      studentLastName,
     };
   },
 });

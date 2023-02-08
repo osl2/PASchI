@@ -3,7 +3,6 @@
     <v-app-bar-title> Kurse ansehen </v-app-bar-title>
     <template v-slot:extension>
       <v-btn
-        class="ml-15"
         variant="flat"
         color="green"
         rounded
@@ -17,10 +16,11 @@
   <SideMenu />
   <v-main class="ma-0 v-row justify-center align-content-xl-space-around">
     <v-container fluid class="v-col-11" style="max-width: 700px">
-      <v-list rounded>
+      <v-list rounded v-if="courses.length > 0">
         <v-list-item
           rounded
           v-for="course in courses"
+          :key="course.getId"
           @click="showCourse(course)"
         >
           <v-list-item-title>
@@ -37,17 +37,72 @@
               @click="editCourseClick(course)"
               ><v-icon>fas fa-pencil</v-icon></v-btn
             >
-            <v-btn
-              class="ml-2"
-              variant="tonal"
-              color="red"
-              @click="deleteCourseClick(course)"
-              ><v-icon>far fa-trash-can</v-icon></v-btn
-            >
           </template>
         </v-list-item>
       </v-list>
+      <v-card v-else class="pa-2" variant="text">
+        <v-card-title
+          class="text-h5 text-center text-indigo-darken-4 text-wrap"
+        >
+          Es wurden noch keine Kurse erstellt.
+        </v-card-title>
+        <v-card-item class="justify-center">
+          <v-btn
+            max-width="450"
+            height="50"
+            variant="tonal"
+            prepend-icon="fas fa-plus"
+            color="primary"
+            @click="newCourseClick"
+            >Kurs erstellen!
+          </v-btn>
+        </v-card-item>
+      </v-card>
     </v-container>
+    <v-dialog max-width="700" v-model="enterCourseNameDialog">
+      <v-card variant="flat" class="pa-2 rounded-lg">
+        <v-card-title class="text-h5 text-center text-indigo-darken-4">
+          Neuen Kurs erstellen
+        </v-card-title>
+        <v-form validate-on="submit" @submit.prevent>
+          <v-card-item>
+            <v-text-field
+              class="mt-2"
+              v-model="courseName"
+              variant="outlined"
+              label="Kursname"
+              type="input"
+              autofocus
+            ></v-text-field>
+            <v-text-field
+              class="mt-1"
+              v-model="courseSubject"
+              variant="outlined"
+              label="Kursfach"
+              type="input"
+            ></v-text-field>
+          </v-card-item>
+          <v-card-actions class="row justify-center">
+            <v-btn
+              height="50"
+              width="150"
+              variant="tonal"
+              @click="abortNewCourseClick"
+              >Abbrechen</v-btn
+            >
+            <v-btn
+              type="submit"
+              height="50"
+              width="150"
+              variant="tonal"
+              @click="confirmNewCourseClick"
+              color="primary"
+              >Bestätigen</v-btn
+            >
+          </v-card-actions>
+        </v-form>
+      </v-card>
+    </v-dialog>
   </v-main>
 </template>
 
@@ -57,55 +112,46 @@ import SideMenu from "@/components/navigation/SideMenu.vue";
 import { defineComponent, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
 import { Course } from "@/model/userdata/courses/Course";
-import { User } from "@/model/User";
-import { Role } from "@/model/Role";
-import router from "@/plugins/router";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "ViewCoursesPage",
   components: { SideMenu, NavigationBar },
 
   setup() {
-    const courseController = CourseController.getCourseController();
-    //const courses: Ref<Course[]> = ref<Course[]>(courseController.getAllCourses()) as Ref<Course[]>;
+    const router = useRouter();
 
-    const courses: Ref<Course[]> = ref<Course[]>([
-      new Course(
-        "asdf",
-        new User(1, "", "", "", true, Role.USER, ""),
-        "Physik 11",
-        "Physik"
-      ),
-      new Course(
-        "asdf",
-        new User(1, "", "", "", true, Role.USER, ""),
-        "Physik 12",
-        "Physik"
-      ),
-      new Course(
-        "asdf",
-        new User(1, "", "", "", true, Role.USER, ""),
-        "Informatik 11",
-        "Informatik"
-      ),
-      new Course(
-        "asdf",
-        new User(1, "", "", "", true, Role.USER, ""),
-        "Informatik 12",
-        "Informatik"
-      ),
-    ]) as Ref<Course[]>;
+    const courseController = CourseController.getCourseController();
+    const courses: Ref<Course[]> = ref<Course[]>(
+      courseController.getAllCourses()
+    ) as Ref<Course[]>;
+    const enterCourseNameDialog: Ref<boolean> = ref(false);
+    const courseName: Ref<string> = ref("");
+    const courseSubject: Ref<string> = ref("");
+
     function editCourseClick(course: Course) {
       router.push({
-        name:"EditCoursePage",
-        params: { courseId: course.getId }
-      })
+        name: "EditCoursePage",
+        params: { courseId: course.getId },
+      });
     }
     function newCourseClick() {
-      let courseId: string = courseController.createCourse("", "");
+      courseName.value = "";
+      courseSubject.value = "";
+      enterCourseNameDialog.value = true;
+    }
+    function abortNewCourseClick() {
+      enterCourseNameDialog.value = false;
+    }
+    function confirmNewCourseClick() {
       router.push({
-        name: "EditCoursePage",
-        params: { courseId: courseId },
+        name: "CourseDetailsPage",
+        params: {
+          courseId: courseController.createCourse(
+            courseName.value,
+            courseSubject.value
+          ),
+        },
       });
     }
     function deleteCourseClick(course: Course) {
@@ -119,11 +165,16 @@ export default defineComponent({
       });
     }
     return {
+      abortNewCourseClick,
+      confirmNewCourseClick,
       editCourseClick,
       newCourseClick,
       deleteCourseClick,
       showCourse,
       courses,
+      enterCourseNameDialog,
+      courseName,
+      courseSubject,
     };
   },
 });
