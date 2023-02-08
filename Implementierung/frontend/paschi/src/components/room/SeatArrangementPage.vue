@@ -2,7 +2,31 @@
   <navigation-bar />
   <RoomDisplay :room-id="seatArrangement.room.getId">
     <template v-slot:chair="chair">
-      <SeatLabel :participant="seatArrangement.getParticipantForSeat(chair.chair)" />
+      <SeatLabel :participant="seatArrangement.getParticipantForSeat(chair.chair)">
+        <v-menu activator="parent" transition="slide-x-transition">
+          <v-card>
+            <v-list>
+              <v-list-item prepend-icon="fas fa-user-slash">
+                <v-list-item-title>Kein Schüler ausgewählt</v-list-item-title>
+              </v-list-item>
+            </v-list>
+            <v-divider />
+            <v-list>
+              <v-list-item
+                v-for="participant in seatArrangement.participants"
+                :key="participant.getId"
+                prepend-icon="fas fa-circle-user"
+                @click="seatArrangement.setSeat(chair.chair, participant)"
+              >
+                <v-list-item-title>
+                  {{ participant.firstName }}
+                  {{ participant.lastName }}
+                </v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-card>
+        </v-menu>
+      </SeatLabel>
     </template>
   </RoomDisplay>
 </template>
@@ -24,8 +48,11 @@ export default defineComponent({
     },
   },
   setup(props) {
+
+    const seatArrangementController = SeatArrangementController.getSeatArrangementController();
+
     const seatArrangement = ref<SeatArrangement | undefined>(
-      SeatArrangementController.getSeatArrangementController().getSeatArrangement(
+      seatArrangementController.getSeatArrangement(
         props.seatArrangementId
       )
     ) as Ref<SeatArrangement>;
