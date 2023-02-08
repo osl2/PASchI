@@ -1,10 +1,19 @@
 <template>
-  <v-avatar v-if="participant" color="primary">
-    <v-icon> far fa-circle-user </v-icon>
-    {{ participant.firstName }}
-    {{ participant.lastName }}
-    <slot />
-  </v-avatar>
+  <div
+    v-if="participant"
+    class="flex-column align-content-center justify-center"
+  >
+    <div class="d-flex align center justify-center">
+      <v-avatar class="justify-center" color="primary">
+        <v-icon> far fa-circle-user </v-icon>
+        <slot />
+      </v-avatar>
+    </div>
+    <div class="col font-weight-medium">
+      {{ participant.firstName }}
+      {{ participant.lastName }}
+    </div>
+  </div>
   <v-avatar v-else color="grey-lighten-4">
     <v-icon color="grey-darken-3"> fas fa-user-slash </v-icon>
     <slot />
@@ -13,8 +22,8 @@
 
 <script lang="ts">
 import { Participant } from "@/model/userdata/interactions/Participant";
-import {computed, defineComponent, ref} from "vue";
-import {Ref} from "vue";
+import { computed, defineComponent, ref } from "vue";
+import { Ref } from "vue";
 
 export default defineComponent({
   name: "SeatLabel",
@@ -28,7 +37,7 @@ export default defineComponent({
     const participant = computed(() => props.participant);
 
     return {
-      participant
+      participant,
     };
   },
 });
