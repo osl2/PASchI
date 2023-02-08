@@ -121,6 +121,33 @@ export class SessionController {
     }
   }
 
+  undoInteraction(sessionId: string) {
+    let session = this.sessionStore.getSession(sessionId);
+    if (session !== undefined) {
+      session.undoInteraction();
+    }
+  }
+
+  redoInteraction(sessionId: string): string | undefined {
+    let session = this.sessionStore.getSession(sessionId);
+    if (session == undefined) {
+      return undefined;
+    }
+    let interaction = session.redoInteraction();
+    if (interaction == undefined) {
+      return undefined;
+    }
+    return interaction.getId;
+  }
+
+  hasRedo(sessionId: string): boolean | undefined {
+    let session = this.sessionStore.getSession(sessionId);
+    if (session == undefined) {
+      return undefined;
+    }
+    return session.hasRedo();
+  }
+
   setSeatArrangementOfSession(sessionId: string, arrangementId: string) {
     let session = this.sessionStore.getSession(sessionId);
     let arrangement = this.arrangementStore.getSeatArrangement(arrangementId);
