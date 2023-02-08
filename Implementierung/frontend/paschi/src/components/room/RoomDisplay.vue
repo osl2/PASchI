@@ -18,56 +18,70 @@
       @mouseup="mouseUp"
       @mouseleave="mouseUp"
     >
-      <slot name="chair" v-for="chair in chairs" :key="chair.getId">
-        <v-card
-          class="ma-0 v-row align-center justify-center"
-          :class="[
-            chair === selectedRoomObject && roomObjectOverlaps
-              ? 'error'
-              : 'notError',
-          ]"
-          color="secondary-lighten-2"
-          elevation="0"
-          draggable="false"
-          :style="getRoomObjectStyle(chair)"
-          @mousedown="mouseDown($event, chair)"
-          @touchstart="touchStart($event, chair)"
-          @touchmove="touchMove"
-          @touchend="touchEnd"
-        >
-          <v-icon
-            class="v-col-auto"
-            size="25px"
-            color="white"
-            icon="fas fa-chair"
-          ></v-icon>
-        </v-card>
-      </slot>
-      <slot name="table" v-for="table in tables" :key="table.getId">
-        <v-card
-          class="ma-0 v-row align-center justify-center"
-          :class="[
-            table === selectedRoomObject && roomObjectOverlaps
-              ? 'error'
-              : 'notError',
-          ]"
-          color="secondary-lighten-1"
-          elevation="0"
-          draggable="false"
-          :style="getRoomObjectStyle(table)"
-          @mousedown="mouseDown($event, table)"
-          @touchstart="touchStart($event, table)"
-          @touchmove="touchMove"
-          @touchend="touchEnd"
-        >
-          <v-icon
-            class="v-col-auto"
-            size="25px"
-            color="white"
-            icon="mdi mdi-desk"
-          ></v-icon>
-        </v-card>
-      </slot>
+      <div
+        v-for="chair in chairs"
+        :key="chair.getId"
+        :style="getRoomObjectStyle(chair)"
+        :class="[
+          chair === selectedRoomObject && roomObjectOverlaps
+            ? 'error'
+            : 'notError',
+        ]"
+      >
+        <slot name="chair">
+          <v-card
+            class="ma-0 v-row align-center justify-center"
+            color="secondary-lighten-2"
+            elevation="0"
+            draggable="false"
+            :width="getRoomObjectWidth(chair)"
+            :height="getRoomObjectHeight(chair)"
+            @mousedown="mouseDown($event, chair)"
+            @touchstart="touchStart($event, chair)"
+            @touchmove="touchMove"
+            @touchend="touchEnd"
+          >
+            <v-icon
+              class="v-col-auto"
+              size="25px"
+              color="white"
+              icon="fas fa-chair"
+            ></v-icon>
+          </v-card>
+        </slot>
+      </div>
+      <div
+        v-for="table in tables"
+        :style="getRoomObjectStyle(table)"
+        :key="table.getId"
+        :class="[
+          table === selectedRoomObject && roomObjectOverlaps
+            ? 'error'
+            : 'notError',
+        ]"
+      >
+        <slot name="table" v-bind:table="table">
+          <v-card
+            class="ma-0 v-row align-center justify-center"
+            color="secondary-lighten-1"
+            elevation="0"
+            draggable="false"
+            :width="getRoomObjectWidth(table)"
+            :height="getRoomObjectHeight(table)"
+            @mousedown="mouseDown($event, table)"
+            @touchstart="touchStart($event, table)"
+            @touchmove="touchMove"
+            @touchend="touchEnd"
+          >
+            <v-icon
+              class="v-col-auto"
+              size="25px"
+              color="white"
+              icon="mdi mdi-desk"
+            ></v-icon>
+          </v-card>
+        </slot>
+      </div>
     </v-card>
   </v-main>
 </template>
@@ -80,7 +94,7 @@ import { Coordinate } from "@/components/room/Coordinate";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import { Chair } from "@/model/userdata/rooms/Chair";
 import { Table } from "@/model/userdata/rooms/Table";
-import {useRoomObjectUtilities} from "@/components/room/RoomObjectUtilities";
+import { useRoomObjectUtilities } from "@/components/room/RoomObjectUtilities";
 
 export default defineComponent({
   name: "RoomDisplay.vue",
@@ -144,7 +158,6 @@ export default defineComponent({
         y: y * roomScale,
       };
     }
-
     function displayToRoomCoordinates(x: number, y: number) {
       return {
         x: (x - roomDisplayLeftMargin) / roomScale,
@@ -153,18 +166,26 @@ export default defineComponent({
     }
 
     function getRoomObjectStyle(roomObject: RoomObject) {
-      const { x, y } = roomToDisplayCoordinates(
-        roomObject.position.xCoordinate,
-        roomObject.position.yCoordinate
+      const origin = roomObjectUtilities.getRoomObjectOrigin(roomObject);
+      const displayCoordinates = roomToDisplayCoordinates(
+        origin.x,
+        origin.y
       );
       return {
         position: "absolute",
-        top: y + "px",
-        left: x + "px",
-        width: roomObject.dimensions.width * roomScale + "px",
-        height: roomObject.dimensions.length * roomScale + "px",
-        transform: `rotate(${roomObject.position.orientation}rad)`,
+        top: displayCoordinates.y + "px",
+        left: displayCoordinates.x + "px",
+        transform: `rotate(${roomObject.position.orientation}rad) translate(-50%, -50%)`,
+        transformOrigin: "0 0"
       };
+    }
+
+    function getRoomObjectHeight(roomObject: RoomObject) {
+      return roomObject.dimensions.length * roomScale;
+    }
+
+    function getRoomObjectWidth(roomObject: RoomObject) {
+      return roomObject.dimensions.width * roomScale;
     }
 
     function mouseDown(event: MouseEvent, roomObject: RoomObject) {
@@ -279,6 +300,8 @@ export default defineComponent({
       mouseMove,
       mouseUp,
       getRoomObjectStyle,
+      getRoomObjectHeight,
+      getRoomObjectWidth,
       roomDisplayStyle,
       selectedRoomObject,
       roomId,
