@@ -1,43 +1,43 @@
 export abstract class DataObject {
 
-  private id: string | undefined;
-  private readonly localId: number;
-  private readonly createdAt: string;
-  private updatedAt: string;
+  private _id: string | undefined;
+  private readonly _localId: number;
+  private readonly _createdAt: string;
+  private _updatedAt: string;
 
   protected constructor(id: string | undefined, localId: number) {
-    this.id = id;
-    this.localId = localId;
+    this._id = id;
+    this._localId = localId;
     const date = new Date();
-    this.createdAt = date.toString();
-    this.updatedAt = date.toString();
+    this._createdAt = date.toString();
+    this._updatedAt = date.toString();
   }
 
   update() {
     const date = new Date();
-    this.updatedAt = date.toString();
+    this._updatedAt = date.toString();
   }
 
   hasId(): boolean {
-    return this.id != undefined;
+    return this._id != undefined;
   }
 
   get getId(): string {
-    if (this.id == undefined) {
-      return this.localId.toString();
+    if (this._id == undefined) {
+      return this._localId.toString();
     }
-    return this.id;
+    return this._id;
   }
 
   set setId(id: string) {
-    this.id = id;
+    this._id = id;
   }
 
-  get created(): string {
-    return this.createdAt;
+  get createdAt(): string {
+    return this._createdAt;
   }
 
-  get lastUpdate(): string {
-    return this.updatedAt;
+  get updatedAt(): string {
+    return this._updatedAt;
   }
 }
