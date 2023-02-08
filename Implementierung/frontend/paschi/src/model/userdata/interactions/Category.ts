@@ -32,4 +32,8 @@ export class Category {
 
   set setQuality(quality: Quality) {
   }
+
+  getQuality(): Quality | undefined {
+    return undefined;
+  }
 }

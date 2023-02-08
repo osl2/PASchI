@@ -4,7 +4,7 @@ import Dashboard from "@/components/dashboard/Dashboard.vue";
 import EditStudentPage from "@/components/studentManagement/EditStudentPage.vue";
 import Register from "@/components/userManagement/Register.vue";
 import AdminPage from "@/components/userManagement/AdminPage.vue";
-import RoomEditor from "@/components/interactionMaps/RoomEditor.vue";
+import RoomEditor from "@/components/room/RoomEditor.vue";
 import ViewStudentsPage from "@/components/studentManagement/ViewStudentsPage.vue";
 import ViewCoursesPage from "@/components/courses/ViewCoursesPage.vue";
 import EditCoursePage from "@/components/courses/EditCoursePage.vue";
@@ -14,12 +14,12 @@ import CourseStatisticPage from "@/components/statistics/CourseStatisticPage.vue
 import SessionStatisticPage from "@/components/statistics/SessionStatisticPage.vue";
 import StudentStatisticPage from "@/components/statistics/StudentStatisticPage.vue";
 import ShowInteractionMapPage from "@/components/statistics/ShowInteractionMapPage.vue";
-import RoomArrangementPage from "@/components/room/RoomArrangementPage.vue";
 import SeatArrangementPage from "@/components/room/SeatArrangementPage.vue";
 import ViewRoomsPage from "@/components/room/ViewRoomsPage.vue";
 import SessionPage from "@/components/session/SessionPage.vue";
 
 const routes = [
+  { path: "/", redirect: "/login" },
   { path: "/login", name: "Login", component: Login },
   { path: "/register", name: "Register", component: Register },
   { path: "/admin", name: "AdminPage", component: AdminPage },
@@ -46,7 +46,12 @@ const routes = [
     name: "ViewCoursesPage",
     component: ViewCoursesPage,
   },
-  { path: "/room-editor", name: "InteractionMap", component: RoomEditor },
+  {
+    path: "/room-editor/:roomId",
+    name: "RoomEditor",
+    component: RoomEditor,
+    props: true,
+  },
   {
     path: "/edit-account",
     name: "EditAccountPage",
@@ -80,12 +85,6 @@ const routes = [
     path: "/show-interaction-map/:sessionId",
     name: "ShowInteractionMapPage",
     component: ShowInteractionMapPage,
-    props: true,
-  },
-  {
-    path: "/room-arrangement/:roomId",
-    name: "RoomArrangementPage",
-    component: RoomArrangementPage,
     props: true,
   },
   {

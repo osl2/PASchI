@@ -18,4 +18,8 @@ export class RatedCategory extends Category {
   set setQuality(quality: Quality) {
     this.quality = quality;
   }
+
+  getQuality(): Quality | undefined {
+    return this.quality;
+  }
 }

@@ -93,7 +93,6 @@ import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import { Room } from "@/model/userdata/rooms/Room";
 import { RoomController } from "@/controller/RoomController";
-import router from "@/plugins/router";
 import { useRouter } from "vue-router";
 export default defineComponent({
   name: "ViewRoomsPage",
@@ -111,7 +110,7 @@ export default defineComponent({
     }
     function confirmNewRoomClick() {
       router.push({
-        name: "RoomArrangementPage",
+        name: "RoomEditor",
         params: { roomId: roomController.createRoom(newRoomName.value) },
       });
     }
@@ -121,7 +120,7 @@ export default defineComponent({
     }
     function editRoom(room: Room) {
       router.push({
-        name: "RoomArrangementPage",
+        name: "RoomEditor",
         params: { roomId: room.getId },
       });
     }
