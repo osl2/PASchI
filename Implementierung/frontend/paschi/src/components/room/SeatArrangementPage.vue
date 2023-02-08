@@ -30,7 +30,7 @@
             <v-list variant="flat">
               <v-list-subheader> Schüler auswählen </v-list-subheader>
               <v-list-item
-                v-for="participant in seatArrangement.course.participants"
+                v-for="participant in unseatedParticipants"
                 :key="participant.getId"
                 rounded
                 prepend-icon="fas fa-circle-user"
@@ -86,7 +86,12 @@ export default defineComponent({
       return seatArrangement.value?.course.participants;
     });
 
-    return { emptySeat, seatArrangement, getParticipant };
+    const unseatedParticipants = computed(() => {
+      return seatArrangement.value?.getStudentsNotAssigned();
+    });
+
+
+    return { unseatedParticipants, emptySeat, seatArrangement, getParticipant };
   },
 });
 </script>
