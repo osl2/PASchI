@@ -32,7 +32,7 @@ export default defineComponent({
 
 
   setup(){
-    /*const saveStatisticsffClick {
+    /*const saveStatisticsClick {
 
 
     }
