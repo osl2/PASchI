@@ -28,7 +28,7 @@
             : 'notError',
         ]"
       >
-        <slot name="chair">
+        <slot name="chair" :chair="chair">
           <v-card
             class="ma-0 v-row align-center justify-center"
             color="secondary-lighten-2"
