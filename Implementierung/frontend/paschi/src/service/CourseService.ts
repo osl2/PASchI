@@ -33,6 +33,8 @@ export class CourseService extends BaseService<Course, CourseDto> {
       courseDto = new CourseDto(
         response.data.id,
         response.data.userId,
+        response.data.createdAt,
+        response.data.updatedAt,
         response.data.name,
         response.data.subject,
         response.data.sessionIds,
@@ -55,6 +57,8 @@ export class CourseService extends BaseService<Course, CourseDto> {
         const courseDto = new CourseDto(
           course.id,
           course.userId,
+          response.data.createdAt,
+          response.data.updatedAt,
           course.name,
           course.subject,
           course.sessionIds,

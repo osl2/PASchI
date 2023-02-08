@@ -36,6 +36,8 @@ export class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
     return new CourseDto(
       course.getId,
       course.user.getId,
+      course.createdAt, 
+      course.updatedAt,
       course.name,
       course.subject,
       sessionIds,
