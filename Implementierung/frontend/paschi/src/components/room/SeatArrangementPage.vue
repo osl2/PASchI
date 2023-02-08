@@ -1,76 +1,65 @@
 <template>
-  <NavigationBar>
-    <template v-slot:prepend> Sitzordnung bearbeiten </template>
-    <template v-slot:default class="row justify-center w-100">
-      <v-app-bar-title class="v-col-auto">
-        {{ seatArrangementName }}
-      </v-app-bar-title>
+  <navigation-bar />
+  <RoomDisplay :room-id="seatArrangement.room.getId">
+    <template v-slot:chair="chair">
+      <SeatLabel :participant="getParticipant(chair.chair)">
+        <v-menu activator="parent" transition="slide-x-transition">
+          <v-card min-width="450" class="ma-2" variant="flat" color="primary">
+            <v-list variant="plain" bg-color="transparent">
+              <v-list-item
+                v-if="getParticipant(chair.chair)"
+                prepend-icon="fas fa-user"
+              >
+                <v-list-item-title
+                  >{{ getParticipant(chair.chair).firstName }}
+                  {{ getParticipant(chair.chair).lastName }}</v-list-item-title
+                >
+                <template v-slot:append>
+                  <v-btn
+                    variant="tonal"
+                    icon="mdi mdi-minus-circle"
+                    @click="emptySeat(chair.chair)"
+                  />
+                </template>
+              </v-list-item>
+              <v-list-item v-else disabled prepend-icon="fas fa-user-slash">
+                <v-list-item-title>Kein Schüler ausgewählt</v-list-item-title>
+              </v-list-item>
+            </v-list>
+            <v-divider />
+            <v-list variant="flat">
+              <v-list-subheader> Schüler auswählen </v-list-subheader>
+              <v-list-item
+                v-for="participant in unseatedParticipants"
+                :key="participant.getId"
+                rounded
+                prepend-icon="fas fa-circle-user"
+                @click="seatArrangement.setSeat(chair.chair, participant)"
+              >
+                <v-list-item-title>
+                  {{ participant.firstName }}
+                  {{ participant.lastName }}
+                </v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-card>
+        </v-menu>
+      </SeatLabel>
     </template>
-    <template v-slot:append>
-      <v-btn color="green" variant="flat" rounded @click="saveClick()"
-        >speichern</v-btn
-      >
-    </template>
-  </NavigationBar>
-  <v-main
-    fluid
-    :scrollable="false"
-    class="bg-grey-lighten-3"
-    style="touch-action: none"
-  >
-    <v-card
-      key="background"
-      variant="flat"
-      color="white"
-      :style="roomDisplayStyle"
-    >
-      <v-card
-        v-for="chair in chairs"
-        :key="chair.getId"
-        class="ma-0 v-row align-center justify-center"
-        color="secondary-lighten-2"
-        elevation="0"
-        draggable="false"
-        :style="getRoomObjectStyle(chair)"
-      >
-        <v-icon
-          class="v-col-auto"
-          size="25px"
-          color="white"
-          icon="fas fa-chair"
-        ></v-icon>
-      </v-card>
-      <v-card
-        v-for="table in tables"
-        :key="table.getId"
-        class="ma-0 v-row align-center justify-center"
-        color="secondary-lighten-1"
-        elevation="0"
-        draggable="false"
-        :style="getRoomObjectStyle(table)"
-      >
-        <v-icon
-          class="v-col-auto"
-          size="25px"
-          color="white"
-          icon="mdi mdi-desk"
-        ></v-icon>
-      </v-card>
-    </v-card>
-  </v-main>
+  </RoomDisplay>
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, ref, Ref} from "vue";
+import { computed, defineComponent, Ref, ref } from "vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
-import { RoomObject } from "@/model/userdata/rooms/RoomObject";
+import RoomDisplay from "@/components/room/RoomDisplay.vue";
+import SeatLabel from "@/components/room/SeatLabel.vue";
 import { SeatArrangementController } from "@/controller/SeatArrangementController";
 import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
 import { Chair } from "@/model/userdata/rooms/Chair";
-import {Table} from "@/model/userdata/rooms/Table";
 export default defineComponent({
   name: "SeatArrangementPage",
-  components: { NavigationBar },
+  components: { SeatLabel, RoomDisplay, NavigationBar },
   props: {
     seatArrangementId: {
       type: String,
@@ -78,93 +67,31 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const seatArrangementController: SeatArrangementController =
+    const seatArrangementController =
       SeatArrangementController.getSeatArrangementController();
-    const seatArrangement: Ref<SeatArrangement | undefined> = ref(
+
+    const seatArrangement = ref<SeatArrangement | undefined>(
       seatArrangementController.getSeatArrangement(props.seatArrangementId)
-    ) as Ref<SeatArrangement | undefined>;
-    const seatArrangementName = ref(getSeatArrangementName())
-    const chairs: Ref<RoomObject[]> = ref(getChairs()) as Ref<
-      Chair[]
-    >;
-    const tables: Ref<RoomObject[]> = ref(getTables()) as Ref<
-      Table[]
-    >;
-    const roomWidth = 16180;
-    const roomHeight = 10000;
+    ) as Ref<SeatArrangement>;
 
-    const maxRoomDisplayWidth = 0.9 * window.innerWidth;
-    const maxRoomDisplayHeight = 0.9 * window.innerHeight;
+    function getParticipant(chair: Chair) {
+      return seatArrangement.value?.getParticipantForSeat(chair);
+    }
 
-    const roomScale = Math.min(
-      maxRoomDisplayWidth / roomWidth,
-      maxRoomDisplayHeight / roomHeight
-    );
+    function emptySeat(chair: Chair) {
+      seatArrangement.value?.removeSeat(chair);
+    }
 
-    const roomDisplayWidth = roomWidth * roomScale;
-    const roomDisplayHeight = roomHeight * roomScale;
+    const participants = computed(() => {
+      return seatArrangement.value?.course.participants;
+    });
 
-    const roomDisplayTopMargin = (window.innerHeight - roomDisplayHeight) / 2;
-    const roomDisplayLeftMargin = (window.innerWidth - roomDisplayWidth) / 2;
+    const unseatedParticipants = computed(() => {
+      return seatArrangement.value?.getStudentsNotAssigned();
+    });
 
-    const roomDisplayStyle = {
-      position: "absolute",
-      top: roomDisplayTopMargin + "px",
-      left: roomDisplayLeftMargin + "px",
-      width: roomDisplayWidth + "px",
-      height: roomDisplayHeight + "px",
-    };
-    function getChairs(): Chair[] {
-      if (seatArrangement.value instanceof SeatArrangement) {
-        return seatArrangement.value.room.roomObjects.filter((roomObject) => {
-          return roomObject instanceof Chair
-        });
-      }
-      return [];
-    }
-    function getTables(): Table[] {
-      if (seatArrangement.value instanceof SeatArrangement) {
-        return seatArrangement.value.room.roomObjects.filter((roomObject) => {
-          return roomObject instanceof Table
-        });
-      }
-      return [];
-    }
-    function getSeatArrangementName(): string {
-      if (seatArrangement.value instanceof SeatArrangement) {
-        return seatArrangement.value.name;
-      }
-      return "";
-    }
-    function saveClick() {}
-    function roomToDisplayCoordinates(x: number, y: number) {
-      return {
-        x: x * roomScale,
-        y: y * roomScale,
-      };
-    }
-    function getRoomObjectStyle(roomObject: RoomObject) {
-      const { x, y } = roomToDisplayCoordinates(
-        roomObject.position.xCoordinate,
-        roomObject.position.yCoordinate
-      );
-      return {
-        position: "absolute",
-        top: y + "px",
-        left: x + "px",
-        width: roomObject.dimensions.width * roomScale + "px",
-        height: roomObject.dimensions.length * roomScale + "px",
-        transform: `rotate(${roomObject.position.orientation}rad)`,
-      };
-    }
-    return {
-      seatArrangementName,
-      roomDisplayStyle,
-      chairs,
-      tables,
-      getRoomObjectStyle,
-      saveClick,
-    };
+
+    return { unseatedParticipants, emptySeat, seatArrangement, getParticipant };
   },
 });
 </script>

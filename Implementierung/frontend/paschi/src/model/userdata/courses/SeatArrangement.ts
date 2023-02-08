@@ -36,6 +36,28 @@ export class SeatArrangement {
     this.seatMap.delete(seat);
   }
 
+  getAllStudents(): Participant[] {
+    return this.course.participants;
+  }
+
+  getStudentsNotAssigned(): Participant[] {
+    const students: Participant[] = [];
+    this.getAllStudents().forEach((participant: Participant) => {
+      let isAssigned = false;
+      this.seatMap.forEach((student: Participant) => {
+        if (participant.getId === student.getId) {
+          isAssigned = true;
+        }
+      });
+
+      if (!isAssigned) {
+        students.push(participant);
+      }
+    });
+
+    return students;
+  }
+
   get getId(): string {
     if (this.id == undefined) {
       return this.localId.toString();
