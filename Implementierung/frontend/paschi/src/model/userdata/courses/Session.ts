@@ -60,6 +60,10 @@ export class Session {
     return this.undoInteractions.length != 0;
   }
 
+  hasUndo(): boolean {
+    return this.interactions.length != 0;
+  }
+
   getInteraction(interactionId: string): Interaction | undefined {
     for (let i = 0; i < this.interactions.length; i++) {
       if (this.interactions.at(i)?.getId === interactionId) {

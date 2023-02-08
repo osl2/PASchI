@@ -148,6 +148,14 @@ export class SessionController {
     return session.hasRedo();
   }
 
+  hasUndo(sessionId: string): boolean | undefined {
+    let session = this.sessionStore.getSession(sessionId);
+    if (session == undefined) {
+      return undefined;
+    }
+    return session.hasUndo();
+  }
+
   setSeatArrangementOfSession(sessionId: string, arrangementId: string) {
     let session = this.sessionStore.getSession(sessionId);
     let arrangement = this.arrangementStore.getSeatArrangement(arrangementId);
