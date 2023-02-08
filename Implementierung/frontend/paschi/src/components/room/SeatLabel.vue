@@ -9,7 +9,7 @@
         <slot />
       </v-avatar>
     </div>
-    <div class="col font-weight-medium">
+    <div class="col text-center font-weight-medium">
       {{ participant.firstName }}
       {{ participant.lastName }}
     </div>
