@@ -155,7 +155,15 @@ export class RoomController {
   removeRoomObject(roomId: string, objectId: string) {
     let room = this.roomStore.getRoom(roomId);
     if (room !== undefined) {
-      room.removeRoomObject(objectId);
+      let object = room.getRoomObject(objectId);
+      if (object !== undefined) {
+        room.removeRoomObject(objectId);
+        this.arrangementStore.getAllSeatArrangements().forEach((arrangement: SeatArrangement) => {
+          if (arrangement.room.getId === roomId) {
+            arrangement.removeSeat(object!);
+          }
+        });
+      }
     }
   }
 }
