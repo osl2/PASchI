@@ -51,4 +51,8 @@ export class Room {
   set setId(id: string) {
     this.id = id;
   }
+
+  copy(): Room {
+    return new Room(undefined, 0, this.user, this.name);
+  }
 }

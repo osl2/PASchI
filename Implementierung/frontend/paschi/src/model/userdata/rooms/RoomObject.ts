@@ -19,6 +19,8 @@ export abstract class RoomObject {
     this.dimensions = dimensions;
   }
 
+  abstract copy(): RoomObject;
+
   get getId(): string {
     if (this.id == undefined) {
       return this.localId.toString();

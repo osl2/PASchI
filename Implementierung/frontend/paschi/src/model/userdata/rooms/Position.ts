@@ -29,4 +29,15 @@ export class Position {
   set setId(id: string) {
     this.id = id;
   }
+
+  copy(): Position {
+    return new Position(
+      undefined,
+      0,
+      this.user,
+      this.xCoordinate,
+      this.yCoordinate,
+      this.orientation
+    );
+  }
 }

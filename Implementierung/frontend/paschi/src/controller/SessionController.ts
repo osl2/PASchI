@@ -37,8 +37,15 @@ export class SessionController {
 
     let currentDate = new Date();
     let date = currentDate.getDay() + '.' + currentDate.getMonth() + '.' + currentDate.getFullYear();
-    let session = new Session(undefined, this.sessionStore.getNextId(), this.userController.getUser(), name,
-      date, course, arrangement);
+    let session = new Session(
+      undefined,
+      this.sessionStore.getNextId(),
+      this.userController.getUser(),
+      name,
+      date,
+      course,
+      arrangement
+    );
     this.sessionStore.addSession(session);
 
     return session.getId;
