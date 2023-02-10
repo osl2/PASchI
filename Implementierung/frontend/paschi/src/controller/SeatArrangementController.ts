@@ -48,9 +48,10 @@ export class SeatArrangementController {
       arrangement.course.removeSeatArrangement(id);
       this.sessionStore.getAllSessions().forEach((session: Session) => {
         if (session.seatArrangement !== undefined && session.seatArrangement.getId === id) {
-          session.seatArrangement = undefined;
+          session.seatArrangement = arrangement?.copy();
         }
       });
+      this.seatArrangementStore.deleteSeatArrangement(id);
     }
   }
 

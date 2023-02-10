@@ -12,4 +12,8 @@ export class Table extends RoomObject {
   copy(): RoomObject {
     return new Table(undefined, 0, this.user, this.position, this.dimensions.length, this.dimensions.width);
   }
+
+  isTable(): boolean {
+    return true;
+  }
 }

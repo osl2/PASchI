@@ -53,6 +53,12 @@ export class Room {
   }
 
   copy(): Room {
-    return new Room(undefined, 0, this.user, this.name);
+    const room = new Room(undefined, 0, this.user, this.name);
+    this.roomObjects.forEach((object: RoomObject) => {
+      if (object.isTable()) {
+        room.addRoomObject(object.copy());
+      }
+    });
+    return room;
   }
 }

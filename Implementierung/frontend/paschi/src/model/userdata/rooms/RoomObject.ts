@@ -21,6 +21,8 @@ export abstract class RoomObject {
 
   abstract copy(): RoomObject;
 
+  abstract isTable(): boolean;
+
   get getId(): string {
     if (this.id == undefined) {
       return this.localId.toString();
