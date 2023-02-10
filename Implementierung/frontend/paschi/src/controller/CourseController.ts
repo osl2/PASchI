@@ -7,6 +7,7 @@ import {UserController} from "@/controller/UserController";
 import {useStudentStore} from "@/store/StudentStore";
 import {useSessionStore} from "@/store/SessionStore";
 import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
+import {RoomObject} from "@/model/userdata/rooms/RoomObject";
 
 // TODO: Backend Service einbinden
 export class CourseController {
@@ -102,6 +103,13 @@ export class CourseController {
     if (course !== undefined && student !== undefined) {
       course.removeParticipant(studentId);
       student.removeCourse(courseId);
+      course.seatArrangements.forEach((arrangement: SeatArrangement) => {
+        arrangement.seatMap.forEach((student: Participant, chair: RoomObject) => {
+          if (student.getId === studentId) {
+            arrangement.removeSeat(chair);
+          }
+        });
+      });
     }
   }
 
