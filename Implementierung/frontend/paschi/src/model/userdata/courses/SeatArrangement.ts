@@ -36,18 +36,6 @@ export class SeatArrangement extends DataObject {
     this.update();
   }
 
-  get user(): User {
-    return this._user;
-  }
-
-  get name(): string {
-    return this._name;
-  }
-
-  get seatMap(): Map<RoomObject, Participant> {
-    return this._seatMap;
-  }
-
   getAllStudents(): Participant[] {
     return this.course.participants;
   }
@@ -68,6 +56,18 @@ export class SeatArrangement extends DataObject {
     });
 
     return students;
+  }
+
+  get user(): User {
+    return this._user;
+  }
+
+  get name(): string {
+    return this._name;
+  }
+
+  get seatMap(): Map<RoomObject, Participant> {
+    return this._seatMap;
   }
 
   get course(): Course {
