@@ -6,6 +6,7 @@ import {useRoomStore} from "@/store/RoomStore";
 import {useCourseStore} from "@/store/CourseStore";
 import {useSessionStore} from "@/store/SessionStore";
 import {useStudentStore} from "@/store/StudentStore";
+import {Participant} from "@/model/userdata/interactions/Participant";
 
 // TODO: Backend Service einbinden
 // TODO: Standard Sitzordnung
@@ -47,9 +48,10 @@ export class SeatArrangementController {
       arrangement.course.removeSeatArrangement(id);
       this.sessionStore.getAllSessions().forEach((session: Session) => {
         if (session.seatArrangement !== undefined && session.seatArrangement.getId === id) {
-          session.seatArrangement = undefined;
+          session.seatArrangement = arrangement?.copy();
         }
       });
+      this.seatArrangementStore.deleteSeatArrangement(id);
     }
   }
 
@@ -59,6 +61,22 @@ export class SeatArrangementController {
 
   getAllArrangements(): SeatArrangement[] {
     return this.seatArrangementStore.getAllSeatArrangements();
+  }
+
+  getAllStudents(arrangementId: string): Participant[] | undefined {
+    const arrangement = this.seatArrangementStore.getSeatArrangement(arrangementId);
+    if (arrangement == undefined) {
+      return undefined;
+    }
+    return arrangement.getAllStudents();
+  }
+
+  getStudentsNotAssigned(arrangementId: string): Participant[] | undefined {
+    const arrangement = this.seatArrangementStore.getSeatArrangement(arrangementId);
+    if (arrangement == undefined) {
+      return undefined;
+    }
+    return arrangement.getStudentsNotAssigned();
   }
 
   addMapping(arrangementId: string, chairId: string, studentId: string) {

@@ -9,6 +9,7 @@ import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
 import { RoomObject } from "@/model/userdata/rooms/RoomObject";
 import { useSeatArrangementStore } from "@/store/SeatArrangementStore";
 import { usePositionStore } from "@/store/PositionStore";
+import {SeatArrangementController} from "@/controller/SeatArrangementController";
 
 // TODO: Backend Service einbinden
 export class RoomController {
@@ -51,10 +52,11 @@ export class RoomController {
         .getAllSeatArrangements()
         .forEach((arrangement: SeatArrangement) => {
           if (arrangement.room.getId === id) {
-            this.arrangementStore.deleteSeatArrangement(arrangement.getId);
+            SeatArrangementController.getSeatArrangementController().deleteSeatArrangement(arrangement.getId);
           }
         });
     }
+    this.roomStore.deleteRoom(id);
   }
 
   getRoom(id: string): Room | undefined {
@@ -69,12 +71,7 @@ export class RoomController {
     return this.roomStore.getAllRooms();
   }
 
-  addChair(
-    roomId: string,
-    xCoordinate: number,
-    yCoordinate: number,
-    orientation: number
-  ): string | undefined {
+  addChair(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number): string | undefined {
     let room = this.roomStore.getRoom(roomId);
     if (room == undefined) {
       return undefined;
@@ -98,14 +95,8 @@ export class RoomController {
     return chair.getId;
   }
 
-  addTable(
-    roomId: string,
-    xCoordinate: number,
-    yCoordinate: number,
-    orientation: number,
-    length: number,
-    width: number
-  ): string | undefined {
+  addTable(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number, length: number,
+           width: number): string | undefined {
     let room = this.roomStore.getRoom(roomId);
     if (room == undefined) {
       return undefined;
@@ -155,7 +146,15 @@ export class RoomController {
   removeRoomObject(roomId: string, objectId: string) {
     let room = this.roomStore.getRoom(roomId);
     if (room !== undefined) {
-      room.removeRoomObject(objectId);
+      let object = room.getRoomObject(objectId);
+      if (object !== undefined) {
+        room.removeRoomObject(objectId);
+        this.arrangementStore.getAllSeatArrangements().forEach((arrangement: SeatArrangement) => {
+          if (arrangement.room.getId === roomId) {
+            arrangement.removeSeat(object!);
+          }
+        });
+      }
     }
   }
 }

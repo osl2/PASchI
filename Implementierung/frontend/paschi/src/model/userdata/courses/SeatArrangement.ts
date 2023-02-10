@@ -48,6 +48,28 @@ export class SeatArrangement extends DataObject {
     return this._seatMap;
   }
 
+  getAllStudents(): Participant[] {
+    return this.course.participants;
+  }
+
+  getStudentsNotAssigned(): Participant[] {
+    const students: Participant[] = [];
+    this.getAllStudents().forEach((participant: Participant) => {
+      let isAssigned = false;
+      this.seatMap.forEach((student: Participant) => {
+        if (participant.getId === student.getId) {
+          isAssigned = true;
+        }
+      });
+
+      if (!isAssigned) {
+        students.push(participant);
+      }
+    });
+
+    return students;
+  }
+
   get course(): Course {
     return this._course;
   }
@@ -59,5 +81,20 @@ export class SeatArrangement extends DataObject {
   set name(value: string) {
     this._name = value;
     this.update();
+  }
+
+  copy(): SeatArrangement {
+    const map: Map<RoomObject, Participant> = new Map<RoomObject, Participant>();
+    this.seatMap.forEach((student: Participant, chair: RoomObject) => {
+      map.set(chair.copy(), student);
+    });
+
+    const arr = new SeatArrangement(undefined, 0, this.user, this.name, this.course, this.room.copy());
+
+    map.forEach((student: Participant, chair: RoomObject) => {
+      arr.setSeat(chair, student);
+      arr.room.addRoomObject(chair);
+    });
+    return arr;
   }
 }

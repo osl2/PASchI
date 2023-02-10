@@ -1,6 +1,25 @@
 <template>
-  <navigation-bar />
-  <side-menu />
+  <NavigationBar extended>
+    <template v-slot:prepend> Raum bearbeiten </template>
+    <template v-slot:default class="row justify-center w-100">
+      <v-app-bar-title class="v-col-auto">
+        {{ sessionName }}
+      </v-app-bar-title>
+    </template>
+    <template v-slot:append>
+      <v-btn color="green" variant="flat" rounded @click="finishSessionClick()">
+        Sitzung beenden
+      </v-btn>
+    </template>
+    <template v-slot:extension>
+      <v-icon @click="undoClick" class="ma-2">
+        mdi mdi-undo
+      </v-icon>
+      <v-icon @click="redoClick" class="ma-2">
+        mdi mdi-redo
+      </v-icon>
+    </template>
+  </NavigationBar>
   <v-main>
     <v-card rounded="0" class="ma-2">
       <v-list>
@@ -9,14 +28,18 @@
             <v-col>
               <v-text-field
                 clearable
-
                 v-model="searchInput"
                 label="Suche"
                 type="input"
               ></v-text-field>
             </v-col>
             <v-col>
-              <v-btn color="primary" variant="flat" rounded height="56" @click=""
+              <v-btn
+                color="primary"
+                variant="flat"
+                rounded
+                height="56"
+                @click=""
                 ><div style="font-size: large">Lehrkraft</div></v-btn
               >
             </v-col>
@@ -32,15 +55,18 @@
           )"
         >
           <v-divider />
-          <v-list-item
-            border="2px dashed orange"
-            @click="setParticipant(participant)"
-          >
+          <v-list-item @click="setParticipant(participant)">
             {{ participant.firstName }} {{ participant.lastName }}
           </v-list-item>
         </template>
       </v-list>
     </v-card>
+    <v-dialog>
+      <v-card>
+        <v-list></v-list>
+        <v-btn rounded @click="abortCategory">abbrechen</v-btn>
+      </v-card>
+    </v-dialog>
   </v-main>
 </template>
 
@@ -82,6 +108,7 @@ export default defineComponent({
     const roomObjects: Ref<RoomObject[]> = ref(getRoomObjects()) as Ref<
       RoomObject[]
     >;
+    const sessionName = sessionController.getSession(props.sessionId)?.name;
     const courseParticipantsSortedByName: Participant[] =
       getCourseParticipantsSortedByName();
     const firstParticipant: Ref<Participant | undefined> = ref(undefined);
@@ -92,11 +119,15 @@ export default defineComponent({
     ) as Ref<Interaction[]>;
     const searchInput = ref("");
 
+    function abortCategory() {
+      setFirstParticipant(undefined);
+      setSecondParticipant(undefined);
+    }
     function undoClick() {
-      sessionController.deleteInteraction(
-        props.sessionId,
-        interactions.value[interactions.value.length - 1].getId
-      );
+      sessionController.undoInteraction(props.sessionId);
+    }
+    function redoClick() {
+      sessionController.redoInteraction(props.sessionId);
     }
     function getRoomObjects(): RoomObject[] {
       if (seatArrangement instanceof SeatArrangement) {
@@ -135,8 +166,19 @@ export default defineComponent({
       if ((firstParticipant.value = undefined)) {
         setFirstParticipant(participant);
       } else {
-        setParticipant(participant);
+        setSecondParticipant(participant);
       }
+    }
+    function createInteraction() {
+      sessionController.createInteraction(
+        props.sessionId,
+        firstParticipant.value!.getId,
+        secondParticipant.value!.getId,
+        selectedCategory.value!.getId
+      );
+      firstParticipant.value = undefined;
+      secondParticipant.value = undefined;
+      selectedCategory.value = undefined;
     }
     function setCategory(category: Category | undefined) {
       selectedCategory.value = category;
@@ -146,13 +188,17 @@ export default defineComponent({
     }
 
     return {
+      sessionName,
       searchInput,
       interactionMapActivated,
       categories,
       roomObjects,
       courseParticipantsSortedByName,
       secondParticipant,
+      abortCategory,
+      createInteraction,
       undoClick,
+      redoClick,
       toggleInteractionMapActivated,
       finishSessionClick,
       setParticipant,

@@ -16,6 +16,11 @@ export abstract class RoomObject extends DataObject {
     this._position = position;
     this._dimensions = dimensions;
   }
+
+  abstract copy(): RoomObject;
+
+  abstract isTable(): boolean;
+
   get user(): User {
     return this._user;
   }

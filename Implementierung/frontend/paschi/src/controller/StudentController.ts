@@ -5,6 +5,7 @@ import {useStudentStore} from "@/store/StudentStore";
 import {UserController} from "@/controller/UserController";
 import {useCourseStore} from "@/store/CourseStore";
 import {useSessionStore} from "@/store/SessionStore";
+import {CourseController} from "@/controller/CourseController";
 
 // TODO: Backend Service einbinden
 export class StudentController {
@@ -43,7 +44,9 @@ export class StudentController {
   deleteStudent(id: string) {
     let student = this.studentStore.getStudent(id);
     if (student !== undefined) {
-      student.courses.forEach((course: Course) => course.removeParticipant(id));
+      student.courses.forEach((course: Course) => {
+        CourseController.getCourseController().removeStudentFromCourse(course.getId, id);
+      });
       this.studentStore.deleteStudent(id);
     }
   }

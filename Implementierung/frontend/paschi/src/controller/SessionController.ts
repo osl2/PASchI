@@ -37,8 +37,15 @@ export class SessionController {
 
     let currentDate = new Date();
     let date = currentDate.getDay() + '.' + currentDate.getMonth() + '.' + currentDate.getFullYear();
-    let session = new Session(undefined, this.sessionStore.getNextId(), this.userController.getUser(), name,
-      date, course, arrangement);
+    let session = new Session(
+      undefined,
+      this.sessionStore.getNextId(),
+      this.userController.getUser(),
+      name,
+      date,
+      course,
+      arrangement
+    );
     this.sessionStore.addSession(session);
 
     return session.getId;
@@ -119,6 +126,41 @@ export class SessionController {
     if (session !== undefined) {
       session.removeInteraction(interactionId);
     }
+  }
+
+  undoInteraction(sessionId: string) {
+    let session = this.sessionStore.getSession(sessionId);
+    if (session !== undefined) {
+      session.undoInteraction();
+    }
+  }
+
+  redoInteraction(sessionId: string): string | undefined {
+    let session = this.sessionStore.getSession(sessionId);
+    if (session == undefined) {
+      return undefined;
+    }
+    let interaction = session.redoInteraction();
+    if (interaction == undefined) {
+      return undefined;
+    }
+    return interaction.getId;
+  }
+
+  hasRedo(sessionId: string): boolean | undefined {
+    let session = this.sessionStore.getSession(sessionId);
+    if (session == undefined) {
+      return undefined;
+    }
+    return session.hasRedo();
+  }
+
+  hasUndo(sessionId: string): boolean | undefined {
+    let session = this.sessionStore.getSession(sessionId);
+    if (session == undefined) {
+      return undefined;
+    }
+    return session.hasUndo();
   }
 
   setSeatArrangementOfSession(sessionId: string, arrangementId: string) {

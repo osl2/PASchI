@@ -10,6 +10,7 @@ export class Session extends DataObject {
   private _name: string;
   private _date: string;
   private readonly _interactions: Interaction[];
+  undoInteractions: Interaction[];
   private readonly _course: Course;
   private _seatArrangement: SeatArrangement | undefined;
 
@@ -22,6 +23,7 @@ export class Session extends DataObject {
     this._course = course;
     this._seatArrangement = seatArrangement;
     this._interactions = [];
+    this.undoInteractions = [];
   }
 
   addInteraction(interaction: Interaction) {
@@ -38,6 +40,32 @@ export class Session extends DataObject {
       }
     });
     this.update();
+  }
+
+  undoInteraction() {
+    let interaction = this.interactions.pop();
+    if (interaction !== undefined) {
+      this.undoInteractions.push();
+    }
+    this.update();
+  }
+
+  redoInteraction(): Interaction | undefined {
+    let interaction = this.undoInteractions.pop();
+    if (interaction !== undefined) {
+      this.interactions.push(interaction);
+      return interaction;
+    }
+    this.update();
+    return undefined;
+  }
+
+  hasRedo(): boolean {
+    return this.undoInteractions.length != 0;
+  }
+
+  hasUndo(): boolean {
+    return this.interactions.length != 0;
   }
 
   getInteraction(interactionId: string): Interaction | undefined {

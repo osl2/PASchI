@@ -57,4 +57,14 @@ export class Room extends DataObject {
     this._name = value;
     this.update();
   }
+
+  copy(): Room {
+    const room = new Room(undefined, 0, this.user, this.name);
+    this.roomObjects.forEach((object: RoomObject) => {
+      if (object.isTable()) {
+        room.addRoomObject(object.copy());
+      }
+    });
+    return room;
+  }
 }
