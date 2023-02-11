@@ -11,6 +11,7 @@ import edu.kit.informatik.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +64,9 @@ public class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
                 course.getSubject(),
                 sessionIds,
                 participantIds,
-                seatArrangementIds
+                seatArrangementIds,
+                course.getCreatedAt(),
+                course.getUpdatedAt()
         );
     }
 
@@ -97,7 +100,16 @@ public class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
                     seatArrangementRepository.findSeatArrangementById(id).ifPresent(seatArrangements::add));
         }
 
-        Course course = new Course(user, courseDto.getName(), courseDto.getSubject());
+        Timestamp updatedAt;
+
+        if (courseDto.getUpdatedAt() == null) {
+            updatedAt = courseDto.getCreatedAt();
+        } else {
+            updatedAt = courseDto.getUpdatedAt();
+        }
+
+        Course course = new Course(user, courseDto.getName(), courseDto.getSubject(),
+                                        courseDto.getCreatedAt(), updatedAt);
 
         course.setParticipants(participants);
         course.setSessions(sessions);

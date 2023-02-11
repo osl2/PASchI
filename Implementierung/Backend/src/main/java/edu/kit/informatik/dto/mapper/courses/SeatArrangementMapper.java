@@ -12,6 +12,7 @@ import edu.kit.informatik.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +64,9 @@ public class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, S
                 seatArrangement.getName(),
                 seatMap,
                 seatArrangement.getRoom().getId(),
-                seatArrangement.getCourse().getId()
+                seatArrangement.getCourse().getId(),
+                seatArrangement.getCreatedAt(),
+                seatArrangement.getUpdatedAt()
         );
     }
 
@@ -89,7 +92,16 @@ public class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, S
             seatMap.put(chair, participant);
         });
 
-        return new SeatArrangement(user, seatArrangementDto.getName(), room, course, seatMap);
+        Timestamp updatedAt;
+
+        if (seatArrangementDto.getUpdatedAt() == null) {
+            updatedAt = seatArrangementDto.getCreatedAt();
+        } else {
+            updatedAt = seatArrangementDto.getUpdatedAt();
+        }
+
+        return new SeatArrangement(user, seatArrangementDto.getName(), room, course,
+                                    seatMap, seatArrangementDto.getCreatedAt(), updatedAt);
     }
 
     @Override

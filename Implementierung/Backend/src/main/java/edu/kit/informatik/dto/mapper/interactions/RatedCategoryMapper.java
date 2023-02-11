@@ -12,6 +12,7 @@ import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,9 @@ public class RatedCategoryMapper implements IModelDtoMapper<RatedCategory, Rated
                 category.getId(),
                 category.getUser().getId(),
                 category.getName(),
-                qualityDto
+                qualityDto,
+                category.getCreatedAt(),
+                category.getUpdatedAt()
         );
     }
 
@@ -66,7 +69,15 @@ public class RatedCategoryMapper implements IModelDtoMapper<RatedCategory, Rated
         User user = userRepository.findUserById(categoryDto.getUserId()).orElse(null);
         Quality quality = qualityMapper.dtoToModel(categoryDto.getQuality());
 
-        return new RatedCategory(user, categoryDto.getName(), quality);
+        Timestamp updatedAt;
+
+        if (categoryDto.getUpdatedAt() == null) {
+            updatedAt = categoryDto.getCreatedAt();
+        } else {
+            updatedAt = categoryDto.getUpdatedAt();
+        }
+
+        return new RatedCategory(user, categoryDto.getName(), quality, categoryDto.getCreatedAt(), updatedAt);
     }
 
     @Override

@@ -8,6 +8,7 @@ import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +39,9 @@ public class PositionMapper implements IModelDtoMapper<Position, PositionDto> {
                 position.getUser().getId(),
                 position.getXCoordinate(),
                 position.getYCoordinate(),
-                position.getOrientation()
+                position.getOrientation(),
+                position.getCreatedAt(),
+                position.getUpdatedAt()
         );
     }
 
@@ -54,8 +57,16 @@ public class PositionMapper implements IModelDtoMapper<Position, PositionDto> {
     public Position dtoToModel(PositionDto positionDto) {
         User user = userRepository.findUserById(positionDto.getUserId()).orElse(null);
 
+        Timestamp updatedAt;
+
+        if (positionDto.getUpdatedAt() == null) {
+            updatedAt = positionDto.getCreatedAt();
+        } else {
+            updatedAt = positionDto.getUpdatedAt();
+        }
+
         return new Position(positionDto.getXCoordinate(), positionDto.getYCoordinate(),
-                                positionDto.getOrientation(), user);
+                                positionDto.getOrientation(), user, positionDto.getCreatedAt(), updatedAt);
     }
 
     @Override

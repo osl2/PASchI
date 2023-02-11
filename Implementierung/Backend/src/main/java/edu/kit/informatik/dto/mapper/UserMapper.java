@@ -7,6 +7,7 @@ import edu.kit.informatik.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +44,9 @@ public class UserMapper implements IModelDtoMapper<User, UserDto> {
                 user.getPassword(),
                 user.isAuth(),
                 null,
-                roleDto);
+                roleDto,
+                user.getCreatedAt(),
+                user.getUpdatedAt());
     }
 
     @Override
@@ -58,8 +61,16 @@ public class UserMapper implements IModelDtoMapper<User, UserDto> {
     public User dtoToModel(UserDto userDto) {
         Role role = roleMapper.dtoToModel(userDto.getRole());
 
+        Timestamp updatedAt;
+
+        if (userDto.getUpdatedAt() == null) {
+            updatedAt = userDto.getCreatedAt();
+        } else {
+            updatedAt = userDto.getUpdatedAt();
+        }
+
         return new User(userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(), userDto.getPassword(),
-                userDto.isAuth(), role);
+                userDto.isAuth(), role, userDto.getCreatedAt(), updatedAt);
     }
 
     @Override

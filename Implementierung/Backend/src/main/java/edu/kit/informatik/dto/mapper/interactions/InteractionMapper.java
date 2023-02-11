@@ -12,6 +12,7 @@ import edu.kit.informatik.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +56,9 @@ public class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
                 interaction.getSession().getId(),
                 interaction.getTo().getId(),
                 interaction.getFrom().getId(),
-                interaction.getCategory().getId()
+                interaction.getCategory().getId(),
+                interaction.getCreatedAt(),
+                interaction.getUpdatedAt()
         );
     }
 
@@ -77,8 +80,16 @@ public class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
                 findParticipantById(interactionDto.getToParticipantId()).orElse(null);
         Category category = categoryBaseRepository.findCategoryById(interactionDto.getCategoryId()).orElse(null);
 
+        Timestamp updatedAt;
+
+        if (interactionDto.getUpdatedAt() == null) {
+            updatedAt = interactionDto.getCreatedAt();
+        } else {
+            updatedAt = interactionDto.getUpdatedAt();
+        }
+
         return new Interaction(user, interactionDto.getTimeStamp(), session,
-                                                    fromParticipant, toParticipant, category);
+                                fromParticipant, toParticipant, category, interactionDto.getCreatedAt(), updatedAt);
     }
 
     @Override

@@ -12,6 +12,7 @@ import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +63,9 @@ public class RoomMapper implements IModelDtoMapper<Room, RoomDto> {
                 room.getId(),
                 room.getUser().getId(),
                 room.getName(),
-                roomObjectDtos
+                roomObjectDtos,
+                room.getCreatedAt(),
+                room.getUpdatedAt()
         );
     }
 
@@ -93,7 +96,15 @@ public class RoomMapper implements IModelDtoMapper<Room, RoomDto> {
             });
         }
 
-        Room room = new Room(user, roomDto.getName());
+        Timestamp updatedAt;
+
+        if (roomDto.getUpdatedAt() == null) {
+            updatedAt = roomDto.getCreatedAt();
+        } else {
+            updatedAt = roomDto.getUpdatedAt();
+        }
+
+        Room room = new Room(user, roomDto.getName(), roomDto.getCreatedAt(), updatedAt);
 
         room.setChairs(chairs);
         room.setTables(tables);

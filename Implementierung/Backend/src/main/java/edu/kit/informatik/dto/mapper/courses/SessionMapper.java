@@ -15,6 +15,7 @@ import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +70,9 @@ public class SessionMapper implements IModelDtoMapper<Session, SessionDto> {
                 session.getName(),
                 session.getDate(),
                 session.getCourse().getId(),
-                seatArrangementId
+                seatArrangementId,
+                session.getCreatedAt(),
+                session.getUpdatedAt()
         );
     }
 
@@ -95,8 +98,16 @@ public class SessionMapper implements IModelDtoMapper<Session, SessionDto> {
                     interactions.add(interactionMapper.dtoToModel(interactionDto)));
         }
 
+        Timestamp updatedAt;
 
-        Session session = new Session(user, sessionDto.getName(), sessionDto.getDate(), course, seatArrangement);
+        if (sessionDto.getUpdatedAt() == null) {
+            updatedAt = sessionDto.getCreatedAt();
+        } else {
+            updatedAt = sessionDto.getUpdatedAt();
+        }
+
+        Session session = new Session(user, sessionDto.getName(), sessionDto.getDate(),
+                                        course, seatArrangement, sessionDto.getCreatedAt(), updatedAt);
 
         session.setInteractions(interactions);
 

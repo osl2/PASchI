@@ -16,6 +16,7 @@ import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +66,9 @@ public class ParticipantMapper implements IModelDtoMapper<Participant, Participa
                 participant.getLastName(),
                 participantTypeDto,
                 courseIds,
-                interactionIds
+                interactionIds,
+                participant.getCreatedAt(),
+                participant.getUpdatedAt()
         );
     }
 
@@ -95,8 +98,16 @@ public class ParticipantMapper implements IModelDtoMapper<Participant, Participa
                     interactionRepository.findInteractionById(interactionId).ifPresent(interactions::add));
         }
 
-        Participant participant = new Participant(user, participantDto.getFirstName(),
-                                                    participantDto.getLastName(), participantType);
+        Timestamp updatedAt;
+
+        if (participantDto.getUpdatedAt() == null) {
+            updatedAt = participantDto.getCreatedAt();
+        } else {
+            updatedAt = participantDto.getUpdatedAt();
+        }
+
+        Participant participant = new Participant(user, participantDto.getFirstName(), participantDto.getLastName(),
+                                                    participantType, participantDto.getCreatedAt(), updatedAt);
 
         participant.setCourses(courses);
         participant.setInteractions(interactions);

@@ -10,6 +10,7 @@ import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +42,8 @@ public class ChairMapper implements IModelDtoMapper<Chair, ChairDto> {
     public ChairDto modelToDto(Chair chair) {
         PositionDto positionDto = positionMapper.modelToDto(chair.getPosition());
 
-        return new ChairDto(chair.getId(), chair.getUser().getId(), positionDto);
+        return new ChairDto(chair.getId(), chair.getUser().getId(), positionDto,
+                            chair.getCreatedAt(), chair.getUpdatedAt());
     }
 
     @Override
@@ -57,7 +59,15 @@ public class ChairMapper implements IModelDtoMapper<Chair, ChairDto> {
         User user = userRepository.findUserById(chairDto.getUserId()).orElse(null);
         Position position = positionMapper.dtoToModel(chairDto.getPosition());
 
-        return new Chair(user, position);
+        Timestamp updatedAt;
+
+        if (chairDto.getUpdatedAt() == null) {
+            updatedAt = chairDto.getCreatedAt();
+        } else {
+            updatedAt = chairDto.getUpdatedAt();
+        }
+
+        return new Chair(user, position, chairDto.getCreatedAt(), updatedAt);
     }
 
     @Override

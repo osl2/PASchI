@@ -10,6 +10,7 @@ import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +47,9 @@ public class TableMapper implements IModelDtoMapper<Table, TableDto> {
                 table.getUser().getId(),
                 positionDto,
                 table.getLength(),
-                table.getWidth()
+                table.getWidth(),
+                table.getCreatedAt(),
+                table.getUpdatedAt()
         );
     }
 
@@ -63,7 +66,16 @@ public class TableMapper implements IModelDtoMapper<Table, TableDto> {
         User user = userRepository.findUserByEmail(tableDto.getUserId()).orElse(null);
         Position position = positionMapper.dtoToModel(tableDto.getPosition());
 
-        return new Table(user, position, tableDto.getLength(), tableDto.getWidth());
+        Timestamp updatedAt;
+
+        if (tableDto.getUpdatedAt() == null) {
+            updatedAt = tableDto.getCreatedAt();
+        } else {
+            updatedAt = tableDto.getUpdatedAt();
+        }
+
+        return new Table(user, position, tableDto.getLength(), tableDto.getWidth(),
+                            tableDto.getCreatedAt(), updatedAt);
     }
 
     @Override

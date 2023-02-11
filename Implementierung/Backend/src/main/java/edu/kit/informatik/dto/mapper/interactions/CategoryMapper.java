@@ -12,6 +12,7 @@ import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,9 +44,11 @@ public class CategoryMapper implements IModelDtoMapper<Category, CategoryDto> {
     public CategoryDto modelToDto(Category category) {
         if (category instanceof RatedCategory ratedCategory) {
             return new RatedCategoryDto(ratedCategory.getId(), ratedCategory.getUser().getId(),
-                                    ratedCategory.getName(), this.qualityMapper.modelToDto(ratedCategory.getQuality()));
+                                    ratedCategory.getName(), this.qualityMapper.modelToDto(ratedCategory.getQuality()),
+                                    category.getCreatedAt(), category.getUpdatedAt());
         } else {
-            return new CategoryDto(category.getId(), category.getUser().getId(), category.getName());
+            return new CategoryDto(category.getId(), category.getUser().getId(),
+                                    category.getName(), category.getCreatedAt(), category.getUpdatedAt());
         }
     }
 
@@ -59,11 +62,18 @@ public class CategoryMapper implements IModelDtoMapper<Category, CategoryDto> {
 
     @Override
     public Category dtoToModel(CategoryDto categoryDto) {
-
         User user = userRepository.findUserById(categoryDto.getUserId()).orElse(null);
 
+        Timestamp updatedAt;
 
-        return new Category(user, categoryDto.getName());
+        if (categoryDto.getUpdatedAt() == null) {
+            updatedAt = categoryDto.getCreatedAt();
+        } else {
+            updatedAt = categoryDto.getUpdatedAt();
+        }
+
+
+        return new Category(user, categoryDto.getName(), categoryDto.getCreatedAt(), updatedAt);
     }
 
     @Override
