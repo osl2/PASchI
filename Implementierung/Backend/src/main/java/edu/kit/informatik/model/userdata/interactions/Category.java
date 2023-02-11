@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 
 @Getter
@@ -29,8 +30,8 @@ public class Category extends DataObject {
 
     private String name;
 
-    public Category(User user, String name, Timestamp createdAt) {
-        super(user, createdAt, createdAt);
+    public Category(User user, String name, Timestamp createdAt, Timestamp updatedAt) {
+        super(user, createdAt, updatedAt);
         //this.user = user;
         this.name = name;
     }
