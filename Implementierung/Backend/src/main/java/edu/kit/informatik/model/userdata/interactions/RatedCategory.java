@@ -20,8 +20,8 @@ public class RatedCategory extends Category {
     @Enumerated(EnumType.STRING)
     private Quality quality;
 
-    public RatedCategory(User user, String name, Quality quality, Timestamp createdAt) {
-        super(user, name, createdAt);
+    public RatedCategory(User user, String name, Quality quality, Timestamp createdAt, Timestamp updatedAt) {
+        super(user, name, createdAt, updatedAt);
         this.quality = quality;
     }
 }
