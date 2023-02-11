@@ -14,6 +14,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -244,7 +247,7 @@ public class UserControllerTest extends AbstractTest {
         userDto.setFirstName(firstName);
         userDto.setLastName(lastName);
         userDto.setPassword(faker.crypto().md5());
-
+        userDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
 
         return userDto;
     }

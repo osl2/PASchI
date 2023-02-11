@@ -24,6 +24,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -223,6 +226,7 @@ public class CourseControllerTest extends AbstractTest {
         courseDto.setSubject(name);
         User user = this.userRepository.save(userMapper.dtoToModel(getNewUser(faker)));
         courseDto.setUserId(user.getId());
+        courseDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
 
         List<String> participantIds = new ArrayList<>();
 
@@ -247,6 +251,7 @@ public class CourseControllerTest extends AbstractTest {
         participantDto.setUserId(userId);
         participantDto.setFirstName(faker.name().firstName());
         participantDto.setLastName(faker.name().lastName());
+        participantDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
 
         return participantDto;
     }
@@ -262,6 +267,7 @@ public class CourseControllerTest extends AbstractTest {
         userDto.setFirstName(firstName);
         userDto.setLastName(lastName);
         userDto.setPassword(faker.crypto().md5());
+        userDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
 
 
         return userDto;

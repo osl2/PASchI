@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -232,6 +233,7 @@ public class SessionControllerTest extends AbstractTest {
         sessionDto.setUserId(user.getId());
         Course course = courseRepository.save(courseMapper.dtoToModel(getNewCourse(faker, user.getId())));
         sessionDto.setCourseId(course.getId());
+        sessionDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
 
         sessionDto.setDate(Timestamp.from(Instant.now()).toString());
 
@@ -261,6 +263,7 @@ public class SessionControllerTest extends AbstractTest {
             interactionDto.setUserId(userId);
             interactionDto.setFromParticipantId(fromId);
             interactionDto.setToParticipantId(toId);
+            interactionDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
 
             interactionDtos.add(interactionDto);
         }
@@ -279,7 +282,7 @@ public class SessionControllerTest extends AbstractTest {
         userDto.setFirstName(firstName);
         userDto.setLastName(lastName);
         userDto.setPassword(faker.crypto().md5());
-
+        userDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
 
         return userDto;
     }
@@ -293,6 +296,7 @@ public class SessionControllerTest extends AbstractTest {
         courseDto.setName(name + " " + faker.number().randomDigit());
         courseDto.setSubject(name);
         courseDto.setUserId(userId);
+        courseDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
 
         return courseDto;
     }

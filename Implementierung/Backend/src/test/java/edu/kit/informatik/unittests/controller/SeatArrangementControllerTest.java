@@ -27,6 +27,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -244,6 +247,7 @@ public class SeatArrangementControllerTest extends AbstractTest {
 
         Room room = roomRepository.save(roomMapper.dtoToModel(getNewRoom(faker, user.getId())));
         seatArrangementDto.setRoomId(room.getId());
+        seatArrangementDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
 
         return seatArrangementDto;
     }
@@ -256,6 +260,7 @@ public class SeatArrangementControllerTest extends AbstractTest {
         courseDto.setName(name + " " + faker.number().randomDigit());
         courseDto.setSubject(name);
         courseDto.setUserId(userId);
+        courseDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
 
         return courseDto;
     }
@@ -267,6 +272,7 @@ public class SeatArrangementControllerTest extends AbstractTest {
 
         roomDto.setUserId(userId);
         roomDto.setRoomObjects(new ArrayList<>());
+        roomDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
 
         return roomDto;
     }
@@ -282,7 +288,7 @@ public class SeatArrangementControllerTest extends AbstractTest {
         userDto.setFirstName(firstName);
         userDto.setLastName(lastName);
         userDto.setPassword(faker.crypto().md5());
-
+        userDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
 
         return userDto;
     }
