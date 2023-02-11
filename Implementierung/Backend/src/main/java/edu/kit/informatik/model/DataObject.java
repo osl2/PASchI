@@ -36,5 +36,7 @@ public abstract class DataObject {
         this.updatedAt = updatedAt;
     }
 
-
+    public void setUpdatedAt(Timestamp updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }
