@@ -57,8 +57,8 @@ public class SeatArrangement extends DataObject {
     private Map<Chair, Participant> seatMap;
 
     public SeatArrangement(User user, String name, Room room, Course course, Map<Chair,
-                            Participant> seatMap, Timestamp createdAt) {
-        super(user, createdAt, createdAt);
+                            Participant> seatMap, Timestamp createdAt, Timestamp updatedAt) {
+        super(user, createdAt, updatedAt);
         //this.user = user;
         this.name = name;
         this.room = room;
