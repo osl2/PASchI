@@ -7,6 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
 
+import java.sql.Timestamp;
+
 @Getter
 @Entity
 @jakarta.persistence.Table(name = "tables")
@@ -21,8 +23,8 @@ public class Table extends RoomObject {
     private double length;
     private double width;
 
-    public Table(User user, Position position, double length, double width) {
-        super(user, position);
+    public Table(User user, Position position, double length, double width, Timestamp createdAt, Timestamp updatedAt) {
+        super(user, position, createdAt, updatedAt);
         this.length = length;
         this.width = width;
     }

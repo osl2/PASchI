@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,8 +20,8 @@ public class RatedCategory extends Category {
     @Enumerated(EnumType.STRING)
     private Quality quality;
 
-    public RatedCategory(User user, String name, Quality quality) {
-        super(user, name);
+    public RatedCategory(User user, String name, Quality quality, Timestamp createdAt) {
+        super(user, name, createdAt);
         this.quality = quality;
     }
 }

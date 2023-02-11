@@ -1,5 +1,6 @@
 package edu.kit.informatik.model.userdata.rooms;
 
+import edu.kit.informatik.model.DataObject;
 import edu.kit.informatik.model.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,20 +11,23 @@ import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @NoArgsConstructor
 @Entity
-public class Room {
-
+public class Room extends DataObject {
+    /*
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @ManyToOne
     private User user;
+     */
+
     private String name;
 
     @OneToMany
@@ -32,8 +36,9 @@ public class Room {
     @OneToMany
     private  List<Chair> chairs;
 
-    public Room(User user, String name) {
-        this.user = user;
+    public Room(User user, String name, Timestamp createdAt, Timestamp updatedAt) {
+        super(user, createdAt, updatedAt);
+        //this.user = user;
         this.name = name;
         this.tables = new ArrayList<>();
         this.chairs = new ArrayList<>();

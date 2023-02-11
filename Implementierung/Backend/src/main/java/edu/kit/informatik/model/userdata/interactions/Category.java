@@ -1,5 +1,6 @@
 package edu.kit.informatik.model.userdata.interactions;
 
+import edu.kit.informatik.model.DataObject;
 import edu.kit.informatik.model.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,22 +11,27 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 @Getter
 @NoArgsConstructor
 @Entity
 @Table(name = "categories")
-public class Category {
-
+public class Category extends DataObject {
+    /*
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @ManyToOne
     private User user;
+     */
+
     private String name;
 
-    public Category(User user, String name) {
-        this.user = user;
+    public Category(User user, String name, Timestamp createdAt) {
+        super(user, createdAt, createdAt);
+        //this.user = user;
         this.name = name;
     }
 

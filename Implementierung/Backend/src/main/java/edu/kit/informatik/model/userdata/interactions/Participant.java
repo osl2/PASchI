@@ -1,5 +1,6 @@
 package edu.kit.informatik.model.userdata.interactions;
 
+import edu.kit.informatik.model.DataObject;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.courses.Course;
 import jakarta.persistence.Entity;
@@ -13,6 +14,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,14 +22,16 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "participants")
-public class Participant {
-
+public class Participant extends DataObject {
+    /*
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @ManyToOne
     private User user;
+     */
+
     private String firstName;
     private String lastName;
     @ManyToMany
@@ -39,8 +43,10 @@ public class Participant {
     @ManyToMany
     private List<Interaction> interactions;
 
-    public Participant(User user, String firstName, String lastName, ParticipantType participantType) {
-        this.user = user;
+    public Participant(User user, String firstName, String lastName,
+                       ParticipantType participantType, Timestamp createdAt, Timestamp updatedAt) {
+        super(user, createdAt, updatedAt);
+        //this.user = user;
         this.firstName = firstName;
         this.lastName = lastName;
         this.participantType = participantType;

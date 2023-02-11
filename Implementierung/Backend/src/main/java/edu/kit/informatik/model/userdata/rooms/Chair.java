@@ -7,6 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import java.sql.Timestamp;
+
 @Entity
 @Table(name = "chairs")
 public class Chair extends RoomObject {
@@ -17,8 +19,8 @@ public class Chair extends RoomObject {
 
      */
 
-    public Chair(User user, Position position) {
-        super(user, position);
+    public Chair(User user, Position position, Timestamp createdAt, Timestamp updatedAt) {
+        super(user, position, createdAt, updatedAt);
     }
 
     public Chair() {

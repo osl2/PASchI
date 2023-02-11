@@ -1,5 +1,6 @@
 package edu.kit.informatik.model.userdata.courses;
 
+import edu.kit.informatik.model.DataObject;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.interactions.Participant;
 import edu.kit.informatik.model.userdata.rooms.Chair;
@@ -19,14 +20,15 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.util.Map;
 
 @Getter
 @NoArgsConstructor
 @Entity
 @Table(name = "seatarrangements")
-public class SeatArrangement {
-
+public class SeatArrangement extends DataObject {
+    /*
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
@@ -34,6 +36,8 @@ public class SeatArrangement {
     @ManyToOne
 
     private User user;
+     */
+
     private String name;
 
     @OneToOne
@@ -52,8 +56,10 @@ public class SeatArrangement {
 
     private Map<Chair, Participant> seatMap;
 
-    public SeatArrangement(User user, String name, Room room, Course course, Map<Chair, Participant> seatMap) {
-        this.user = user;
+    public SeatArrangement(User user, String name, Room room, Course course, Map<Chair,
+                            Participant> seatMap, Timestamp createdAt) {
+        super(user, createdAt, createdAt);
+        //this.user = user;
         this.name = name;
         this.room = room;
         this.course = course;
