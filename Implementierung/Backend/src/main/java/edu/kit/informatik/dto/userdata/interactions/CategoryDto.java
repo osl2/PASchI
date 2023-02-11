@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
@@ -29,6 +30,8 @@ public class CategoryDto implements Comparable<CategoryDto> {
     private String id;
     private String userId;
     private String name;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
 
     @Override
     public int compareTo(CategoryDto o) {

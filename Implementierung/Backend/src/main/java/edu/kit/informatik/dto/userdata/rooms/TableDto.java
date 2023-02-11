@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+
 /**
  * Data-Transfer-Object zur Klasse {@link Table}
  *
@@ -28,9 +30,12 @@ public class TableDto extends RoomObjectDto {
      * @param position {@link edu.kit.informatik.model.userdata.rooms.Position}
      * @param length Länge
      * @param width Breite
+     * @param createdAt {@link Timestamp} beim Erstellen
+     * @param updatedAt {@link Timestamp} beim Update
      */
-    public TableDto(String id, String userId, PositionDto position, double length, double width) {
-        super(id, userId, position);
+    public TableDto(String id, String userId, PositionDto position, double length, double width,
+                            Timestamp createdAt, Timestamp updatedAt) {
+        super(id, userId, position, createdAt, updatedAt);
         this.length = length;
         this.width = width;
     }

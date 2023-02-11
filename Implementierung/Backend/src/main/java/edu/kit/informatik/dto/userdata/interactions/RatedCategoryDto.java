@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+
 /**
  * Data-Transfer-Object zur Klasse {@link RatedCategory}
  *
@@ -26,9 +28,12 @@ public class RatedCategoryDto extends CategoryDto {
      * @param userId Id eines {@link User}
      * @param name Name
      * @param quality {@link QualityDto}
+     * @param createdAt {@link Timestamp} beim Erstellen
+     * @param updatedAt {@link Timestamp} beim Update
      */
-    public RatedCategoryDto(String id, String userId, String name, QualityDto quality) {
-        super(id, userId, name);
+    public RatedCategoryDto(String id, String userId, String name, QualityDto quality,
+                            Timestamp createdAt, Timestamp updatedAt) {
+        super(id, userId, name, createdAt, updatedAt);
         this.quality = quality;
     }
 }

@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+
 /**
  * Data-Transfer-Object zur Klasse {@link Position}
  *
@@ -24,4 +26,6 @@ public class PositionDto {
     private double xCoordinate;
     private double yCoordinate;
     private double orientation;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
 }

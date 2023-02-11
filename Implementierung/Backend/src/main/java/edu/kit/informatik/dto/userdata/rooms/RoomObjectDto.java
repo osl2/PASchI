@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+
 /**
  * Data-Transfer-Object zur Klasse {@link RoomObject}
  *
@@ -24,6 +26,8 @@ public abstract class RoomObjectDto {
     private String id;
     private String userId;
     private PositionDto position;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
 
     /**
      * Abstrakte Methode zur Vererbung zur Implementierung in Unterklassen

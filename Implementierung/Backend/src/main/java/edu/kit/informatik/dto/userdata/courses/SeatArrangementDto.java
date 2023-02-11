@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.sql.Timestamp;
 import java.util.Map;
 import java.util.UUID;
 
@@ -32,6 +33,8 @@ public class SeatArrangementDto implements Comparable<SeatArrangementDto> {
     private Map<String, String> seatMap;
     private String roomId;
     private String courseId;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
 
     @Override
     public int compareTo(SeatArrangementDto o) {

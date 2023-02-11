@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+
 /**
  * Data-Transfer-Object zur Klasse {@link Interaction}
  *
@@ -27,4 +29,6 @@ public class InteractionDto {
     private String toParticipantId;
     private String fromParticipantId;
     private String categoryId;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
 }

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
@@ -35,6 +36,8 @@ public class UserDto implements Comparable<UserDto> {
     private boolean auth;
     private String token;
     private RoleDto role;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
 
     @Override
     public int compareTo(UserDto o) {

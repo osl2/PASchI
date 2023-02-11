@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,6 +35,8 @@ public class ParticipantDto implements Comparable<ParticipantDto> {
     private ParticipantTypeDto participantType;
     private List<String> courseIds;
     private List<String> interactionIds;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
 
     @Override
     public int compareTo(ParticipantDto o) {
