@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
@@ -37,13 +38,20 @@ public class User implements Comparable<User> {
     private boolean auth;
     private Role role;
 
-    public User(String firstName, String lastName, String email, String password, boolean auth, Role role) {
+    private Timestamp createdAt;
+
+    private Timestamp updatedAt;
+
+    public User(String firstName, String lastName, String email, String password,
+                boolean auth, Role role, Timestamp createdAt, Timestamp updatedAt) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.auth = auth;
         this.role = role;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public void setFirstName(String firstName) {
@@ -68,6 +76,14 @@ public class User implements Comparable<User> {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(Timestamp updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override
