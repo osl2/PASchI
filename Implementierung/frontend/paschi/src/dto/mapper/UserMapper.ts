@@ -6,8 +6,16 @@ import {useUserStore} from "@/store/UserStore";
 
 export class UserMapper implements IModelDtoMapper<User, UserDto> {
 
-  roleMapper: RoleMapper = new RoleMapper();
-  userStore = useUserStore();
+  private static mapper: UserMapper = new UserMapper();
+  private roleMapper: RoleMapper = new RoleMapper();
+  private userStore = useUserStore();
+
+  private constructor() {
+  }
+
+  static getMapper(): UserMapper {
+    return UserMapper.mapper;
+  }
 
   modelToDto(user: User): UserDto {
     let id: string | undefined;
@@ -19,6 +27,8 @@ export class UserMapper implements IModelDtoMapper<User, UserDto> {
 
     return new UserDto(
       id,
+      user.createdAt,
+      user.updatedAt,
       user.firstName,
       user.lastName,
       user.email,
