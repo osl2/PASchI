@@ -18,7 +18,7 @@ export abstract class BaseService<Entity, Dto> {
 
   abstract getById(id: string): Promise<Entity | undefined>;
 
-  abstract getAll(): Entity[];
+  abstract getAll(): Promise<Entity[]>;
 
   abstract delete(id: string): void;
 }

@@ -9,6 +9,9 @@ import {User} from "@/model/User";
 import {Role} from "@/model/Role";
 import {useUserStore} from "@/store/UserStore";
 import {useCourseStore} from "@/store/CourseStore";
+// import {SessionService} from "@/service/SessionService";
+// import {ParticipantService} from "@/service/ParticipantService";
+// import {SeatArrangementService} from "@/service/SeatArrangementService";
 
 export class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
 

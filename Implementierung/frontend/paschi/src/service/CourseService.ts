@@ -5,7 +5,7 @@ import {CourseMapper} from "@/dto/mapper/courses/CourseMapper";
 import axios from "axios";
 
 // TODO: URL
-const COURSE_BASE_URL: string = 'https://mocki.io/v1/9089aaa5-4243-4866-9e62-67d5763347e1';
+const COURSE_BASE_URL: string = '';
 
 export class CourseService extends BaseService<Course, CourseDto> {
 
@@ -40,28 +40,12 @@ export class CourseService extends BaseService<Course, CourseDto> {
     }
   }
 
-  getAll(): Course[] {
-    let courseDtos: CourseDto[] = [];
+  async getAll(): Promise<Course[]> {
     let courses: Course[] = [];
     axios.get(COURSE_BASE_URL + '').then((response) => {
       response.data.forEach((course: any) => {
-        const courseDto = new CourseDto(
-          course.id,
-          course.userId,
-          response.data.createdAt,
-          response.data.updatedAt,
-          course.name,
-          course.subject,
-          course.sessionIds,
-          course.participantIds,
-          course.seatArrangementIds
-        );
-        courseDtos.push(courseDto);
+        courses.push(this.getMapper().dtoToModel(course));
       });
-    });
-
-    courseDtos.forEach((courseDto: CourseDto) => {
-      courses.push(this.getMapper().dtoToModel(courseDto));
     });
 
     return courses;
