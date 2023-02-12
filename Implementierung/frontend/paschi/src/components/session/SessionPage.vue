@@ -1,6 +1,6 @@
 <template>
   <NavigationBar extended>
-    <template v-slot:prepend> Raum bearbeiten </template>
+    <template v-slot:prepend> Sitzung </template>
     <template v-slot:default class="row justify-center w-100">
       <v-app-bar-title class="v-col-auto">
         {{ sessionName }}
@@ -12,11 +12,18 @@
       </v-btn>
     </template>
     <template v-slot:extension>
-      <v-icon v-if="undoPossible()" @click="undoClick" class="ma-2"> mdi mdi-undo </v-icon>
-      <v-icon v-if="!undoPossible()" color="#999999" class="ma-2"> mdi mdi-undo </v-icon>
-      <v-icon v-if="redoPossible()" @click="redoClick" class="ma-2"> mdi mdi-redo </v-icon>
-      <v-icon v-if="!redoPossible()" color="#999999" class="ma-2"> mdi mdi-redo </v-icon>
-
+      <v-icon v-if="undoPossible()" @click="undoClick" class="ma-2">
+        mdi mdi-undo
+      </v-icon>
+      <v-icon v-if="!undoPossible()" color="#999999" class="ma-2">
+        mdi mdi-undo
+      </v-icon>
+      <v-icon v-if="redoPossible()" @click="redoClick" class="ma-2">
+        mdi mdi-redo
+      </v-icon>
+      <v-icon v-if="!redoPossible()" color="#999999" class="ma-2">
+        mdi mdi-redo
+      </v-icon>
     </template>
   </NavigationBar>
   <v-main>
@@ -45,25 +52,25 @@
           </v-row>
         </v-list-item>
         <template
-          v-for="participant in courseParticipantsSortedByName.filter(
-            (participant) => {
-              (participant.firstName + ' ' + participant.lastName).startsWith(
-                searchInput
-              );
-            }
+          v-for="participant in filterParticipants(
+            courseParticipantsSortedByName
           )"
         >
-          <v-divider />
-          <v-list-item @click="setParticipant(participant)">
-            {{ participant.firstName }} {{ participant.lastName }}
+          <v-list-item
+            @click="setParticipant(participant)"
+            prepend-icon="fas fa-user"
+          >
+            <v-list-item-title>
+              {{ participant.firstName }} {{ participant.lastName }}
+            </v-list-item-title>
           </v-list-item>
         </template>
       </v-list>
     </v-card>
-    <v-dialog>
+    <v-dialog v-model="categoryDialog">
       <v-card>
         <v-list></v-list>
-        <v-btn rounded @click="abortCategory">abbrechen</v-btn>
+        <v-btn rounded @click="resetInterActionParams">abbrechen</v-btn>
       </v-card>
     </v-dialog>
   </v-main>
@@ -117,15 +124,25 @@ export default defineComponent({
       sessionController.getInteractionsOfSession(props.sessionId)
     ) as Ref<Interaction[]>;
     const searchInput = ref("");
+    const categoryDialog = ref(false);
 
-    function abortCategory() {
+    function filterParticipants(participants: Participant[]): Participant[] {
+      return participants.filter((participant) => {
+        return (participant.firstName + " " + participant.lastName).startsWith(
+          searchInput.value
+        );
+      });
+    }
+    function resetInterActionParams() {
       setFirstParticipant(undefined);
       setSecondParticipant(undefined);
+      setCategory(undefined);
+      categoryDialog.value = false;
     }
     function undoPossible(): boolean {
       let undoPossible = sessionController.hasUndo(props.sessionId);
       if (typeof undoPossible === "boolean") {
-        return false
+        return false;
       }
       return false;
     }
@@ -176,10 +193,12 @@ export default defineComponent({
       firstParticipant.value = participant;
     }
     function setParticipant(participant: Participant) {
-      if ((firstParticipant.value = undefined)) {
+      if (typeof firstParticipant.value === "undefined") {
         setFirstParticipant(participant);
-      } else {
+      }
+      else {
         setSecondParticipant(participant);
+        categoryDialog.value = true;
       }
     }
     function createInteraction() {
@@ -208,12 +227,14 @@ export default defineComponent({
       roomObjects,
       courseParticipantsSortedByName,
       secondParticipant,
-      abortCategory,
+      categoryDialog,
+      resetInterActionParams,
       createInteraction,
       undoClick,
       redoClick,
       undoPossible,
       redoPossible,
+      filterParticipants,
       toggleInteractionMapActivated,
       finishSessionClick,
       setParticipant,
