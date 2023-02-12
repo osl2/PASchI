@@ -5,17 +5,18 @@ import {Session} from "@/model/userdata/courses/Session";
 import {Participant} from "@/model/userdata/interactions/Participant";
 import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {UserController} from "@/controller/UserController";
-import {SessionService} from "@/service/SessionService";
-import {ParticipantService} from "@/service/ParticipantService";
-import {SeatArrangementService} from "@/service/SeatArrangementService";
+import {User} from "@/model/User";
+import {Role} from "@/model/Role";
+import {useUserStore} from "@/store/UserStore";
+import {useCourseStore} from "@/store/CourseStore";
 
 export class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
 
   private static mapper: CourseMapper = new CourseMapper();
   private userController = UserController.getUserController();
-  private sessionService = new SessionService();
-  private participantService = new ParticipantService();
-  private arrangementService = new SeatArrangementService();
+  // private sessionService = new SessionService();
+  // private participantService = new ParticipantService();
+  // private arrangementService = new SeatArrangementService();
 
   private constructor() {
   }
@@ -36,7 +37,7 @@ export class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
     return new CourseDto(
       course.getId,
       course.user.getId,
-      course.createdAt, 
+      course.createdAt,
       course.updatedAt,
       course.name,
       course.subject,
@@ -46,10 +47,10 @@ export class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
     );
   }
 
-  dtoToModel(courseDto: CourseDto): Course {
-    let sessions: Session[] = [];
-    let participants: Participant[] = [];
-    let arrangements: SeatArrangement[] = [];
+  dtoToModel(courseDto: any): Course {
+    const sessions: Session[] = [];
+    const participants: Participant[] = [];
+    const arrangements: SeatArrangement[] = [];
     const user = this.userController.getUser();
 
     courseDto.sessionIds.forEach((id: string) => {
@@ -59,6 +60,10 @@ export class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
     courseDto.participantIds.forEach((id: string) => {
       // TODO: Service implementieren
       // participants.push(this.participantService.getById(id));
+      // const student = useStudentStore().getStudent(id);
+      // if (student !== undefined) {
+      //   participants.push();
+      // }
     });
     courseDto.seatArrangementIds.forEach((id: string) => {
       // TODO: Service implementieren

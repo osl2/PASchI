@@ -5,7 +5,7 @@ import {CourseMapper} from "@/dto/mapper/courses/CourseMapper";
 import axios from "axios";
 
 // TODO: URL
-const COURSE_BASE_URL: string = '';
+const COURSE_BASE_URL: string = 'https://mocki.io/v1/9089aaa5-4243-4866-9e62-67d5763347e1';
 
 export class CourseService extends BaseService<Course, CourseDto> {
 
@@ -27,26 +27,17 @@ export class CourseService extends BaseService<Course, CourseDto> {
     });
   }
 
-  getById(id: string): Course | undefined {
-    let courseDto;
-    axios.get(COURSE_BASE_URL + '').then((response) => {
-      courseDto = new CourseDto(
-        response.data.id,
-        response.data.userId,
-        response.data.createdAt,
-        response.data.updatedAt,
-        response.data.name,
-        response.data.subject,
-        response.data.sessionIds,
-        response.data.participantIds,
-        response.data.seatArrangementIds
-      );
+  async getById(id: string): Promise<Course | undefined> {
+    let course;
+    await axios.get(COURSE_BASE_URL + '').then((response) => {
+      course = this.getMapper().dtoToModel(response.data);
     });
 
-    if (courseDto != undefined) {
-      return this.getMapper().dtoToModel(courseDto);
+    if (course != undefined) {
+      return course;
+    } else {
+      return undefined;
     }
-    return undefined;
   }
 
   getAll(): Course[] {

@@ -8,6 +8,8 @@ import {useStudentStore} from "@/store/StudentStore";
 import {useSessionStore} from "@/store/SessionStore";
 import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 import {RoomObject} from "@/model/userdata/rooms/RoomObject";
+import {CourseService} from "@/service/CourseService";
+import {CourseMapper} from "@/dto/mapper/courses/CourseMapper";
 
 // TODO: Backend Service einbinden
 export class CourseController {

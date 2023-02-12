@@ -9,9 +9,9 @@ export class Course extends DataObject {
   private readonly _user: User
   private _name: string;
   private _subject: string;
-  private readonly _participants: Participant[];
-  private readonly _sessions: Session[];
-  private readonly _seatArrangements: SeatArrangement[];
+  private _participants: Participant[];
+  private _sessions: Session[];
+  private _seatArrangements: SeatArrangement[];
 
   constructor(id: string | undefined, localId: number, user: User, name: string, subject: string) {
     super(id, localId);
@@ -133,5 +133,17 @@ export class Course extends DataObject {
   set subject(value: string) {
     this._subject = value;
     this.update();
+  }
+
+  set participants(value: Participant[]) {
+    this._participants = value;
+  }
+
+  set sessions(value: Session[]) {
+    this._sessions = value;
+  }
+
+  set seatArrangements(value: SeatArrangement[]) {
+    this._seatArrangements = value;
   }
 }
