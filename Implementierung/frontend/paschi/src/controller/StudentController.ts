@@ -20,7 +20,7 @@ export class StudentController {
   }
 
   static getStudentConroller(): StudentController {
-    return StudentController.controller;
+    return this.controller;
   }
 
   createStudent(firstName: string, lastName: string): string {

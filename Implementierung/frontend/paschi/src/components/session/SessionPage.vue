@@ -12,12 +12,11 @@
       </v-btn>
     </template>
     <template v-slot:extension>
-      <v-icon @click="undoClick" class="ma-2">
-        mdi mdi-undo
-      </v-icon>
-      <v-icon @click="redoClick" class="ma-2">
-        mdi mdi-redo
-      </v-icon>
+      <v-icon v-if="undoPossible()" @click="undoClick" class="ma-2"> mdi mdi-undo </v-icon>
+      <v-icon v-if="!undoPossible()" color="#999999" class="ma-2"> mdi mdi-undo </v-icon>
+      <v-icon v-if="redoPossible()" @click="redoClick" class="ma-2"> mdi mdi-redo </v-icon>
+      <v-icon v-if="!redoPossible()" color="#999999" class="ma-2"> mdi mdi-redo </v-icon>
+
     </template>
   </NavigationBar>
   <v-main>
@@ -123,6 +122,20 @@ export default defineComponent({
       setFirstParticipant(undefined);
       setSecondParticipant(undefined);
     }
+    function undoPossible(): boolean {
+      let undoPossible = sessionController.hasUndo(props.sessionId);
+      if (typeof undoPossible === "boolean") {
+        return false
+      }
+      return false;
+    }
+    function redoPossible(): boolean {
+      let redoPossible = sessionController.hasRedo(props.sessionId);
+      if (typeof redoPossible === "boolean") {
+        return redoPossible;
+      }
+      return false;
+    }
     function undoClick() {
       sessionController.undoInteraction(props.sessionId);
     }
@@ -199,6 +212,8 @@ export default defineComponent({
       createInteraction,
       undoClick,
       redoClick,
+      undoPossible,
+      redoPossible,
       toggleInteractionMapActivated,
       finishSessionClick,
       setParticipant,

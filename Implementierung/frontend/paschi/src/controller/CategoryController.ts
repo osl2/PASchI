@@ -15,7 +15,7 @@ export class CategoryController {
   }
 
   static getCategoryController(): CategoryController {
-    return CategoryController.controller;
+    return this.controller;
   }
 
   createCategory(name: string): string {
