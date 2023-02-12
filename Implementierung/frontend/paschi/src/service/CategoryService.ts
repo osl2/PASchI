@@ -4,9 +4,9 @@ import {CategoryDto} from "@/dto/userdata/interactions/CategoryDto";
 import {CategoryMapper} from "@/dto/mapper/interactions/CategoryMapper";
 import axios from "axios/index";
 
+// TODO: URL
 const CATEGORY_BASE_URL: string = '';
 
-// TODO: URL
 export class CategoryService extends BaseService<Category, CategoryDto> {
 
   constructor() {

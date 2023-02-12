@@ -22,7 +22,7 @@ export class CourseService extends BaseService<Course, CourseDto> {
 
   update(course: Course) {
     const courseDto = this.getMapper().modelToDto(course);
-    axios.put(COURSE_BASE_URL + '').then((response) => {
+    axios.put(COURSE_BASE_URL + '', courseDto).then((response) => {
       // irgendwas
     });
   }
