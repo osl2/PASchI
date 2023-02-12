@@ -23,7 +23,7 @@ export class CourseController {
   }
 
   static getCourseController(): CourseController {
-    return CourseController.controller;
+    return this.controller;
   }
 
   createCourse(name: string, subject: string): string {

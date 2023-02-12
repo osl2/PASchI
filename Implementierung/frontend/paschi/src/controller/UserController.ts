@@ -13,7 +13,7 @@ export class UserController {
   }
 
   static getUserController(): UserController {
-    return UserController.controller;
+    return this.controller;
   }
 
   login(email: string, password: string): boolean {

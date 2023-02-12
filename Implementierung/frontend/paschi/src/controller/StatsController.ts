@@ -17,7 +17,7 @@ export class StatsController {
   }
 
   static getStatsController(): StatsController {
-    return StatsController.controller;
+    return this.controller;
   }
 
   /*

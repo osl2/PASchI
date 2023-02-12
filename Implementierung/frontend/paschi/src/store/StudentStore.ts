@@ -1,10 +1,11 @@
 import {defineStore} from "pinia";
 import {Student} from "@/model/userdata/interactions/Student";
-import {Participant} from "@/model/userdata/interactions/Participant";
+import {Teacher} from "@/model/userdata/interactions/Teacher";
 
 export const useStudentStore = defineStore('students', {
   state: () => ({
     students: [] as Student[],
+    teacher: undefined as Teacher | undefined,
     nextId: 0
   }),
   actions: {
@@ -36,6 +37,13 @@ export const useStudentStore = defineStore('students', {
     getAllStudents(): Student[] {
       // @ts-ignore
       return this.students;
+    },
+    getTeacher(): Teacher | undefined {
+      // @ts-ignore
+      return this.teacher;
+    },
+    setTeacher(teacher: Teacher) {
+      this.teacher = teacher;
     },
     getNextId(): number {
       return this.nextId++;

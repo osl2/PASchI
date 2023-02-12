@@ -10,7 +10,7 @@ export class AdminController {
   }
 
   static getAdminController(): AdminController {
-    return AdminController.controller;
+    return this.controller;
   }
 
   getUsers(): User[] {

@@ -24,7 +24,7 @@ export class SeatArrangementController {
   }
 
   static getSeatArrangementController(): SeatArrangementController {
-    return SeatArrangementController.controller;
+    return this.controller;
   }
 
   createSeatArrangement(name: string, roomId: string, courseId: string): string | undefined {

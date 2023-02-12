@@ -25,7 +25,7 @@ export class SessionController {
   }
 
   static getSessionController(): SessionController {
-    return SessionController.controller;
+    return this.controller;
   }
 
   createSession(courseId: string, seatArrangementId: string, name: string): string | undefined {

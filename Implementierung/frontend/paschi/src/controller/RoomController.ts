@@ -23,7 +23,7 @@ export class RoomController {
   private constructor() {}
 
   static getRoomController(): RoomController {
-    return RoomController.controller;
+    return this.controller;
   }
 
   createRoom(name: string): string {
