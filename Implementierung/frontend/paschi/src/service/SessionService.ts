@@ -2,7 +2,9 @@ import {BaseService} from "@/service/BaseService";
 import {Session} from "@/model/userdata/courses/Session";
 import {SessionDto} from "@/dto/userdata/courses/SessionDto";
 import {SessionMapper} from "@/dto/mapper/courses/SessionMapper";
+import axios from "axios";
 
+// TODO: URL
 const SESSION_BASE_URL: string = '';
 
 export class SessionService extends BaseService<Session, SessionDto> {
@@ -11,18 +13,47 @@ export class SessionService extends BaseService<Session, SessionDto> {
     super(SessionMapper.getMapper());
   }
 
-  add(e: Session) {
+  add(session: Session) {
+    const sessionDto = this.getMapper().modelToDto(session);
+    axios.post(SESSION_BASE_URL + '', sessionDto).then((response) => {
+      // irgendwas
+    });
   }
 
-  update(e: Session) {
+  update(session: Session) {
+    const sessionDto = this.getMapper().modelToDto(session);
+    axios.post(SESSION_BASE_URL + '', sessionDto).then((response) => {
+      // irgendwas
+    });
   }
 
-  getById(id: string): Session | undefined {
+  async getById(id: string): Promise<Session | undefined> {
+    let session;
+    await axios.get(SESSION_BASE_URL + '').then((response) => {
+      session = this.getMapper().dtoToModel(response.data);
+    });
+
+    if (session != undefined) {
+      return session;
+    } else {
+      return undefined;
+    }
   }
 
-  getAll(): Session[] {
+  async getAll(): Promise<Session[]> {
+    let sessions: Session[] = [];
+    axios.get(SESSION_BASE_URL + '').then((response) => {
+      response.data.forEach((course: any) => {
+        sessions.push(this.getMapper().dtoToModel(course));
+      });
+    });
+
+    return sessions;
   }
 
   delete(id: string) {
+    axios.post(SESSION_BASE_URL + '').then((response) => {
+      // irgendwas
+    });
   }
 }
