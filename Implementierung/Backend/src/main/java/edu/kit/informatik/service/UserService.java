@@ -4,9 +4,13 @@ import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.dto.mapper.UserMapper;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.repositories.UserRepository;
+import edu.kit.informatik.security.TokenService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -26,20 +30,40 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
 
     private final UserRepository userRepository;
 
+    private final TokenService tokenService;
+    private final AuthenticationManager authenticationManager;
+
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
-     * @param userRepository {@link UserRepository}
-     * @param userMapper {@link UserMapper}
+     *
+     * @param userRepository        {@link UserRepository}
+     * @param userMapper            {@link UserMapper}
+     * @param tokenService          {@link TokenService}
+     * @param authenticationManager {@link AuthenticationManager}
      */
     @Autowired
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, UserMapper userMapper,
+                       TokenService tokenService, AuthenticationManager authenticationManager) {
         super(userMapper);
         this.userRepository = userRepository;
+        this.tokenService = tokenService;
+        this.authenticationManager = authenticationManager;
     }
 
     @Override
     public UserDto add(UserDto userDto) {
         User user = this.mapper.dtoToModel(userDto);
+
+        Optional<User> userOptional = userRepository.findUserByEmail(user.getEmail());
+
+        if (userOptional.isPresent()) {
+            throw new IllegalArgumentException("Email already taken");
+        }
+
+        String newPassword = new BCryptPasswordEncoder().encode(user.getPassword());
+
+        user.setPassword("{bcrypt}" + newPassword);
+
         User newUser = userRepository.save(user);
 
         return this.mapper.modelToDto(newUser);
@@ -51,7 +75,7 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
 
         Optional<User> repositoryUserOptional = userRepository.findUserById(userDto.getId());
         if (repositoryUserOptional.isEmpty()) {
-            return null;
+            throw new IllegalArgumentException("User with ID " + userDto.getId() + " not found.");
         }
 
         User repositoryUser = repositoryUserOptional.get();
@@ -77,7 +101,11 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
     public UserDto getById(String id) {
         Optional<User> userOptional = userRepository.findUserById(id);
 
-        return userOptional.map(this.mapper::modelToDto).orElse(null);
+        if (userOptional.isPresent()) {
+            return this.mapper.modelToDto(userOptional.get());
+        } else {
+            throw new IllegalArgumentException("User with ID " + id + " not found.");
+        }
     }
 
     @Override
@@ -99,11 +127,27 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
      * @return {@link UserDto}
      */
     public UserDto login(String email, String password) {
-        return null;
+        UsernamePasswordAuthenticationToken uPAT = new UsernamePasswordAuthenticationToken(email, password);
+
+        Authentication authentication = authenticationManager.authenticate(uPAT);
+
+        User user = (User) authentication.getPrincipal();
+        UserDto userDto = this.mapper.modelToDto(user);
+        userDto.setToken(tokenService.generateToken(authentication));
+
+        return userDto;
     }
 
-
+    /**
+     * Rückgabe eines neuen JWT-Tokens bei Authentifizierung
+     * @param authentication {@link Authentication}
+     * @return {@link UserDto}
+     */
     public UserDto getToken(Authentication authentication) {
-        return null;
+        User user = (User) authentication.getPrincipal();
+        UserDto userDto = this.mapper.modelToDto(user);
+        userDto.setToken(tokenService.generateToken(authentication));
+
+        return userDto;
     }
 }
