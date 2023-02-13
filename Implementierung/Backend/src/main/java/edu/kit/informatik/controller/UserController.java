@@ -75,7 +75,7 @@ public class UserController extends BaseController<User, UserDto, UserDto> {
      * @return {@link UserDto}
      */
     @PostMapping(path = "/login")
-    public UserDto login(@RequestParam String email, @RequestParam  String password) {
+    public UserDto login(@RequestParam String email, @RequestParam String password) {
         return this.userService.login(email, password);
     }
 
