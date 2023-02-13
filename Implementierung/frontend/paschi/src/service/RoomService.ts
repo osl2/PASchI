@@ -2,7 +2,7 @@ import {BaseService} from "@/service/BaseService";
 import {Room} from "@/model/userdata/rooms/Room";
 import {RoomDto} from "@/dto/userdata/rooms/RoomDto";
 import {RoomMapper} from "@/dto/mapper/rooms/RoomMapper";
-import axios from "axios/index";
+import axios from "axios";
 
 // TODO: URL
 const ROOM_BASE_URL: string = '';
