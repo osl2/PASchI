@@ -1,7 +1,9 @@
 package edu.kit.informatik;
 
+import edu.kit.informatik.security.RsaKeyProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 /**
  * Hauptklasse zum Starten des Backends.
@@ -9,6 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author ugqbo
  * @version 1.0
  */
+
+@EnableConfigurationProperties(RsaKeyProperties.class)
 @SpringBootApplication
 public class PAschIApplication {
     /**
