@@ -1,7 +1,7 @@
 import {BaseService} from "@/service/BaseService";
 import {User} from "@/model/User";
 import {UserDto} from "@/dto/UserDto";
-import axios from "axios/index";
+import axios from "axios";
 import {UserMapper} from "@/dto/mapper/UserMapper";
 
 const USER_BASE_URL: string = '';
