@@ -2,7 +2,7 @@ import {BaseService} from "@/service/BaseService";
 import {Category} from "@/model/userdata/interactions/Category";
 import {CategoryDto} from "@/dto/userdata/interactions/CategoryDto";
 import {CategoryMapper} from "@/dto/mapper/interactions/CategoryMapper";
-import axios from "axios/index";
+import axios from "axios";
 
 // TODO: URL
 const CATEGORY_BASE_URL: string = '';
