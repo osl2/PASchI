@@ -5,8 +5,10 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### Application.properties sollte nur lokal sein###
+### Application.properties sollte nur lokal sein + Keys ###
 application.properties
+privateSecurityKey.pem
+publicSecurityKey.pem
 
 ### STS ###
 .apt_generated
