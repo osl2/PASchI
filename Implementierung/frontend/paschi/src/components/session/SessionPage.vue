@@ -51,20 +51,19 @@
             </v-col>
           </v-row>
         </v-list-item>
-        <template
-          v-for="participant in filterParticipants(
-            courseParticipantsSortedByName
-          )"
-        >
-          <v-list-item
-            @click="setParticipant(participant)"
-            prepend-icon="fas fa-user"
+        <v-row no-gutters>
+          <template
+            v-for="participant in filterParticipants(
+              courseParticipantsSortedByName
+            )"
           >
-            <v-list-item-title>
-              {{ participant.firstName }} {{ participant.lastName }}
-            </v-list-item-title>
-          </v-list-item>
-        </template>
+            <v-card class="v-col-3" @click="setParticipant(participant)">
+              <v-row no-gutters justify="space-around" class="ma-2">
+                <SeatLabel :participant="participant"></SeatLabel>
+              </v-row>
+            </v-card>
+          </template>
+        </v-row>
       </v-list>
     </v-card>
     <v-dialog v-model="categoryDialog">
@@ -89,9 +88,10 @@ import { useRouter } from "vue-router";
 import { CategoryController } from "@/controller/CategoryController";
 import { Interaction } from "@/model/userdata/interactions/Interaction";
 import { Course } from "@/model/userdata/courses/Course";
+import SeatLabel from "@/components/room/SeatLabel.vue";
 export default defineComponent({
   name: "SessionPage",
-  components: { SideMenu, NavigationBar },
+  components: { SeatLabel, SideMenu, NavigationBar },
   props: {
     sessionId: {
       type: String,
@@ -195,8 +195,7 @@ export default defineComponent({
     function setParticipant(participant: Participant) {
       if (typeof firstParticipant.value === "undefined") {
         setFirstParticipant(participant);
-      }
-      else {
+      } else {
         setSecondParticipant(participant);
         categoryDialog.value = true;
       }
