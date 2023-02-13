@@ -3,6 +3,7 @@ package edu.kit.informatik.controller;
 import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.service.UserService;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -74,7 +75,17 @@ public class UserController extends BaseController<User, UserDto, UserDto> {
      * @return {@link UserDto}
      */
     @PostMapping(path = "/login")
-    public UserDto login(String email, String password) {
+    public UserDto login(@RequestParam String email, @RequestParam  String password) {
         return this.userService.login(email, password);
+    }
+
+    /**
+     * Rückgabe eines neuen JWT-Tokens bei Authentifizierung
+     * @param authentication {@link Authentication}
+     * @return {@link UserDto}
+     */
+    @PostMapping(path = "/token")
+    public UserDto getToken(Authentication authentication) {
+        return this.userService.getToken(authentication);
     }
 }
