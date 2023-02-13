@@ -6,6 +6,7 @@ import edu.kit.informatik.model.User;
 import edu.kit.informatik.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -98,6 +99,11 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
      * @return {@link UserDto}
      */
     public UserDto login(String email, String password) {
+        return null;
+    }
+
+
+    public UserDto getToken(Authentication authentication) {
         return null;
     }
 }
