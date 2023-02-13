@@ -8,6 +8,7 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -26,6 +27,8 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
+
+import static org.springframework.security.authorization.AuthorityAuthorizationManager.hasAuthority;
 
 @Configuration
 @EnableWebSecurity
@@ -53,18 +56,15 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/user/login").permitAll()
-                        //.mvcMatchers("/token").permitAll()
-                        //.mvcMatchers("/secure").access("hasAuthority('SCOPE_ROLE_USER')")
-                        //.mvcMatchers("/test").permitAll()
-                        //.mvcMatchers("/v1/user/**").permitAll()
-                        //.mvcMatchers("/user/admin").access("hasRole('SCOPE_ROLE_ADMIN')")
+                        .requestMatchers(HttpMethod.POST, "/api/user").permitAll()
+                        .requestMatchers("/api/user/admin").access(hasAuthority("SCOPE_ROLE_ADMIN"))
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling((ex) -> ex
                         .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
-                        .accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
-                //.userDetailsService(userDetailsService)
+                        .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
+                        )
                 .build();
     }
 
