@@ -4,6 +4,7 @@ import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.service.UserService;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,7 @@ import java.util.List;
  * @version 1.0
  */
 @RestController
+@CrossOrigin
 @RequestMapping(path = "/api/user")
 public class UserController extends BaseController<User, UserDto, UserDto> {
 
