@@ -3,6 +3,7 @@ package edu.kit.informatik.controller;
 import edu.kit.informatik.dto.userdata.courses.SeatArrangementDto;
 import edu.kit.informatik.model.userdata.courses.SeatArrangement;
 import edu.kit.informatik.service.SeatArrangementService;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,31 +37,32 @@ public class SeatArrangementController extends BaseController<SeatArrangement, S
 
     @Override
     @PostMapping
-    public SeatArrangementDto add(@RequestBody SeatArrangementDto seatArrangementDto) {
-        return super.add(seatArrangementDto);
+    public SeatArrangementDto add(@RequestBody SeatArrangementDto seatArrangementDto, Authentication authentication) {
+        return super.add(seatArrangementDto, authentication);
     }
 
     @Override
     @PutMapping
-    public SeatArrangementDto update(@RequestBody SeatArrangementDto seatArrangementDto) {
-        return super.update(seatArrangementDto);
+    public SeatArrangementDto update(@RequestBody SeatArrangementDto seatArrangementDto,
+                                    Authentication authentication) {
+        return super.update(seatArrangementDto, authentication);
     }
 
     @Override
     @GetMapping(path = "/{id}")
-    public SeatArrangementDto getById(@PathVariable("id") String id) {
-        return super.getById(id);
+    public SeatArrangementDto getById(@PathVariable("id") String id, Authentication authentication) {
+        return super.getById(id, authentication);
     }
 
     @Override
     @GetMapping
-    public List<SeatArrangementDto> getAll() {
-        return super.getAll();
+    public List<SeatArrangementDto> getAll(Authentication authentication) {
+        return super.getAll(authentication);
     }
 
     @Override
     @DeleteMapping
-    public String delete(@RequestParam String id) {
-        return super.delete(id);
+    public String delete(@RequestParam String id, Authentication authentication) {
+        return super.delete(id, authentication);
     }
 }

@@ -40,32 +40,32 @@ public class UserController extends BaseController<User, UserDto, UserDto> {
 
     @Override
     @PostMapping
-    public UserDto add(@RequestBody UserDto userDto) {
-        return super.add(userDto);
+    public UserDto add(@RequestBody UserDto userDto, Authentication authentication) {
+        return super.add(userDto, authentication);
     }
 
     @Override
     @PutMapping
-    public UserDto update(@RequestBody UserDto userDto) {
-        return super.update(userDto);
+    public UserDto update(@RequestBody UserDto userDto, Authentication authentication) {
+        return super.update(userDto, authentication);
     }
 
     @Override
     @GetMapping(path = "/{id}")
-    public UserDto getById(@PathVariable("id") String id) {
-        return super.getById(id);
+    public UserDto getById(@PathVariable("id") String id, Authentication authentication) {
+        return super.getById(id, authentication);
     }
 
     @Override
     @GetMapping(path = "/admin")
-    public List<UserDto> getAll() {
-        return super.getAll();
+    public List<UserDto> getAll(Authentication authentication) {
+        return super.getAll(authentication);
     }
 
     @Override
     @DeleteMapping
-    public String delete(@RequestParam String id) {
-        return super.delete(id);
+    public String delete(@RequestParam String id, Authentication authentication) {
+        return super.delete(id, authentication);
     }
 
     /**

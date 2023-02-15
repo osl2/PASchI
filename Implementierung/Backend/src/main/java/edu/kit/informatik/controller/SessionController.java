@@ -3,6 +3,7 @@ package edu.kit.informatik.controller;
 import edu.kit.informatik.dto.userdata.courses.SessionDto;
 import edu.kit.informatik.model.userdata.courses.Session;
 import edu.kit.informatik.service.SessionService;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,31 +37,31 @@ public class SessionController extends BaseController<Session, SessionDto, Sessi
 
     @Override
     @PostMapping
-    public SessionDto add(@RequestBody SessionDto sessionDto) {
-        return super.add(sessionDto);
+    public SessionDto add(@RequestBody SessionDto sessionDto, Authentication authentication) {
+        return super.add(sessionDto, authentication);
     }
 
     @Override
     @PutMapping
-    public SessionDto update(@RequestBody SessionDto sessionDto) {
-        return super.update(sessionDto);
+    public SessionDto update(@RequestBody SessionDto sessionDto, Authentication authentication) {
+        return super.update(sessionDto, authentication);
     }
 
     @Override
     @GetMapping(path = "/{id}")
-    public SessionDto getById(@PathVariable("id") String id) {
-        return super.getById(id);
+    public SessionDto getById(@PathVariable("id") String id, Authentication authentication) {
+        return super.getById(id, authentication);
     }
 
     @Override
     @GetMapping
-    public List<SessionDto> getAll() {
-        return super.getAll();
+    public List<SessionDto> getAll(Authentication authentication) {
+        return super.getAll(authentication);
     }
 
     @Override
     @DeleteMapping
-    public String delete(@RequestParam String id) {
-        return super.delete(id);
+    public String delete(@RequestParam String id, Authentication authentication) {
+        return super.delete(id, authentication);
     }
 }
