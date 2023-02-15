@@ -1,14 +1,17 @@
 <template>
-  <NavigationBar extended>
-    <template v-slot:extension>
-      <v-btn @click="saveStatisticsClick">Statistik herunterladen</v-btn>
-    </template>
-  </NavigationBar>
-
+  <NavigationBar extended />
   <v-main>
     <SideMenu />
-    <v-container>
-      <BarChart :chartData="chartData" :chartOptions="chartOptions"/>
+    <v-container fluid>
+      <v-row justify="space-around" align-content="stretch">
+        <v-col>
+          <h3> Durchschnittliche Qualität </h3>
+          {{statsController.getStudentStats(studentId)[1]}} / 5
+        </v-col>
+        <v-col>
+          <canvas id = "categoryChart" width="100" />
+        </v-col>
+      </v-row>
     </v-container>
 
   </v-main>
@@ -18,20 +21,29 @@
 import { defineComponent } from "vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
-import BarChart from "@/components/statistics/BarChart.vue";
-import { Bar } from "vue-chartjs";
+import Chart from 'chart.js/auto';
+import {StatsController} from "@/controller/StatsController";
 
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+
 
 export default defineComponent({
   name: "StudentStatisticPage",
-  components: {BarChart, Bar, SideMenu, NavigationBar},
+  components: {SideMenu, NavigationBar},
 
-
+  props: {
+    studentId: {
+      type: String,
+      required: true,
+    },
+  },
 
   setup(){
+    const statsController = StatsController.getStatsController();
+
+    return {
+      statsController,
+    };
     /*const saveStatisticsClick {
 
 
@@ -41,33 +53,42 @@ export default defineComponent({
     }*/
   },
 
-  data() {
-    return {
-      chartData: {
-        labels: [ '1.10', '5.10', '6.10', '7.10' ],
-        datasets: [ {
-          data: [40, 20, 12, 38],
-          label: 'Beteiligungsquote',
 
-        } ]
-      },
-      chartOptions: {
-        responsive: true
-      }
+  mounted() {
+    const categoryChartId = document.getElementById('categoryChart') as HTMLCanvasElement;
+    const stats  = this.statsController.getStudentStats(this.studentId);
+
+    if (stats == undefined) {
+      console.log('stats controller konnte nicht erreicht werden');
+      return;
     }
-  },
 
-  props: {
-    studentId: {
-      type: String,
-      required: true,
-    },
+    let keys = stats[0].keys();
+    let values = stats[0].values();
+    console.log(keys  + 'das waren die keys');
+    console.log(values);
 
-  },
+    const data = {
+      labels:
+      //['test', 'test2', 'test3'],
+        keys,
+      datasets: [{
+        label: 'Kategorien',
+        data:
+        //[1, 2, 3],
+        values,
+      }]
+    };
+
+    const categoryChart = new Chart(categoryChartId, {
+      type: 'pie',
+      data: data,
+
+    });
+
+    categoryChart;
+  }
 })
-
-
-
 
 </script>
 
