@@ -4,6 +4,7 @@ import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
 import edu.kit.informatik.dto.userdata.interactions.RatedCategoryDto;
 import edu.kit.informatik.model.userdata.interactions.Category;
 import edu.kit.informatik.service.CategoryService;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -35,31 +37,31 @@ public class CategoryController extends BaseController<Category, RatedCategoryDt
 
     @Override
     @PostMapping
-    public CategoryDto add(@RequestBody RatedCategoryDto categoryDto) {
-        return super.add(categoryDto);
+    public CategoryDto add(@RequestBody RatedCategoryDto categoryDto, Authentication authentication) {
+        return super.add(categoryDto, authentication);
     }
 
     @Override
     @PutMapping
-    public CategoryDto update(@RequestBody RatedCategoryDto categoryDto) {
-        return super.update(categoryDto);
+    public CategoryDto update(@RequestBody RatedCategoryDto categoryDto, Authentication authentication) {
+        return super.update(categoryDto, authentication);
     }
 
     @Override
     @GetMapping(path = "/{id}")
-    public CategoryDto getById(@PathVariable("id") String id) {
-        return super.getById(id);
+    public CategoryDto getById(@PathVariable("id") String id, Authentication authentication) {
+        return super.getById(id, authentication);
     }
 
     @Override
     @GetMapping
-    public List<CategoryDto> getAll() {
-        return super.getAll();
+    public List<CategoryDto> getAll(Authentication authentication) {
+        return super.getAll(authentication);
     }
 
     @Override
     @DeleteMapping
-    public String delete(String id) {
-        return super.delete(id);
+    public String delete(@RequestParam String id, Authentication authentication) {
+        return super.delete(id, authentication);
     }
 }
