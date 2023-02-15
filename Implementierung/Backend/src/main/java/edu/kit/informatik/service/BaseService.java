@@ -2,6 +2,7 @@ package edu.kit.informatik.service;
 
 import edu.kit.informatik.dto.mapper.IModelDtoMapper;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,33 +42,33 @@ public abstract class BaseService<Entity, ParameterDto, ReturnDto> {
      * @param dto Dto
      * @return Dto
      */
-    public abstract ReturnDto add(ParameterDto dto);
+    public abstract ReturnDto add(ParameterDto dto, Authentication authentication);
     /**
      * Aktualisieren einer Entität
      * @param dto Dto
      * @return Dto
      */
 
-    public abstract ReturnDto update(ParameterDto dto);
+    public abstract ReturnDto update(ParameterDto dto, Authentication authentication);
 
     /**
      * Rückgabe einer Entität
      * @param id id der Entität
      * @return Dto
      */
-    public abstract ReturnDto getById(String id);
+    public abstract ReturnDto getById(String id, Authentication authentication);
 
     /**
      * Rückgabe aller Entitäten
      * @return Liste der Entitäten
      */
-    public abstract List<ReturnDto> getAll();
+    public abstract List<ReturnDto> getAll(Authentication authentication);
 
     /**
      * Löschen einer Entität
      * @param id id der Entität
      * @return id
      */
-    public abstract String delete(String id);
+    public abstract String delete(String id, Authentication authentication);
 
 }

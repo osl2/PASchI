@@ -1,6 +1,7 @@
 package edu.kit.informatik.controller;
 
 import edu.kit.informatik.service.BaseService;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -36,8 +37,8 @@ public abstract class BaseController<Entity, ParameterDto, ReturnDto> {
      * @param dto Dto der Entität
      * @return Dto der Entität
      */
-    public ReturnDto add(ParameterDto dto) {
-        return this.service.add(dto);
+    public ReturnDto add(ParameterDto dto, Authentication authentication) {
+        return this.service.add(dto, authentication);
     }
 
     /**
@@ -45,8 +46,8 @@ public abstract class BaseController<Entity, ParameterDto, ReturnDto> {
      * @param dto Dto der Entität
      * @return Dto der Entität
      */
-    public ReturnDto update(ParameterDto dto) {
-        return this.service.update(dto);
+    public ReturnDto update(ParameterDto dto, Authentication authentication) {
+        return this.service.update(dto, authentication);
     }
 
     /**
@@ -54,16 +55,16 @@ public abstract class BaseController<Entity, ParameterDto, ReturnDto> {
      * @param id Id der Entität
      * @return Dto der Entität
      */
-    public ReturnDto getById(String id) {
-        return this.service.getById(id);
+    public ReturnDto getById(String id, Authentication authentication) {
+        return this.service.getById(id, authentication);
     }
 
     /**
      * REST-Api Rückgabe aller Entitäten
      * @return Liste der Dtos der Entitäten
      */
-    public List<ReturnDto> getAll() {
-        return this.service.getAll();
+    public List<ReturnDto> getAll(Authentication authentication) {
+        return this.service.getAll(authentication);
     }
 
     /**
@@ -71,8 +72,8 @@ public abstract class BaseController<Entity, ParameterDto, ReturnDto> {
      * @param id Id der Entität
      * @return Dto der Entität
      */
-    public String delete(String id) {
-        return this.service.delete(id);
+    public String delete(String id, Authentication authentication) {
+        return this.service.delete(id, authentication);
     }
 
 
