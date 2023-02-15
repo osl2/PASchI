@@ -5,6 +5,7 @@ import edu.kit.informatik.dto.userdata.rooms.RoomDto;
 import edu.kit.informatik.model.userdata.rooms.Room;
 import edu.kit.informatik.repositories.RoomRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -33,7 +34,7 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
     }
 
     @Override
-    public RoomDto add(RoomDto roomDto) {
+    public RoomDto add(RoomDto roomDto, Authentication authentication) {
         Room newRoom = this.roomRepository.save(this.mapper.dtoToModel(roomDto));
 
         return this.mapper.modelToDto(newRoom);
@@ -41,7 +42,7 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
 
     @Transactional
     @Override
-    public RoomDto update(RoomDto roomDto) {
+    public RoomDto update(RoomDto roomDto, Authentication authentication) {
         Optional<Room> repositoryRoomOptional = this.roomRepository.findRoomById(roomDto.getId());
 
         if (repositoryRoomOptional.isEmpty()) {
@@ -63,19 +64,19 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
     }
 
     @Override
-    public RoomDto getById(String id) {
+    public RoomDto getById(String id, Authentication authentication) {
         Optional<Room> roomOptional = this.roomRepository.findRoomById(id);
 
         return roomOptional.map(this.mapper::modelToDto).orElse(null);
     }
 
     @Override
-    public List<RoomDto> getAll() {
+    public List<RoomDto> getAll(Authentication authentication) {
         return mapper.modelToDto(this.roomRepository.findAll());
     }
 
     @Override
-    public String delete(String id) {
+    public String delete(String id, Authentication authentication) {
         this.roomRepository.deleteById(id);
 
         return id;

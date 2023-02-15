@@ -5,6 +5,7 @@ import edu.kit.informatik.dto.userdata.courses.SeatArrangementDto;
 import edu.kit.informatik.model.userdata.courses.SeatArrangement;
 import edu.kit.informatik.repositories.SeatArrangementRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
     }
 
     @Override
-    public SeatArrangementDto add(SeatArrangementDto seatArrangementDto) {
+    public SeatArrangementDto add(SeatArrangementDto seatArrangementDto, Authentication authentication) {
         SeatArrangement seatArrangement = this.mapper.dtoToModel(seatArrangementDto);
         SeatArrangement newSeatArrangement = this.seatArrangementRepository.save(seatArrangement);
         return this.mapper.modelToDto(newSeatArrangement);
@@ -42,7 +43,7 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
 
     @Transactional
     @Override
-    public SeatArrangementDto update(SeatArrangementDto seatArrangementDto) {
+    public SeatArrangementDto update(SeatArrangementDto seatArrangementDto, Authentication authentication) {
         Optional<SeatArrangement> repositorySeatArrangementOptional = this.seatArrangementRepository
                                                                 .findSeatArrangementById(seatArrangementDto.getId());
         if (repositorySeatArrangementOptional.isEmpty()) {
@@ -64,19 +65,19 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
     }
 
     @Override
-    public SeatArrangementDto getById(String id) {
+    public SeatArrangementDto getById(String id, Authentication authentication) {
         Optional<SeatArrangement> seatArrangementOptional = this.seatArrangementRepository.findSeatArrangementById(id);
         
         return seatArrangementOptional.map(this.mapper::modelToDto).orElse(null);
     }
 
     @Override
-    public List<SeatArrangementDto> getAll() {
+    public List<SeatArrangementDto> getAll(Authentication authentication) {
         return mapper.modelToDto(this.seatArrangementRepository.findAll());
     }
 
     @Override
-    public String delete(String id) {
+    public String delete(String id, Authentication authentication) {
         this.seatArrangementRepository.deleteById(id);
         
         return id;

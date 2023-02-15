@@ -6,6 +6,7 @@ import edu.kit.informatik.dto.userdata.courses.SessionDto;
 import edu.kit.informatik.model.userdata.courses.Session;
 import edu.kit.informatik.repositories.SessionRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
     }
 
     @Override
-    public SessionDto add(SessionDto sessionDto) {
+    public SessionDto add(SessionDto sessionDto, Authentication authentication) {
         Session session = this.mapper.dtoToModel(sessionDto);
         Session newSession = sessionRepository.save(session);
 
@@ -43,7 +44,7 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
 
     @Transactional
     @Override
-    public SessionDto update(SessionDto sessionDto) {
+    public SessionDto update(SessionDto sessionDto, Authentication authentication) {
         Optional<Session> repositorySessionOptional = sessionRepository.findSessionById(sessionDto.getId());
 
         if (repositorySessionOptional.isEmpty()) {
@@ -65,19 +66,19 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
     }
 
     @Override
-    public SessionDto getById(String id) {
+    public SessionDto getById(String id, Authentication authentication) {
         Optional<Session> sessionOptional = sessionRepository.findSessionById(id);
 
         return sessionOptional.map(this.mapper::modelToDto).orElse(null);
     }
 
     @Override
-    public List<SessionDto> getAll() {
+    public List<SessionDto> getAll(Authentication authentication) {
         return mapper.modelToDto(sessionRepository.findAll());
     }
 
     @Override
-    public String delete(String id) {
+    public String delete(String id, Authentication authentication) {
         this.sessionRepository.deleteById(id);
 
         return id;

@@ -5,6 +5,7 @@ import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.model.userdata.interactions.Participant;
 import edu.kit.informatik.repositories.ParticipantRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
     }
 
     @Override
-    public ParticipantDto add(ParticipantDto participantDto) {
+    public ParticipantDto add(ParticipantDto participantDto, Authentication authentication) {
         Participant newParticipant = this.participantRepository.save(this.mapper.dtoToModel(participantDto));
 
         return this.mapper.modelToDto(newParticipant);
@@ -42,7 +43,7 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
 
     @Transactional
     @Override
-    public ParticipantDto update(ParticipantDto participantDto) {
+    public ParticipantDto update(ParticipantDto participantDto, Authentication authentication) {
         Optional<Participant> repositoryParticipantOptional = this.participantRepository
                                                                     .findParticipantById(participantDto.getId());
 
@@ -67,19 +68,19 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
     }
 
     @Override
-    public ParticipantDto getById(String id) {
+    public ParticipantDto getById(String id, Authentication authentication) {
         Optional<Participant> participantOptional = this.participantRepository.findParticipantById(id);
 
         return participantOptional.map(this.mapper::modelToDto).orElse(null);
     }
 
     @Override
-    public List<ParticipantDto> getAll() {
+    public List<ParticipantDto> getAll(Authentication authentication) {
         return this.mapper.modelToDto(this.participantRepository.findAll());
     }
 
     @Override
-    public String delete(String id) {
+    public String delete(String id, Authentication authentication) {
         this.participantRepository.deleteById(id);
 
         return id;

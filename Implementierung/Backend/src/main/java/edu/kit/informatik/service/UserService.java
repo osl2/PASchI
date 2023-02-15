@@ -51,7 +51,7 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
     }
 
     @Override
-    public UserDto add(UserDto userDto) {
+    public UserDto add(UserDto userDto, Authentication authentication) {
         User user = this.mapper.dtoToModel(userDto);
 
         Optional<User> userOptional = userRepository.findUserByEmail(user.getEmail());
@@ -71,7 +71,7 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
 
     @Transactional
     @Override
-    public UserDto update(UserDto userDto) {
+    public UserDto update(UserDto userDto, Authentication authentication) {
 
         Optional<User> repositoryUserOptional = userRepository.findUserById(userDto.getId());
         if (repositoryUserOptional.isEmpty()) {
@@ -95,7 +95,7 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
     }
 
     @Override
-    public UserDto getById(String id) {
+    public UserDto getById(String id, Authentication authentication) {
         Optional<User> userOptional = userRepository.findUserById(id);
 
         if (userOptional.isPresent()) {
@@ -106,12 +106,12 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
     }
 
     @Override
-    public List<UserDto> getAll() {
+    public List<UserDto> getAll(Authentication authentication) {
         return this.mapper.modelToDto(userRepository.findAll());
     }
 
     @Override
-    public String delete(String id) {
+    public String delete(String id, Authentication authentication) {
         this.userRepository.deleteById(id);
 
         return id;
