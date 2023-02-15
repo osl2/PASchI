@@ -25,7 +25,7 @@ export class RoomController {
   static getRoomController(): RoomController {
     return this.controller;
   }
-
+  
   createRoom(name: string): string {
     let room = new Room(
       undefined,
