@@ -5,8 +5,8 @@ import edu.kit.informatik.dto.userdata.courses.CourseDto;
 import edu.kit.informatik.model.userdata.courses.Course;
 import edu.kit.informatik.repositories.CourseRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,14 +34,14 @@ public class CourseService extends BaseService<Course, CourseDto, CourseDto> {
     }
 
     @Override
-    public CourseDto add(CourseDto courseDto) {
+    public CourseDto add(CourseDto courseDto, Authentication authentication) {
         Course newCourse = this.courseRepository.save(this.mapper.dtoToModel(courseDto));
         return this.mapper.modelToDto(newCourse);
     }
 
     @Transactional
     @Override
-    public CourseDto update(CourseDto courseDto) {
+    public CourseDto update(CourseDto courseDto, Authentication authentication) {
         Optional<Course> repositoryCourseOptional = this.courseRepository.findById(courseDto.getId());
 
         if (repositoryCourseOptional.isEmpty()) {
@@ -67,19 +67,19 @@ public class CourseService extends BaseService<Course, CourseDto, CourseDto> {
     }
 
     @Override
-    public CourseDto getById(String id) {
+    public CourseDto getById(String id, Authentication authentication) {
         Optional<Course> courseOptional = this.courseRepository.findCourseById(id);
 
         return courseOptional.map(this.mapper::modelToDto).orElse(null);
     }
 
     @Override
-    public List<CourseDto> getAll() {
+    public List<CourseDto> getAll(Authentication authentication) {
         return this.mapper.modelToDto(this.courseRepository.findAll());
     }
 
     @Override
-    public String delete(@RequestParam String id) {
+    public String delete(String id, Authentication authentication) {
         this.courseRepository.deleteById(id);
         return id;
     }

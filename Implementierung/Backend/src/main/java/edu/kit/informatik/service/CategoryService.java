@@ -10,8 +10,8 @@ import edu.kit.informatik.model.userdata.interactions.RatedCategory;
 import edu.kit.informatik.repositories.CategoryBaseRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +45,7 @@ public class CategoryService extends BaseService<Category, RatedCategoryDto, Cat
     }
 
     @Override
-    public CategoryDto add(@RequestBody RatedCategoryDto categoryDto) {
+    public CategoryDto add(RatedCategoryDto categoryDto, Authentication authentication) {
 
         if (categoryDto.getQuality() == null) {
             Category newCategory = this.categoryBaseRepository.save(this.mapper.dtoToModel(categoryDto));
@@ -65,7 +65,7 @@ public class CategoryService extends BaseService<Category, RatedCategoryDto, Cat
 
     @Transactional
     @Override
-    public CategoryDto update(RatedCategoryDto categoryDto) {
+    public CategoryDto update(RatedCategoryDto categoryDto, Authentication authentication) {
         Optional<Category> repositoryCategoryOptional = this.categoryBaseRepository
                                                                 .findCategoryById(categoryDto.getId());
 
@@ -89,19 +89,19 @@ public class CategoryService extends BaseService<Category, RatedCategoryDto, Cat
     }
 
     @Override
-    public CategoryDto getById(String id) {
+    public CategoryDto getById(String id, Authentication authentication) {
         Optional<Category> categoryOptional = this.categoryBaseRepository.findCategoryById(id);
 
         return categoryOptional.map(this.mapper::modelToDto).orElse(null);
     }
 
     @Override
-    public List<CategoryDto> getAll() {
+    public List<CategoryDto> getAll(Authentication authentication) {
         return this.mapper.modelToDto(this.categoryBaseRepository.findAll());
     }
 
     @Override
-    public String delete(String id) {
+    public String delete(String id, Authentication authentication) {
         this.categoryBaseRepository.deleteById(id);
         return id;
     }
