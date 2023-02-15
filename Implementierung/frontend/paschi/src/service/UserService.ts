@@ -3,13 +3,22 @@ import {User} from "@/model/User";
 import {UserDto} from "@/dto/UserDto";
 import axios from "axios";
 import {UserMapper} from "@/dto/mapper/UserMapper";
+import {RoleDto} from "@/dto/RoleDto";
 
-const USER_BASE_URL: string = '';
+const USER_BASE_URL: string = 'http://193.196.37.141/api/user';
 
 export class UserService extends BaseService<User, UserDto> {
 
   constructor() {
     super(UserMapper.getMapper());
+  }
+
+  addUser() {
+    const userDto = new UserDto("0", "0", "0", "Gregor",
+      "Snelting", "snelting@kit.edu", "password", true, RoleDto.USER, "0");
+    axios.post(USER_BASE_URL, userDto).then((response) => {
+      console.log(response.data);
+    });
   }
 
   add(user: User) {
