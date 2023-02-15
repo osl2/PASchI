@@ -2,12 +2,16 @@ package edu.kit.informatik.service;
 
 import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.dto.mapper.UserMapper;
+import edu.kit.informatik.exceptions.EntityNotFoundException;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.repositories.UserRepository;
 import edu.kit.informatik.security.TokenService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -75,7 +79,7 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
 
         Optional<User> repositoryUserOptional = userRepository.findUserById(userDto.getId());
         if (repositoryUserOptional.isEmpty()) {
-            throw new IllegalArgumentException("User with ID " + userDto.getId() + " not found.");
+            throw new EntityNotFoundException(User.class, userDto.getId());
         }
 
         User repositoryUser = repositoryUserOptional.get();
@@ -101,7 +105,7 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
         if (userOptional.isPresent()) {
             return this.mapper.modelToDto(userOptional.get());
         } else {
-            throw new IllegalArgumentException("User with ID " + id + " not found.");
+            throw new EntityNotFoundException(User.class, id);
         }
     }
 
@@ -112,6 +116,11 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
 
     @Override
     public String delete(String id, Authentication authentication) {
+        Optional<User> repositoryUserOptional = userRepository.findUserById(id);
+        if (repositoryUserOptional.isEmpty()) {
+            throw new EntityNotFoundException(User.class, id);
+        }
+
         this.userRepository.deleteById(id);
 
         return id;
@@ -123,7 +132,8 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
      * @param password Password
      * @return {@link UserDto}
      */
-    public UserDto login(String email, String password) {
+    public UserDto login(String email, String password) throws DisabledException, LockedException,
+                                                                BadCredentialsException {
         UsernamePasswordAuthenticationToken uPAT = new UsernamePasswordAuthenticationToken(email, password);
 
         Authentication authentication = authenticationManager.authenticate(uPAT);
@@ -151,7 +161,7 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
     public UserDto adminUpdate(UserDto userDto) {
         Optional<User> repositoryUserOptional = userRepository.findUserById(userDto.getId());
         if (repositoryUserOptional.isEmpty()) {
-            throw new IllegalArgumentException("User with ID " + userDto.getId() + " not found.");
+            throw new EntityNotFoundException(User.class, userDto.getId());
         }
 
         User repositoryUser = repositoryUserOptional.get();
