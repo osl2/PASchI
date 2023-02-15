@@ -88,4 +88,9 @@ public class UserController extends BaseController<User, UserDto, UserDto> {
     public UserDto getToken(Authentication authentication) {
         return this.userService.getToken(authentication);
     }
+
+    @PutMapping(path = "/admin")
+    public UserDto adminUpdate(@RequestBody UserDto userDto) {
+        return this.userService.adminUpdate(userDto);
+    }
 }

@@ -90,9 +90,6 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
         if (!newUser.getPassword().equals(repositoryUser.getPassword())) {
             repositoryUser.setPassword(newUser.getPassword());
         }
-        if (!newUser.isAuth() == repositoryUser.isAuth()) {
-            repositoryUser.setAuth(newUser.isAuth());
-        }
 
         return mapper.modelToDto(repositoryUser);
     }
@@ -149,5 +146,24 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
         userDto.setToken(tokenService.generateToken(authentication));
 
         return userDto;
+    }
+
+    public UserDto adminUpdate(UserDto userDto) {
+        Optional<User> repositoryUserOptional = userRepository.findUserById(userDto.getId());
+        if (repositoryUserOptional.isEmpty()) {
+            throw new IllegalArgumentException("User with ID " + userDto.getId() + " not found.");
+        }
+
+        User repositoryUser = repositoryUserOptional.get();
+        User newUser = this.mapper.dtoToModel(userDto);
+
+        if (!newUser.isAuth() == repositoryUser.isAuth()) {
+            repositoryUser.setAuth(newUser.isAuth());
+        }
+        if (newUser.getRole() != repositoryUser.getRole()) {
+            repositoryUser.setRole(newUser.getRole());
+        }
+
+        return mapper.modelToDto(repositoryUser);
     }
 }
