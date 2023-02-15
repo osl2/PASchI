@@ -82,10 +82,6 @@ export default defineComponent({
       seatArrangement.value?.removeSeat(chair);
     }
 
-    const participants = computed(() => {
-      return seatArrangement.value?.course.participants;
-    });
-
     const unseatedParticipants = computed(() => {
       return seatArrangement.value?.getStudentsNotAssigned();
     });

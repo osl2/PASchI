@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue';
 import { SessionController } from '@/controller/SessionController';
 import RoomDisplay from '@/components/room/RoomDisplay.vue'
 import SeatLabel from "@/components/room/SeatLabel.vue";

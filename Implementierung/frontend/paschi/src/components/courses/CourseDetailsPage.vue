@@ -311,7 +311,8 @@ export default defineComponent({
     }
     function startSessionClick(seatArrangement: SeatArrangement) {
       router.push({
-        name: "SessionPage",
+        //name: "SessionPage",
+        name: "SessionPageDesktop",
         params: {
           sessionId: sessionController.createSession(
             props.courseId,
