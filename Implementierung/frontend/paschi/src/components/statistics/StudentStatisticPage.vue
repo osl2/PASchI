@@ -43,14 +43,12 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, Ref} from "vue";
+import {defineComponent} from "vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import Chart from 'chart.js/auto';
 import {StatsController} from "@/controller/StatsController";
 import {StudentController} from "@/controller/StudentController";
-import {Student} from "@/model/userdata/interactions/Student";
-
 
 
 
