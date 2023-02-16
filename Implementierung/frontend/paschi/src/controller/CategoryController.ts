@@ -5,6 +5,8 @@ import {RatedCategory} from "@/model/userdata/interactions/RatedCategory";
 import {Quality} from "@/model/userdata/interactions/Quality";
 
 const NAME_ERROR = "Name schon vergeben";
+const DEFAULT_ERROR = "Name von Standard Kategorie kann nicht geändert werden"
+const DEFAULT_CATEGORIES = ["Störung", "Antwort", "Frage"];
 
 // TODO: Backend Service einbinden
 export class CategoryController {
@@ -15,9 +17,9 @@ export class CategoryController {
 
   private constructor() {
     if (this.categoryStore.getAllCategories().length == 0) {
-      this.createCategory("Störung");
-      this.createRatedCategory("Antwort");
-      this.createRatedCategory("Frage");
+      this.createCategory(DEFAULT_CATEGORIES[0]);
+      this.createRatedCategory(DEFAULT_CATEGORIES[0]);
+      this.createRatedCategory(DEFAULT_CATEGORIES[0]);
     }
   }
 
@@ -60,17 +62,22 @@ export class CategoryController {
     }
   }
 
-  updateCategory(id: string, name: string) {
+  updateCategory(id: string, name: string): string {
     if (this.categoryStore.hasName(name)) {
       return NAME_ERROR;
     }
     let category = this.categoryStore.getCategory(id);
     if (category !== undefined) {
+      if (DEFAULT_CATEGORIES.includes(category.name)) {
+        return DEFAULT_ERROR;
+      }
       let categories = this.categoryStore.getByName(category.name);
       categories.forEach((category: Category) => {
         category.name = name;
       });
     }
+
+    return name;
   }
 
   getCategory(id: string): Category | undefined {
