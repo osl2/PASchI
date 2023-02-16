@@ -46,7 +46,8 @@
                 rounded
                 height="56"
                 @click=""
-                ><div style="font-size: large">Lehrkraft</div></v-btn
+              >
+              <div style="font-size: large">Lehrkraft</div></v-btn
               >
             </v-col>
           </v-row>
@@ -68,7 +69,16 @@
     </v-card>
     <v-dialog v-model="categoryDialog">
       <v-card>
-        <v-list></v-list>
+
+        <template
+          v-for="category in categories"
+        >
+          <v-card class="v-col-3" @click="setCategory(category)">
+            <v-row no-gutters justify="space-around" class="ma-2">
+              {{ category.name }}
+            </v-row>
+          </v-card>
+        </template>
         <v-btn rounded @click="resetInterActionParams">abbrechen</v-btn>
       </v-card>
     </v-dialog>
@@ -86,7 +96,6 @@ import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
 import { Category } from "@/model/userdata/interactions/Category";
 import { useRouter } from "vue-router";
 import { CategoryController } from "@/controller/CategoryController";
-import { Interaction } from "@/model/userdata/interactions/Interaction";
 import { Course } from "@/model/userdata/courses/Course";
 import SeatLabel from "@/components/room/SeatLabel.vue";
 export default defineComponent({
@@ -107,7 +116,6 @@ export default defineComponent({
     const seatArrangement = sessionController.getSeatArrangementOfSession(
       props.sessionId
     );
-    const interactionMapActivated = ref(false);
     const categories: Ref<Category[]> = ref(
       categoryController.getCategories()
     ) as Ref<Category[]>;
@@ -117,12 +125,10 @@ export default defineComponent({
     const sessionName = sessionController.getSession(props.sessionId)?.name;
     const courseParticipantsSortedByName: Participant[] =
       getCourseParticipantsSortedByName();
+    const teacher = sessionController.getTeacher();
     const firstParticipant: Ref<Participant | undefined> = ref(undefined);
     const secondParticipant: Ref<Participant | undefined> = ref(undefined);
     const selectedCategory: Ref<Category | undefined> = ref(undefined);
-    const interactions: Ref<Interaction[]> = ref(
-      sessionController.getInteractionsOfSession(props.sessionId)
-    ) as Ref<Interaction[]>;
     const searchInput = ref("");
     const categoryDialog = ref(false);
 
@@ -214,14 +220,10 @@ export default defineComponent({
     function setCategory(category: Category | undefined) {
       selectedCategory.value = category;
     }
-    function toggleInteractionMapActivated() {
-      interactionMapActivated.value = !interactionMapActivated.value;
-    }
 
     return {
       sessionName,
       searchInput,
-      interactionMapActivated,
       categories,
       roomObjects,
       courseParticipantsSortedByName,
@@ -234,10 +236,10 @@ export default defineComponent({
       undoPossible,
       redoPossible,
       filterParticipants,
-      toggleInteractionMapActivated,
       finishSessionClick,
       setParticipant,
       setCategory,
+      teacher
     };
   },
 });
