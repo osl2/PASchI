@@ -69,30 +69,94 @@
     </v-card>
     <v-dialog v-model="categoryDialog">
       <v-card>
-        <v-row no-gutters>
-          <template v-for="category in categories">
-            <v-card class="v-col-3" @click="selectCategory(category)">
-              <v-row no-gutters justify="space-around" class="ma-2">
-                {{ category.name }}
-              </v-row>
-            </v-card>
-          </template>
-        </v-row>
-        <v-btn rounded color="primary" class="v-col-6" @click="resetInterActionParams">abbrechen</v-btn>
+        <v-container>
+          <v-row no-gutters>
+            <template v-for="category in categories">
+              <v-card class="v-col-3" @click="selectCategory(category)">
+                <v-row no-gutters justify="space-around" class="ma-2">
+                  {{ category.name }}
+                </v-row>
+              </v-card>
+              <v-card class="v-col-3" @click="addCategoryClick()">
+                <v-row no-gutters justify="space-around" class="ma-2">
+                  {{ category.name }}
+                </v-row>
+              </v-card>
+            </template>
+          </v-row>
+          <v-row justify="space-around">
+            <v-btn
+              rounded
+              color="primary"
+              class="v-col-6 ma-2"
+              @click="resetInterActionParams"
+              >abbrechen</v-btn
+            >
+          </v-row>
+        </v-container>
       </v-card>
     </v-dialog>
     <v-dialog v-model="starDialog">
       <v-card>
-        <v-row no-gutters justify="space-around" class="ma-2">
-          <v-rating
-            v-model="categoryQuality"
-            @update:modelValue="selectQuality()"
-            class="ma-2"
-            :item-labels="['schlecht', '', '', '', 'gut']"
-            item-label-position="top"
-          ></v-rating>
-        </v-row>
-        <v-btn rounded color="primary" class="v-col-6" @click="resetInterActionParams">abbrechen</v-btn>
+        <v-container>
+          <v-row no-gutters justify="space-around" class="ma-2">
+            <v-rating
+              v-model="categoryQuality"
+              @update:modelValue="selectQuality()"
+              class="ma-2"
+              :item-labels="['schlecht', '', '', '', 'gut']"
+              item-label-position="top"
+            ></v-rating>
+          </v-row>
+          <v-row justify="space-around">
+            <v-btn
+              rounded
+              color="primary"
+              class="v-col-6 ma-2"
+              @click="resetInterActionParams"
+              >abbrechen</v-btn
+            >
+          </v-row>
+        </v-container>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="newCategoryDialog" class="v-col-10">
+      <v-card>
+        <v-container>
+          <v-row>
+            <v-text-field
+              v-model="newCategoryName"
+              variant="outlined"
+              label="Name der neuen Kategorie"
+              type="input"
+              class="v-col-8"
+            ></v-text-field>
+            <v-checkbox
+              label="bewertete Kategorie"
+              v-model="newCategoryIsRated"
+            ></v-checkbox>
+          </v-row>
+          <v-row justify="center">
+            <v-btn
+              height="50"
+              width="150"
+              @click="cancelAddCategory"
+              variant="tonal"
+              class="ma-2"
+              >Abbrechen</v-btn
+            >
+            <v-btn
+              type="submit"
+              height="50"
+              width="150"
+              @click="confirmAddCategory"
+              variant="tonal"
+              color="primary"
+              class="ma-2"
+              >Bestätigen</v-btn
+            >
+          </v-row>
+        </v-container>
       </v-card>
     </v-dialog>
   </v-main>
@@ -157,6 +221,9 @@ export default defineComponent({
     const categoryQuality = ref(0);
     const undoPossible = computed(() => getUndoPossible());
     const redoPossible = computed(() => getRedoPossible());
+    const newCategoryDialog = ref(true);
+    const newCategoryName = ref("");
+    const newCategoryIsRated = ref(false);
 
     function filterParticipants(participants: Participant[]): Participant[] {
       return participants.filter((participant) => {
@@ -218,6 +285,21 @@ export default defineComponent({
       router.push({
         name: "DashBoard",
       });
+    }
+    function addCategoryClick() {
+      newCategoryName.value = "";
+      newCategoryDialog.value = true;
+    }
+    function cancelAddCategory() {
+      newCategoryDialog.value = false;
+    }
+    function confirmAddCategory() {
+      if (newCategoryIsRated.value) {
+        categoryController.createRatedCategory(newCategoryName.value);
+      } else {
+        categoryController.createCategory(newCategoryName.value);
+      }
+      newCategoryDialog.value = false;
     }
     function setFirstParticipant(participant: Participant | undefined) {
       firstParticipant.value = participant;
@@ -310,6 +392,9 @@ export default defineComponent({
       categoryQuality,
       undoPossible,
       redoPossible,
+      newCategoryDialog,
+      newCategoryName,
+      newCategoryIsRated,
       resetInterActionParams,
       undoClick,
       redoClick,
@@ -318,6 +403,9 @@ export default defineComponent({
       selectParticipant,
       selectCategory,
       selectQuality,
+      addCategoryClick,
+      confirmAddCategory,
+      cancelAddCategory,
     };
   },
 });
