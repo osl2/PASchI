@@ -8,7 +8,6 @@ import {useStudentStore} from "@/store/StudentStore";
 import {useSessionStore} from "@/store/SessionStore";
 import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 import {RoomObject} from "@/model/userdata/rooms/RoomObject";
-import {UserService} from "@/service/UserService";
 
 // TODO: Backend Service einbinden
 export class CourseController {
@@ -60,8 +59,6 @@ export class CourseController {
   }
 
   getAllCourses(): Course[] {
-    const service = new UserService();
-    service.addUser();
     return this.courseStore.getAllCourses();
   }
 
