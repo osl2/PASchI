@@ -1,11 +1,18 @@
 <template>
-  <NavigationBar>
-    <template #default>
-      <v-app-bar-title>
-        Schülerstatistiken von {{firstName + " " + lastName}}
-      </v-app-bar-title>
+  <navigation-bar extended>
+    <v-app-bar-title>
+      Schülerstatistiken von {{firstName + " " + lastName}}
+    </v-app-bar-title>
+    <template v-slot:extension>
+      <v-btn
+        variant="flat"
+        color="green"
+        rounded
+        prepend-icon="mdi mdi-download"
+        @click="downloadClicked()"
+      > Statistiken herunterladen</v-btn>
     </template>
-  </NavigationBar>
+  </navigation-bar>
   <v-main>
     <SideMenu />
     <v-container fluid>
@@ -43,12 +50,13 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
+import {defineComponent, onMounted} from "vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import Chart from 'chart.js/auto';
 import {StatsController} from "@/controller/StatsController";
 import {StudentController} from "@/controller/StudentController";
+
 
 
 
@@ -63,74 +71,88 @@ export default defineComponent({
     },
   },
 
-  setup(props){
+  setup(props) {
     const statsController = StatsController.getStatsController();
     const studentController = StudentController.getStudentConroller();
     const firstName = studentController.getStudent(props.studentId)?.firstName;
     const lastName = studentController.getStudent(props.studentId)?.lastName;
 
-
-
-    return {
-      statsController, firstName, lastName
-    };
-    /*const saveStatisticsClick {
-
-
+    const a = document.createElement('a');
+    function downloadClicked() {
+      a.click();
     }
-    return {
-      saveStatisticsClick,
-    }*/
-  },
+    onMounted(() => {
+      const categoryChartId = document.getElementById('categoryChart') as HTMLCanvasElement;
+      const stats  = statsController.getStudentStats(props.studentId);
 
-
-  mounted() {
-    const categoryChartId = document.getElementById('categoryChart') as HTMLCanvasElement;
-    const stats  = this.statsController.getStudentStats(this.studentId);
-
-    if (stats == undefined) {
-      console.log('stats controller konnte nicht erreicht werden');
-      return;
-    }
-
-    let keys = stats[0].keys();
-    let values = stats[0].values();
-    console.log(keys  + 'das waren die keys');
-    console.log(values);
-
-    const data = {
-      labels:
-      ['Störungsdummy', 'Antwortdummy', 'Fragendummy'],
-        //keys,
-      datasets: [{
-        label: 'Kategorien',
-        data:
-        [5,47,19],
-        //values,
-      }]
-    };
-
-    const categoryChart = new Chart(categoryChartId, {
-      type: 'pie',
-      data: data,
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: true,
-            labels: {
-              color: 'rgb(255, 255, 255)'
-            }
-          }
-        }
+      if (stats == undefined) {
+        console.log('stats controller konnte nicht erreicht werden');
+        return;
       }
 
-    });
+      let keys = stats[0].keys();
+      let values = stats[0].values();
+      console.log(keys  + 'das waren die keys');
+      console.log(values);
 
-    categoryChart;
-  }
-})
+      const data = {
+        labels:
+          ['Störungsdummy', 'Antwortdummy', 'Fragendummy'],
+        //keys,
+        datasets: [{
+          label: 'Anzahl',
+          data:
+            [5,47,19],
+          //values,
+        }]
+      };
+
+
+      const categoryChart = new Chart(categoryChartId, {
+        type: 'pie',
+        data: data,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              labels: {
+                color: 'rgb(0,0,0)'
+              }
+            }
+          },
+          animation : {
+          onComplete : done
+          }
+        }
+      });
+
+
+      function done(){
+        a.href = categoryChart.toBase64Image();
+        a.download = 'Schülerstatistik.png';
+      }
+
+      categoryChart;
+
+    }
+  )
+    return{
+      statsController, firstName, lastName, downloadClicked
+    }
+  },
+}
+
+
+
+);
+
+
+
+
+
+
 
 </script>
 
