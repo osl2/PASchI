@@ -77,12 +77,12 @@
                   {{ category.name }}
                 </v-row>
               </v-card>
-              <v-card class="v-col-3" @click="addCategoryClick()">
-                <v-row no-gutters justify="space-around" class="ma-2">
-                  {{ category.name }}
-                </v-row>
-              </v-card>
             </template>
+            <v-card class="v-col-3" @click="addCategoryClick()">
+              <v-row no-gutters justify="space-around" class="ma-2">
+                <v-icon icon="mdi mdi-plus"></v-icon>
+              </v-row>
+            </v-card>
           </v-row>
           <v-row justify="space-around">
             <v-btn
@@ -238,6 +238,7 @@ export default defineComponent({
       setCategory(undefined);
       categoryQuality.value = 0;
       categoryDialog.value = false;
+      starDialog.value = false;
     }
     function getUndoPossible(): boolean {
       let undoPossible = sessionController.hasUndo(props.sessionId);
@@ -288,6 +289,7 @@ export default defineComponent({
     }
     function addCategoryClick() {
       newCategoryName.value = "";
+      newCategoryIsRated.value = false;
       newCategoryDialog.value = true;
     }
     function cancelAddCategory() {
