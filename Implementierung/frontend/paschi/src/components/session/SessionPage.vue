@@ -69,25 +69,30 @@
     </v-card>
     <v-dialog v-model="categoryDialog">
       <v-card>
-        <template v-for="category in categories">
-          <v-card class="v-col-3" @click="selectCategory(category)">
-            <v-row no-gutters justify="space-around" class="ma-2">
-              {{ category.name }}
-            </v-row>
-          </v-card>
-        </template>
-        <v-btn rounded @click="resetInterActionParams">abbrechen</v-btn>
+        <v-row no-gutters>
+          <template v-for="category in categories">
+            <v-card class="v-col-3" @click="selectCategory(category)">
+              <v-row no-gutters justify="space-around" class="ma-2">
+                {{ category.name }}
+              </v-row>
+            </v-card>
+          </template>
+        </v-row>
+        <v-btn rounded color="primary" class="v-col-6" @click="resetInterActionParams">abbrechen</v-btn>
       </v-card>
     </v-dialog>
     <v-dialog v-model="starDialog">
       <v-card>
-        <v-rating
-          v-model="categoryQuality"
-          @update:modelValue="selectQuality()"
-          class="ma-2"
-          :item-labels="['schlecht', '', '', '', 'gut']"
-          item-label-position="top"
-        ></v-rating>
+        <v-row no-gutters justify="space-around" class="ma-2">
+          <v-rating
+            v-model="categoryQuality"
+            @update:modelValue="selectQuality()"
+            class="ma-2"
+            :item-labels="['schlecht', '', '', '', 'gut']"
+            item-label-position="top"
+          ></v-rating>
+        </v-row>
+        <v-btn rounded color="primary" class="v-col-6" @click="resetInterActionParams">abbrechen</v-btn>
       </v-card>
     </v-dialog>
   </v-main>
@@ -138,9 +143,15 @@ export default defineComponent({
       getCourseParticipantsSortedByName();
     // TODO Kommentar entfernen sobald login möglich
     // const teacher = sessionController.getTeacher();
-    const firstParticipant: Ref<Participant | undefined> = ref<Participant | undefined>(undefined) as Ref<Participant | undefined>;
-    const secondParticipant: Ref<Participant | undefined> = ref<Participant | undefined>(undefined) as Ref<Participant | undefined>;
-    const selectedCategory: Ref<Category | undefined> = ref<Category | undefined>(undefined) as Ref<Category | undefined>;
+    const firstParticipant: Ref<Participant | undefined> = ref<
+      Participant | undefined
+    >(undefined) as Ref<Participant | undefined>;
+    const secondParticipant: Ref<Participant | undefined> = ref<
+      Participant | undefined
+    >(undefined) as Ref<Participant | undefined>;
+    const selectedCategory: Ref<Category | undefined> = ref<
+      Category | undefined
+    >(undefined) as Ref<Category | undefined>;
     const searchInput = ref("");
     const categoryDialog = ref(false);
     const categoryQuality = ref(0);
@@ -158,6 +169,7 @@ export default defineComponent({
       setFirstParticipant(undefined);
       setSecondParticipant(undefined);
       setCategory(undefined);
+      categoryQuality.value = 0;
       categoryDialog.value = false;
     }
     function getUndoPossible(): boolean {
