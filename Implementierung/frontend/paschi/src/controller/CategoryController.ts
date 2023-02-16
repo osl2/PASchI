@@ -14,6 +14,11 @@ export class CategoryController {
   private categoryStore = useCategoryStore();
 
   private constructor() {
+    if (this.categoryStore.getAllCategories().length == 0) {
+      this.createCategory("Störung");
+      this.createRatedCategory("Antwort");
+      this.createRatedCategory("Frage");
+    }
   }
 
   static getCategoryController(): CategoryController {
