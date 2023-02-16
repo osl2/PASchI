@@ -27,9 +27,6 @@ export class UserController {
 
   register(firstName: string, lastName: string, email: string, password: string, repeatPassword: string) {
     // TODO: auth vom admin setzen
-    this.categoryController.createCategory("Störung");
-    this.categoryController.createRatedCategory("Antwort");
-    this.categoryController.createRatedCategory("Frage");
     this.userStore.setUser(
       new User(
         undefined,
@@ -41,6 +38,10 @@ export class UserController {
         Role.USER,
         undefined
       ));
+
+    this.categoryController.createCategory("Störung");
+    this.categoryController.createRatedCategory("Antwort");
+    this.categoryController.createRatedCategory("Frage");
   }
 
   update(firstName: string, lastName: string, email: string, password: string) {
