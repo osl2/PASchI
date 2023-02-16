@@ -30,6 +30,7 @@ export class Session {
 
   addInteraction(interaction: Interaction) {
     this.interactions.push(interaction);
+    this.undoInteractions = []
   }
 
   removeInteraction(interactionId: string) {
