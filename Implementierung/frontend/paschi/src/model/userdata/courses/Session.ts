@@ -43,7 +43,7 @@ export class Session {
   undoInteraction() {
     let interaction = this.interactions.pop();
     if (interaction !== undefined) {
-      this.undoInteractions.push();
+      this.undoInteractions.push(interaction);
     }
   }
 
