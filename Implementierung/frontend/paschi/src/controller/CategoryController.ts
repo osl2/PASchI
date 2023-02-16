@@ -18,8 +18,8 @@ export class CategoryController {
   private constructor() {
     if (this.categoryStore.getAllCategories().length == 0) {
       this.createCategory(DEFAULT_CATEGORIES[0]);
-      this.createRatedCategory(DEFAULT_CATEGORIES[0]);
-      this.createRatedCategory(DEFAULT_CATEGORIES[0]);
+      this.createRatedCategory(DEFAULT_CATEGORIES[1]);
+      this.createRatedCategory(DEFAULT_CATEGORIES[2]);
     }
   }
 

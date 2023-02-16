@@ -12,16 +12,16 @@
       </v-btn>
     </template>
     <template v-slot:extension>
-      <v-icon v-if="undoPossible()" @click="undoClick" class="ma-2">
+      <v-icon v-if="undoPossible" @click="undoClick" class="ma-2">
         mdi mdi-undo
       </v-icon>
-      <v-icon v-if="!undoPossible()" color="#999999" class="ma-2">
+      <v-icon v-if="!undoPossible" color="#999999" class="ma-2">
         mdi mdi-undo
       </v-icon>
-      <v-icon v-if="redoPossible()" @click="redoClick" class="ma-2">
+      <v-icon v-if="redoPossible" @click="redoClick" class="ma-2">
         mdi mdi-redo
       </v-icon>
-      <v-icon v-if="!redoPossible()" color="#999999" class="ma-2">
+      <v-icon v-if="!redoPossible" color="#999999" class="ma-2">
         mdi mdi-redo
       </v-icon>
     </template>
@@ -47,7 +47,7 @@
                 height="56"
                 @click=""
               >
-              <div style="font-size: large">Lehrkraft</div></v-btn
+                <div style="font-size: large">Lehrkraft</div></v-btn
               >
             </v-col>
           </v-row>
@@ -58,7 +58,7 @@
               courseParticipantsSortedByName
             )"
           >
-            <v-card class="v-col-3" @click="setParticipant(participant)">
+            <v-card class="v-col-3" @click="selectParticipant(participant)">
               <v-row no-gutters justify="space-around" class="ma-2">
                 <SeatLabel :participant="participant"></SeatLabel>
               </v-row>
@@ -69,11 +69,8 @@
     </v-card>
     <v-dialog v-model="categoryDialog">
       <v-card>
-
-        <template
-          v-for="category in categories"
-        >
-          <v-card class="v-col-3" @click="setCategory(category)">
+        <template v-for="category in categories">
+          <v-card class="v-col-3" @click="selectCategory(category)">
             <v-row no-gutters justify="space-around" class="ma-2">
               {{ category.name }}
             </v-row>
@@ -82,11 +79,22 @@
         <v-btn rounded @click="resetInterActionParams">abbrechen</v-btn>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="starDialog">
+      <v-card>
+        <v-rating
+          v-model="categoryQuality"
+          @update:modelValue="selectQuality()"
+          class="ma-2"
+          :item-labels="['schlecht', '', '', '', 'gut']"
+          item-label-position="top"
+        ></v-rating>
+      </v-card>
+    </v-dialog>
   </v-main>
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref } from "vue";
+import { computed, defineComponent, Ref, ref } from "vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import { SessionController } from "@/controller/SessionController";
@@ -98,6 +106,8 @@ import { useRouter } from "vue-router";
 import { CategoryController } from "@/controller/CategoryController";
 import { Course } from "@/model/userdata/courses/Course";
 import SeatLabel from "@/components/room/SeatLabel.vue";
+import { Quality } from "@/model/userdata/interactions/Quality";
+
 export default defineComponent({
   name: "SessionPage",
   components: { SeatLabel, SideMenu, NavigationBar },
@@ -122,15 +132,20 @@ export default defineComponent({
     const roomObjects: Ref<RoomObject[]> = ref(getRoomObjects()) as Ref<
       RoomObject[]
     >;
+    const starDialog = ref(false);
     const sessionName = sessionController.getSession(props.sessionId)?.name;
     const courseParticipantsSortedByName: Participant[] =
       getCourseParticipantsSortedByName();
-    const teacher = sessionController.getTeacher();
-    const firstParticipant: Ref<Participant | undefined> = ref(undefined);
-    const secondParticipant: Ref<Participant | undefined> = ref(undefined);
-    const selectedCategory: Ref<Category | undefined> = ref(undefined);
+    // TODO Kommentar entfernen sobald login möglich
+    // const teacher = sessionController.getTeacher();
+    const firstParticipant: Ref<Participant | undefined> = ref<Participant | undefined>(undefined) as Ref<Participant | undefined>;
+    const secondParticipant: Ref<Participant | undefined> = ref<Participant | undefined>(undefined) as Ref<Participant | undefined>;
+    const selectedCategory: Ref<Category | undefined> = ref<Category | undefined>(undefined) as Ref<Category | undefined>;
     const searchInput = ref("");
     const categoryDialog = ref(false);
+    const categoryQuality = ref(0);
+    const undoPossible = computed(() => getUndoPossible());
+    const redoPossible = computed(() => getRedoPossible());
 
     function filterParticipants(participants: Participant[]): Participant[] {
       return participants.filter((participant) => {
@@ -145,14 +160,14 @@ export default defineComponent({
       setCategory(undefined);
       categoryDialog.value = false;
     }
-    function undoPossible(): boolean {
+    function getUndoPossible(): boolean {
       let undoPossible = sessionController.hasUndo(props.sessionId);
       if (typeof undoPossible === "boolean") {
-        return false;
+        return undoPossible;
       }
       return false;
     }
-    function redoPossible(): boolean {
+    function getRedoPossible(): boolean {
       let redoPossible = sessionController.hasRedo(props.sessionId);
       if (typeof redoPossible === "boolean") {
         return redoPossible;
@@ -196,9 +211,9 @@ export default defineComponent({
       firstParticipant.value = participant;
     }
     function setSecondParticipant(participant: Participant | undefined) {
-      firstParticipant.value = participant;
+      secondParticipant.value = participant;
     }
-    function setParticipant(participant: Participant) {
+    function selectParticipant(participant: Participant) {
       if (typeof firstParticipant.value === "undefined") {
         setFirstParticipant(participant);
       } else {
@@ -207,21 +222,72 @@ export default defineComponent({
       }
     }
     function createInteraction() {
-      sessionController.createInteraction(
-        props.sessionId,
-        firstParticipant.value!.getId,
-        secondParticipant.value!.getId,
-        selectedCategory.value!.getId
-      );
+      console.log(selectedCategory.value!.getId);
+      console.log(firstParticipant.value!.getId);
+      console.log(secondParticipant.value!.getId);
+
+      if (selectedCategory.value!.hasQuality()) {
+        let quality: Quality;
+        switch (categoryQuality.value) {
+          case 1:
+            quality = Quality.ONE_STAR;
+            break;
+          case 2:
+            quality = Quality.TWO_STAR;
+            break;
+          case 3:
+            quality = Quality.THREE_STAR;
+            break;
+          case 4:
+            quality = Quality.FOUR_STAR;
+            break;
+          default:
+            quality = Quality.FIVE_STAR;
+            break;
+        }
+        sessionController.createInteraction(
+          props.sessionId,
+          firstParticipant.value!.getId,
+          secondParticipant.value!.getId,
+          categoryController.getCategoryWithQuality(
+            selectedCategory.value!.name,
+            quality
+          )!.getId
+        );
+      } else {
+        sessionController.createInteraction(
+          props.sessionId,
+          firstParticipant.value!.getId,
+          secondParticipant.value!.getId,
+          selectedCategory.value!.getId
+        );
+      }
+
       firstParticipant.value = undefined;
       secondParticipant.value = undefined;
       selectedCategory.value = undefined;
+      categoryQuality.value = 0;
     }
     function setCategory(category: Category | undefined) {
       selectedCategory.value = category;
     }
+    function selectCategory(category: Category) {
+      setCategory(category);
+      categoryDialog.value = false;
+      if (category.hasQuality()) {
+        starDialog.value = true;
+      } else {
+        createInteraction();
+      }
+    }
+    function selectQuality() {
+      createInteraction();
+      starDialog.value = false;
+    }
 
     return {
+      starDialog,
+      //teacher, TODO Kommentar entfernen
       sessionName,
       searchInput,
       categories,
@@ -229,17 +295,17 @@ export default defineComponent({
       courseParticipantsSortedByName,
       secondParticipant,
       categoryDialog,
-      resetInterActionParams,
-      createInteraction,
-      undoClick,
-      redoClick,
+      categoryQuality,
       undoPossible,
       redoPossible,
+      resetInterActionParams,
+      undoClick,
+      redoClick,
       filterParticipants,
       finishSessionClick,
-      setParticipant,
-      setCategory,
-      teacher
+      selectParticipant,
+      selectCategory,
+      selectQuality,
     };
   },
 });
