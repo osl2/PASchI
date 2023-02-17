@@ -12,6 +12,9 @@ export const useUserStore = defineStore('user', {
     },
     setUser(user: User) {
       this.user = user;
+    },
+    deleteUser() {
+      this.user = undefined;
     }
   }
 })

@@ -17,8 +17,18 @@ export class UserController {
     return this.controller;
   }
 
-  async login(email: string, password: string): Promise<User | undefined> {
-    return this.userService.login(email, password);
+  async login(email: string, password: string): Promise<string | undefined> {
+    let user: User | undefined;
+    await this.userService.login(email, password).then((response: User | undefined) => {
+      user = response;
+    });
+
+    if (user == undefined) {
+      return undefined;
+    }
+
+    this.userStore.setUser(user);
+    return user.getId;
   }
 
   register(firstName: string, lastName: string, email: string, password: string, repeatPassword: string) {
@@ -44,8 +54,8 @@ export class UserController {
       user.firstName = firstName;
       user.lastName = lastName;
       user.email = email;
+      this.userService.update(user);
     }
-    this.userService.update(user);
   }
 
   getUser(): User {
@@ -55,6 +65,7 @@ export class UserController {
   delete() {
     const user = this.userStore.getUser();
     if (user !== undefined) {
+      this.userStore.deleteUser();
       this.userService.delete(user.getId);
     }
   }
