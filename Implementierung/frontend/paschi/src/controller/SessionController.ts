@@ -71,6 +71,11 @@ export class SessionController {
     let session = this.sessionStore.getSession(id);
     if (session !== undefined) {
       session.course.removeSession(id);
+      session.interactions.forEach((interaction: Interaction) => {
+        interaction.fromParticipant.removeInteraction(interaction.getId);
+        interaction.toParticipant.removeInteraction(interaction.getId);
+        this.interactionStore.deleteInteraction(interaction.getId);
+      });
       this.sessionStore.deleteSession(id);
     }
   }
@@ -133,13 +138,13 @@ export class SessionController {
     return interaction.getId;
   }
 
-  deleteInteraction(sessionId: string, interactionId: string) {
-    let session = this.sessionStore.getSession(sessionId);
-    if (session !== undefined) {
-      session.removeInteraction(interactionId);
-      this.interactionStore.deleteInteraction(interactionId);
-    }
-  }
+  // deleteInteraction(sessionId: string, interactionId: string) {
+  //   let session = this.sessionStore.getSession(sessionId);
+  //   if (session !== undefined) {
+  //     session.removeInteraction(interactionId);
+  //     this.interactionStore.deleteInteraction(interactionId);
+  //   }
+  // }
 
   undoInteraction(sessionId: string) {
     let session = this.sessionStore.getSession(sessionId);
