@@ -62,8 +62,17 @@ export class UserService extends BaseService<User, UserDto> {
     });
   }
 
-  // TODO: login
-  login(email: string, password: string)/*: User*/ {
+  async login(email: string, password: string): Promise<User | undefined> {
+    let user;
+    await axios.post(USER_BASE_URL + "/login", null, {params: {email, password}})
+      .then((response) => {
+        user = this.getMapper().dtoToModel(response.data);
+      });
 
+    if (user != undefined) {
+      return user;
+    } else {
+      return undefined;
+    }
   }
 }
