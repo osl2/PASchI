@@ -27,4 +27,8 @@ export class Teacher extends Participant {
     }
     return teacher;
   }
+
+  isTeacher(): boolean {
+    return true;
+  }
 }

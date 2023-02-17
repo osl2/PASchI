@@ -20,6 +20,8 @@ export abstract class Participant extends DataObject {
     this._interactions = [];
   }
 
+  abstract isTeacher(): boolean;
+
   addCourse(course: Course) {
     if (this.getCourse(course.getId) == undefined) {
       this.courses.push(course);
