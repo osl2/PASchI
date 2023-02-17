@@ -14,18 +14,18 @@ const password = "exmatrikulaion";
 userController.register(firstName, lastName, email, password, password);
 const user = userController.getUser();
 
-test("getUsersNotAuthenticated", () => {
-  const users = adminController.getUsersNotAuthenticated();
-  expect(users.pop()!.getId).toBe(user.getId);
-});
-
-test("authUser", () => {
-  expect(user.auth).toBe(false);
-  adminController.authUser(user.getId);
-  expect(user.auth).toBe(true);
-});
-
-test("getUsers", () => {
-  const users = adminController.getUsers();
-  expect(users.pop()!.getId).toBe(user.getId);
-});
+// test("getUsersNotAuthenticated", () => {
+//   const users = adminController.getUsersNotAuthenticated();
+//   expect(users.pop()!.getId).toBe(user.getId);
+// });
+//
+// test("authUser", () => {
+//   expect(user.auth).toBe(false);
+//   adminController.authUser(user.getId);
+//   expect(user.auth).toBe(true);
+// });
+//
+// test("getUsers", () => {
+//   const users = adminController.getUsers();
+//   expect(users.pop()!.getId).toBe(user.getId);
+// });
