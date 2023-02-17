@@ -2,7 +2,6 @@ import {IModelDtoMapper} from "@/dto/mapper/IModelDtoMapper";
 import {User} from "@/model/User";
 import {UserDto} from "@/dto/UserDto";
 import {RoleMapper} from "@/dto/mapper/RoleMapper";
-import {useUserStore} from "@/store/UserStore";
 
 export class UserMapper implements IModelDtoMapper<User, UserDto> {
 
