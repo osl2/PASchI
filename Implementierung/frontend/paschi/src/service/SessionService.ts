@@ -2,14 +2,15 @@ import {BaseService} from "@/service/BaseService";
 import {Session} from "@/model/userdata/courses/Session";
 import {SessionDto} from "@/dto/userdata/courses/SessionDto";
 import {SessionMapper} from "@/dto/mapper/courses/SessionMapper";
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
+import {useUserStore} from "@/store/UserStore";
 
-// TODO: URL
-const SESSION_BASE_URL: string = '';
+const SESSION_BASE_URL: string = 'http://193.196.37.141/api/session';
 
 export class SessionService extends BaseService<Session, SessionDto> {
 
   private static sessionService: SessionService = new SessionService();
+  private userStore = useUserStore();
 
   private constructor() {
     super(SessionMapper.getMapper());
@@ -21,22 +22,34 @@ export class SessionService extends BaseService<Session, SessionDto> {
 
   add(session: Session) {
     const sessionDto = this.getMapper().modelToDto(session);
-    axios.post(SESSION_BASE_URL + '', sessionDto).then((response) => {
-      // irgendwas
+    axios.post(SESSION_BASE_URL + '', sessionDto).catch((error) => {
+      console.log(error);
     });
   }
 
   update(session: Session) {
+    const token = this.userStore.getUser()?.token;
     const sessionDto = this.getMapper().modelToDto(session);
-    axios.post(SESSION_BASE_URL + '', sessionDto).then((response) => {
-      // irgendwas
+    axios.post(SESSION_BASE_URL, sessionDto, {
+      headers: {
+        'Authorization': token
+      }
+    }).catch((error) => {
+      console.log(error);
     });
   }
 
   async getById(id: string): Promise<Session | undefined> {
+    const token = this.userStore.getUser()?.token;
     let session;
-    await axios.get(SESSION_BASE_URL + '').then((response) => {
+    await axios.get(SESSION_BASE_URL + `/${id}`, {
+      headers: {
+        'Authorization': token
+      }
+    }).then((response: AxiosResponse<SessionDto>) => {
       session = this.getMapper().dtoToModel(response.data);
+    }).catch((error) => {
+      console.log(error);
     });
 
     if (session != undefined) {
@@ -47,19 +60,34 @@ export class SessionService extends BaseService<Session, SessionDto> {
   }
 
   async getAll(): Promise<Session[]> {
+    const token = this.userStore.getUser()?.token;
     let sessions: Session[] = [];
-    axios.get(SESSION_BASE_URL + '').then((response) => {
-      response.data.forEach((course: any) => {
-        sessions.push(this.getMapper().dtoToModel(course));
+    axios.get(SESSION_BASE_URL, {
+      headers: {
+        'Authorization': token
+      }
+    }).then((response: AxiosResponse<SessionDto[]>) => {
+      response.data.forEach((sessionDto: SessionDto) => {
+        sessions.push(this.getMapper().dtoToModel(sessionDto));
       });
+    }).catch((error) => {
+      console.log(error);
     });
 
     return sessions;
   }
 
   delete(id: string) {
-    axios.post(SESSION_BASE_URL + '').then((response) => {
-      // irgendwas
+    const token = this.userStore.getUser()?.token;
+    axios.post(SESSION_BASE_URL, {
+      params: {
+        id
+      },
+      headers: {
+        'Authorization': token
+      }
+    }).catch((error) => {
+      console.log(error);
     });
   }
 }
