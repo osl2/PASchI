@@ -78,7 +78,7 @@
                 </v-row>
               </v-card>
             </template>
-            <v-card class="v-col-3" @click="addCategoryClick()">
+            <v-card class="v-col-3" @click="addCategoryClick()" color="#eeeeee">
               <v-row no-gutters justify="space-around" class="ma-2">
                 <v-icon icon="mdi mdi-plus"></v-icon>
               </v-row>
