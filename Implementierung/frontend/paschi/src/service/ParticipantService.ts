@@ -2,7 +2,8 @@ import {BaseService} from "@/service/BaseService";
 import {Participant} from "@/model/userdata/interactions/Participant";
 import {ParticipantDto} from "@/dto/userdata/interactions/ParticipantDto";
 import {ParticipantMapper} from "@/dto/mapper/interactions/ParticipantMapper";
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
+import {useUserStore} from "@/store/UserStore";
 
 // TODO: URL
 const PARTICIPANT_BASE_URL: string = '';
@@ -10,6 +11,7 @@ const PARTICIPANT_BASE_URL: string = '';
 export class ParticipantService extends BaseService<Participant, ParticipantDto> {
 
   private static participantService: ParticipantService = new ParticipantService();
+  private userStore = useUserStore();
 
   private constructor() {
     super(ParticipantMapper.getMapper());
@@ -21,22 +23,34 @@ export class ParticipantService extends BaseService<Participant, ParticipantDto>
 
   add(participant: Participant) {
     const participantDto = this.getMapper().modelToDto(participant);
-    axios.post(PARTICIPANT_BASE_URL + '', participantDto).then((response) => {
-      // irgendwas
+    axios.post(PARTICIPANT_BASE_URL, participantDto).catch((error) => {
+      console.log(error);
     });
   }
 
   update(participant: Participant) {
+    const token = this.userStore.getUser()?.token;
     const participantDto = this.getMapper().modelToDto(participant);
-    axios.post(PARTICIPANT_BASE_URL + '', participantDto).then((response) => {
-      // irgendwas
+    axios.put(PARTICIPANT_BASE_URL, participantDto, {
+      headers: {
+        'Authorization': token
+      }
+    }).catch((error) => {
+      console.log(error);
     });
   }
 
   async getById(id: string): Promise<Participant | undefined> {
+    const token = this.userStore.getUser()?.token;
     let participant;
-    await axios.get(PARTICIPANT_BASE_URL + '').then((response) => {
+    await axios.get(PARTICIPANT_BASE_URL + `/${id}`, {
+      headers: {
+        'Authorization': token
+      }
+    }).then((response: AxiosResponse<ParticipantDto>) => {
       participant = this.getMapper().dtoToModel(response.data);
+    }).catch((error) => {
+      console.log(error);
     });
 
     if (participant != undefined) {
@@ -47,19 +61,34 @@ export class ParticipantService extends BaseService<Participant, ParticipantDto>
   }
 
   async getAll(): Promise<Participant[]> {
+    const token = this.userStore.getUser()?.token;
     let participants: Participant[] = [];
-    axios.get(PARTICIPANT_BASE_URL + '').then((response) => {
-      response.data.forEach((course: any) => {
-        participants.push(this.getMapper().dtoToModel(course));
+    axios.get(PARTICIPANT_BASE_URL, {
+      headers: {
+        'Authorization': token
+      }
+    }).then((response: AxiosResponse<ParticipantDto[]>) => {
+      response.data.forEach((participantDto: ParticipantDto) => {
+        participants.push(this.getMapper().dtoToModel(participantDto));
       });
+    }).catch((error) => {
+      console.log(error);
     });
 
     return participants;
   }
 
   delete(id: string) {
-    axios.delete(PARTICIPANT_BASE_URL + '').then((response) => {
-      // irgendwas
+    const token = this.userStore.getUser()?.token;
+    axios.delete(PARTICIPANT_BASE_URL, {
+      params: {
+        id
+      },
+      headers: {
+        'Authorization': token
+      }
+    }).catch((error) => {
+      console.log(error);
     });
   }
 }
