@@ -48,6 +48,7 @@ export class SessionController {
       arrangement
     );
     this.sessionStore.addSession(session);
+    course.addSession(session);
 
     return session.getId;
   }
