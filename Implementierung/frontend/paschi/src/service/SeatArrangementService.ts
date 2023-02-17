@@ -9,8 +9,14 @@ const SEAT_ARRANGEMENT_BASE_URL: string = '';
 
 export class SeatArrangementService extends BaseService<SeatArrangement, SeatArrangementDto> {
 
-  constructor() {
+  private static seatArrangementService: SeatArrangementService = new SeatArrangementService();
+
+  private constructor() {
     super(SeatArrangementMapper.getMapper());
+  }
+
+  static getService(): SeatArrangementService {
+    return this.seatArrangementService;
   }
 
   add(arrangement: SeatArrangement) {
