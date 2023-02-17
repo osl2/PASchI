@@ -67,7 +67,7 @@
         </v-row>
       </v-list>
     </v-card>
-    <v-dialog v-model="categoryDialog">
+    <v-dialog v-model="categoryDialog" persistent>
       <v-card>
         <v-container>
           <v-row no-gutters>
@@ -96,7 +96,7 @@
         </v-container>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="starDialog">
+    <v-dialog v-model="starDialog" persistent>
       <v-card>
         <v-container>
           <v-row no-gutters justify="space-around" class="ma-2">
@@ -221,14 +221,17 @@ export default defineComponent({
     const categoryQuality = ref(0);
     const undoPossible = computed(() => getUndoPossible());
     const redoPossible = computed(() => getRedoPossible());
-    const newCategoryDialog = ref(true);
+    const newCategoryDialog = ref(false);
     const newCategoryName = ref("");
     const newCategoryIsRated = ref(false);
 
     function filterParticipants(participants: Participant[]): Participant[] {
+      let searchInputUpperCase = searchInput.value.toUpperCase();
       return participants.filter((participant) => {
-        return (participant.firstName + " " + participant.lastName).startsWith(
-          searchInput.value
+        return (
+          (participant.firstName + " " + participant.lastName).startsWith(
+            searchInputUpperCase
+          ) || participant.lastName.startsWith(searchInputUpperCase)
         );
       });
     }
@@ -284,7 +287,7 @@ export default defineComponent({
     }
     function finishSessionClick() {
       router.push({
-        name: "DashBoard",
+        name: "Dashboard",
       });
     }
     function addCategoryClick() {
