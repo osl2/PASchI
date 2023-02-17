@@ -8,8 +8,8 @@ export abstract class Participant extends DataObject {
   private readonly _user: User;
   private _firstName: string;
   private _lastName: string;
-  private readonly _courses: Course[];
-  private readonly _interactions: Interaction[];
+  private _courses: Course[];
+  private _interactions: Interaction[];
 
   protected constructor(id: string | undefined, localId: number, user: User, firstName: string, lastName: string) {
     super(id, localId);
@@ -101,6 +101,16 @@ export abstract class Participant extends DataObject {
 
   set lastName(value: string) {
     this._lastName = value;
+    this.update();
+  }
+
+  set courses(value: Course[]) {
+    this._courses = value;
+    this.update();
+  }
+
+  set interactions(value: Interaction[]) {
+    this._interactions = value;
     this.update();
   }
 }

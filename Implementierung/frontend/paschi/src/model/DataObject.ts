@@ -2,7 +2,7 @@ export abstract class DataObject {
 
   private _id: string | undefined;
   private readonly _localId: number;
-  private readonly _createdAt: string;
+  private _createdAt: string;
   private _updatedAt: string;
 
   protected constructor(id: string | undefined, localId: number) {
@@ -31,6 +31,10 @@ export abstract class DataObject {
 
   set setId(id: string) {
     this._id = id;
+  }
+
+  set createdAt(value: string) {
+    this._createdAt = value;
   }
 
   get createdAt(): string {
