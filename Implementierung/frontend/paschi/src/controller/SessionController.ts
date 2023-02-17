@@ -21,6 +21,7 @@ export class SessionController {
   private arrangementStore = useSeatArrangementStore();
   private categoryStore = useCategoryStore();
   private studentStore = useStudentStore();
+  private interactionStore = useInteractionStore();
 
   private constructor() {
   }
@@ -118,30 +119,37 @@ export class SessionController {
     let date = new Date();
     let interaction = new Interaction(
       undefined,
-      useInteractionStore().getNextId(),
+      this.interactionStore.getNextId(),
       this.userController.getUser(),
       date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds(),
       fromParticipant,
       toParticipant,
       category
     );
+    this.interactionStore.addInteraction(interaction);
     session.addInteraction(interaction);
     fromParticipant.addInteraction(interaction);
     toParticipant.addInteraction(interaction);
     return interaction.getId;
   }
 
-  deleteInteraction(sesisonId: string, interactionId: string) {
-    let session = this.sessionStore.getSession(sesisonId);
+  deleteInteraction(sessionId: string, interactionId: string) {
+    let session = this.sessionStore.getSession(sessionId);
     if (session !== undefined) {
       session.removeInteraction(interactionId);
+      this.interactionStore.deleteInteraction(interactionId);
     }
   }
 
   undoInteraction(sessionId: string) {
     let session = this.sessionStore.getSession(sessionId);
     if (session !== undefined) {
-      session.undoInteraction();
+      const interaction = session.undoInteraction();
+      if (interaction !== undefined) {
+        interaction.fromParticipant.removeInteraction(interaction.getId);
+        interaction.toParticipant.removeInteraction(interaction.getId);
+        this.interactionStore.deleteInteraction(interaction.getId);
+      }
     }
   }
 
@@ -154,6 +162,9 @@ export class SessionController {
     if (interaction == undefined) {
       return undefined;
     }
+    this.interactionStore.addInteraction(interaction);
+    interaction.fromParticipant.addInteraction(interaction);
+    interaction.toParticipant.addInteraction(interaction);
     return interaction.getId;
   }
 

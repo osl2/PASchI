@@ -43,21 +43,24 @@ export class Session extends DataObject {
     this.update();
   }
 
-  undoInteraction() {
+  undoInteraction(): Interaction | undefined {
     let interaction = this.interactions.pop();
     if (interaction !== undefined) {
       this._undoInteractions.push(interaction);
+      this.update();
+      return interaction;
     }
-    this.update();
+
+    return undefined;
   }
 
   redoInteraction(): Interaction | undefined {
     let interaction = this._undoInteractions.pop();
     if (interaction !== undefined) {
       this.interactions.push(interaction);
+      this.update();
       return interaction;
     }
-    this.update();
     return undefined;
   }
 
