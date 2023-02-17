@@ -78,18 +78,21 @@ export class RoomController {
       return undefined;
     }
 
+    const position = new Position(
+      undefined,
+      this.positionStore.nextId,
+      this.userController.getUser(),
+      xCoordinate,
+      yCoordinate,
+      orientation
+    );
+    this.positionStore.addPosition(position);
+
     let chair = new Chair(
       undefined,
       this.roomObjectStore.getNextId(),
       this.userController.getUser(),
-      new Position(
-        undefined,
-        this.positionStore.nextId,
-        this.userController.getUser(),
-        xCoordinate,
-        yCoordinate,
-        orientation
-      )
+      position
     );
     room.addRoomObject(chair);
 
@@ -103,18 +106,21 @@ export class RoomController {
       return undefined;
     }
 
+    const position = new Position(
+      undefined,
+      this.positionStore.nextId,
+      this.userController.getUser(),
+      xCoordinate,
+      yCoordinate,
+      orientation
+    );
+    this.positionStore.addPosition(position);
+
     let table = new Table(
       undefined,
       this.roomObjectStore.getNextId(),
       this.userController.getUser(),
-      new Position(
-        undefined,
-        this.positionStore.nextId,
-        this.userController.getUser(),
-        xCoordinate,
-        yCoordinate,
-        orientation
-      ),
+      position,
       length,
       width
     );
@@ -150,6 +156,7 @@ export class RoomController {
       let object = room.getRoomObject(objectId);
       if (object !== undefined) {
         room.removeRoomObject(objectId);
+        this.positionStore.deletePosition(object.position.getId);
         this.arrangementStore.getAllSeatArrangements().forEach((arrangement: SeatArrangement) => {
           if (arrangement.room.getId === roomId) {
             arrangement.removeSeat(object!);
