@@ -15,7 +15,6 @@ import { createApp } from 'vue'
 import { registerPlugins } from '@/plugins'
 
 const app = createApp(App)
-app.config.globalProperties.$minDesktopSize = 1500;
 
 registerPlugins(app)
 
