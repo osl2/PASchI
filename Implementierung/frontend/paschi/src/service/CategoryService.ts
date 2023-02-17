@@ -22,7 +22,7 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
 
   add(category: Category) {
     const categoryDto = this.getMapper().modelToDto(category);
-    axios.post(CATEGORY_BASE_URL + '', categoryDto).catch((error) => {
+    axios.post(CATEGORY_BASE_URL, categoryDto).catch((error) => {
       console.log(error);
     });
   }
