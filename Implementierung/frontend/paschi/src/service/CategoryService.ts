@@ -2,14 +2,15 @@ import {BaseService} from "@/service/BaseService";
 import {Category} from "@/model/userdata/interactions/Category";
 import {CategoryDto} from "@/dto/userdata/interactions/CategoryDto";
 import {CategoryMapper} from "@/dto/mapper/interactions/CategoryMapper";
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
+import {useUserStore} from "@/store/UserStore";
 
-// TODO: URL
-const CATEGORY_BASE_URL: string = '';
+const CATEGORY_BASE_URL: string = 'http://193.196.37.141/api/category';
 
 export class CategoryService extends BaseService<Category, CategoryDto> {
 
   private static categoryService: CategoryService = new CategoryService();
+  private userStore = useUserStore();
 
   private constructor() {
     super(CategoryMapper.getMapper());
@@ -21,22 +22,34 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
 
   add(category: Category) {
     const categoryDto = this.getMapper().modelToDto(category);
-    axios.post(CATEGORY_BASE_URL + '', categoryDto).then((response) => {
-      // irgendwas
+    axios.post(CATEGORY_BASE_URL + '', categoryDto).catch((error) => {
+      console.log(error);
     });
   }
 
   update(category: Category) {
+    const token = this.userStore.getUser()?.token;
     const categoryDto = this.getMapper().modelToDto(category);
-    axios.post(CATEGORY_BASE_URL + '', categoryDto).then((response) => {
-      // irgendwas
+    axios.put(CATEGORY_BASE_URL, categoryDto, {
+      headers: {
+        'Authorization': token
+      }
+    }).catch((error) => {
+      console.log(error);
     });
   }
 
   async getById(id: string): Promise<Category | undefined> {
+    const token = this.userStore.getUser()?.token;
     let category;
-    await axios.get(CATEGORY_BASE_URL + '').then((response) => {
+    await axios.get(CATEGORY_BASE_URL + `/${id}`, {
+      headers: {
+        'Authorization': token
+      }
+    }).then((response: AxiosResponse<CategoryDto>) => {
       category = this.getMapper().dtoToModel(response.data);
+    }).catch((error) => {
+      console.log(error);
     });
 
     if (category != undefined) {
@@ -47,19 +60,34 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
   }
 
   async getAll(): Promise<Category[]> {
+    const token = this.userStore.getUser()?.token;
     let categories: Category[] = [];
-    axios.get(CATEGORY_BASE_URL + '').then((response) => {
-      response.data.forEach((course: any) => {
-        categories.push(this.getMapper().dtoToModel(course));
+    axios.get(CATEGORY_BASE_URL, {
+      headers: {
+        'Authorization': token
+      }
+    }).then((response: AxiosResponse<CategoryDto[]>) => {
+      response.data.forEach((categoryDto: CategoryDto) => {
+        categories.push(this.getMapper().dtoToModel(categoryDto));
       });
+    }).catch((error) => {
+      console.log(error);
     });
 
     return categories;
   }
 
   delete(id: string) {
-    axios.delete(CATEGORY_BASE_URL + '').then((response) => {
-      // irgendwas
+    const token = this.userStore.getUser()?.token;
+    axios.delete(CATEGORY_BASE_URL, {
+      params: {
+        id
+      },
+      headers: {
+        'Authorization': token
+      }
+    }).catch((error) => {
+      console.log(error);
     });
   }
 }
