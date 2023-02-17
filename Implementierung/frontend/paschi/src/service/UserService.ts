@@ -8,8 +8,14 @@ const USER_BASE_URL: string = '';
 
 export class UserService extends BaseService<User, UserDto> {
 
-  constructor() {
+  private static userService: UserService = new UserService();
+
+  private constructor() {
     super(UserMapper.getMapper());
+  }
+
+  static getService(): UserService {
+    return this.userService;
   }
 
   add(user: User) {
