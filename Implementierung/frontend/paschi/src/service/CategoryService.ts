@@ -9,8 +9,14 @@ const CATEGORY_BASE_URL: string = '';
 
 export class CategoryService extends BaseService<Category, CategoryDto> {
 
-  constructor() {
+  private static categoryService: CategoryService = new CategoryService();
+
+  private constructor() {
     super(CategoryMapper.getMapper());
+  }
+
+  static getUserService(): CategoryService {
+    return this.categoryService;
   }
 
   add(category: Category) {

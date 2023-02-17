@@ -2,12 +2,14 @@ import {User} from "@/model/User";
 import {useUserStore} from "@/store/UserStore";
 import {Role} from "@/model/Role";
 import {createPinia} from "pinia";
+import {UserService} from "@/service/UserService";
 
 // TODO: Services fürs Backend einbinden
 export class UserController {
 
   private static controller: UserController = new UserController();
   private userStore = useUserStore(createPinia());
+  private userService = new UserService();
 
   private constructor() {
   }
@@ -16,10 +18,7 @@ export class UserController {
     return this.controller;
   }
 
-  login(email: string, password: string): boolean {
-    // nur lokal
-    let user = this.getUser();
-    return user.email === email && user.auth;
+  login(email: string, password: string): User {
 
   }
 
