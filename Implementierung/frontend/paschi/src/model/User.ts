@@ -6,16 +6,18 @@ export class User extends DataObject {
   private _firstName: string;
   private _lastName: string;
   private _email: string;
+  private readonly _password: string;
   private _auth: boolean;
   private _role: Role;
   private _token: string | undefined;
 
-  constructor(id: string | undefined, firstName: string, lastName: string, email: string,
+  constructor(id: string | undefined, firstName: string, lastName: string, email: string, password: string,
               auth: boolean, role: Role, token: string | undefined) {
     super(id, 0);
     this._firstName = firstName;
     this._lastName = lastName;
     this._email = email;
+    this._password = password;
     this._auth = auth;
     this._role = role;
     this._token = token;
@@ -31,6 +33,10 @@ export class User extends DataObject {
 
   get email(): string {
     return this._email;
+  }
+
+  get password(): string {
+    return this._password;
   }
 
   get auth(): boolean {

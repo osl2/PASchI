@@ -4,7 +4,6 @@ import {Role} from "@/model/Role";
 import {createPinia} from "pinia";
 import {UserService} from "@/service/UserService";
 
-// TODO: Services fürs Backend einbinden
 export class UserController {
 
   private static controller: UserController = new UserController();
@@ -23,11 +22,15 @@ export class UserController {
   }
 
   register(firstName: string, lastName: string, email: string, password: string, repeatPassword: string) {
+    if (password !== repeatPassword) {
+      return;
+    }
     const user = new User(
       undefined,
       firstName,
       lastName,
       email,
+      password,
       false,
       Role.USER,
       undefined
@@ -41,12 +44,8 @@ export class UserController {
       user.firstName = firstName;
       user.lastName = lastName;
       user.email = email;
-      // TODO: Backend einbinden
     }
-  }
-
-  changePassword(oldPassword: string, newPassword: string, repeatPassword: string) {
-
+    this.userService.update(user);
   }
 
   getUser(): User {
@@ -54,6 +53,9 @@ export class UserController {
   }
 
   delete() {
-
+    const user = this.userStore.getUser();
+    if (user !== undefined) {
+      this.userService.delete(user.getId);
+    }
   }
 }

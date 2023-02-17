@@ -32,7 +32,7 @@ export class UserMapper implements IModelDtoMapper<User, UserDto> {
       user.firstName,
       user.lastName,
       user.email,
-      "",
+      user.password,
       user.auth,
       this.roleMapper.modelToDto(user.role),
       user.token
@@ -42,13 +42,13 @@ export class UserMapper implements IModelDtoMapper<User, UserDto> {
   dtoToModel(userDto: UserDto): User {
     return new User(
       userDto.id,
-      this.userStore.getNextId(),
       userDto.firstName,
       userDto.lastName,
       userDto.email,
+      userDto.password,
       userDto.auth,
       this.roleMapper.dtoToModel(userDto.role),
       userDto.token
-      );
+    );
   }
 }
