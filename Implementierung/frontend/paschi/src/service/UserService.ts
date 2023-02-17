@@ -39,7 +39,7 @@ export class UserService extends BaseService<User, UserDto> {
   }
 
   async getById(id: string): Promise<User | undefined> {
-    const token = useUserStore().getUser()?.token;
+    const token = this.userStore.getUser()?.token;
     let user;
     await axios.get(USER_BASE_URL + `/${id}`, {
       headers: {
@@ -59,7 +59,7 @@ export class UserService extends BaseService<User, UserDto> {
   }
 
   async getAll(): Promise<User[]> {
-    const token = useUserStore().getUser()?.token;
+    const token = this.userStore.getUser()?.token;
     let users: User[] = [];
     axios.get(USER_BASE_URL + '/admin', {
       headers: {
@@ -77,7 +77,7 @@ export class UserService extends BaseService<User, UserDto> {
   }
 
   delete(id: string) {
-    const token = useUserStore().getUser()?.token;
+    const token = this.userStore.getUser()?.token;
     axios.delete(USER_BASE_URL, {
       params: {
         id
@@ -111,7 +111,7 @@ export class UserService extends BaseService<User, UserDto> {
   }
 
   async getToken() {
-    const user = useUserStore().getUser();
+    const user = this.userStore.getUser();
     if (user == undefined) {
       return;
     }
