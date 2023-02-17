@@ -70,11 +70,11 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
     } else if (participantDto.updatedAt <= participant.updatedAt && participantDto.createdAt >= participant.createdAt) {
       return participant;
     } else {
-      if (participantDto.createdAt < participant.createdAt) {
-        participant.createdAt = participantDto.createdAt;
-      }
       participant.firstName = participantDto.firstName;
       participant.lastName = participantDto.lastName;
+    }
+    if (participantDto.createdAt < participant.createdAt) {
+      participant.createdAt = participantDto.createdAt;
     }
 
     const courses: Course[] = [];
