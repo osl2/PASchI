@@ -21,8 +21,13 @@ export class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
   }
 
   add(arrangement: SeatArrangement) {
+    const token = this.userStore.getUser()?.token;
     const arrangementDto = this.getMapper().modelToDto(arrangement);
-    axios.post(SEAT_ARRANGEMENT_BASE_URL, arrangementDto).catch((error) => {
+    axios.post(SEAT_ARRANGEMENT_BASE_URL, arrangementDto, {
+      headers: {
+        'Authorization': token
+      }
+    }).catch((error) => {
       console.log(error);
     });
   }

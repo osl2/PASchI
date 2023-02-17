@@ -21,8 +21,13 @@ export class ParticipantService extends BaseService<Participant, ParticipantDto>
   }
 
   add(participant: Participant) {
+    const token = this.userStore.getUser()?.token;
     const participantDto = this.getMapper().modelToDto(participant);
-    axios.post(PARTICIPANT_BASE_URL, participantDto).catch((error) => {
+    axios.post(PARTICIPANT_BASE_URL, participantDto, {
+      headers: {
+        'Authorization': token
+      }
+    }).catch((error) => {
       console.log(error);
     });
   }

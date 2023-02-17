@@ -21,8 +21,13 @@ export class SessionService extends BaseService<Session, SessionDto> {
   }
 
   add(session: Session) {
+    const token = this.userStore.getUser()?.token;
     const sessionDto = this.getMapper().modelToDto(session);
-    axios.post(SESSION_BASE_URL + '', sessionDto).catch((error) => {
+    axios.post(SESSION_BASE_URL, sessionDto, {
+      headers: {
+        'Authorization': token
+      }
+    }).catch((error) => {
       console.log(error);
     });
   }

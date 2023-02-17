@@ -21,8 +21,13 @@ export class RoomService extends BaseService<Room, RoomDto> {
   }
 
   add(room: Room) {
+    const token = this.userStore.getUser()?.token;
     const roomDto = this.getMapper().modelToDto(room);
-    axios.post(ROOM_BASE_URL, roomDto).catch((error) => {
+    axios.post(ROOM_BASE_URL, roomDto, {
+      headers: {
+        'Authorization': token
+      }
+    }).catch((error) => {
       console.log(error);
     });
   }

@@ -21,8 +21,13 @@ export class CourseService extends BaseService<Course, CourseDto> {
   }
 
   add(course: Course) {
+    const token = this.userStore.getUser()?.token;
     const courseDto = this.getMapper().modelToDto(course);
-    axios.post(COURSE_BASE_URL, courseDto).catch((error) => {
+    axios.post(COURSE_BASE_URL, courseDto, {
+      headers: {
+        'Authorization': token
+      }
+    }).catch((error) => {
       console.log(error);
     });
   }
