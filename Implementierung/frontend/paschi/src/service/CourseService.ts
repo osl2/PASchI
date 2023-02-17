@@ -9,8 +9,14 @@ const COURSE_BASE_URL: string = '';
 
 export class CourseService extends BaseService<Course, CourseDto> {
 
-  constructor() {
+  private static courseService: CourseService = new CourseService();
+
+  private constructor() {
     super(CourseMapper.getMapper());
+  }
+
+  static getService(): CourseService {
+    return this.courseService;
   }
 
   add(course: Course) {
