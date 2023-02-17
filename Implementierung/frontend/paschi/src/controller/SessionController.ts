@@ -126,6 +126,8 @@ export class SessionController {
       category
     );
     session.addInteraction(interaction);
+    fromParticipant.addInteraction(interaction);
+    toParticipant.addInteraction(interaction);
     return interaction.getId;
   }
 
@@ -190,5 +192,22 @@ export class SessionController {
 
   getTeacher(): Teacher {
     return Teacher.getTeacher();
+  }
+
+  getInteractionsOfStudent(sessionId: string, studentId: string): Interaction[] | undefined {
+    const student = this.studentStore.getStudent(studentId);
+    const session = this.sessionStore.getSession(sessionId);
+    if (student == undefined || session == undefined) {
+      return undefined;
+    }
+
+    const interactions: Interaction[] = [];
+    session.interactions.forEach((interaction: Interaction) => {
+      if (interaction.fromParticipant.getId === studentId || interaction.toParticipant.getId === studentId) {
+        interactions.push(interaction);
+      }
+    });
+
+    return interactions;
   }
 }
