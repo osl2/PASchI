@@ -15,7 +15,7 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
     super(CategoryMapper.getMapper());
   }
 
-  static getUserService(): CategoryService {
+  static getService(): CategoryService {
     return this.categoryService;
   }
 
