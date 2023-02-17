@@ -310,9 +310,13 @@ export default defineComponent({
       seatArrangementSelectionDialog.value = true;
     }
     function startSessionClick(seatArrangement: SeatArrangement) {
+      let pageName = "SessionPage";
+      if(window.innerWidth > 1500) {
+        pageName = "SessionPageDesktop";
+      }
+
       router.push({
-        //name: "SessionPage",
-        name: "SessionPageDesktop",
+        name: pageName,
         params: {
           sessionId: sessionController.createSession(
             props.courseId,

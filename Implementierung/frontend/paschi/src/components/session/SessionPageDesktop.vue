@@ -1,20 +1,25 @@
 <template>
   <RoomDisplay :room-id="roomId">
     <template v-slot:chair="chair">
-      <SeatLabel :chair="chair.chair" :participant="seatArrangement.getParticipantForSeat(chair.chair)" />
+      <SeatLabel
+        :chair="chair.chair"
+        :participant="seatArrangement.getParticipantForSeat(chair.chair)"
+        @click="selectStudent(seatArrangement.getParticipantForSeat(chair.chair))"
+      />
     </template>
   </RoomDisplay>
 </template>
 
-<script>
-import { defineComponent } from 'vue';
-import { SessionController } from '@/controller/SessionController';
-import RoomDisplay from '@/components/room/RoomDisplay.vue'
+<script lang="ts">
+import { defineComponent } from "vue";
+import { SessionController } from "@/controller/SessionController";
+import RoomDisplay from "@/components/room/RoomDisplay.vue";
 import SeatLabel from "@/components/room/SeatLabel.vue";
+import {Participant} from "@/model/userdata/interactions/Participant";
 
 export default defineComponent({
-  name: 'SessionPageDesktop',
-  components: {SeatLabel, RoomDisplay},
+  name: "SessionPageDesktop",
+  components: { SeatLabel, RoomDisplay },
   props: {
     sessionId: {
       type: String,
@@ -27,11 +32,18 @@ export default defineComponent({
     const session = sessionController.getSession(sessionId);
     const seatArrangement = sessionController.getSeatArrangementOfSession(sessionId);
 
-    return {
-      roomId: seatArrangement.room.getId,
-      seatArrangement
+    let selectedStudent: Participant | undefined = undefined;
+
+    function selectStudent(participant: Participant) {
+      if (participant) {
+      }
     }
 
+    return {
+      roomId: seatArrangement?.room.getId,
+      seatArrangement,
+      selectStudent,
+    };
   },
 });
 </script>
