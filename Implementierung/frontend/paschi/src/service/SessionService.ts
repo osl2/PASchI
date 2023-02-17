@@ -62,7 +62,7 @@ export class SessionService extends BaseService<Session, SessionDto> {
   async getAll(): Promise<Session[]> {
     const token = this.userStore.getUser()?.token;
     let sessions: Session[] = [];
-    axios.get(SESSION_BASE_URL, {
+    await axios.get(SESSION_BASE_URL, {
       headers: {
         'Authorization': token
       }

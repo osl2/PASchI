@@ -62,7 +62,7 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
   async getAll(): Promise<Category[]> {
     const token = this.userStore.getUser()?.token;
     let categories: Category[] = [];
-    axios.get(CATEGORY_BASE_URL, {
+    await axios.get(CATEGORY_BASE_URL, {
       headers: {
         'Authorization': token
       }

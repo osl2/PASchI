@@ -62,7 +62,7 @@ export class CourseService extends BaseService<Course, CourseDto> {
   async getAll(): Promise<Course[]> {
     const token = this.userStore.getUser()?.token;
     let courses: Course[] = [];
-    axios.get(COURSE_BASE_URL, {
+    await axios.get(COURSE_BASE_URL, {
       headers: {
         'Authorization': token
       }

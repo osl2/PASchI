@@ -62,7 +62,7 @@ export class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
   async getAll(): Promise<SeatArrangement[]> {
     const token = this.userStore.getUser()?.token;
     let arrangements: SeatArrangement[] = [];
-    axios.get(SEAT_ARRANGEMENT_BASE_URL, {
+    await axios.get(SEAT_ARRANGEMENT_BASE_URL, {
       headers: {
         'Authorization': token
       }

@@ -62,7 +62,7 @@ export class RoomService extends BaseService<Room, RoomDto> {
   async getAll(): Promise<Room[]> {
     const token = this.userStore.getUser()?.token;
     let rooms: Room[] = [];
-    axios.get(ROOM_BASE_URL, {
+    await axios.get(ROOM_BASE_URL, {
       headers: {
         'Authorization': token
       }

@@ -62,7 +62,7 @@ export class ParticipantService extends BaseService<Participant, ParticipantDto>
   async getAll(): Promise<Participant[]> {
     const token = this.userStore.getUser()?.token;
     let participants: Participant[] = [];
-    axios.get(PARTICIPANT_BASE_URL, {
+    await axios.get(PARTICIPANT_BASE_URL, {
       headers: {
         'Authorization': token
       }
