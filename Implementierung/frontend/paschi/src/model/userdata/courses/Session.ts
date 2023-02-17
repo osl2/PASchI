@@ -9,9 +9,9 @@ export class Session extends DataObject {
   private readonly _user: User;
   private _name: string;
   private _date: string;
-  private readonly _interactions: Interaction[];
-  private readonly _undoInteractions: Interaction[];
   private readonly _course: Course;
+  private readonly _interactions: Interaction[];
+  private _undoInteractions: Interaction[];
   private _seatArrangement: SeatArrangement | undefined;
 
   constructor(id: string | undefined, localId: number, user: User, name: string, date: string, course: Course,
@@ -29,6 +29,7 @@ export class Session extends DataObject {
   addInteraction(interaction: Interaction) {
     if (this.getInteraction(interaction.getId) == undefined) {
       this._interactions.push(interaction);
+      this._undoInteractions = [];
     }
     this.update();
   }
@@ -45,7 +46,7 @@ export class Session extends DataObject {
   undoInteraction() {
     let interaction = this.interactions.pop();
     if (interaction !== undefined) {
-      this._undoInteractions.push();
+      this._undoInteractions.push(interaction);
     }
     this.update();
   }
