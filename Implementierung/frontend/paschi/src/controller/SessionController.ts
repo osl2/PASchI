@@ -29,10 +29,16 @@ export class SessionController {
     return this.controller;
   }
 
-  createSession(courseId: string, seatArrangementId: string, name: string): string | undefined {
+  createSession(courseId: string, seatArrangementId: string | undefined, name: string): string | undefined {
     let course = this.courseStore.getCourse(courseId);
-    let arrangement = this.arrangementStore.getSeatArrangement(seatArrangementId);
-    if (course == undefined || arrangement == undefined) {
+    let arrangement = undefined;
+    if (seatArrangementId != undefined) {
+      arrangement = this.arrangementStore.getSeatArrangement(seatArrangementId);
+      if (arrangement == undefined) {
+        return undefined;
+      }
+    }
+    if (course == undefined) {
       return undefined
     }
 
@@ -48,6 +54,7 @@ export class SessionController {
       arrangement
     );
     this.sessionStore.addSession(session);
+    course.addSession(session);
 
     return session.getId;
   }
@@ -119,6 +126,8 @@ export class SessionController {
       category
     );
     session.addInteraction(interaction);
+    fromParticipant.addInteraction(interaction);
+    toParticipant.addInteraction(interaction);
     return interaction.getId;
   }
 
@@ -183,5 +192,22 @@ export class SessionController {
 
   getTeacher(): Teacher {
     return Teacher.getTeacher();
+  }
+
+  getInteractionsOfStudent(sessionId: string, studentId: string): Interaction[] | undefined {
+    const student = this.studentStore.getStudent(studentId);
+    const session = this.sessionStore.getSession(sessionId);
+    if (student == undefined || session == undefined) {
+      return undefined;
+    }
+
+    const interactions: Interaction[] = [];
+    session.interactions.forEach((interaction: Interaction) => {
+      if (interaction.fromParticipant.getId === studentId || interaction.toParticipant.getId === studentId) {
+        interactions.push(interaction);
+      }
+    });
+
+    return interactions;
   }
 }

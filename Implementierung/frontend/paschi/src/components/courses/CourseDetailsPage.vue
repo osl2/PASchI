@@ -8,75 +8,73 @@
   </navigation-bar>
   <side-menu></side-menu>
   <v-main>
-    <v-container fluid class="v-row justify-center">
-      <v-card min-width="640" rounded class="ma-3 v-col-auto">
-        <v-row>
-          <h2 class="ma-2">Sitzungsliste</h2>
-          <v-spacer />
-          <v-btn
-            min-width="228"
-            class="ml-15 ma-2"
-            variant="flat"
-            color="green"
-            rounded
-            prepend-icon="mdi mdi-plus"
-            @click="addSessionClick"
-          >Sitzung starten</v-btn
-          >
-          <v-icon
-            v-if="sessionListCollapsed"
-            icon="mdi mdi-arrow-up-drop-circle"
-            size="40"
-            @click="toggleSessionListCollapsed"
-            class="ma-2"
-            color="primary"
-          />
-          <v-icon
-            v-if="!sessionListCollapsed"
-            icon="mdi mdi-arrow-down-drop-circle"
-            size="40"
-            @click="toggleSessionListCollapsed"
-            class="ma-2"
-            color="primary"
-          />
-        </v-row>
-        <v-row class="v-card justify-center" v-if="!sessionListCollapsed">
-          <v-card class="v-col-12" max-height="1000">
-            <v-list max-height="500">
-              <v-row class="ma-2" v-for="session in sessions"
-                >{{ session.name }} {{ session.date }}
-                <v-spacer />
-                <v-btn
-                  variant="tonal"
-                  color="primary"
-                  @click="interactionMapClick(session)"
-                  >InteraktionsKarte</v-btn
-                >
-                <v-btn
-                  class="ml-2"
-                  variant="tonal"
-                  color="primary"
-                  @click="sessionStatisticClick(session)"
-                >
-                  <v-icon> fas fa-chart-line </v-icon>
-                </v-btn>
-                <v-btn
-                  class="ml-2"
-                  variant="tonal"
-                  color="red"
-                  @click="deleteSessionClick(session)"
-                >
-                  <v-icon>mdi mdi-minus</v-icon>
-                </v-btn>
-              </v-row>
-            </v-list>
-          </v-card>
-        </v-row>
-      </v-card>
-    </v-container>
-    <v-container fluid class="v-row justify-center">
-      <v-card min-width="640" rounded class="ma-3 v-col-auto">
-        <v-row>
+    <v-container fluid class="v-row align-start justify-space-around">
+        <v-card  max-width="800" min-width="570" rounded class="ma-1 v-col-5">
+          <v-row class="v-col-12">
+            <h2 class="ma-2">Sitzungsliste</h2>
+            <v-spacer />
+            <v-btn
+              min-width="228"
+              class="ml-15 ma-2"
+              variant="flat"
+              color="green"
+              rounded
+              prepend-icon="mdi mdi-plus"
+              @click="addSessionClick"
+              >Sitzung starten</v-btn
+            >
+            <v-icon
+              v-if="sessionListCollapsed"
+              icon="mdi mdi-arrow-up-drop-circle"
+              size="40"
+              @click="toggleSessionListCollapsed"
+              class="ma-2"
+              color="primary"
+            />
+            <v-icon
+              v-if="!sessionListCollapsed"
+              icon="mdi mdi-arrow-down-drop-circle"
+              size="40"
+              @click="toggleSessionListCollapsed"
+              class="ma-2"
+              color="primary"
+            />
+          </v-row>
+          <v-row class="v-card justify-center" v-if="!sessionListCollapsed">
+            <v-card class="v-col-12" max-height="1000">
+              <v-list max-height="500">
+                <v-row class="ma-2" v-for="session in sessions"
+                  >{{ session.name }} {{ session.date }}
+                  <v-spacer />
+                  <v-btn
+                    variant="tonal"
+                    color="primary"
+                    @click="interactionMapClick(session)"
+                    >InteraktionsKarte</v-btn
+                  >
+                  <v-btn
+                    class="ml-2"
+                    variant="tonal"
+                    color="primary"
+                    @click="sessionStatisticClick(session)"
+                  >
+                    <v-icon> fas fa-chart-line </v-icon>
+                  </v-btn>
+                  <v-btn
+                    class="ml-2"
+                    variant="tonal"
+                    color="red"
+                    @click="deleteSessionClick(session)"
+                  >
+                    <v-icon>mdi mdi-minus</v-icon>
+                  </v-btn>
+                </v-row>
+              </v-list>
+            </v-card>
+          </v-row>
+        </v-card>
+        <v-card  max-width="800" min-width="570" rounded class="ma-1 v-col-5">
+          <v-row class="v-col-12">
           <h2 class="ma-2">Schülerliste</h2>
           <v-spacer />
           <v-btn
@@ -136,11 +134,12 @@
                 </v-btn>
               </v-row>
             </v-list>
+
           </v-card>
         </v-row>
       </v-card>
     </v-container>
-    <v-dialog v-model="addStudentSelectionDialog">
+    <v-dialog max-width="700" v-model="addStudentSelectionDialog">
       <v-card>
         <v-list>
           <v-list-item
@@ -152,7 +151,7 @@
         </v-list>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="seatArrangementSelectionDialog">
+    <v-dialog max-width="700" v-model="seatArrangementSelectionDialog">
       <v-card>
         <v-list>
           <v-list-item
@@ -162,6 +161,30 @@
             {{ seatArrangement.name }} {{ seatArrangement.room.name }}
           </v-list-item>
         </v-list>
+      </v-card>
+    </v-dialog>
+    <v-dialog max-width="700" v-model="deleteSessionDialog">
+      <v-card variant="flat" class="pa-2 rounded-lg">
+        <v-card-title class="text-h5 text-center text-indigo-darken-4">
+          Sitzung unwiederruflich löschen?
+        </v-card-title>
+        <v-card-actions class="row justify-center">
+          <v-btn
+            height="50"
+            width="150"
+            variant="tonal"
+            @click="cancelDeleteSessionClick"
+          >Abbrechen</v-btn
+          >
+          <v-btn
+            height="50"
+            width="150"
+            variant="tonal"
+            @click="confirmDeleteSessionClick"
+            color="primary"
+          >Bestätigen</v-btn
+          >
+        </v-card-actions>
       </v-card>
     </v-dialog>
   </v-main>
@@ -177,6 +200,7 @@ import { computed, defineComponent, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
 import { SessionController } from "@/controller/SessionController";
 import { useRouter } from "vue-router";
+import App from "@/App.vue";
 
 export default defineComponent({
   name: "CourseDetailsPage",
@@ -195,13 +219,15 @@ export default defineComponent({
     const sessionController: SessionController =
       SessionController.getSessionController();
 
-    const studentListCollapsed: Ref<boolean> = ref<boolean>(true);
-    const sessionListCollapsed: Ref<boolean> = ref<boolean>(true);
+    const studentListCollapsed: Ref<boolean> = ref<boolean>(false);
+    const sessionListCollapsed: Ref<boolean> = ref<boolean>(false);
+    const deleteSessionBuffer: Ref<Session|undefined> = ref<Session|undefined>(undefined) as Ref<Session|undefined>
 
     const sessionStatisticDialog: Ref<boolean> = ref<boolean>(false);
     const interactionMapSelectionDialog: Ref<boolean> = ref<boolean>(false);
     const addStudentSelectionDialog: Ref<boolean> = ref<boolean>(false);
     const seatArrangementSelectionDialog: Ref<boolean> = ref<boolean>(false);
+    const deleteSessionDialog: Ref<boolean> = ref<boolean>(false);
 
     const sessions: Ref<Session[]> = ref<Session[]>(getSessions()) as Ref<
       Session[]
@@ -215,6 +241,7 @@ export default defineComponent({
     const seatArrangements: Ref<SeatArrangement[]> = ref<SeatArrangement[]>(
       getSeatArrangements()
     ) as Ref<SeatArrangement[]>;
+
 
     //Hilfsmethoden
     function getSessions(): Session[] {
@@ -253,7 +280,15 @@ export default defineComponent({
 
     //normale Methoden
     function deleteSessionClick(session: Session) {
-      courseController.deleteSession(props.courseId, session.getId);
+      deleteSessionBuffer.value = session
+      deleteSessionDialog.value = true
+    }
+    function cancelDeleteSessionClick() {
+      deleteSessionDialog.value = false
+    }
+    function confirmDeleteSessionClick() {
+      courseController.deleteSession(props.courseId, deleteSessionBuffer.value!.getId);
+      deleteSessionDialog.value = false
     }
     function toggleSessionListCollapsed() {
       sessionListCollapsed.value = !sessionListCollapsed.value;
@@ -307,11 +342,24 @@ export default defineComponent({
       addStudentSelectionDialog.value = true;
     }
     function addSessionClick() {
-      seatArrangementSelectionDialog.value = true;
+      if(window.innerWidth < 1500) {
+        router.push({
+          name: "SessionPage",
+          params: {
+            sessionId: sessionController.createSession(
+              props.courseId,
+              undefined,
+              ""
+            ),
+          }, //TODO session name
+        });
+      }
+      else {
+        seatArrangementSelectionDialog.value = true;
+      }
     }
     function startSessionClick(seatArrangement: SeatArrangement) {
       router.push({
-        //name: "SessionPage",
         name: "SessionPageDesktop",
         params: {
           sessionId: sessionController.createSession(
@@ -345,6 +393,9 @@ export default defineComponent({
       toggleStudentListCollapsed,
       toggleSessionListCollapsed,
       deleteSessionClick,
+      cancelDeleteSessionClick,
+      confirmDeleteSessionClick,
+      deleteSessionDialog,
       sessionStatisticDialog,
       interactionMapSelectionDialog,
       addStudentSelectionDialog,

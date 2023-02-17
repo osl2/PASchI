@@ -8,6 +8,7 @@ import {useStudentStore} from "@/store/StudentStore";
 import {useSessionStore} from "@/store/SessionStore";
 import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 import {RoomObject} from "@/model/userdata/rooms/RoomObject";
+import {Interaction} from "@/model/userdata/interactions/Interaction";
 
 // TODO: Backend Service einbinden
 export class CourseController {
@@ -162,5 +163,24 @@ export class CourseController {
       course.removeSeatArrangement(arrangementId);
       this.arrangementStore.deleteSeatArrangement(arrangementId);
     }
+  }
+
+  getInteractionsOfStudent(courseId: string, studentId: string): Interaction[] | undefined {
+    const student = this.studentStore.getStudent(studentId);
+    const course = this.courseStore.getCourse(courseId);
+    if (student == undefined || course == undefined) {
+      return undefined;
+    }
+
+    const interactions: Interaction[] = [];
+    course.sessions.forEach((session: Session) => {
+      session.interactions.forEach((interaction: Interaction) => {
+        if (interaction.fromParticipant.getId === studentId || interaction.toParticipant.getId === studentId) {
+          interactions.push(interaction);
+        }
+      });
+    });
+
+    return interactions;
   }
 }
