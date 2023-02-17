@@ -15,6 +15,7 @@ import {SeatArrangementController} from "@/controller/SeatArrangementController"
 export class RoomController {
   private static controller: RoomController = new RoomController();
   private userController = UserController.getUserController();
+  private arrangementController = SeatArrangementController.getSeatArrangementController();
   private roomStore = useRoomStore();
   private roomObjectStore = useRoomObjectStore();
   private arrangementStore = useSeatArrangementStore();
@@ -25,7 +26,7 @@ export class RoomController {
   static getRoomController(): RoomController {
     return this.controller;
   }
-  
+
   createRoom(name: string): string {
     let room = new Room(
       undefined,
@@ -52,7 +53,7 @@ export class RoomController {
         .getAllSeatArrangements()
         .forEach((arrangement: SeatArrangement) => {
           if (arrangement.room.getId === id) {
-            SeatArrangementController.getSeatArrangementController().deleteSeatArrangement(arrangement.getId);
+            this.arrangementController.deleteSeatArrangement(arrangement.getId);
           }
         });
     }

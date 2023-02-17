@@ -5,16 +5,17 @@ import {Course} from "@/model/userdata/courses/Course";
 import {Interaction} from "@/model/userdata/interactions/Interaction";
 import {UserController} from "@/controller/UserController";
 import {ParticipantTypeDto} from "@/dto/userdata/interactions/ParticipantTypeDto";
-import {CourseService} from "@/service/CourseService";
 import {useCourseStore} from "@/store/CourseStore";
+import {CourseController} from "@/controller/CourseController";
 import {useInteractionStore} from "@/store/InteractionStore";
 
 export class ParticipantMapper implements IModelDtoMapper<Participant, ParticipantDto> {
 
   private static mapper: ParticipantMapper = new ParticipantMapper();
   private userController = UserController.getUserController();
-  private courseService = CourseService.getService();
+  private courseController = CourseController.getCourseController();
   private courseStore = useCourseStore();
+  private interactionStore = useInteractionStore();
 
   private constructor() {
   }
@@ -62,10 +63,10 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
       courses.push(course);
     });
 
-    participantDto.interactionIds.forEach((interactionId: string) => {
-      courses.forEach((course: Course) => {
-
-      });
+    participantDto.interactionIds.forEach((id: string) => {
+      let interaction = this.interactionStore.getInteraction(id);
+      if (interaction == undefined) {
+      }
     });
   }
 }
