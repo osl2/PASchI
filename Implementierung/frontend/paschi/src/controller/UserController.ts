@@ -9,7 +9,7 @@ export class UserController {
 
   private static controller: UserController = new UserController();
   private userStore = useUserStore(createPinia());
-  private userService = new UserService();
+  private userService = UserService.getService();
 
   private constructor() {
   }
@@ -18,23 +18,21 @@ export class UserController {
     return this.controller;
   }
 
-  login(email: string, password: string): User {
-
+  async login(email: string, password: string): Promise<User | undefined> {
+    return this.userService.login(email, password);
   }
 
   register(firstName: string, lastName: string, email: string, password: string, repeatPassword: string) {
-    // TODO: auth vom admin setzen
-    this.userStore.setUser(
-      new User(
-        undefined,
-        this.userStore.getNextId(),
-        firstName,
-        lastName,
-        email,
-        false,
-        Role.USER,
-        undefined
-      ));
+    const user = new User(
+      undefined,
+      firstName,
+      lastName,
+      email,
+      false,
+      Role.USER,
+      undefined
+    );
+    this.userService.add(user);
   }
 
   update(firstName: string, lastName: string, email: string, password: string) {

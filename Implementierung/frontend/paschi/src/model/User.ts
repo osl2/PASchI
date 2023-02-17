@@ -10,9 +10,9 @@ export class User extends DataObject {
   private _role: Role;
   private _token: string | undefined;
 
-  constructor(id: string | undefined, localId: number, firstName: string, lastName: string, email: string,
+  constructor(id: string | undefined, firstName: string, lastName: string, email: string,
               auth: boolean, role: Role, token: string | undefined) {
-    super(id, localId);
+    super(id, 0);
     this._firstName = firstName;
     this._lastName = lastName;
     this._email = email;
