@@ -9,12 +9,16 @@ import {useSessionStore} from "@/store/SessionStore";
 import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 import {RoomObject} from "@/model/userdata/rooms/RoomObject";
 import {Interaction} from "@/model/userdata/interactions/Interaction";
+import {SessionController} from "@/controller/SessionController";
+import {SeatArrangementController} from "@/controller/SeatArrangementController";
 
 // TODO: Backend Service einbinden
 export class CourseController {
 
   private static controller: CourseController = new CourseController();
   private userController = UserController.getUserController();
+  private sessionController = SessionController.getSessionController();
+  private arrangementController = SeatArrangementController.getSeatArrangementController();
   private courseStore = useCourseStore();
   private studentStore = useStudentStore();
   private sessionStore = useSessionStore();
@@ -51,8 +55,14 @@ export class CourseController {
       course.participants.forEach((student: Participant) => {
         student.removeCourse(id);
       });
+      course.sessions.forEach((session: Session) => {
+        this.sessionController.deleteSession(session.getId);
+      });
+      course.seatArrangements.forEach((arrangement: SeatArrangement) => {
+        this.arrangementController.deleteSeatArrangement(arrangement.getId);
+      });
+      this.courseStore.deleteCourse(id);
     }
-    this.courseStore.deleteCourse(id);
   }
 
   getCourse(id: string): Course | undefined {
