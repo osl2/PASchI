@@ -6,12 +6,14 @@ import {UserController} from "@/controller/UserController";
 import {useCourseStore} from "@/store/CourseStore";
 import {useSessionStore} from "@/store/SessionStore";
 import {CourseController} from "@/controller/CourseController";
+import {ParticipantService} from "@/service/ParticipantService";
 
 // TODO: Backend Service einbinden
 export class StudentController {
 
   private static controller: StudentController = new StudentController();
   private userController = UserController.getUserController();
+  private studentService = ParticipantService.getService();
   private studentStore = useStudentStore();
   private courseStore = useCourseStore();
   private sessionStore = useSessionStore();
@@ -24,13 +26,15 @@ export class StudentController {
   }
 
   createStudent(firstName: string, lastName: string): string {
-    return this.studentStore.addStudent(new Student(
+    const student = new Student(
       undefined,
       this.studentStore.getNextId(),
       this.userController.getUser(),
       firstName,
       lastName
-    ));
+    );
+    this.studentService.add(student);
+    return this.studentStore.addStudent(student);
   }
 
   updateStudent(id: string, firstName: string, lastName: string) {
@@ -38,6 +42,7 @@ export class StudentController {
     if (student !== undefined) {
       student.firstName = firstName;
       student.lastName = lastName;
+      this.studentService.update(student);
     }
   }
 
