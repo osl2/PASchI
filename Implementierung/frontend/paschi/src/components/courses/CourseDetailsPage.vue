@@ -163,6 +163,30 @@
         </v-list>
       </v-card>
     </v-dialog>
+    <v-dialog max-width="700" v-model="deleteSessionDialog">
+      <v-card variant="flat" class="pa-2 rounded-lg">
+        <v-card-title class="text-h5 text-center text-indigo-darken-4">
+          Sitzung unwiederruflich löschen?
+        </v-card-title>
+        <v-card-actions class="row justify-center">
+          <v-btn
+            height="50"
+            width="150"
+            variant="tonal"
+            @click="cancelDeleteSessionClick"
+          >Abbrechen</v-btn
+          >
+          <v-btn
+            height="50"
+            width="150"
+            variant="tonal"
+            @click="confirmDeleteSessionClick"
+            color="primary"
+          >Bestätigen</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-main>
 </template>
 
@@ -196,11 +220,13 @@ export default defineComponent({
 
     const studentListCollapsed: Ref<boolean> = ref<boolean>(false);
     const sessionListCollapsed: Ref<boolean> = ref<boolean>(false);
+    const deleteSessionBuffer: Ref<Session|undefined> = ref<Session|undefined>(undefined) as Ref<Session|undefined>
 
     const sessionStatisticDialog: Ref<boolean> = ref<boolean>(false);
     const interactionMapSelectionDialog: Ref<boolean> = ref<boolean>(false);
     const addStudentSelectionDialog: Ref<boolean> = ref<boolean>(false);
     const seatArrangementSelectionDialog: Ref<boolean> = ref<boolean>(false);
+    const deleteSessionDialog: Ref<boolean> = ref<boolean>(false);
 
     const sessions: Ref<Session[]> = ref<Session[]>(getSessions()) as Ref<
       Session[]
@@ -214,6 +240,7 @@ export default defineComponent({
     const seatArrangements: Ref<SeatArrangement[]> = ref<SeatArrangement[]>(
       getSeatArrangements()
     ) as Ref<SeatArrangement[]>;
+
 
     //Hilfsmethoden
     function getSessions(): Session[] {
@@ -252,7 +279,15 @@ export default defineComponent({
 
     //normale Methoden
     function deleteSessionClick(session: Session) {
-      courseController.deleteSession(props.courseId, session.getId);
+      deleteSessionBuffer.value = session
+      deleteSessionDialog.value = true
+    }
+    function cancelDeleteSessionClick() {
+      deleteSessionDialog.value = false
+    }
+    function confirmDeleteSessionClick() {
+      courseController.deleteSession(props.courseId, deleteSessionBuffer.value!.getId);
+      deleteSessionDialog.value = false
     }
     function toggleSessionListCollapsed() {
       sessionListCollapsed.value = !sessionListCollapsed.value;
@@ -348,6 +383,9 @@ export default defineComponent({
       toggleStudentListCollapsed,
       toggleSessionListCollapsed,
       deleteSessionClick,
+      cancelDeleteSessionClick,
+      confirmDeleteSessionClick,
+      deleteSessionDialog,
       sessionStatisticDialog,
       interactionMapSelectionDialog,
       addStudentSelectionDialog,
