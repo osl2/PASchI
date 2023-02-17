@@ -25,9 +25,9 @@ export class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
   }
 
   modelToDto(course: Course): CourseDto {
-    let sessionIds: string[] = [];
-    let participantIds: string[] = [];
-    let arrangementIds: string[] = [];
+    const sessionIds: string[] = [];
+    const participantIds: string[] = [];
+    const arrangementIds: string[] = [];
 
     course.sessions.forEach((session: Session) => sessionIds.push(session.getId));
     course.participants.forEach((participant: Participant) => participantIds.push(participant.getId));
