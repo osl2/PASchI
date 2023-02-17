@@ -29,10 +29,16 @@ export class SessionController {
     return this.controller;
   }
 
-  createSession(courseId: string, seatArrangementId: string, name: string): string | undefined {
+  createSession(courseId: string, seatArrangementId: string | undefined, name: string): string | undefined {
     let course = this.courseStore.getCourse(courseId);
-    let arrangement = this.arrangementStore.getSeatArrangement(seatArrangementId);
-    if (course == undefined || arrangement == undefined) {
+    let arrangement = undefined;
+    if (seatArrangementId != undefined) {
+      arrangement = this.arrangementStore.getSeatArrangement(seatArrangementId);
+      if (arrangement == undefined) {
+        return undefined;
+      }
+    }
+    if (course == undefined) {
       return undefined
     }
 
