@@ -8,75 +8,76 @@
   </navigation-bar>
   <side-menu></side-menu>
   <v-main>
-    <v-container fluid class="v-row justify-center">
-      <v-card min-width="640" rounded class="ma-3 v-col-auto">
-        <v-row>
-          <h2 class="ma-2">Sitzungsliste</h2>
-          <v-spacer />
-          <v-btn
-            min-width="228"
-            class="ml-15 ma-2"
-            variant="flat"
-            color="green"
-            rounded
-            prepend-icon="mdi mdi-plus"
-            @click="addSessionClick"
-          >Sitzung starten</v-btn
-          >
-          <v-icon
-            v-if="sessionListCollapsed"
-            icon="mdi mdi-arrow-up-drop-circle"
-            size="40"
-            @click="toggleSessionListCollapsed"
-            class="ma-2"
-            color="primary"
-          />
-          <v-icon
-            v-if="!sessionListCollapsed"
-            icon="mdi mdi-arrow-down-drop-circle"
-            size="40"
-            @click="toggleSessionListCollapsed"
-            class="ma-2"
-            color="primary"
-          />
-        </v-row>
-        <v-row class="v-card justify-center" v-if="!sessionListCollapsed">
-          <v-card class="v-col-12" max-height="1000">
-            <v-list max-height="500">
-              <v-row class="ma-2" v-for="session in sessions"
-                >{{ session.name }} {{ session.date }}
-                <v-spacer />
-                <v-btn
-                  variant="tonal"
-                  color="primary"
-                  @click="interactionMapClick(session)"
-                  >InteraktionsKarte</v-btn
-                >
-                <v-btn
-                  class="ml-2"
-                  variant="tonal"
-                  color="primary"
-                  @click="sessionStatisticClick(session)"
-                >
-                  <v-icon> fas fa-chart-line </v-icon>
-                </v-btn>
-                <v-btn
-                  class="ml-2"
-                  variant="tonal"
-                  color="red"
-                  @click="deleteSessionClick(session)"
-                >
-                  <v-icon>mdi mdi-minus</v-icon>
-                </v-btn>
-              </v-row>
-            </v-list>
-          </v-card>
-        </v-row>
-      </v-card>
-    </v-container>
-    <v-container fluid class="v-row justify-center">
-      <v-card min-width="640" rounded class="ma-3 v-col-auto">
-        <v-row>
+    <v-row no-gutters>
+      <v-row  justify="start" class="ma-2" no-gutters>
+        <v-card  max-width="800" min-width="570" rounded class="ma-1 v-col-11">
+          <v-row class="v-col-12">
+            <h2 class="ma-2">Sitzungsliste</h2>
+            <v-spacer />
+            <v-btn
+              min-width="228"
+              class="ml-15 ma-2"
+              variant="flat"
+              color="green"
+              rounded
+              prepend-icon="mdi mdi-plus"
+              @click="addSessionClick"
+              >Sitzung starten</v-btn
+            >
+            <v-icon
+              v-if="sessionListCollapsed"
+              icon="mdi mdi-arrow-up-drop-circle"
+              size="40"
+              @click="toggleSessionListCollapsed"
+              class="ma-2"
+              color="primary"
+            />
+            <v-icon
+              v-if="!sessionListCollapsed"
+              icon="mdi mdi-arrow-down-drop-circle"
+              size="40"
+              @click="toggleSessionListCollapsed"
+              class="ma-2"
+              color="primary"
+            />
+          </v-row>
+          <v-row class="v-card justify-center" v-if="!sessionListCollapsed">
+            <v-card class="v-col-12" max-height="1000">
+              <v-list max-height="500">
+                <v-row class="ma-2" v-for="session in sessions"
+                  >{{ session.name }} {{ session.date }}
+                  <v-spacer />
+                  <v-btn
+                    variant="tonal"
+                    color="primary"
+                    @click="interactionMapClick(session)"
+                    >InteraktionsKarte</v-btn
+                  >
+                  <v-btn
+                    class="ml-2"
+                    variant="tonal"
+                    color="primary"
+                    @click="sessionStatisticClick(session)"
+                  >
+                    <v-icon> fas fa-chart-line </v-icon>
+                  </v-btn>
+                  <v-btn
+                    class="ml-2"
+                    variant="tonal"
+                    color="red"
+                    @click="deleteSessionClick(session)"
+                  >
+                    <v-icon>mdi mdi-minus</v-icon>
+                  </v-btn>
+                </v-row>
+              </v-list>
+            </v-card>
+          </v-row>
+        </v-card>
+      </v-row>
+      <v-row  justify="start" class="ma-2" no-gutters>
+        <v-card  max-width="800" min-width="570" rounded class="ma-1 v-col-11">
+          <v-row class="v-col-12">
           <h2 class="ma-2">Schülerliste</h2>
           <v-spacer />
           <v-btn
@@ -136,10 +137,12 @@
                 </v-btn>
               </v-row>
             </v-list>
+
           </v-card>
         </v-row>
       </v-card>
-    </v-container>
+      </v-row>
+    </v-row>
     <v-dialog v-model="addStudentSelectionDialog">
       <v-card>
         <v-list>
