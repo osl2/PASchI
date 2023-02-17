@@ -9,8 +9,14 @@ const PARTICIPANT_BASE_URL: string = '';
 
 export class ParticipantService extends BaseService<Participant, ParticipantDto> {
 
-  constructor() {
+  private static participantService: ParticipantService = new ParticipantService();
+
+  private constructor() {
     super(ParticipantMapper.getMapper());
+  }
+
+  static getService(): ParticipantService {
+    return this.participantService;
   }
 
   add(participant: Participant) {
