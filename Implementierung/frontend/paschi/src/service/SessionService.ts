@@ -9,8 +9,14 @@ const SESSION_BASE_URL: string = '';
 
 export class SessionService extends BaseService<Session, SessionDto> {
 
-  constructor() {
+  private static sessionService: SessionService = new SessionService();
+
+  private constructor() {
     super(SessionMapper.getMapper());
+  }
+
+  static getService(): SessionService {
+    return this.sessionService;
   }
 
   add(session: Session) {
