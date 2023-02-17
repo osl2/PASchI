@@ -8,7 +8,6 @@ export class UserMapper implements IModelDtoMapper<User, UserDto> {
 
   private static mapper: UserMapper = new UserMapper();
   private roleMapper: RoleMapper = new RoleMapper();
-  private userStore = useUserStore();
 
   private constructor() {
   }
