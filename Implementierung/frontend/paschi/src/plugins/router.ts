@@ -17,6 +17,7 @@ import ShowInteractionMapPage from "@/components/statistics/ShowInteractionMapPa
 import SeatArrangementPage from "@/components/room/SeatArrangementPage.vue";
 import ViewRoomsPage from "@/components/room/ViewRoomsPage.vue";
 import SessionPage from "@/components/session/SessionPage.vue";
+import SessionPageDesktop from "@/components/session/SessionPageDesktop.vue";
 
 const routes = [
   { path: "/", redirect: "/login" },
@@ -102,6 +103,12 @@ const routes = [
     path: "/session/:sessionId",
     name: "SessionPage",
     component: SessionPage,
+    props: true,
+  },
+  {
+    path: "/session-desktop/:sessionId",
+    name: "SessionPageDesktop",
+    component: SessionPageDesktop,
     props: true,
   },
 ];

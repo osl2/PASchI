@@ -8,6 +8,7 @@ import {useCourseStore} from "@/store/CourseStore";
 import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 import {useCategoryStore} from "@/store/CategoryStore";
 import {useStudentStore} from "@/store/StudentStore";
+import {Teacher} from "@/model/userdata/interactions/Teacher";
 
 // TODO: Backend Service einbinden
 // TODO: Standard Sitzordnung
@@ -178,5 +179,9 @@ export class SessionController {
     }
 
     return session.seatArrangement;
+  }
+
+  getTeacher(): Teacher {
+    return Teacher.getTeacher();
   }
 }

@@ -4,7 +4,7 @@
     <template v-slot:chair="chair">
       <SeatLabel :participant="getParticipant(chair.chair)">
         <v-menu activator="parent" transition="slide-x-transition">
-          <v-card min-width="450" class="ma-2" variant="flat" color="primary">
+          <v-card min-width="450" class="pa-2" variant="flat" color="primary">
             <v-list variant="plain" bg-color="transparent">
               <v-list-item
                 v-if="getParticipant(chair.chair)"
@@ -27,7 +27,7 @@
               </v-list-item>
             </v-list>
             <v-divider />
-            <v-list variant="flat">
+            <v-list variant="tonal" :rounded="true" >
               <v-list-subheader> Schüler auswählen </v-list-subheader>
               <v-list-item
                 v-for="participant in unseatedParticipants"
@@ -81,10 +81,6 @@ export default defineComponent({
     function emptySeat(chair: Chair) {
       seatArrangement.value?.removeSeat(chair);
     }
-
-    const participants = computed(() => {
-      return seatArrangement.value?.course.participants;
-    });
 
     const unseatedParticipants = computed(() => {
       return seatArrangement.value?.getStudentsNotAssigned();
