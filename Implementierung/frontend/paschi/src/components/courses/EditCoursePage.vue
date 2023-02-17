@@ -65,6 +65,35 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog max-width="700" v-model="newSeatArrangementNameDialog" persistent>
+      <v-card variant="flat" class="pa-2 rounded-lg">
+        <v-card-title class="text-h5 text-center text-indigo-darken-4">
+          Sitzordnung benennen
+        </v-card-title>
+        <v-text-field
+          v-model="newSetArrangementName"
+          label="Name der Sitzordnung"
+          type="input"
+        ></v-text-field>
+        <v-card-actions class="row justify-center">
+          <v-btn
+            height="50"
+            width="150"
+            variant="tonal"
+            @click="cancelAddSeatArrangement"
+          >Abbrechen</v-btn
+          >
+          <v-btn
+            height="50"
+            width="150"
+            variant="tonal"
+            @click="confirmAddSeatArrangement"
+            color="primary"
+          >Bestätigen</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-main>
 </template>
 
@@ -110,7 +139,9 @@ export default defineComponent({
     const seatArrangementDialog: Ref<boolean> = ref<boolean>(false);
     const roomSelectionDialog: Ref<boolean> = ref<boolean>(false);
     const deleteCourseDialog: Ref<boolean> = ref<boolean>(false);
-
+    const newSeatArrangementNameDialog: Ref<boolean> = ref<boolean>(false);
+    const newSetArrangementName: Ref<string> = ref<string>("");
+    const newSeatArrangementRoom: Ref<Room|undefined> = ref<Room|undefined>(undefined) as Ref<Room|undefined>
     //Hilfsmethoden
     function getCourseName(): string {
       if (course.value instanceof Course) {
@@ -165,21 +196,27 @@ export default defineComponent({
     function editSeatArrangementClick() {
       seatArrangementDialog.value = true;
     }
-
-    function addSeatArrangement(room: Room) {
+    function confirmAddSeatArrangement() {
       let seatArrangementId: string | undefined =
         seatArrangementController.createSeatArrangement(
-          "unbenannt",
-          room.getId,
+          newSetArrangementName.value,
+          newSeatArrangementRoom.value!.getId,
           props.courseId
         );
-      //TODO Name des SeatArrangements hier festlegen?
       if (typeof seatArrangementId == "string") {
         router.push({
           name: "SeatArrangementPage",
           params: { seatArrangementId: seatArrangementId },
         });
       }
+    }
+    function cancelAddSeatArrangement() {
+      newSeatArrangementRoom.value = undefined
+    }
+    function addSeatArrangement(room: Room) {
+      newSeatArrangementRoom.value = room
+      newSetArrangementName.value = ""
+      newSeatArrangementNameDialog.value = true
     }
 
     function editSeatArrangement(seatArrangement: SeatArrangement) {
@@ -198,6 +235,8 @@ export default defineComponent({
       editSeatArrangementClick,
       addSeatArrangement,
       editSeatArrangement,
+      confirmAddSeatArrangement,
+      cancelAddSeatArrangement,
       deleteCourseDialog,
       seatArrangementDialog,
       roomSelectionDialog,
@@ -205,6 +244,8 @@ export default defineComponent({
       rooms,
       courseName,
       courseSubject,
+      newSeatArrangementNameDialog,
+      newSetArrangementName
     };
   },
 });
