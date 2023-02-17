@@ -229,9 +229,9 @@ export default defineComponent({
       let searchInputUpperCase = searchInput.value.toUpperCase();
       return participants.filter((participant) => {
         return (
-          (participant.firstName + " " + participant.lastName).startsWith(
+          (participant.firstName + " " + participant.lastName).toUpperCase().startsWith(
             searchInputUpperCase
-          ) || participant.lastName.startsWith(searchInputUpperCase)
+          ) || participant.lastName.toUpperCase().startsWith(searchInputUpperCase)
         );
       });
     }
