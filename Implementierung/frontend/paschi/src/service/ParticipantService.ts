@@ -5,8 +5,7 @@ import {ParticipantMapper} from "@/dto/mapper/interactions/ParticipantMapper";
 import axios, {AxiosResponse} from "axios";
 import {useUserStore} from "@/store/UserStore";
 
-// TODO: URL
-const PARTICIPANT_BASE_URL: string = '';
+const PARTICIPANT_BASE_URL: string = 'http://193.196.37.141/api/participant';
 
 export class ParticipantService extends BaseService<Participant, ParticipantDto> {
 

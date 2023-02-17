@@ -5,7 +5,7 @@ import axios, {AxiosResponse} from "axios";
 import {UserMapper} from "@/dto/mapper/UserMapper";
 import {useUserStore} from "@/store/UserStore";
 
-const USER_BASE_URL: string = '';
+const USER_BASE_URL: string = 'http://193.196.37.141/api/user';
 
 export class UserService extends BaseService<User, UserDto> {
 
