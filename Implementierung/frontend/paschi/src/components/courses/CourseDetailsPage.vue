@@ -8,9 +8,8 @@
   </navigation-bar>
   <side-menu></side-menu>
   <v-main>
-    <v-row no-gutters>
-      <v-row  justify="start" class="ma-2" no-gutters>
-        <v-card  max-width="800" min-width="570" rounded class="ma-1 v-col-11">
+    <v-container fluid class="v-row align-start justify-space-around">
+        <v-card  max-width="800" min-width="570" rounded class="ma-1 v-col-5">
           <v-row class="v-col-12">
             <h2 class="ma-2">Sitzungsliste</h2>
             <v-spacer />
@@ -74,9 +73,7 @@
             </v-card>
           </v-row>
         </v-card>
-      </v-row>
-      <v-row  justify="start" class="ma-2" no-gutters>
-        <v-card  max-width="800" min-width="570" rounded class="ma-1 v-col-11">
+        <v-card  max-width="800" min-width="570" rounded class="ma-1 v-col-5">
           <v-row class="v-col-12">
           <h2 class="ma-2">Schülerliste</h2>
           <v-spacer />
@@ -141,9 +138,8 @@
           </v-card>
         </v-row>
       </v-card>
-      </v-row>
-    </v-row>
-    <v-dialog v-model="addStudentSelectionDialog">
+    </v-container>
+    <v-dialog max-width="700" v-model="addStudentSelectionDialog">
       <v-card>
         <v-list>
           <v-list-item
@@ -155,7 +151,7 @@
         </v-list>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="seatArrangementSelectionDialog">
+    <v-dialog max-width="700" v-model="seatArrangementSelectionDialog">
       <v-card>
         <v-list>
           <v-list-item
@@ -198,8 +194,8 @@ export default defineComponent({
     const sessionController: SessionController =
       SessionController.getSessionController();
 
-    const studentListCollapsed: Ref<boolean> = ref<boolean>(true);
-    const sessionListCollapsed: Ref<boolean> = ref<boolean>(true);
+    const studentListCollapsed: Ref<boolean> = ref<boolean>(false);
+    const sessionListCollapsed: Ref<boolean> = ref<boolean>(false);
 
     const sessionStatisticDialog: Ref<boolean> = ref<boolean>(false);
     const interactionMapSelectionDialog: Ref<boolean> = ref<boolean>(false);

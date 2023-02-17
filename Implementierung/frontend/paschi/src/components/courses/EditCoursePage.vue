@@ -19,7 +19,7 @@
       type="input"
     ></v-text-field>
     <v-btn @click="editSeatArrangementClick()">Sitzordnungen bearbeiten</v-btn>
-    <v-dialog v-model="seatArrangementDialog">
+    <v-dialog max-width="700" v-model="seatArrangementDialog">
       <v-card>
         <v-list>
           <v-list-item
@@ -32,7 +32,7 @@
       </v-card>
     </v-dialog>
     <v-btn @click="addSeatArrangementClick">Sitzordung hinzufügen</v-btn>
-    <v-dialog v-model="roomSelectionDialog">
+    <v-dialog max-width="700" v-model="roomSelectionDialog">
       <v-card>
         <v-list>
           <v-list-item v-for="room in rooms" @click="addSeatArrangement(room)">
