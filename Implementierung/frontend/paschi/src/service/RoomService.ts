@@ -9,8 +9,14 @@ const ROOM_BASE_URL: string = '';
 
 export class RoomService extends BaseService<Room, RoomDto> {
 
-  constructor() {
+  private static roomService: RoomService = new RoomService();
+
+  private constructor() {
     super(RoomMapper.getMapper());
+  }
+
+  static getService(): RoomService {
+    return this.roomService;
   }
 
   add(room: Room) {
