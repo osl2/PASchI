@@ -2,14 +2,15 @@ import {BaseService} from "@/service/BaseService";
 import {Course} from "@/model/userdata/courses/Course";
 import {CourseDto} from "@/dto/userdata/courses/CourseDto";
 import {CourseMapper} from "@/dto/mapper/courses/CourseMapper";
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
+import {useUserStore} from "@/store/UserStore";
 
-// TODO: URL
-const COURSE_BASE_URL: string = '';
+const COURSE_BASE_URL: string = 'http://193.196.37.141/api/course';
 
 export class CourseService extends BaseService<Course, CourseDto> {
 
   private static courseService: CourseService = new CourseService();
+  private userStore = useUserStore();
 
   private constructor() {
     super(CourseMapper.getMapper());
@@ -21,22 +22,34 @@ export class CourseService extends BaseService<Course, CourseDto> {
 
   add(course: Course) {
     const courseDto = this.getMapper().modelToDto(course);
-    axios.post(COURSE_BASE_URL + '', courseDto).then((response) => {
-      // irgendwas
+    axios.post(COURSE_BASE_URL, courseDto).catch((error) => {
+      console.log(error);
     });
   }
 
   update(course: Course) {
+    const token = this.userStore.getUser()?.token;
     const courseDto = this.getMapper().modelToDto(course);
-    axios.put(COURSE_BASE_URL + '', courseDto).then((response) => {
-      // irgendwas
+    axios.put(COURSE_BASE_URL, courseDto, {
+      headers: {
+        'Authorization': token
+      }
+    }).catch((error) => {
+      console.log(error);
     });
   }
 
   async getById(id: string): Promise<Course | undefined> {
+    const token = this.userStore.getUser()?.token;
     let course;
-    await axios.get(COURSE_BASE_URL + '').then((response) => {
+    await axios.get(COURSE_BASE_URL + `/${id}`, {
+      headers: {
+        'Authorization': token
+      }
+    }).then((response: AxiosResponse<CourseDto>) => {
       course = this.getMapper().dtoToModel(response.data);
+    }).catch((error) => {
+      console.log(error);
     });
 
     if (course != undefined) {
@@ -47,19 +60,34 @@ export class CourseService extends BaseService<Course, CourseDto> {
   }
 
   async getAll(): Promise<Course[]> {
+    const token = this.userStore.getUser()?.token;
     let courses: Course[] = [];
-    axios.get(COURSE_BASE_URL + '').then((response) => {
-      response.data.forEach((course: any) => {
-        courses.push(this.getMapper().dtoToModel(course));
+    axios.get(COURSE_BASE_URL, {
+      headers: {
+        'Authorization': token
+      }
+    }).then((response: AxiosResponse<CourseDto[]>) => {
+      response.data.forEach((courseDto: CourseDto) => {
+        courses.push(this.getMapper().dtoToModel(courseDto));
       });
+    }).catch((error) => {
+      console.log(error);
     });
 
     return courses;
   }
 
   delete(id: string) {
-    axios.delete(COURSE_BASE_URL + '').then((response) => {
-      // irgendwas
+    const token = this.userStore.getUser()?.token;
+    axios.delete(COURSE_BASE_URL, {
+      params: {
+        id
+      },
+      headers: {
+        'Authorization': token
+      }
+    }).catch((error) => {
+      console.log(error);
     });
   }
 }
