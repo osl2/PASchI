@@ -66,6 +66,7 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
         participantDto.firstName,
         participantDto.lastName
       )
+      this.studentStore.addStudent(participant);
     } else if (participantDto.updatedAt <= participant.updatedAt && participantDto.createdAt >= participant.createdAt) {
       return participant;
     } else {
