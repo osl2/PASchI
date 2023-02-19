@@ -45,6 +45,7 @@ export class AdminController {
       response.forEach((user: User) => {
         if (user.getId === userId) {
           user.auth = true;
+          this.userService.adminUpdate(user);
           return;
         }
       });
