@@ -20,7 +20,7 @@ export class PositionMapper implements IModelDtoMapper<Position, PositionDto> {
   modelToDto(position: Position): PositionDto {
     return new PositionDto(
       position.getId,
-      this.userController.getUser().getId,
+      position.user.getId,
       position.createdAt,
       position.updatedAt,
       position.xCoordinate,
