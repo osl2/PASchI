@@ -4,6 +4,7 @@ import edu.kit.informatik.model.userdata.courses.Course;
 import edu.kit.informatik.model.userdata.courses.SeatArrangement;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import edu.kit.informatik.model.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +30,13 @@ public interface SeatArrangementRepository extends JpaRepository<SeatArrangement
      * @param course {@link Course}
      * @return {@link Optional} von {@link SeatArrangement}
      */
-    Optional<List<SeatArrangement>> findSeatArrangementsByCourse(Course course);
+    List<SeatArrangement> findSeatArrangementsByCourse(Course course);
+
+    /**
+     * Rückgabe von Optionals mit {@link SeatArrangement}
+     * @param userId Id eines {@link User}
+     * @return {@link Optional} von {@link SeatArrangement}
+     */
+    List<SeatArrangement> findSeatArrangementsByUserId(String userId);
 
 }
