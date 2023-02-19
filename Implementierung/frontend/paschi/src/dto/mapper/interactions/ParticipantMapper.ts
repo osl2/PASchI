@@ -39,7 +39,7 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
 
     return new ParticipantDto(
       participant.getId,
-      this.userController.getUser().getId,
+      participant.user.getId,
       participant.createdAt,
       participant.updatedAt,
       participant.firstName,
