@@ -77,7 +77,7 @@ public abstract class BaseService<Entity, ParameterDto, ReturnDto> {
         JwtAuthenticationToken jAT = (JwtAuthenticationToken) authentication;
 
         if (!jAT.getTokenAttributes().get("userId").equals(userId)) {
-            throw  new NotEntityOfUserException(userId);
+            throw new NotEntityOfUserException(userId);
         }
     }
 
