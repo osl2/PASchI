@@ -2,6 +2,8 @@ import {IModelDtoMapper} from "@/dto/mapper/IModelDtoMapper";
 import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {SeatArrangementDto} from "@/dto/userdata/courses/SeatArrangementDto";
 import {UserController} from "@/controller/UserController";
+import {Participant} from "@/model/userdata/interactions/Participant";
+import {RoomObject} from "@/model/userdata/rooms/RoomObject";
 
 export class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, SeatArrangementDto> {
 
@@ -15,12 +17,29 @@ export class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, S
     return SeatArrangementMapper.mapper;
   }
 
+  modelToDto(arrangement: SeatArrangement): SeatArrangementDto {
+    const seatMap: Map<string, string> = new Map<string, string>();
+    const roomId = arrangement.room.getId;
+    const courseId = arrangement.course.getId;
+
+    arrangement.seatMap.forEach((student: Participant, chair: RoomObject) => {
+      seatMap.set(chair.getId, student.getId);
+    });
+
+    return new SeatArrangementDto(
+      arrangement.getId,
+      this.userController.getUser().getId,
+      arrangement.createdAt,
+      arrangement.updatedAt,
+      arrangement.name,
+      seatMap,
+      roomId,
+      courseId
+    );
+  }
+
+
   dtoToModel(arrangementDto: SeatArrangementDto): SeatArrangement {
     return undefined;
   }
-
-  modelToDto(arrangement: SeatArrangement): SeatArrangementDto {
-    return undefined;
-  }
-
 }
