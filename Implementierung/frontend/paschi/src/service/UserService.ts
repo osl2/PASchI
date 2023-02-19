@@ -10,7 +10,6 @@ const USER_BASE_URL: string = 'http://193.196.37.141/api/user';
 export class UserService extends BaseService<User, UserDto> {
 
   private static userService: UserService = new UserService();
-  private userStore = useUserStore();
 
   private constructor() {
     super(UserMapper.getMapper());
@@ -39,7 +38,7 @@ export class UserService extends BaseService<User, UserDto> {
   }
 
   async getById(id: string): Promise<User | undefined> {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     let user;
     await axios.get(USER_BASE_URL + `/${id}`, {
       headers: {
@@ -59,7 +58,7 @@ export class UserService extends BaseService<User, UserDto> {
   }
 
   async getAll(): Promise<User[]> {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     let users: User[] = [];
     await axios.get(USER_BASE_URL + '/admin', {
       headers: {
@@ -77,7 +76,7 @@ export class UserService extends BaseService<User, UserDto> {
   }
 
   delete(id: string) {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     axios.delete(USER_BASE_URL, {
       params: {
         id
@@ -111,7 +110,7 @@ export class UserService extends BaseService<User, UserDto> {
   }
 
   async getToken() {
-    const user = this.userStore.getUser();
+    const user = useUserStore().getUser();
     if (user == undefined) {
       return;
     }
@@ -128,7 +127,7 @@ export class UserService extends BaseService<User, UserDto> {
   }
 
   adminUpdate(user: User) {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     const userDto = this.getMapper().modelToDto(user);
     axios.put(USER_BASE_URL + '/admin', userDto, {
       headers: {

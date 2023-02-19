@@ -10,7 +10,6 @@ const COURSE_BASE_URL: string = 'http://193.196.37.141/api/course';
 export class CourseService extends BaseService<Course, CourseDto> {
 
   private static courseService: CourseService = new CourseService();
-  private userStore = useUserStore();
 
   private constructor() {
     super(CourseMapper.getMapper());
@@ -21,7 +20,7 @@ export class CourseService extends BaseService<Course, CourseDto> {
   }
 
   add(course: Course) {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     const courseDto = this.getMapper().modelToDto(course);
     axios.post(COURSE_BASE_URL, courseDto, {
       headers: {
@@ -33,7 +32,7 @@ export class CourseService extends BaseService<Course, CourseDto> {
   }
 
   update(course: Course) {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     const courseDto = this.getMapper().modelToDto(course);
     axios.put(COURSE_BASE_URL, courseDto, {
       headers: {
@@ -45,7 +44,7 @@ export class CourseService extends BaseService<Course, CourseDto> {
   }
 
   async getById(id: string): Promise<Course | undefined> {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     let course;
     await axios.get(COURSE_BASE_URL + `/${id}`, {
       headers: {
@@ -65,7 +64,7 @@ export class CourseService extends BaseService<Course, CourseDto> {
   }
 
   async getAll(): Promise<Course[]> {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     let courses: Course[] = [];
     await axios.get(COURSE_BASE_URL, {
       headers: {
@@ -83,7 +82,7 @@ export class CourseService extends BaseService<Course, CourseDto> {
   }
 
   delete(id: string) {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     axios.delete(COURSE_BASE_URL, {
       params: {
         id

@@ -10,7 +10,6 @@ const CATEGORY_BASE_URL: string = 'http://193.196.37.141/api/category';
 export class CategoryService extends BaseService<Category, CategoryDto> {
 
   private static categoryService: CategoryService = new CategoryService();
-  private userStore = useUserStore();
 
   private constructor() {
     super(CategoryMapper.getMapper());
@@ -21,7 +20,7 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
   }
 
   add(category: Category) {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     const categoryDto = this.getMapper().modelToDto(category);
     axios.post(CATEGORY_BASE_URL, categoryDto, {
       headers: {
@@ -33,7 +32,7 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
   }
 
   update(category: Category) {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     const categoryDto = this.getMapper().modelToDto(category);
     axios.put(CATEGORY_BASE_URL, categoryDto, {
       headers: {
@@ -45,7 +44,7 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
   }
 
   async getById(id: string): Promise<Category | undefined> {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     let category;
     await axios.get(CATEGORY_BASE_URL + `/${id}`, {
       headers: {
@@ -65,7 +64,7 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
   }
 
   async getAll(): Promise<Category[]> {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     let categories: Category[] = [];
     await axios.get(CATEGORY_BASE_URL, {
       headers: {
@@ -83,7 +82,7 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
   }
 
   delete(id: string) {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     axios.delete(CATEGORY_BASE_URL, {
       params: {
         id

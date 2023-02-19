@@ -16,12 +16,6 @@ export class SessionController {
 
   private static controller: SessionController = new SessionController();
   private userController = UserController.getUserController();
-  private sessionStore = useSessionStore();
-  private courseStore = useCourseStore();
-  private arrangementStore = useSeatArrangementStore();
-  private categoryStore = useCategoryStore();
-  private studentStore = useStudentStore();
-  private interactionStore = useInteractionStore();
 
   private constructor() {
   }
@@ -31,10 +25,10 @@ export class SessionController {
   }
 
   createSession(courseId: string, seatArrangementId: string | undefined, name: string): string | undefined {
-    let course = this.courseStore.getCourse(courseId);
+    let course = useCourseStore().getCourse(courseId);
     let arrangement = undefined;
     if (seatArrangementId != undefined) {
-      arrangement = this.arrangementStore.getSeatArrangement(seatArrangementId);
+      arrangement = useSeatArrangementStore().getSeatArrangement(seatArrangementId);
       if (arrangement == undefined) {
         return undefined;
       }
@@ -47,45 +41,45 @@ export class SessionController {
     let date = currentDate.getDay() + '.' + currentDate.getMonth() + '.' + currentDate.getFullYear();
     let session = new Session(
       undefined,
-      this.sessionStore.getNextId(),
+      useSessionStore().getNextId(),
       this.userController.getUser(),
       name,
       date,
       course,
       arrangement
     );
-    this.sessionStore.addSession(session);
+    useSessionStore().addSession(session);
     course.addSession(session);
 
     return session.getId;
   }
 
   updateSession(id: string, name: string) {
-    let session = this.sessionStore.getSession(id);
+    let session = useSessionStore().getSession(id);
     if (session !== undefined) {
       session.name = name;
     }
   }
 
   deleteSession(id: string) {
-    let session = this.sessionStore.getSession(id);
+    let session = useSessionStore().getSession(id);
     if (session !== undefined) {
       session.course.removeSession(id);
       session.interactions.forEach((interaction: Interaction) => {
         interaction.fromParticipant.removeInteraction(interaction.getId);
         interaction.toParticipant.removeInteraction(interaction.getId);
-        this.interactionStore.deleteInteraction(interaction.getId);
+        useInteractionStore().deleteInteraction(interaction.getId);
       });
-      this.sessionStore.deleteSession(id);
+      useSessionStore().deleteSession(id);
     }
   }
 
   getAllSessions(): Session[] {
-    return this.sessionStore.getAllSessions();
+    return useSessionStore().getAllSessions();
   }
 
   getSession(id: string): Session | undefined {
-    let session = this.sessionStore.getSession(id);
+    let session = useSessionStore().getSession(id);
     if (session == undefined) {
       return undefined
     }
@@ -94,7 +88,7 @@ export class SessionController {
   }
 
   getCourseOfSession(sessionId: string): Course | undefined {
-    let session = this.sessionStore.getSession(sessionId);
+    let session = useSessionStore().getSession(sessionId);
     if (session == undefined) {
       return undefined;
     }
@@ -103,7 +97,7 @@ export class SessionController {
   }
 
   getInteractionsOfSession(sessionId: string): Interaction[] | undefined {
-    let session = this.sessionStore.getSession(sessionId);
+    let session = useSessionStore().getSession(sessionId);
     if (session == undefined) {
       return undefined;
     }
@@ -113,10 +107,10 @@ export class SessionController {
 
   createInteraction(sessionId: string, fromParticipantId: string, toParticipantId: string,
                     categoryId: string): string | undefined {
-    let session = this.sessionStore.getSession(sessionId);
-    let category = this.categoryStore.getCategory(categoryId);
-    let fromParticipant = this.studentStore.getStudent(fromParticipantId);
-    let toParticipant = this.studentStore.getStudent(toParticipantId);
+    let session = useSessionStore().getSession(sessionId);
+    let category = useCategoryStore().getCategory(categoryId);
+    let fromParticipant = useStudentStore().getStudent(fromParticipantId);
+    let toParticipant = useStudentStore().getStudent(toParticipantId);
     if (session == undefined || category == undefined || fromParticipant == undefined || toParticipant == undefined) {
       return undefined;
     }
@@ -124,7 +118,7 @@ export class SessionController {
     let date = new Date();
     let interaction = new Interaction(
       undefined,
-      this.interactionStore.getNextId(),
+      useInteractionStore().getNextId(),
       this.userController.getUser(),
       date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds(),
       session,
@@ -132,7 +126,7 @@ export class SessionController {
       toParticipant,
       category
     );
-    this.interactionStore.addInteraction(interaction);
+    useInteractionStore().addInteraction(interaction);
     session.addInteraction(interaction);
     fromParticipant.addInteraction(interaction);
     toParticipant.addInteraction(interaction);
@@ -140,27 +134,27 @@ export class SessionController {
   }
 
   // deleteInteraction(sessionId: string, interactionId: string) {
-  //   let session = this.sessionStore.getSession(sessionId);
+  //   let session = useSessionStore().getSession(sessionId);
   //   if (session !== undefined) {
   //     session.removeInteraction(interactionId);
-  //     this.interactionStore.deleteInteraction(interactionId);
+  //     useInteractionStore().deleteInteraction(interactionId);
   //   }
   // }
 
   undoInteraction(sessionId: string) {
-    let session = this.sessionStore.getSession(sessionId);
+    let session = useSessionStore().getSession(sessionId);
     if (session !== undefined) {
       const interaction = session.undoInteraction();
       if (interaction !== undefined) {
         interaction.fromParticipant.removeInteraction(interaction.getId);
         interaction.toParticipant.removeInteraction(interaction.getId);
-        this.interactionStore.deleteInteraction(interaction.getId);
+        useInteractionStore().deleteInteraction(interaction.getId);
       }
     }
   }
 
   redoInteraction(sessionId: string): string | undefined {
-    let session = this.sessionStore.getSession(sessionId);
+    let session = useSessionStore().getSession(sessionId);
     if (session == undefined) {
       return undefined;
     }
@@ -168,14 +162,14 @@ export class SessionController {
     if (interaction == undefined) {
       return undefined;
     }
-    this.interactionStore.addInteraction(interaction);
+    useInteractionStore().addInteraction(interaction);
     interaction.fromParticipant.addInteraction(interaction);
     interaction.toParticipant.addInteraction(interaction);
     return interaction.getId;
   }
 
   hasRedo(sessionId: string): boolean | undefined {
-    let session = this.sessionStore.getSession(sessionId);
+    let session = useSessionStore().getSession(sessionId);
     if (session == undefined) {
       return undefined;
     }
@@ -183,7 +177,7 @@ export class SessionController {
   }
 
   hasUndo(sessionId: string): boolean | undefined {
-    let session = this.sessionStore.getSession(sessionId);
+    let session = useSessionStore().getSession(sessionId);
     if (session == undefined) {
       return undefined;
     }
@@ -191,15 +185,15 @@ export class SessionController {
   }
 
   setSeatArrangementOfSession(sessionId: string, arrangementId: string) {
-    let session = this.sessionStore.getSession(sessionId);
-    let arrangement = this.arrangementStore.getSeatArrangement(arrangementId);
+    let session = useSessionStore().getSession(sessionId);
+    let arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
     if (session !== undefined && arrangement !== undefined) {
       session.seatArrangement = arrangement;
     }
   }
 
   getSeatArrangementOfSession(sessionId: string) {
-    let session = this.sessionStore.getSession(sessionId);
+    let session = useSessionStore().getSession(sessionId);
     if (session == undefined) {
       return undefined;
     }
@@ -212,8 +206,8 @@ export class SessionController {
   }
 
   getInteractionsOfStudent(sessionId: string, studentId: string): Interaction[] | undefined {
-    const student = this.studentStore.getStudent(studentId);
-    const session = this.sessionStore.getSession(sessionId);
+    const student = useStudentStore().getStudent(studentId);
+    const session = useSessionStore().getSession(sessionId);
     if (student == undefined || session == undefined) {
       return undefined;
     }

@@ -13,14 +13,13 @@ export class CategoryController {
 
   private static controller: CategoryController = new CategoryController();
   private userController = UserController.getUserController();
-  private categoryStore = useCategoryStore();
 
   private constructor() {
-    if (this.categoryStore.getAllCategories().length == 0) {
-      this.createCategory(DEFAULT_CATEGORIES[0]);
-      this.createRatedCategory(DEFAULT_CATEGORIES[1]);
-      this.createRatedCategory(DEFAULT_CATEGORIES[2]);
-    }
+    // if (useCategoryStore().getAllCategories().length == 0) {
+    //   this.createCategory(DEFAULT_CATEGORIES[0]);
+    //   this.createRatedCategory(DEFAULT_CATEGORIES[1]);
+    //   this.createRatedCategory(DEFAULT_CATEGORIES[2]);
+    // }
   }
 
   static getCategoryController(): CategoryController {
@@ -28,26 +27,26 @@ export class CategoryController {
   }
 
   createCategory(name: string): string {
-    if (this.categoryStore.hasName(name)) {
+    if (useCategoryStore().hasName(name)) {
       return NAME_ERROR;
     }
-    let category = new Category(undefined, this.categoryStore.getNextId(), this.userController.getUser(), name);
-    this.categoryStore.addCategory(category);
+    let category = new Category(undefined, useCategoryStore().getNextId(), this.userController.getUser(), name);
+    useCategoryStore().addCategory(category);
 
     return category.getId;
   }
 
   createRatedCategory(name: string): string {
-    if (this.categoryStore.hasName(name)) {
+    if (useCategoryStore().hasName(name)) {
       return NAME_ERROR;
     }
     let categoryId = "";
     for (let i = 0; i < 5; i++) {
-      let category = new RatedCategory(undefined, this.categoryStore.getNextId(), this.userController.getUser(),
+      let category = new RatedCategory(undefined, useCategoryStore().getNextId(), this.userController.getUser(),
         name, i);
-      this.categoryStore.addRatedCategory(category)
+      useCategoryStore().addRatedCategory(category)
       if (i == 0) {
-        this.categoryStore.addCategory(category);
+        useCategoryStore().addCategory(category);
         categoryId = category.getId;
       }
     }
@@ -56,22 +55,22 @@ export class CategoryController {
   }
 
   deleteCategory(id: string) {
-    const category = this.categoryStore.getCategory(id);
+    const category = useCategoryStore().getCategory(id);
     if (category !== undefined) {
-      this.categoryStore.deleteCategory(category.name);
+      useCategoryStore().deleteCategory(category.name);
     }
   }
 
   updateCategory(id: string, name: string): string {
-    if (this.categoryStore.hasName(name)) {
+    if (useCategoryStore().hasName(name)) {
       return NAME_ERROR;
     }
-    let category = this.categoryStore.getCategory(id);
+    let category = useCategoryStore().getCategory(id);
     if (category !== undefined) {
       if (DEFAULT_CATEGORIES.includes(category.name)) {
         return DEFAULT_ERROR;
       }
-      let categories = this.categoryStore.getByName(category.name);
+      let categories = useCategoryStore().getByName(category.name);
       categories.forEach((category: Category) => {
         category.name = name;
       });
@@ -81,7 +80,7 @@ export class CategoryController {
   }
 
   getCategory(id: string): Category | undefined {
-    let category = this.categoryStore.getCategory(id);
+    let category = useCategoryStore().getCategory(id);
     if (category == undefined) {
       return undefined;
     }
@@ -90,7 +89,7 @@ export class CategoryController {
   }
 
   getCategoryWithQuality(name: string, quality: Quality): RatedCategory | undefined {
-    const categories = this.categoryStore.getRatedCategories(name);
+    const categories = useCategoryStore().getRatedCategories(name);
     if (categories.length == 0) {
       return undefined;
     }
@@ -108,10 +107,10 @@ export class CategoryController {
   }
 
   getCategories(): Category[] {
-    return this.categoryStore.getAllCategories();
+    return useCategoryStore().getAllCategories();
   }
 
   getRatedCategoriesByName(name: string): RatedCategory[] {
-    return this.categoryStore.getRatedCategories(name);
+    return useCategoryStore().getRatedCategories(name);
   }
 }

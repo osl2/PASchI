@@ -6,7 +6,6 @@ import {UserService} from "@/service/UserService";
 export class UserController {
 
   private static controller: UserController = new UserController();
-  private userStore = useUserStore();
   private userService = UserService.getService();
 
   private constructor() {
@@ -26,7 +25,7 @@ export class UserController {
       return undefined;
     }
 
-    this.userStore.setUser(user);
+    useUserStore().setUser(user);
     return user.getId;
   }
 
@@ -58,13 +57,13 @@ export class UserController {
   }
 
   getUser(): User {
-    return this.userStore.getUser()!;
+    return useUserStore().getUser()!;
   }
 
   delete() {
-    const user = this.userStore.getUser();
+    const user = useUserStore().getUser();
     if (user !== undefined) {
-      this.userStore.deleteUser();
+      useUserStore().deleteUser();
       this.userService.delete(user.getId);
     }
   }

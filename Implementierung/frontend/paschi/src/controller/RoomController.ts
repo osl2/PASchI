@@ -16,10 +16,6 @@ export class RoomController {
   private static controller: RoomController = new RoomController();
   private userController = UserController.getUserController();
   private arrangementController = SeatArrangementController.getSeatArrangementController();
-  private roomStore = useRoomStore();
-  private roomObjectStore = useRoomObjectStore();
-  private arrangementStore = useSeatArrangementStore();
-  private positionStore = usePositionStore();
 
   private constructor() {}
 
@@ -30,26 +26,26 @@ export class RoomController {
   createRoom(name: string): string {
     let room = new Room(
       undefined,
-      this.roomStore.getNextId(),
+      useRoomStore().getNextId(),
       this.userController.getUser(),
       name
     );
-    this.roomStore.addRoom(room);
+    useRoomStore().addRoom(room);
 
     return room.getId;
   }
 
   updateRoom(id: string, name: string) {
-    let room = this.roomStore.getRoom(id);
+    let room = useRoomStore().getRoom(id);
     if (room !== undefined) {
       room.name = name;
     }
   }
 
   deleteRoom(id: string) {
-    let room = this.roomStore.getRoom(id);
+    let room = useRoomStore().getRoom(id);
     if (room !== undefined) {
-      this.arrangementStore
+      useSeatArrangementStore()
         .getAllSeatArrangements()
         .forEach((arrangement: SeatArrangement) => {
           if (arrangement.room.getId === id) {
@@ -57,11 +53,11 @@ export class RoomController {
           }
         });
     }
-    this.roomStore.deleteRoom(id);
+    useRoomStore().deleteRoom(id);
   }
 
   getRoom(id: string): Room | undefined {
-    let room = this.roomStore.getRoom(id);
+    let room = useRoomStore().getRoom(id);
     if (room == undefined) {
       return undefined;
     }
@@ -69,28 +65,28 @@ export class RoomController {
   }
 
   getAllRooms(): Room[] {
-    return this.roomStore.getAllRooms();
+    return useRoomStore().getAllRooms();
   }
 
   addChair(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number): string | undefined {
-    let room = this.roomStore.getRoom(roomId);
+    let room = useRoomStore().getRoom(roomId);
     if (room == undefined) {
       return undefined;
     }
 
     const position = new Position(
       undefined,
-      this.positionStore.nextId,
+      usePositionStore().nextId,
       this.userController.getUser(),
       xCoordinate,
       yCoordinate,
       orientation
     );
-    this.positionStore.addPosition(position);
+    usePositionStore().addPosition(position);
 
     let chair = new Chair(
       undefined,
-      this.roomObjectStore.getNextId(),
+      useRoomObjectStore().getNextId(),
       this.userController.getUser(),
       position
     );
@@ -101,24 +97,24 @@ export class RoomController {
 
   addTable(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number, length: number,
            width: number): string | undefined {
-    let room = this.roomStore.getRoom(roomId);
+    let room = useRoomStore().getRoom(roomId);
     if (room == undefined) {
       return undefined;
     }
 
     const position = new Position(
       undefined,
-      this.positionStore.nextId,
+      usePositionStore().nextId,
       this.userController.getUser(),
       xCoordinate,
       yCoordinate,
       orientation
     );
-    this.positionStore.addPosition(position);
+    usePositionStore().addPosition(position);
 
     let table = new Table(
       undefined,
-      this.roomObjectStore.getNextId(),
+      useRoomObjectStore().getNextId(),
       this.userController.getUser(),
       position,
       length,
@@ -130,7 +126,7 @@ export class RoomController {
   }
 
   getRoomObjects(roomId: string): RoomObject[] | undefined {
-    let room = this.roomStore.getRoom(roomId);
+    let room = useRoomStore().getRoom(roomId);
     if (room == undefined) {
       return undefined;
     }
@@ -139,7 +135,7 @@ export class RoomController {
   }
 
   getRoomObject(roomId: string, objectId: string): RoomObject | undefined {
-    let room = this.roomStore.getRoom(roomId);
+    let room = useRoomStore().getRoom(roomId);
     if (room == undefined) {
       return undefined;
     }
@@ -151,13 +147,13 @@ export class RoomController {
   }
 
   removeRoomObject(roomId: string, objectId: string) {
-    let room = this.roomStore.getRoom(roomId);
+    let room = useRoomStore().getRoom(roomId);
     if (room !== undefined) {
       let object = room.getRoomObject(objectId);
       if (object !== undefined) {
         room.removeRoomObject(objectId);
-        this.positionStore.deletePosition(object.position.getId);
-        this.arrangementStore.getAllSeatArrangements().forEach((arrangement: SeatArrangement) => {
+        usePositionStore().deletePosition(object.position.getId);
+        useSeatArrangementStore().getAllSeatArrangements().forEach((arrangement: SeatArrangement) => {
           if (arrangement.room.getId === roomId) {
             arrangement.removeSeat(object!);
           }

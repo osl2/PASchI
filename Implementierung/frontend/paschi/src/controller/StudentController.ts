@@ -14,9 +14,6 @@ export class StudentController {
   private static controller: StudentController = new StudentController();
   private userController = UserController.getUserController();
   //private studentService = ParticipantService.getService();
-  private studentStore = useStudentStore();
-  private courseStore = useCourseStore();
-  private sessionStore = useSessionStore();
 
   private constructor() {
   }
@@ -28,17 +25,17 @@ export class StudentController {
   createStudent(firstName: string, lastName: string): string {
     const student = new Student(
       undefined,
-      this.studentStore.getNextId(),
+      useStudentStore().getNextId(),
       this.userController.getUser(),
       firstName,
       lastName
     );
     //this.studentService.add(student);
-    return this.studentStore.addStudent(student);
+    return useStudentStore().addStudent(student);
   }
 
   updateStudent(id: string, firstName: string, lastName: string) {
-    let student = this.studentStore.getStudent(id);
+    let student = useStudentStore().getStudent(id);
     if (student !== undefined) {
       student.firstName = firstName;
       student.lastName = lastName;
@@ -47,25 +44,25 @@ export class StudentController {
   }
 
   deleteStudent(id: string) {
-    let student = this.studentStore.getStudent(id);
+    let student = useStudentStore().getStudent(id);
     if (student !== undefined) {
       student.courses.forEach((course: Course) => {
         CourseController.getCourseController().removeStudentFromCourse(course.getId, id);
       });
-      this.studentStore.deleteStudent(id);
+      useStudentStore().deleteStudent(id);
     }
   }
 
   getStudent(id: string): Student | undefined {
-    return this.studentStore.getStudent(id);
+    return useStudentStore().getStudent(id);
   }
 
   getAllStudents(): Student[] {
-    return this.studentStore.getAllStudents();
+    return useStudentStore().getAllStudents();
   }
 
   getCoursesOfStudent(studentId: string): Course[] | undefined {
-    let student = this.studentStore.getStudent(studentId);
+    let student = useStudentStore().getStudent(studentId);
     if (student == undefined) {
       return undefined;
     }
@@ -74,8 +71,8 @@ export class StudentController {
   }
 
   addCourseToStudent(studentId: string, courseId: string) {
-    let student = this.studentStore.getStudent(studentId);
-    let course = this.courseStore.getCourse(courseId);
+    let student = useStudentStore().getStudent(studentId);
+    let course = useCourseStore().getCourse(courseId);
     if (student !== undefined && course !== undefined) {
       student.addCourse(course);
       course.addParticipant(student);
@@ -83,8 +80,8 @@ export class StudentController {
   }
 
   removeCourseFromStudent(studentId: string, courseId: string) {
-    let student = this.studentStore.getStudent(studentId);
-    let course = this.courseStore.getCourse(courseId);
+    let student = useStudentStore().getStudent(studentId);
+    let course = useCourseStore().getCourse(courseId);
     if (student !== undefined && course !== undefined) {
       student.removeCourse(courseId);
       course.removeParticipant(studentId);
@@ -92,7 +89,7 @@ export class StudentController {
   }
 
   getInteractionsOfStudent(studentId: string): Interaction[] | undefined {
-    let student = this.studentStore.getStudent(studentId);
+    let student = useStudentStore().getStudent(studentId);
     if (student == undefined) {
       return undefined;
     }
@@ -101,8 +98,8 @@ export class StudentController {
   }
 
   addInteraction(studentId: string, sessionId: string, interactionId: string) {
-    let student = this.studentStore.getStudent(studentId);
-    let session = this.sessionStore.getSession(sessionId);
+    let student = useStudentStore().getStudent(studentId);
+    let session = useSessionStore().getSession(sessionId);
     if (student !== undefined && session !== undefined) {
       let interaction = session.getInteraction(interactionId);
       if (interaction !== undefined) {
@@ -112,7 +109,7 @@ export class StudentController {
   }
 
   removeInteraction(studentId: string, interactionId: string) {
-    let student = this.studentStore.getStudent(studentId);
+    let student = useStudentStore().getStudent(studentId);
     if (student !== undefined) {
       student.removeInteraction(interactionId);
     }

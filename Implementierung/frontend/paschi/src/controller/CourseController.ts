@@ -19,10 +19,6 @@ export class CourseController {
   private userController = UserController.getUserController();
   private sessionController = SessionController.getSessionController();
   private arrangementController = SeatArrangementController.getSeatArrangementController();
-  private courseStore = useCourseStore();
-  private studentStore = useStudentStore();
-  private sessionStore = useSessionStore();
-  private arrangementStore = useSeatArrangementStore();
 
   private constructor() {
   }
@@ -32,9 +28,9 @@ export class CourseController {
   }
 
   createCourse(name: string, subject: string): string {
-    return this.courseStore.addCourse(new Course(
+    return useCourseStore().addCourse(new Course(
       undefined,
-      this.courseStore.getNextId(),
+      useCourseStore().getNextId(),
       this.userController.getUser(),
       name,
       subject
@@ -42,7 +38,7 @@ export class CourseController {
   }
 
   updateCourse(courseId: string, name: string, subject: string) {
-    let course = this.courseStore.getCourse(courseId);
+    let course = useCourseStore().getCourse(courseId);
     if (course !== undefined) {
       course.name = name;
       course.subject = subject;
@@ -50,7 +46,7 @@ export class CourseController {
   }
 
   deleteCourse(id: string) {
-    let course = this.courseStore.getCourse(id);
+    let course = useCourseStore().getCourse(id);
     if (course !== undefined) {
       course.participants.forEach((student: Participant) => {
         student.removeCourse(id);
@@ -61,20 +57,20 @@ export class CourseController {
       course.seatArrangements.forEach((arrangement: SeatArrangement) => {
         this.arrangementController.deleteSeatArrangement(arrangement.getId);
       });
-      this.courseStore.deleteCourse(id);
+      useCourseStore().deleteCourse(id);
     }
   }
 
   getCourse(id: string): Course | undefined {
-    return this.courseStore.getCourse(id);
+    return useCourseStore().getCourse(id);
   }
 
   getAllCourses(): Course[] {
-    return this.courseStore.getAllCourses();
+    return useCourseStore().getAllCourses();
   }
 
   getStudentsOfCourse(courseId: string): Participant[] | undefined {
-    let course = this.courseStore.getCourse(courseId);
+    let course = useCourseStore().getCourse(courseId);
     if (course == undefined) {
       return undefined;
     }
@@ -83,12 +79,12 @@ export class CourseController {
   }
 
   getStudentsNotInCourse(courseId: string): Participant[] | undefined {
-    let course = this.courseStore.getCourse(courseId);
+    let course = useCourseStore().getCourse(courseId);
     if (course == undefined) {
       return undefined;
     }
 
-    let allStudents = this.studentStore.getAllStudents();
+    let allStudents = useStudentStore().getAllStudents();
     let students: Participant[] = [];
     allStudents.forEach((student: Participant) => {
       if (course!.getParticipant(student.getId) == undefined) {
@@ -100,8 +96,8 @@ export class CourseController {
   }
 
   addStudentToCourse(courseId: string, studentId: string) {
-    let course = this.courseStore.getCourse(courseId);
-    let student = this.studentStore.getStudent(studentId);
+    let course = useCourseStore().getCourse(courseId);
+    let student = useStudentStore().getStudent(studentId);
     if (course !== undefined && student !== undefined) {
       course.addParticipant(student);
       student.addCourse(course);
@@ -109,8 +105,8 @@ export class CourseController {
   }
 
   removeStudentFromCourse(courseId: string, studentId: string) {
-    let course = this.courseStore.getCourse(courseId);
-    let student = this.studentStore.getStudent(studentId);
+    let course = useCourseStore().getCourse(courseId);
+    let student = useStudentStore().getStudent(studentId);
     if (course !== undefined && student !== undefined) {
       course.removeParticipant(studentId);
       student.removeCourse(courseId);
@@ -125,7 +121,7 @@ export class CourseController {
   }
 
   getSessions(courseId: string): Session[] | undefined {
-    let course = this.courseStore.getCourse(courseId);
+    let course = useCourseStore().getCourse(courseId);
     if (course == undefined) {
       return undefined;
     }
@@ -134,22 +130,22 @@ export class CourseController {
   }
 
   addSessionToCourse(courseId: string, sessionId: string) {
-    let course = this.courseStore.getCourse(courseId);
-    let session = this.sessionStore.getSession(sessionId);
+    let course = useCourseStore().getCourse(courseId);
+    let session = useSessionStore().getSession(sessionId);
     if (course !== undefined && session !== undefined && session.course.getId === courseId) {
       course.addSession(session);
     }
   }
 
   deleteSession(courseId: string, sessionId: string) {
-    let course = this.courseStore.getCourse(courseId);
+    let course = useCourseStore().getCourse(courseId);
     if (course !== undefined) {
       course.removeSession(sessionId);
     }
   }
 
   getSeatArrangements(courseId: string): SeatArrangement[] | undefined {
-    let course = this.courseStore.getCourse(courseId);
+    let course = useCourseStore().getCourse(courseId);
     if (course == undefined) {
       return undefined;
     }
@@ -158,8 +154,8 @@ export class CourseController {
   }
 
   // addSeatArrangementToCourse(courseId: string, arrangementId: string) {
-  //   let course = this.courseStore.getCourse(courseId);
-  //   let arrangement = this.arrangementStore.getSeatArrangement(arrangementId);
+  //   let course = useCourseStore().getCourse(courseId);
+  //   let arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
   //   if (course !== undefined && arrangement !== undefined) {
   //     course.addSeatArrangement(arrangement);
   //     arrangement.course = course;
@@ -167,17 +163,17 @@ export class CourseController {
   // }
 
   deleteSeatArrangement(courseId: string, arrangementId: string) {
-    let course = this.courseStore.getCourse(courseId);
-    let arrangement = this.arrangementStore.getSeatArrangement(arrangementId);
+    let course = useCourseStore().getCourse(courseId);
+    let arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
     if (course !== undefined && arrangement !== undefined) {
       course.removeSeatArrangement(arrangementId);
-      this.arrangementStore.deleteSeatArrangement(arrangementId);
+      useSeatArrangementStore().deleteSeatArrangement(arrangementId);
     }
   }
 
   getInteractionsOfStudent(courseId: string, studentId: string): Interaction[] | undefined {
-    const student = this.studentStore.getStudent(studentId);
-    const course = this.courseStore.getCourse(courseId);
+    const student = useStudentStore().getStudent(studentId);
+    const course = useCourseStore().getCourse(courseId);
     if (student == undefined || course == undefined) {
       return undefined;
     }

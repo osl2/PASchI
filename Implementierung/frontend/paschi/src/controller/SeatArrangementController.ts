@@ -14,11 +14,6 @@ export class SeatArrangementController {
 
   private static controller: SeatArrangementController = new SeatArrangementController();
   private userController = UserController.getUserController();
-  private seatArrangementStore = useSeatArrangementStore();
-  private roomStore = useRoomStore();
-  private courseStore = useCourseStore();
-  private sessionStore = useSessionStore();
-  private studentStore = useStudentStore();
 
   private constructor() {
   }
@@ -28,43 +23,43 @@ export class SeatArrangementController {
   }
 
   createSeatArrangement(name: string, roomId: string, courseId: string): string | undefined {
-    let room = this.roomStore.getRoom(roomId);
-    let course = this.courseStore.getCourse(courseId);
+    let room = useRoomStore().getRoom(roomId);
+    let course = useCourseStore().getCourse(courseId);
     if (room == undefined || course == undefined) {
       return undefined;
     }
 
-    let arrangement = new SeatArrangement(undefined, this.seatArrangementStore.getNextId(),
+    let arrangement = new SeatArrangement(undefined, useSeatArrangementStore().getNextId(),
       this.userController.getUser(), name, course, room);
-    this.seatArrangementStore.addSeatArrangement(arrangement);
+    useSeatArrangementStore().addSeatArrangement(arrangement);
     course.addSeatArrangement(arrangement);
 
     return arrangement.getId;
   }
 
   deleteSeatArrangement(id: string) {
-    let arrangement = this.seatArrangementStore.getSeatArrangement(id);
+    let arrangement = useSeatArrangementStore().getSeatArrangement(id);
     if (arrangement !== undefined) {
       arrangement.course.removeSeatArrangement(id);
-      this.sessionStore.getAllSessions().forEach((session: Session) => {
+      useSessionStore().getAllSessions().forEach((session: Session) => {
         if (session.seatArrangement !== undefined && session.seatArrangement.getId === id) {
           session.seatArrangement = arrangement?.copy();
         }
       });
-      this.seatArrangementStore.deleteSeatArrangement(id);
+      useSeatArrangementStore().deleteSeatArrangement(id);
     }
   }
 
   getSeatArrangement(id: string): SeatArrangement | undefined {
-    return this.seatArrangementStore.getSeatArrangement(id);
+    return useSeatArrangementStore().getSeatArrangement(id);
   }
 
   getAllArrangements(): SeatArrangement[] {
-    return this.seatArrangementStore.getAllSeatArrangements();
+    return useSeatArrangementStore().getAllSeatArrangements();
   }
 
   getAllStudents(arrangementId: string): Participant[] | undefined {
-    const arrangement = this.seatArrangementStore.getSeatArrangement(arrangementId);
+    const arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
     if (arrangement == undefined) {
       return undefined;
     }
@@ -72,7 +67,7 @@ export class SeatArrangementController {
   }
 
   getStudentsNotAssigned(arrangementId: string): Participant[] | undefined {
-    const arrangement = this.seatArrangementStore.getSeatArrangement(arrangementId);
+    const arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
     if (arrangement == undefined) {
       return undefined;
     }
@@ -80,8 +75,8 @@ export class SeatArrangementController {
   }
 
   addMapping(arrangementId: string, chairId: string, studentId: string) {
-    let arrangement = this.seatArrangementStore.getSeatArrangement(arrangementId);
-    let student = this.studentStore.getStudent(studentId);
+    let arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
+    let student = useStudentStore().getStudent(studentId);
     if (arrangement == undefined || student == undefined) {
       return undefined;
     }
@@ -94,7 +89,7 @@ export class SeatArrangementController {
   }
 
   deleteMapping(arrangementId: string, chairId: string) {
-    let arrangement = this.seatArrangementStore.getSeatArrangement(arrangementId);
+    let arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
     if (arrangement !== undefined) {
       let chair = arrangement.room.getRoomObject(chairId);
       if (chair !== undefined) {

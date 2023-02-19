@@ -10,7 +10,6 @@ const SESSION_BASE_URL: string = 'http://193.196.37.141/api/session';
 export class SessionService extends BaseService<Session, SessionDto> {
 
   private static sessionService: SessionService = new SessionService();
-  private userStore = useUserStore();
 
   private constructor() {
     super(SessionMapper.getMapper());
@@ -21,7 +20,7 @@ export class SessionService extends BaseService<Session, SessionDto> {
   }
 
   add(session: Session) {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     const sessionDto = this.getMapper().modelToDto(session);
     axios.post(SESSION_BASE_URL, sessionDto, {
       headers: {
@@ -33,7 +32,7 @@ export class SessionService extends BaseService<Session, SessionDto> {
   }
 
   update(session: Session) {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     const sessionDto = this.getMapper().modelToDto(session);
     axios.post(SESSION_BASE_URL, sessionDto, {
       headers: {
@@ -45,7 +44,7 @@ export class SessionService extends BaseService<Session, SessionDto> {
   }
 
   async getById(id: string): Promise<Session | undefined> {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     let session;
     await axios.get(SESSION_BASE_URL + `/${id}`, {
       headers: {
@@ -65,7 +64,7 @@ export class SessionService extends BaseService<Session, SessionDto> {
   }
 
   async getAll(): Promise<Session[]> {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     let sessions: Session[] = [];
     await axios.get(SESSION_BASE_URL, {
       headers: {
@@ -83,7 +82,7 @@ export class SessionService extends BaseService<Session, SessionDto> {
   }
 
   delete(id: string) {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     axios.post(SESSION_BASE_URL, {
       params: {
         id

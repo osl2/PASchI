@@ -10,7 +10,6 @@ const ROOM_BASE_URL: string = 'http://193.196.37.141/api/room';
 export class RoomService extends BaseService<Room, RoomDto> {
 
   private static roomService: RoomService = new RoomService();
-  private userStore = useUserStore();
 
   private constructor() {
     super(RoomMapper.getMapper());
@@ -21,7 +20,7 @@ export class RoomService extends BaseService<Room, RoomDto> {
   }
 
   add(room: Room) {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     const roomDto = this.getMapper().modelToDto(room);
     axios.post(ROOM_BASE_URL, roomDto, {
       headers: {
@@ -33,7 +32,7 @@ export class RoomService extends BaseService<Room, RoomDto> {
   }
 
   update(room: Room) {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     const roomDto = this.getMapper().modelToDto(room);
     axios.put(ROOM_BASE_URL, roomDto, {
       headers: {
@@ -45,7 +44,7 @@ export class RoomService extends BaseService<Room, RoomDto> {
   }
 
   async getById(id: string): Promise<Room | undefined> {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     let room;
     await axios.get(ROOM_BASE_URL + `/${id}`, {
       headers: {
@@ -65,7 +64,7 @@ export class RoomService extends BaseService<Room, RoomDto> {
   }
 
   async getAll(): Promise<Room[]> {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     let rooms: Room[] = [];
     await axios.get(ROOM_BASE_URL, {
       headers: {
@@ -83,7 +82,7 @@ export class RoomService extends BaseService<Room, RoomDto> {
   }
 
   delete(id: string) {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     axios.delete(ROOM_BASE_URL, {
       params: {
         id

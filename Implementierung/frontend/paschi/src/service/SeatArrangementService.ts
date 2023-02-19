@@ -10,7 +10,6 @@ const SEAT_ARRANGEMENT_BASE_URL: string = 'http://193.196.37.141/api/seatarrange
 export class SeatArrangementService extends BaseService<SeatArrangement, SeatArrangementDto> {
 
   private static seatArrangementService: SeatArrangementService = new SeatArrangementService();
-  private userStore = useUserStore();
 
   private constructor() {
     super(SeatArrangementMapper.getMapper());
@@ -21,7 +20,7 @@ export class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
   }
 
   add(arrangement: SeatArrangement) {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     const arrangementDto = this.getMapper().modelToDto(arrangement);
     axios.post(SEAT_ARRANGEMENT_BASE_URL, arrangementDto, {
       headers: {
@@ -33,7 +32,7 @@ export class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
   }
 
   update(arrangement: SeatArrangement) {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     const arrangementDto = this.getMapper().modelToDto(arrangement);
     axios.put(SEAT_ARRANGEMENT_BASE_URL, arrangementDto, {
       headers: {
@@ -45,7 +44,7 @@ export class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
   }
 
   async getById(id: string): Promise<SeatArrangement | undefined> {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     let arrangement;
     await axios.get(SEAT_ARRANGEMENT_BASE_URL + `/${id}`, {
       headers: {
@@ -65,7 +64,7 @@ export class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
   }
 
   async getAll(): Promise<SeatArrangement[]> {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     let arrangements: SeatArrangement[] = [];
     await axios.get(SEAT_ARRANGEMENT_BASE_URL, {
       headers: {
@@ -83,7 +82,7 @@ export class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
   }
 
   delete(id: string) {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     axios.delete(SEAT_ARRANGEMENT_BASE_URL, {
       params: {
         id

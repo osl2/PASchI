@@ -5,7 +5,6 @@ import {useStudentStore} from "@/store/StudentStore";
 
 export class Teacher extends Participant {
 
-  private static teacherStore = useStudentStore();
   private static userController = UserController.getUserController();
 
   private constructor(id: string | undefined, localId: number, user: User, firstName: string, lastName: string) {
@@ -14,16 +13,16 @@ export class Teacher extends Participant {
 
   static getTeacher(): Teacher {
     const user = this.userController.getUser();
-    let teacher = this.teacherStore.getTeacher();
+    let teacher = useStudentStore().getTeacher();
     if (teacher == undefined) {
       teacher = new Teacher(
         undefined,
-        this.teacherStore.getNextId(),
+        useStudentStore().getNextId(),
         user,
         user.firstName,
         user.lastName
       );
-      this.teacherStore.setTeacher(teacher);
+      useStudentStore().setTeacher(teacher);
     }
     return teacher;
   }

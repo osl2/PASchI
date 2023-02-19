@@ -22,24 +22,27 @@
       </v-card>
       <v-card class="pa-2 rounded-lg" variant="flat" max-width="450px">
         <v-card-item>
-          <v-text-field class="mt-2" variant="outlined" label="Vorname" />
-          <v-text-field variant="outlined" label="Nachname" />
+          <v-text-field class="mt-2" variant="outlined" label="Vorname" v-model="firstName" />
+          <v-text-field variant="outlined" label="Nachname" v-model="surName" />
           <v-text-field
             prepend-inner-icon="mdi mdi-email-outline"
             variant="outlined"
             label="Mailadresse"
+            v-model="email"
           />
           <v-text-field
             prepend-inner-icon="mdi mdi-lock-outline"
             type="password"
             variant="outlined"
             label="Passwort"
+            v-model="password"
           />
           <v-text-field
             prepend-inner-icon="mdi mdi-lock-outline"
             type="password"
             variant="outlined"
             label="Passwort bestätigen"
+            v-model="repeatPassword"
           />
         </v-card-item>
         <v-card-item>
@@ -49,6 +52,7 @@
             variant="flat"
             prepend-icon="fas fa-sign-in-alt"
             color="primary"
+            @click="register"
             >Registrieren</v-btn
           >
         </v-card-item>
@@ -71,13 +75,32 @@
 <script lang="ts">
 import AppBar from "@/components/navigation/NavigationBar.vue";
 import router from "@/plugins/router";
+import {ref} from "vue";
+import {UserController} from "@/controller/UserController";
 export default {
   name: "Register",
   components: { AppBar },
   setup() {
 
+    const userController = UserController.getUserController()
+
+    const firstName = ref("")
+    const surName = ref("")
+    const email = ref("")
+    const password = ref("")
+    const repeatPassword = ref("")
+
+    function register() {
+      userController.register(firstName.value, surName.value, email.value, password.value, repeatPassword.value)
+    }
     return {
       router,
+      firstName,
+      surName,
+      email,
+      password,
+      repeatPassword,
+      register
     };
   },
 };

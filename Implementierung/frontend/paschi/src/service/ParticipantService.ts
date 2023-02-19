@@ -10,7 +10,6 @@ const PARTICIPANT_BASE_URL: string = 'http://193.196.37.141/api/participant';
 export class ParticipantService extends BaseService<Participant, ParticipantDto> {
 
   private static participantService: ParticipantService = new ParticipantService();
-  private userStore = useUserStore();
 
   private constructor() {
     super(ParticipantMapper.getMapper());
@@ -21,7 +20,7 @@ export class ParticipantService extends BaseService<Participant, ParticipantDto>
   }
 
   add(participant: Participant) {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     const participantDto = this.getMapper().modelToDto(participant);
     axios.post(PARTICIPANT_BASE_URL, participantDto, {
       headers: {
@@ -33,7 +32,7 @@ export class ParticipantService extends BaseService<Participant, ParticipantDto>
   }
 
   update(participant: Participant) {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     const participantDto = this.getMapper().modelToDto(participant);
     axios.put(PARTICIPANT_BASE_URL, participantDto, {
       headers: {
@@ -45,7 +44,7 @@ export class ParticipantService extends BaseService<Participant, ParticipantDto>
   }
 
   async getById(id: string): Promise<Participant | undefined> {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     let participant;
     await axios.get(PARTICIPANT_BASE_URL + `/${id}`, {
       headers: {
@@ -65,7 +64,7 @@ export class ParticipantService extends BaseService<Participant, ParticipantDto>
   }
 
   async getAll(): Promise<Participant[]> {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     let participants: Participant[] = [];
     await axios.get(PARTICIPANT_BASE_URL, {
       headers: {
@@ -83,7 +82,7 @@ export class ParticipantService extends BaseService<Participant, ParticipantDto>
   }
 
   delete(id: string) {
-    const token = this.userStore.getUser()?.token;
+    const token = useUserStore().getUser()?.token;
     axios.delete(PARTICIPANT_BASE_URL, {
       params: {
         id
