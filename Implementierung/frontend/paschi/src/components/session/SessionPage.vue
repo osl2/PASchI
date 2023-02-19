@@ -575,7 +575,6 @@ export default defineComponent({
       studentInteractionListDialog,
       interactionListStudentBuffer,
       interActionListBuffer,
-      interactionListStudentBuffer,
       activateInteractionList,
       resetInterActionParams,
       undoClick,
