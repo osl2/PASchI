@@ -34,6 +34,8 @@ import java.util.Optional;
 @Component
 public class UserService extends BaseService<User, UserDto, UserDto> {
 
+    private static final String EMAIL_ALREADY_EXITS = "EMAIL_ALREADY_EXITS";
+
     private final UserRepository userRepository;
 
     private final TokenService tokenService;
@@ -60,7 +62,7 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
     public UserDto add(UserDto userDto, Authentication authentication) {
         User user = this.mapper.dtoToModel(userDto);
 
-        final var EMAIL_ALREADY_EXITS = "EMAIL_ALREADY_EXITS";
+
         Optional<User> userOptional = userRepository.findUserByEmail(user.getEmail());
 
         if (userOptional.isPresent()) {
@@ -103,11 +105,9 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
     public UserDto getById(String id, Authentication authentication) {
         Optional<User> userOptional = userRepository.findUserById(id);
 
-        if (userOptional.isPresent()) {
-            return this.mapper.modelToDto(userOptional.get());
-        } else {
-            throw new EntityNotFoundException(User.class, id);
-        }
+        User user = userOptional.orElseThrow(() -> new EntityNotFoundException(User.class, id));
+
+        return this.mapper.modelToDto(user);
     }
 
     @Override
@@ -161,11 +161,9 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
 
     public UserDto adminUpdate(UserDto userDto) {
         Optional<User> repositoryUserOptional = userRepository.findUserById(userDto.getId());
-        if (repositoryUserOptional.isEmpty()) {
-            throw new EntityNotFoundException(User.class, userDto.getId());
-        }
 
-        User repositoryUser = repositoryUserOptional.get();
+        User repositoryUser = repositoryUserOptional.orElseThrow(() -> new EntityNotFoundException(
+                                                                                User.class, userDto.getId()));
         User newUser = this.mapper.dtoToModel(userDto);
 
         if (!newUser.isAuth() == repositoryUser.isAuth()) {
