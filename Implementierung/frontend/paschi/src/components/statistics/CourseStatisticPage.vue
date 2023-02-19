@@ -132,10 +132,10 @@ export default defineComponent({
 
       }
       onMounted(() => {
-          const categoryChartId = document.getElementById('categoryChart') as HTMLCanvasElement;
+          //const categoryChartId = document.getElementById('categoryChart') as HTMLCanvasElement;
           const involvementChartId = document.getElementById('involvementChart') as HTMLCanvasElement;
-          const top5InteractionChartId = document.getElementById('top5InteractionChart') as HTMLCanvasElement;
-          const top5DisturberChartId = document.getElementById('top5DisturberChart') as HTMLCanvasElement;
+         // const top5InteractionChartId = document.getElementById('top5InteractionChart') as HTMLCanvasElement;
+         // const top5DisturberChartId = document.getElementById('top5DisturberChart') as HTMLCanvasElement;
 
           const stats  = statsController.getCourseStats(props.courseId);
 
@@ -145,14 +145,14 @@ export default defineComponent({
           }
 
 
-          let keysInvolvementChart= stats[6].keys();
-          let valuesInvolvementChart = stats[6].values();
+          //let keysInvolvementChart= stats[6].keys();
+          //let valuesInvolvementChart = stats[6].values();
 
-          let keysCategoryChart = stats[5].keys();
-          let valuesCategoryChart = stats[5].values();
+          //let keysCategoryChart = stats[5].keys();
+          //let valuesCategoryChart = stats[5].values();
 
-          let top5InteractionArray = stats[0];
-          let top5DisturberArray = stats[4];
+          //let top5InteractionArray = stats[0];
+          //let top5DisturberArray = stats[4];
 
           const involvementChartData = {
             labels:
@@ -228,8 +228,8 @@ export default defineComponent({
           downloadElementInvolvementChart.download = 'Beteiligungsverlauf.png';
         }
 
-        categoryChart;
-        involvementChart;
+        categoryChart.update();
+        involvementChart.update();
 
         }
       )

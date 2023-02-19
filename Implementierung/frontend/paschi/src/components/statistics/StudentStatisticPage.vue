@@ -91,8 +91,8 @@ export default defineComponent({
           return;
         }
 
-        let keys = stats[0].keys();
-        let values = stats[0].values();
+        //let keys = stats[0].keys();
+        //let values = stats[0].values();
 
 
         const data = {
@@ -134,7 +134,7 @@ export default defineComponent({
             downloadElement.download = 'Schülerstatistik.png';
           }
 
-          categoryChart;
+          categoryChart.update();
 
         }
       )
