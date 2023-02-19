@@ -1,10 +1,12 @@
 import {IModelDtoMapper} from "@/dto/mapper/IModelDtoMapper";
 import {Table} from "@/model/userdata/rooms/Table";
 import {TableDto} from "@/dto/userdata/rooms/TableDto";
+import {PositionMapper} from "@/dto/mapper/rooms/PositionMapper";
 
 export class TableMapper implements IModelDtoMapper<Table, TableDto> {
 
   private static mapper: TableMapper = new TableMapper();
+  private positionMapper = PositionMapper.getMapper();
 
   private constructor() {
   }
@@ -13,12 +15,19 @@ export class TableMapper implements IModelDtoMapper<Table, TableDto> {
     return TableMapper.mapper;
   }
 
+  modelToDto(table: Table): TableDto {
+    return new TableDto(
+      table.getId,
+      table.user.getId,
+      table.createdAt,
+      table.updatedAt,
+      this.positionMapper.modelToDto(table.position),
+      table.dimensions.length,
+      table.dimensions.width
+    );
+  }
+
   dtoToModel(tableDto: TableDto): Table {
     return undefined;
   }
-
-  modelToDto(table: Table): TableDto {
-    return undefined;
-  }
-
 }
