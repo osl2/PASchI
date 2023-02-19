@@ -1,12 +1,14 @@
 package edu.kit.informatik.exceptions;
 
-public class EntityNotFoundException extends IllegalArgumentException {
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
+public class EntityNotFoundException extends ResponseStatusException {
 
     private static final String OUTPUT = "Entity of class '%s' with id: '%s' not found";
 
     public EntityNotFoundException(Class<?> tClass, String id) {
-        super(String.format(OUTPUT, tClass.getSimpleName(), id));
-        //super("Entity of class '" + tClass.getSimpleName() + "' with id: '" + id + "' not found");
+        super(HttpStatus.NOT_FOUND, String.format(OUTPUT, tClass.getSimpleName(), id));
     }
 
 }
