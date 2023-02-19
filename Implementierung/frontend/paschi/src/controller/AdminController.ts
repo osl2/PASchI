@@ -56,7 +56,7 @@ export class AdminController {
     this.userService.delete(userId);
   }
 
-  resetPassword(userId: string) {
-
-  }
+  // resetPassword(userId: string) {
+  //
+  // }
 }
