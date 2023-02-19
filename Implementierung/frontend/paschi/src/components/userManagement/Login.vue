@@ -30,12 +30,14 @@
             class="mt-2"
             variant="outlined"
             label="Mailadresse"
+            v-model="email"
           />
           <v-text-field
             prepend-inner-icon="mdi mdi-lock-outline"
             type="password"
             variant="outlined"
             label="Passwort"
+            v-model="password"
           />
         </v-card-item>
         <v-card-item>
@@ -45,7 +47,7 @@
             variant="flat"
             prepend-icon="fas fa-sign-in-alt"
             color="primary"
-            @click="router.push('Dashboard')"
+            @click="login"
             >Anmelden
           </v-btn>
         </v-card-item>
@@ -66,18 +68,30 @@
 </template>
 
 <script lang="ts">
-import { useUserStore } from "@/store/UserStore";
 import AppBar from "@/components/navigation/NavigationBar.vue";
 import router from "@/plugins/router";
+import { UserController } from "@/controller/UserController";
+import { ref } from "vue";
 export default {
   name: "Login",
   components: { AppBar },
   setup() {
-    const userStore = useUserStore();
+    const userController = UserController.getUserController();
+
+    const email = ref("");
+
+    const password = ref("");
+
+    function login() {
+      userController.login(email.value, password.value);
+      router.push('Dashboard');
+    }
 
     return {
-      userStore,
       router,
+      login,
+      email,
+      password,
     };
   },
 };
