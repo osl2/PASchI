@@ -34,6 +34,7 @@
               class="ml-2"
               variant="tonal"
               color="primary"
+              v-on:click.stop
               @click="editCourseClick(course)"
               ><v-icon>fas fa-pencil</v-icon></v-btn
             >
