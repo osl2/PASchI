@@ -37,6 +37,7 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
 
     @Override
     public SessionDto add(SessionDto sessionDto, Authentication authentication) {
+        super.checkAuthorization(authentication, sessionDto.getUserId());
         Session session = this.mapper.dtoToModel(sessionDto);
         Session newSession = sessionRepository.save(session);
 
@@ -46,6 +47,7 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
     @Transactional
     @Override
     public SessionDto update(SessionDto sessionDto, Authentication authentication) {
+        super.checkAuthorization(authentication, sessionDto.getUserId());
         Optional<Session> repositorySessionOptional = sessionRepository.findSessionById(sessionDto.getId());
 
         Session repositorySession = repositorySessionOptional.orElseThrow(() -> new EntityNotFoundException(
@@ -65,6 +67,7 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
 
     @Override
     public SessionDto getById(String id, Authentication authentication) {
+        super.checkAuthorization(authentication, id);
         Optional<Session> sessionOptional = sessionRepository.findSessionById(id);
 
         return sessionOptional.map(this.mapper::modelToDto).orElseThrow(() -> new EntityNotFoundException(
@@ -78,6 +81,7 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
 
     @Override
     public String delete(String id, Authentication authentication) {
+        super.checkAuthorization(authentication, id);
         Optional<Session> sessionOptional = sessionRepository.findById(id);
         if (sessionOptional.isEmpty()) {
             throw new EntityNotFoundException(Session.class, id);

@@ -37,6 +37,7 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
 
     @Override
     public SeatArrangementDto add(SeatArrangementDto seatArrangementDto, Authentication authentication) {
+        super.checkAuthorization(authentication, seatArrangementDto.getUserId());
         SeatArrangement seatArrangement = this.mapper.dtoToModel(seatArrangementDto);
         SeatArrangement newSeatArrangement = this.seatArrangementRepository.save(seatArrangement);
         return this.mapper.modelToDto(newSeatArrangement);
@@ -45,6 +46,7 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
     @Transactional
     @Override
     public SeatArrangementDto update(SeatArrangementDto seatArrangementDto, Authentication authentication) {
+        super.checkAuthorization(authentication, seatArrangementDto.getUserId());
         Optional<SeatArrangement> repositorySeatArrangementOptional = this.seatArrangementRepository
                                                                 .findSeatArrangementById(seatArrangementDto.getId());
         
@@ -63,6 +65,7 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
 
     @Override
     public SeatArrangementDto getById(String id, Authentication authentication) {
+        super.checkAuthorization(authentication, id);
         Optional<SeatArrangement> seatArrangementOptional = this.seatArrangementRepository.findSeatArrangementById(id);
         
         return seatArrangementOptional.map(this.mapper::modelToDto).orElseThrow(() ->
@@ -76,6 +79,7 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
 
     @Override
     public String delete(String id, Authentication authentication) {
+        super.checkAuthorization(authentication, id);
         Optional<SeatArrangement> seatArrangementOptional = this.seatArrangementRepository.findSeatArrangementById(id);
 
         seatArrangementOptional.orElseThrow(() -> new EntityNotFoundException(SeatArrangement.class, id));

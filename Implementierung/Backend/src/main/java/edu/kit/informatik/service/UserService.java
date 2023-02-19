@@ -62,7 +62,6 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
     public UserDto add(UserDto userDto, Authentication authentication) {
         User user = this.mapper.dtoToModel(userDto);
 
-
         Optional<User> userOptional = userRepository.findUserByEmail(user.getEmail());
 
         if (userOptional.isPresent()) {
@@ -81,7 +80,7 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
     @Transactional
     @Override
     public UserDto update(UserDto userDto, Authentication authentication) {
-
+        super.checkAuthorization(authentication, userDto.getId());
         Optional<User> repositoryUserOptional = userRepository.findUserById(userDto.getId());
 
         User repositoryUser = repositoryUserOptional
@@ -103,6 +102,7 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
 
     @Override
     public UserDto getById(String id, Authentication authentication) {
+        super.checkAuthorization(authentication, id);
         Optional<User> userOptional = userRepository.findUserById(id);
 
         User user = userOptional.orElseThrow(() -> new EntityNotFoundException(User.class, id));
@@ -117,10 +117,9 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
 
     @Override
     public String delete(String id, Authentication authentication) {
+        super.checkAuthorization(authentication, id);
         Optional<User> repositoryUserOptional = userRepository.findUserById(id);
-        if (repositoryUserOptional.isEmpty()) {
-            throw new EntityNotFoundException(User.class, id);
-        }
+        repositoryUserOptional.orElseThrow(() -> new EntityNotFoundException(User.class, id));
 
         this.userRepository.deleteById(id);
 
@@ -159,6 +158,7 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
         return userDto;
     }
 
+    @Transactional
     public UserDto adminUpdate(UserDto userDto) {
         Optional<User> repositoryUserOptional = userRepository.findUserById(userDto.getId());
 

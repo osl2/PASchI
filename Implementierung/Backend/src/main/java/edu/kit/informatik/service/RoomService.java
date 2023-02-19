@@ -36,6 +36,7 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
 
     @Override
     public RoomDto add(RoomDto roomDto, Authentication authentication) {
+        super.checkAuthorization(authentication, roomDto.getUserId());
         Room newRoom = this.roomRepository.save(this.mapper.dtoToModel(roomDto));
 
         return this.mapper.modelToDto(newRoom);
@@ -44,6 +45,7 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
     @Transactional
     @Override
     public RoomDto update(RoomDto roomDto, Authentication authentication) {
+        super.checkAuthorization(authentication, roomDto.getUserId());
         Optional<Room> repositoryRoomOptional = this.roomRepository.findRoomById(roomDto.getId());
 
         Room repositoyRoom = repositoryRoomOptional.orElseThrow(() ->
@@ -63,6 +65,7 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
 
     @Override
     public RoomDto getById(String id, Authentication authentication) {
+        super.checkAuthorization(authentication, id);
         Optional<Room> roomOptional = this.roomRepository.findRoomById(id);
 
         return roomOptional.map(this.mapper::modelToDto).orElseThrow(() -> new EntityNotFoundException(Room.class, id));
@@ -75,6 +78,7 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
 
     @Override
     public String delete(String id, Authentication authentication) {
+        super.checkAuthorization(authentication, id);
         Optional<Room> roomOptional = this.roomRepository.findRoomById(id);
 
         roomOptional.orElseThrow(() -> new EntityNotFoundException(Room.class, id));

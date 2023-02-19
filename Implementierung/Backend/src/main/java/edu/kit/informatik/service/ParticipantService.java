@@ -37,6 +37,7 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
 
     @Override
     public ParticipantDto add(ParticipantDto participantDto, Authentication authentication) {
+        super.checkAuthorization(authentication, participantDto.getUserId());
         Participant newParticipant = this.participantRepository.save(this.mapper.dtoToModel(participantDto));
 
         return this.mapper.modelToDto(newParticipant);
@@ -45,12 +46,9 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
     @Transactional
     @Override
     public ParticipantDto update(ParticipantDto participantDto, Authentication authentication) {
+        super.checkAuthorization(authentication, participantDto.getUserId());
         Optional<Participant> repositoryParticipantOptional = this.participantRepository
                                                                     .findParticipantById(participantDto.getId());
-
-        if (repositoryParticipantOptional.isEmpty()) {
-            return null;
-        }
 
         Participant repositoryParticipant = repositoryParticipantOptional.orElseThrow(() ->
                                                 new EntityNotFoundException(Participant.class, participantDto.getId()));
@@ -71,6 +69,7 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
 
     @Override
     public ParticipantDto getById(String id, Authentication authentication) {
+        super.checkAuthorization(authentication, id);
         Optional<Participant> participantOptional = this.participantRepository.findParticipantById(id);
 
         return participantOptional.map(this.mapper::modelToDto).orElseThrow(() ->
@@ -84,6 +83,7 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
 
     @Override
     public String delete(String id, Authentication authentication) {
+        super.checkAuthorization(authentication, id);
         Optional<Participant> participantOptional = this.participantRepository.findParticipantById(id);
         participantOptional.orElseThrow(() -> new EntityNotFoundException(Participant.class, id));
         this.participantRepository.deleteById(id);

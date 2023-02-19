@@ -36,6 +36,7 @@ public class CourseService extends BaseService<Course, CourseDto, CourseDto> {
 
     @Override
     public CourseDto add(CourseDto courseDto, Authentication authentication) {
+        super.checkAuthorization(authentication, courseDto.getUserId());
         Course newCourse = this.courseRepository.save(this.mapper.dtoToModel(courseDto));
         return this.mapper.modelToDto(newCourse);
     }
@@ -43,6 +44,8 @@ public class CourseService extends BaseService<Course, CourseDto, CourseDto> {
     @Transactional
     @Override
     public CourseDto update(CourseDto courseDto, Authentication authentication) {
+        super.checkAuthorization(authentication, courseDto.getUserId());
+
         Optional<Course> repositoryCourseOptional = this.courseRepository.findById(courseDto.getId());
 
         Course repositoryCourse = repositoryCourseOptional.orElseThrow(() ->
@@ -66,6 +69,7 @@ public class CourseService extends BaseService<Course, CourseDto, CourseDto> {
 
     @Override
     public CourseDto getById(String id, Authentication authentication) {
+        super.checkAuthorization(authentication, id);
         Optional<Course> courseOptional = this.courseRepository.findCourseById(id);
 
         return courseOptional.map(this.mapper::modelToDto).orElseThrow(() ->
@@ -79,6 +83,7 @@ public class CourseService extends BaseService<Course, CourseDto, CourseDto> {
 
     @Override
     public String delete(String id, Authentication authentication) {
+        super.checkAuthorization(authentication, id);
         Optional<Course> courseOptional = this.courseRepository.findCourseById(id);
         courseOptional.orElseThrow(() -> new EntityNotFoundException(Course.class, id));
 
