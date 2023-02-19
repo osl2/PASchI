@@ -2,6 +2,7 @@ package edu.kit.informatik.service;
 
 import edu.kit.informatik.dto.mapper.courses.SeatArrangementMapper;
 import edu.kit.informatik.dto.userdata.courses.SeatArrangementDto;
+import edu.kit.informatik.exceptions.EntityNotFoundException;
 import edu.kit.informatik.model.userdata.courses.SeatArrangement;
 import edu.kit.informatik.repositories.SeatArrangementRepository;
 import jakarta.transaction.Transactional;
@@ -46,14 +47,10 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
     public SeatArrangementDto update(SeatArrangementDto seatArrangementDto, Authentication authentication) {
         Optional<SeatArrangement> repositorySeatArrangementOptional = this.seatArrangementRepository
                                                                 .findSeatArrangementById(seatArrangementDto.getId());
-        if (repositorySeatArrangementOptional.isEmpty()) {
-            return null;
-        }
         
-        SeatArrangement repositorySeatArrangement = repositorySeatArrangementOptional.get();
+        SeatArrangement repositorySeatArrangement = repositorySeatArrangementOptional.orElseThrow(
+                        () -> new EntityNotFoundException(SeatArrangementService.class, seatArrangementDto.getId()));
         SeatArrangement newSeatArrangement = this.mapper.dtoToModel(seatArrangementDto);
-        
-        
 
         if (!newSeatArrangement.getName().equals(repositorySeatArrangement.getName())) {
             repositorySeatArrangement.setName(repositorySeatArrangement.getName());
@@ -68,7 +65,8 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
     public SeatArrangementDto getById(String id, Authentication authentication) {
         Optional<SeatArrangement> seatArrangementOptional = this.seatArrangementRepository.findSeatArrangementById(id);
         
-        return seatArrangementOptional.map(this.mapper::modelToDto).orElse(null);
+        return seatArrangementOptional.map(this.mapper::modelToDto).orElseThrow(() ->
+                                                                new EntityNotFoundException(SeatArrangement.class, id));
     }
 
     @Override
@@ -78,6 +76,9 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
 
     @Override
     public String delete(String id, Authentication authentication) {
+        Optional<SeatArrangement> seatArrangementOptional = this.seatArrangementRepository.findSeatArrangementById(id);
+
+        seatArrangementOptional.orElseThrow(() -> new EntityNotFoundException(SeatArrangement.class, id));
         this.seatArrangementRepository.deleteById(id);
         
         return id;
