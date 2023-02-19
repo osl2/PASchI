@@ -13,12 +13,26 @@ export class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
     return InteractionMapper.mapper;
   }
 
+  modelToDto(interaction: Interaction): InteractionDto {
+    const sessionId = interaction.session.getId;
+    const toParticipantId = interaction.toParticipant.getId;
+    const fromParticipantId = interaction.fromParticipant.getId;
+    const categoryId = interaction.category.getId;
+
+    return new InteractionDto(
+      interaction.getId,
+      interaction.user.getId,
+      interaction.createdAt,
+      interaction.updatedAt,
+      interaction.timeStamp,
+      sessionId,
+      toParticipantId,
+      fromParticipantId,
+      categoryId
+    );
+  }
+
   dtoToModel(interactionDto: InteractionDto): Interaction {
     return undefined;
   }
-
-  modelToDto(interaction: Interaction): InteractionDto {
-    return undefined;
-  }
-
 }
