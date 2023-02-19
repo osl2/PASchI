@@ -26,8 +26,8 @@ public interface ParticipantRepository extends JpaRepository<Participant, String
 
     /**
      * Methode zur Rückgabe eins Optionals von {@link  Participant}
-     * @param user {@link User}
+     * @param userId Id eines {@link User}
      * @return {@link Optional} von {@link Participant}
      */
-    Optional<List<Participant>> findParticipantsByUser(User user);
+    List<Participant> findParticipantsByUserId(String userId);
 }

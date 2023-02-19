@@ -25,8 +25,8 @@ public interface RoomRepository extends JpaRepository<Room, String> {
 
     /**
      * Rückgabe eines Optionals von {@link Room Räumen}
-     * @param user {@link User}
+     * @param userId eines {@link User}
      * @return {@link Optional} von {@link Room}
      */
-    Optional<List<Room>> findRoomsByUser(User user);
+   List<Room> findRoomsByUserId(String userId);
 }

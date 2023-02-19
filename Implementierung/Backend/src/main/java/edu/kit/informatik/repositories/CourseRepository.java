@@ -26,8 +26,8 @@ public interface CourseRepository extends JpaRepository<Course, String> {
 
     /**
      * Rückgabe von Optional von {@link Course}
-     * @param user {@link User}
+     * @param userId Id eines {@link User}
      * @return {@link Optional} von ´{@link Course}
      */
-    Optional<List<Course>> findCoursesByUser(User user);
+    List<Course> findCoursesByUserId(String userId);
 }
