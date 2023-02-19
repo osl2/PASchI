@@ -24,7 +24,7 @@ export class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
     const arrangementDto = this.getMapper().modelToDto(arrangement);
     axios.post(SEAT_ARRANGEMENT_BASE_URL, arrangementDto, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).catch((error) => {
       console.log(error);
@@ -36,7 +36,7 @@ export class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
     const arrangementDto = this.getMapper().modelToDto(arrangement);
     axios.put(SEAT_ARRANGEMENT_BASE_URL, arrangementDto, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).catch((error) => {
       console.log(error);
@@ -48,7 +48,7 @@ export class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
     let arrangement;
     await axios.get(SEAT_ARRANGEMENT_BASE_URL + `/${id}`, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).then((response: AxiosResponse<SeatArrangementDto>) => {
       arrangement = this.getMapper().dtoToModel(response.data);
@@ -68,7 +68,7 @@ export class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
     let arrangements: SeatArrangement[] = [];
     await axios.get(SEAT_ARRANGEMENT_BASE_URL, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).then((response: AxiosResponse<SeatArrangementDto[]>) => {
       response.data.forEach((arrangementDto: SeatArrangementDto) => {
@@ -88,7 +88,7 @@ export class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
         id
       },
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).catch((error) => {
       console.log(error);

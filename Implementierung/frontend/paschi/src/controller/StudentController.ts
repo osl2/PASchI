@@ -58,6 +58,7 @@ export class StudentController {
   }
 
   getAllStudents(): Student[] {
+    this.studentService.getAll().then();
     return useStudentStore().getAllStudents();
   }
 

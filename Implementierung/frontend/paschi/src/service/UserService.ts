@@ -30,7 +30,7 @@ export class UserService extends BaseService<User, UserDto> {
     const userDto = this.getMapper().modelToDto(user);
     axios.put(USER_BASE_URL, userDto, {
       headers: {
-        'Authorization': userDto.token
+        Authorization: `Bearer ${userDto.token}`
       }
     }).catch((error) => {
       console.log(error);
@@ -42,7 +42,7 @@ export class UserService extends BaseService<User, UserDto> {
     let user;
     await axios.get(USER_BASE_URL + `/${id}`, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).then((response: AxiosResponse<UserDto>) => {
       user = this.getMapper().dtoToModel(response.data);
@@ -62,7 +62,7 @@ export class UserService extends BaseService<User, UserDto> {
     let users: User[] = [];
     await axios.get(USER_BASE_URL + '/admin', {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).then((response: AxiosResponse<UserDto[]>) => {
       response.data.forEach((userDto: UserDto) => {
@@ -82,7 +82,7 @@ export class UserService extends BaseService<User, UserDto> {
         id
       },
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).catch((error) => {
       console.log(error);
@@ -117,7 +117,7 @@ export class UserService extends BaseService<User, UserDto> {
 
     await axios.post(USER_BASE_URL + '/token', null, {
       headers: {
-        'Authorization': user.token
+        Authorization: `Bearer ${user.token}`
       }
     }).then((response: AxiosResponse<UserDto>) => {
       user.token = response.data.token;
@@ -131,7 +131,7 @@ export class UserService extends BaseService<User, UserDto> {
     const userDto = this.getMapper().modelToDto(user);
     axios.put(USER_BASE_URL + '/admin', userDto, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).catch((error) => {
       console.log(error);

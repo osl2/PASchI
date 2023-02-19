@@ -24,7 +24,7 @@ export class RoomService extends BaseService<Room, RoomDto> {
     const roomDto = this.getMapper().modelToDto(room);
     axios.post(ROOM_BASE_URL, roomDto, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).catch((error) => {
       console.log(error);
@@ -36,7 +36,7 @@ export class RoomService extends BaseService<Room, RoomDto> {
     const roomDto = this.getMapper().modelToDto(room);
     axios.put(ROOM_BASE_URL, roomDto, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).catch((error) => {
       console.log(error);
@@ -48,7 +48,7 @@ export class RoomService extends BaseService<Room, RoomDto> {
     let room;
     await axios.get(ROOM_BASE_URL + `/${id}`, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).then((response: AxiosResponse<RoomDto>) => {
       room = this.getMapper().dtoToModel(response.data);
@@ -68,7 +68,7 @@ export class RoomService extends BaseService<Room, RoomDto> {
     let rooms: Room[] = [];
     await axios.get(ROOM_BASE_URL, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).then((response: AxiosResponse<RoomDto[]>) => {
       response.data.forEach((roomDto: RoomDto) => {
@@ -88,7 +88,7 @@ export class RoomService extends BaseService<Room, RoomDto> {
         id
       },
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).catch((error) => {
       console.log(error);

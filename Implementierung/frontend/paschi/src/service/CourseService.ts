@@ -24,7 +24,7 @@ export class CourseService extends BaseService<Course, CourseDto> {
     const courseDto = this.getMapper().modelToDto(course);
     axios.post(COURSE_BASE_URL, courseDto, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).catch((error) => {
       console.log(error);
@@ -36,7 +36,7 @@ export class CourseService extends BaseService<Course, CourseDto> {
     const courseDto = this.getMapper().modelToDto(course);
     axios.put(COURSE_BASE_URL, courseDto, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).catch((error) => {
       console.log(error);
@@ -48,7 +48,7 @@ export class CourseService extends BaseService<Course, CourseDto> {
     let course;
     await axios.get(COURSE_BASE_URL + `/${id}`, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).then((response: AxiosResponse<CourseDto>) => {
       course = this.getMapper().dtoToModel(response.data);
@@ -68,7 +68,7 @@ export class CourseService extends BaseService<Course, CourseDto> {
     let courses: Course[] = [];
     await axios.get(COURSE_BASE_URL, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).then((response: AxiosResponse<CourseDto[]>) => {
       response.data.forEach((courseDto: CourseDto) => {
@@ -88,7 +88,7 @@ export class CourseService extends BaseService<Course, CourseDto> {
         id
       },
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).catch((error) => {
       console.log(error);

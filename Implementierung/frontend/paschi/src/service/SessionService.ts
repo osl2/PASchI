@@ -24,7 +24,7 @@ export class SessionService extends BaseService<Session, SessionDto> {
     const sessionDto = this.getMapper().modelToDto(session);
     axios.post(SESSION_BASE_URL, sessionDto, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).catch((error) => {
       console.log(error);
@@ -36,7 +36,7 @@ export class SessionService extends BaseService<Session, SessionDto> {
     const sessionDto = this.getMapper().modelToDto(session);
     axios.post(SESSION_BASE_URL, sessionDto, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).catch((error) => {
       console.log(error);
@@ -48,7 +48,7 @@ export class SessionService extends BaseService<Session, SessionDto> {
     let session;
     await axios.get(SESSION_BASE_URL + `/${id}`, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).then((response: AxiosResponse<SessionDto>) => {
       session = this.getMapper().dtoToModel(response.data);
@@ -68,7 +68,7 @@ export class SessionService extends BaseService<Session, SessionDto> {
     let sessions: Session[] = [];
     await axios.get(SESSION_BASE_URL, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).then((response: AxiosResponse<SessionDto[]>) => {
       response.data.forEach((sessionDto: SessionDto) => {
@@ -88,7 +88,7 @@ export class SessionService extends BaseService<Session, SessionDto> {
         id
       },
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).catch((error) => {
       console.log(error);

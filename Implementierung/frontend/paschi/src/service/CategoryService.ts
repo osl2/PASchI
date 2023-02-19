@@ -24,7 +24,7 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
     const categoryDto = this.getMapper().modelToDto(category);
     axios.post(CATEGORY_BASE_URL, categoryDto, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).catch((error) => {
       console.log(error);
@@ -36,7 +36,7 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
     const categoryDto = this.getMapper().modelToDto(category);
     axios.put(CATEGORY_BASE_URL, categoryDto, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).catch((error) => {
       console.log(error);
@@ -48,7 +48,7 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
     let category;
     await axios.get(CATEGORY_BASE_URL + `/${id}`, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).then((response: AxiosResponse<CategoryDto>) => {
       category = this.getMapper().dtoToModel(response.data);
@@ -68,7 +68,7 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
     let categories: Category[] = [];
     await axios.get(CATEGORY_BASE_URL, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).then((response: AxiosResponse<CategoryDto[]>) => {
       response.data.forEach((categoryDto: CategoryDto) => {
@@ -88,7 +88,7 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
         id
       },
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).catch((error) => {
       console.log(error);

@@ -36,7 +36,7 @@ export class ParticipantService extends BaseService<Participant, ParticipantDto>
     const participantDto = this.getMapper().modelToDto(participant);
     axios.put(PARTICIPANT_BASE_URL, participantDto, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).catch((error) => {
       console.log(error);
@@ -48,7 +48,7 @@ export class ParticipantService extends BaseService<Participant, ParticipantDto>
     let participant;
     await axios.get(PARTICIPANT_BASE_URL + `/${id}`, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).then((response: AxiosResponse<ParticipantDto>) => {
       participant = this.getMapper().dtoToModel(response.data);
@@ -68,7 +68,7 @@ export class ParticipantService extends BaseService<Participant, ParticipantDto>
     let participants: Participant[] = [];
     await axios.get(PARTICIPANT_BASE_URL, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).then((response: AxiosResponse<ParticipantDto[]>) => {
       response.data.forEach((participantDto: ParticipantDto) => {
@@ -88,7 +88,7 @@ export class ParticipantService extends BaseService<Participant, ParticipantDto>
         id
       },
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).catch((error) => {
       console.log(error);
