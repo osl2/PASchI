@@ -1,13 +1,12 @@
 import {User} from "@/model/User";
 import {useUserStore} from "@/store/UserStore";
 import {Role} from "@/model/Role";
-import {createPinia} from "pinia";
 import {UserService} from "@/service/UserService";
 
 export class UserController {
 
   private static controller: UserController = new UserController();
-  private userStore = useUserStore(createPinia());
+  private userStore = useUserStore();
   private userService = UserService.getService();
 
   private constructor() {
