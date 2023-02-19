@@ -2,6 +2,7 @@ package edu.kit.informatik.service;
 
 import edu.kit.informatik.dto.mapper.interactions.ParticipantMapper;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
+import edu.kit.informatik.exceptions.EntityNotFoundException;
 import edu.kit.informatik.model.userdata.interactions.Participant;
 import edu.kit.informatik.repositories.ParticipantRepository;
 import jakarta.transaction.Transactional;
@@ -51,7 +52,8 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
             return null;
         }
 
-        Participant repositoryParticipant = repositoryParticipantOptional.get();
+        Participant repositoryParticipant = repositoryParticipantOptional.orElseThrow(() ->
+                                                new EntityNotFoundException(Participant.class, participantDto.getId()));
         Participant newParticipant = this.mapper.dtoToModel(participantDto);
 
         if (!newParticipant.getFirstName().equals(repositoryParticipant.getFirstName())) {
@@ -71,7 +73,8 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
     public ParticipantDto getById(String id, Authentication authentication) {
         Optional<Participant> participantOptional = this.participantRepository.findParticipantById(id);
 
-        return participantOptional.map(this.mapper::modelToDto).orElse(null);
+        return participantOptional.map(this.mapper::modelToDto).orElseThrow(() ->
+                                                                    new EntityNotFoundException(Participant.class, id));
     }
 
     @Override
@@ -81,6 +84,8 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
 
     @Override
     public String delete(String id, Authentication authentication) {
+        Optional<Participant> participantOptional = this.participantRepository.findParticipantById(id);
+        participantOptional.orElseThrow(() -> new EntityNotFoundException(Participant.class, id));
         this.participantRepository.deleteById(id);
 
         return id;

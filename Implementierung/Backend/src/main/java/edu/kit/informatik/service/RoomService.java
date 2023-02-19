@@ -2,6 +2,7 @@ package edu.kit.informatik.service;
 
 import edu.kit.informatik.dto.mapper.rooms.RoomMapper;
 import edu.kit.informatik.dto.userdata.rooms.RoomDto;
+import edu.kit.informatik.exceptions.EntityNotFoundException;
 import edu.kit.informatik.model.userdata.rooms.Room;
 import edu.kit.informatik.repositories.RoomRepository;
 import jakarta.transaction.Transactional;
@@ -45,11 +46,8 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
     public RoomDto update(RoomDto roomDto, Authentication authentication) {
         Optional<Room> repositoryRoomOptional = this.roomRepository.findRoomById(roomDto.getId());
 
-        if (repositoryRoomOptional.isEmpty()) {
-            return null;
-        }
-
-        Room repositoyRoom = repositoryRoomOptional.get();
+        Room repositoyRoom = repositoryRoomOptional.orElseThrow(() ->
+                                                            new EntityNotFoundException(Room.class, roomDto.getId()));
         Room newRoom = this.mapper.dtoToModel(roomDto);
 
         if (!newRoom.getName().equals(repositoyRoom.getName())) {
@@ -67,7 +65,7 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
     public RoomDto getById(String id, Authentication authentication) {
         Optional<Room> roomOptional = this.roomRepository.findRoomById(id);
 
-        return roomOptional.map(this.mapper::modelToDto).orElse(null);
+        return roomOptional.map(this.mapper::modelToDto).orElseThrow(() -> new EntityNotFoundException(Room.class, id));
     }
 
     @Override
@@ -77,6 +75,9 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
 
     @Override
     public String delete(String id, Authentication authentication) {
+        Optional<Room> roomOptional = this.roomRepository.findRoomById(id);
+
+        roomOptional.orElseThrow(() -> new EntityNotFoundException(Room.class, id));
         this.roomRepository.deleteById(id);
 
         return id;
