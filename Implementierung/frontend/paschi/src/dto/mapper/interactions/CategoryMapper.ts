@@ -7,6 +7,7 @@ import {RatedCategory} from "@/model/userdata/interactions/RatedCategory";
 export class CategoryMapper implements IModelDtoMapper<Category, CategoryDto> {
 
   private static mapper: CategoryMapper = new CategoryMapper();
+  private ratedCategoryMapper = RatedCategoryMapper.getMapper();
 
   private constructor() {
   }
@@ -17,7 +18,7 @@ export class CategoryMapper implements IModelDtoMapper<Category, CategoryDto> {
 
   modelToDto(category: Category): CategoryDto {
     if (category.hasQuality()) {
-      return RatedCategoryMapper.getMapper().modelToDto(<RatedCategory> category);
+      return this.ratedCategoryMapper.modelToDto(<RatedCategory> category);
     }
 
     return new CategoryDto(
