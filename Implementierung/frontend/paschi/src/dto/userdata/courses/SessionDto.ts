@@ -8,10 +8,10 @@ export class SessionDto {
   date: string;
   interactionIds: string[]
   courseId: string;
-  seatArrangementId: string;
+  seatArrangementId: string | undefined;
 
   constructor(id: string, userId: string, createdAt: string, updatedAt: string, name: string, date: string,
-              intetactionIds: string[], courseId: string, seatArrangementId: string) {
+              intetactionIds: string[], courseId: string, seatArrangementId: string | undefined) {
     this.id = id;
     this.userId = userId;
     this.createdAt = createdAt;
