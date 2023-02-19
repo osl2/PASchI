@@ -8,6 +8,7 @@ import edu.kit.informatik.model.userdata.courses.Session;
 import edu.kit.informatik.repositories.SessionRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -76,7 +77,10 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
 
     @Override
     public List<SessionDto> getAll(Authentication authentication) {
-        return mapper.modelToDto(sessionRepository.findAll());
+        JwtAuthenticationToken jAT = (JwtAuthenticationToken) authentication;
+
+        return mapper.modelToDto(sessionRepository.findSessionsByUserId(
+                                                                    jAT.getTokenAttributes().get("userId").toString()));
     }
 
     @Override

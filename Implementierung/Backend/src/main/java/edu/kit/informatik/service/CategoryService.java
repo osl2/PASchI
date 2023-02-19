@@ -12,6 +12,7 @@ import edu.kit.informatik.repositories.CategoryBaseRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -96,7 +97,10 @@ public class CategoryService extends BaseService<Category, RatedCategoryDto, Cat
 
     @Override
     public List<CategoryDto> getAll(Authentication authentication) {
-        return this.mapper.modelToDto(this.categoryBaseRepository.findAll());
+        JwtAuthenticationToken jAT = (JwtAuthenticationToken) authentication;
+
+        return this.mapper.modelToDto(this.categoryBaseRepository.findCategoryByUserId(
+                                                                    jAT.getTokenAttributes().get("userId").toString()));
     }
 
     @Override

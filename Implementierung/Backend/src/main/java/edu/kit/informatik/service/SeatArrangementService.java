@@ -7,6 +7,7 @@ import edu.kit.informatik.model.userdata.courses.SeatArrangement;
 import edu.kit.informatik.repositories.SeatArrangementRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -74,7 +75,10 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
 
     @Override
     public List<SeatArrangementDto> getAll(Authentication authentication) {
-        return mapper.modelToDto(this.seatArrangementRepository.findAll());
+        JwtAuthenticationToken jAT = (JwtAuthenticationToken) authentication;
+
+        return mapper.modelToDto(this.seatArrangementRepository.findSeatArrangementsByUserId(
+                                                                    jAT.getTokenAttributes().get("userId").toString()));
     }
 
     @Override
