@@ -29,7 +29,7 @@ export class UserController {
     return user.getId;
   }
 
-  register(firstName: string, lastName: string, email: string, password: string, repeatPassword: string) {
+  async register(firstName: string, lastName: string, email: string, password: string, repeatPassword: string) {
     if (password !== repeatPassword) {
       return;
     }
@@ -43,7 +43,7 @@ export class UserController {
       Role.USER,
       undefined
     );
-    this.userService.add(user);
+    await this.userService.add(user);
   }
 
   update(firstName: string, lastName: string, email: string, password: string) {

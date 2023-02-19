@@ -8,7 +8,7 @@ export abstract class DataObject {
   protected constructor(id: string | undefined, localId: number) {
     this._id = id;
     this._localId = localId;
-    const date = new Date();
+    const date = new Date().toISOString();
     this._createdAt = date.toString();
     this._updatedAt = date.toString();
   }
