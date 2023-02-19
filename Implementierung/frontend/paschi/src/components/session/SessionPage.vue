@@ -60,7 +60,18 @@
           >
             <v-card class="v-col-3" @click="selectParticipant(participant)">
               <v-row no-gutters justify="space-around" class="ma-2">
-                <SeatLabel :participant="participant"></SeatLabel>
+                <v-col class="mr-n4">
+                  <v-row no-gutters justify="space-around" class="ma-2">
+                    <SeatLabel></SeatLabel>
+                  </v-row>
+                </v-col>
+                <v-col cols="1" class="ma-1">
+                  <v-icon
+                    icon="mdi mdi-view-list"
+                    @click="activateStudentInteractionList(participant)"
+                    v-on:click.stop
+                  ></v-icon>
+                </v-col>
               </v-row>
             </v-card>
           </template>
@@ -159,6 +170,34 @@
         </v-container>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="studentInteractionListDialog">
+      <v-card cols="11">
+        <v-list class="ma-2 v-col-12">
+          <v-row class="ma-2">
+            <v-col><div>Von</div></v-col>
+            <v-col><div>Nach</div></v-col>
+            <v-col><div>Katetegorie</div></v-col>
+            <v-col><div>Qualität</div></v-col>
+            <v-col><div>Zeit</div></v-col>
+          </v-row>
+          <v-divider/>
+          <v-row class="ma-2" v-for="interaction in interActionListBuffer">
+            <v-col><div> {{interaction.fromParticipant.firstName}} {{interaction.fromParticipant.lastName}} </div></v-col>
+            <v-col><div>{{interaction.toParticipant.firstName}} {{interaction.toParticipant.lastName}}</div></v-col>
+            <v-col><div>{{interaction.category.name}}</div></v-col>
+            <v-col>
+              <template v-if="interaction.category.hasQuality()">
+              <v-icon icon="mdi mdi-star" v-for="i in interaction.category.getQuality()+1"></v-icon>
+                <v-icon icon="mdi mdi-star-outline" v-for="i in 5-(interaction.category.getQuality()+1)"></v-icon>
+
+              </template>
+            </v-col>
+            <v-col><div>{{interaction.timeStamp}}</div></v-col>
+
+          </v-row>
+        </v-list>
+      </v-card>
+    </v-dialog>
   </v-main>
 </template>
 
@@ -176,7 +215,7 @@ import { CategoryController } from "@/controller/CategoryController";
 import { Course } from "@/model/userdata/courses/Course";
 import SeatLabel from "@/components/room/SeatLabel.vue";
 import { Quality } from "@/model/userdata/interactions/Quality";
-
+import { Interaction } from "@/model/userdata/interactions/Interaction";
 export default defineComponent({
   name: "SessionPage",
   components: { SeatLabel, SideMenu, NavigationBar },
@@ -224,14 +263,32 @@ export default defineComponent({
     const newCategoryDialog = ref(false);
     const newCategoryName = ref("");
     const newCategoryIsRated = ref(false);
+    const studentInteractionListDialog = ref(false);
+    const interactionListStudentBuffer: Ref<Participant | undefined> = ref<
+      Participant | undefined
+    >(undefined) as Ref<Participant | undefined>;
+    const interActionListBuffer = computed< Interaction[]>(() => {
+      if (typeof interactionListStudentBuffer.value === "undefined" ) {
+        return [];
+      }
+      let interactions: Interaction[]|undefined = sessionController.getInteractionsOfStudent(
+        props.sessionId,
+        interactionListStudentBuffer.value.getId
+      );
+      if (typeof interactions === "undefined") {
+        return []
+      }
+      return interactions
+    });
 
     function filterParticipants(participants: Participant[]): Participant[] {
       let searchInputUpperCase = searchInput.value.toUpperCase();
       return participants.filter((participant) => {
         return (
-          (participant.firstName + " " + participant.lastName).toUpperCase().startsWith(
-            searchInputUpperCase
-          ) || participant.lastName.toUpperCase().startsWith(searchInputUpperCase)
+          (participant.firstName + " " + participant.lastName)
+            .toUpperCase()
+            .startsWith(searchInputUpperCase) ||
+          participant.lastName.toUpperCase().startsWith(searchInputUpperCase)
         );
       });
     }
@@ -321,10 +378,6 @@ export default defineComponent({
       }
     }
     function createInteraction() {
-      console.log(selectedCategory.value!.getId);
-      console.log(firstParticipant.value!.getId);
-      console.log(secondParticipant.value!.getId);
-
       if (selectedCategory.value!.hasQuality()) {
         let quality: Quality;
         switch (categoryQuality.value) {
@@ -384,6 +437,11 @@ export default defineComponent({
       starDialog.value = false;
     }
 
+    function activateStudentInteractionList(participant: Participant) {
+      interactionListStudentBuffer.value = participant;
+      studentInteractionListDialog.value = true;
+    }
+
     return {
       starDialog,
       //teacher, TODO Kommentar entfernen
@@ -400,6 +458,9 @@ export default defineComponent({
       newCategoryDialog,
       newCategoryName,
       newCategoryIsRated,
+      studentInteractionListDialog,
+      interactionListStudentBuffer,
+      interActionListBuffer,
       resetInterActionParams,
       undoClick,
       redoClick,
@@ -411,6 +472,7 @@ export default defineComponent({
       addCategoryClick,
       confirmAddCategory,
       cancelAddCategory,
+      activateStudentInteractionList,
     };
   },
 });
