@@ -65,12 +65,6 @@ import { UserController } from "@/controller/UserController";
 export default defineComponent({
   name: "UserListCard",
   setup() {
-    const userController: UserController = UserController.getUserController();
-    userController.register("David", "nachname1", "email1", "", "");
-    userController.register("Cian", "nachname2", "email2", "", "");
-    userController.register("Aaron", "nachname3", "email3", "", "");
-    userController.register("Luka", "nachname4", "email4", "", "");
-    userController.register("Florian", "nachname5", "email5", "", "");
     const adminController: AdminController =
       AdminController.getAdminController();
     const users: Ref<User[]> = ref<User[]>(
@@ -140,38 +134,7 @@ export default defineComponent({
       collapsed,
       toggleCollapseMessage,
       searchInput,
-      users: [
-        new User(
-          undefined,
-          0,
-          "David",
-          "nachname1",
-          "email1",
-          true,
-          Role.USER,
-          ""
-        ),
-        new User(
-          undefined,
-          1,
-          "Cian",
-          "nachname2",
-          "email1",
-          true,
-          Role.USER,
-          ""
-        ),
-        new User(
-          undefined,
-          2,
-          "Luka",
-          "nachname3",
-          "email1",
-          true,
-          Role.USER,
-          ""
-        ),
-      ],
+      users,
     };
   },
 });

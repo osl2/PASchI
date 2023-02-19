@@ -68,12 +68,6 @@ import { UserController } from "@/controller/UserController";
 export default defineComponent({
   name: "RequestListCard",
   setup() {
-    const userController: UserController = UserController.getUserController();
-    userController.register("David", "nachname1", "email1", "", "");
-    userController.register("Cian", "nachname2", "email2", "", "");
-    userController.register("Aaron", "nachname3", "email3", "", "");
-    userController.register("Luka", "nachname4", "email4", "", "");
-    userController.register("Florian", "nachname5", "email5", "", "");
     const adminController: AdminController =
       AdminController.getAdminController();
     const requests: Ref<User[]> = ref<User[]>(
@@ -147,38 +141,7 @@ export default defineComponent({
       collapsed,
       toggleCollapseMessage,
       searchInput,
-      requests: [
-        new User(
-          undefined,
-          0,
-          "David",
-          "nachname1",
-          "email1",
-          false,
-          Role.USER,
-          ""
-        ),
-        new User(
-          undefined,
-          1,
-          "Cian",
-          "nachname2",
-          "email1",
-          false,
-          Role.USER,
-          ""
-        ),
-        new User(
-          undefined,
-          2,
-          "Luka",
-          "nachname3",
-          "email1",
-          false,
-          Role.USER,
-          ""
-        ),
-      ],
+      requests,
     };
   },
 });
