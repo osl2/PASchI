@@ -3,6 +3,7 @@ package edu.kit.informatik.service;
 
 import edu.kit.informatik.dto.mapper.courses.SessionMapper;
 import edu.kit.informatik.dto.userdata.courses.SessionDto;
+import edu.kit.informatik.exceptions.EntityNotFoundException;
 import edu.kit.informatik.model.userdata.courses.Session;
 import edu.kit.informatik.repositories.SessionRepository;
 import jakarta.transaction.Transactional;
@@ -47,11 +48,8 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
     public SessionDto update(SessionDto sessionDto, Authentication authentication) {
         Optional<Session> repositorySessionOptional = sessionRepository.findSessionById(sessionDto.getId());
 
-        if (repositorySessionOptional.isEmpty()) {
-            return null;
-        }
-
-        Session repositorySession = repositorySessionOptional.get();
+        Session repositorySession = repositorySessionOptional.orElseThrow(() -> new EntityNotFoundException(
+                                                                                    Session.class, sessionDto.getId()));
         Session newSession = this.mapper.dtoToModel(sessionDto);
 
         if (!newSession.getInteractions().equals(repositorySession.getInteractions())) {
@@ -69,7 +67,8 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
     public SessionDto getById(String id, Authentication authentication) {
         Optional<Session> sessionOptional = sessionRepository.findSessionById(id);
 
-        return sessionOptional.map(this.mapper::modelToDto).orElse(null);
+        return sessionOptional.map(this.mapper::modelToDto).orElseThrow(() -> new EntityNotFoundException(
+                Session.class, id));
     }
 
     @Override
@@ -79,6 +78,11 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
 
     @Override
     public String delete(String id, Authentication authentication) {
+        Optional<Session> sessionOptional = sessionRepository.findById(id);
+        if (sessionOptional.isEmpty()) {
+            throw new EntityNotFoundException(Session.class, id);
+        }
+
         this.sessionRepository.deleteById(id);
 
         return id;
