@@ -8,6 +8,7 @@ import edu.kit.informatik.repositories.UserRepository;
 import edu.kit.informatik.security.TokenService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -16,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -58,10 +60,11 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
     public UserDto add(UserDto userDto, Authentication authentication) {
         User user = this.mapper.dtoToModel(userDto);
 
+        final var EMAIL_ALREADY_EXITS = "EMAIL_ALREADY_EXITS";
         Optional<User> userOptional = userRepository.findUserByEmail(user.getEmail());
 
         if (userOptional.isPresent()) {
-            throw new IllegalArgumentException("Email already taken");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, EMAIL_ALREADY_EXITS);
         }
 
         String newPassword = new BCryptPasswordEncoder().encode(user.getPassword());
@@ -78,11 +81,9 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
     public UserDto update(UserDto userDto, Authentication authentication) {
 
         Optional<User> repositoryUserOptional = userRepository.findUserById(userDto.getId());
-        if (repositoryUserOptional.isEmpty()) {
-            throw new EntityNotFoundException(User.class, userDto.getId());
-        }
 
-        User repositoryUser = repositoryUserOptional.get();
+        User repositoryUser = repositoryUserOptional
+                .orElseThrow(() -> new EntityNotFoundException(User.class, userDto.getId()));
         User newUser = this.mapper.dtoToModel(userDto);
 
         if (!newUser.getFirstName().equals(repositoryUser.getFirstName())) {
