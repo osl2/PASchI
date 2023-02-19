@@ -69,17 +69,14 @@
 </template>
 
 <script lang="ts">
-import { useUserStore } from "@/store/UserStore";
 import AppBar from "@/components/navigation/NavigationBar.vue";
 import router from "@/plugins/router";
 export default {
   name: "Register",
   components: { AppBar },
   setup() {
-    const userStore = useUserStore();
 
     return {
-      userStore,
       router,
     };
   },

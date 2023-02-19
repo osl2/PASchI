@@ -2,8 +2,6 @@
   <NavigationBar>
     <template #default>
       <v-app-bar-title>
-        Willkommen zurück, {{ userStore.getFirstName }}
-        {{ userStore.getSurName }}
       </v-app-bar-title>
     </template>
     <template #append>
@@ -28,7 +26,6 @@
 
 <script>
 import AppBar from "@/components/navigation/NavigationBar.vue";
-import { useUserStore } from "@/store/UserStore";
 import RecentCoursesCard from "@/components/dashboard/RecentCoursesCard.vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import RecentSessionsCard from "@/components/dashboard/RecentSessionsCard.vue";
@@ -43,11 +40,6 @@ export default {
     RecentCoursesCard,
   },
   setup() {
-    const userStore = useUserStore();
-
-    return {
-      userStore,
-    };
   },
 };
 </script>

@@ -14,7 +14,6 @@
 </template>
 
 <script lang="ts">
-import { useUserStore } from "@/store/UserStore";
 import AppBar from "@/components/navigation/NavigationBar.vue";
 import router from "@/plugins/router";
 import UserListCard from "@/components/userManagement/UserListCard.vue";
@@ -23,10 +22,7 @@ export default {
   name: "AdminPage",
   components: { AppBar, RequestListCard, UserListCard },
   setup() {
-    const userStore = useUserStore();
-
     return {
-      userStore,
       router,
     };
   },
