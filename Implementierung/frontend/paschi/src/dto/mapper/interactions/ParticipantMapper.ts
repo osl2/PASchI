@@ -28,7 +28,7 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
   modelToDto(participant: Participant): ParticipantDto {
     const courseIds: string[] = [];
     const interactionIds: string[] = [];
-    let particpantType;
+    let particpantType = participant.isTeacher() ? ParticipantTypeDto.TEACHER : ParticipantTypeDto.STUDENT;
 
     participant.courses.forEach((course: Course) => {
       courseIds.push(course.getId)
@@ -36,12 +36,6 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
     participant.interactions.forEach((interaction: Interaction) => {
       interactionIds.push(interaction.getId)
     });
-
-    if (participant.isTeacher()) {
-      particpantType = ParticipantTypeDto.TEACHER;
-    } else {
-      particpantType = ParticipantTypeDto.STUDENT;
-    }
 
     return new ParticipantDto(
       participant.getId,
