@@ -18,6 +18,7 @@ import SeatArrangementPage from "@/components/room/SeatArrangementPage.vue";
 import ViewRoomsPage from "@/components/room/ViewRoomsPage.vue";
 import SessionPage from "@/components/session/SessionPage.vue";
 import SessionPageDesktop from "@/components/session/SessionPageDesktop.vue";
+import InteractionMap from "@/components/room/InteractionMap.vue";
 
 const routes = [
   { path: "/", redirect: "/login" },
@@ -110,6 +111,16 @@ const routes = [
     name: "SessionPageDesktop",
     component: SessionPageDesktop,
     props: true,
+  },
+  {
+    path: "/interaction-map",
+    name: "InteractionMapPage",
+    component: InteractionMap,
+  },
+  {
+    path: "/:catchAll(.*)",
+    name: "NotFound",
+    component: Dashboard,
   },
 ];
 
