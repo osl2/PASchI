@@ -127,6 +127,7 @@ export class SessionController {
       this.interactionStore.getNextId(),
       this.userController.getUser(),
       date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds(),
+      session,
       fromParticipant,
       toParticipant,
       category
