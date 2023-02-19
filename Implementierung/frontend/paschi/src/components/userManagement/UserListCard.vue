@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, Ref } from "vue";
+import { computed, defineComponent, onBeforeMount, ref, Ref } from "vue";
 import { AdminController } from "@/controller/AdminController";
 import { User } from "@/model/User";
 import { Role } from "@/model/Role";
@@ -67,9 +67,14 @@ export default defineComponent({
   setup() {
     const adminController: AdminController =
       AdminController.getAdminController();
-    const users: Ref<User[]> = ref<User[]>(
-      adminController.getUsersNotAuthenticated()
-    ) as Ref<User[]>;
+    const users: Ref<User[]> = ref<User[]>() as Ref<User[]>;
+    onBeforeMount(() => {
+      adminController
+        .getUsersNotAuthenticated()
+        .then((notAuthenticatedUsers) => {
+          users.value = notAuthenticatedUsers;
+        });
+    });
     const searchInput = ref("");
     const searchParameters = computed(() => {
       if (
