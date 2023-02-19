@@ -57,7 +57,8 @@
         </v-list-item>
         <v-row no-gutters>
           <template
-            v-bind="participant.getId" v-for="participant in filterParticipants(
+            v-bind="participant.getId"
+            v-for="participant in filterParticipants(
               courseParticipantsSortedByName
             )"
           >
@@ -175,6 +176,18 @@
     </v-dialog>
     <v-dialog v-model="studentInteractionListDialog">
       <v-card cols="11">
+        <v-card-title>
+          <v-row>
+            <v-col cols="11" no-gutters
+            ><div class="v-col-11">Interaktionen</div></v-col
+            >
+            <v-col cols="1" no-gutters align-self="start">
+              <v-row justify="end">
+                <v-icon class="ma-2" @click="studentInteractionListDialog = false">mdi mdi-close</v-icon>
+              </v-row>
+            </v-col>
+          </v-row>
+        </v-card-title>
         <v-list class="ma-2 v-col-12">
           <v-row class="ma-2">
             <v-col><div>Von</div></v-col>
@@ -184,7 +197,11 @@
             <v-col><div>Zeit</div></v-col>
           </v-row>
           <v-divider />
-          <v-row class="ma-2" v-bind="interaction.getId" v-for="interaction in interActionListBuffer.reverse()">
+          <v-row
+            class="ma-2"
+            v-bind="interaction.getId"
+            v-for="interaction in interActionListBuffer.reverse()"
+          >
             <v-col
               ><div>
                 {{ interaction.fromParticipant.firstName }}
@@ -221,6 +238,18 @@
     </v-dialog>
     <v-dialog v-model="interactionListDialog">
       <v-card cols="11">
+        <v-card-title>
+          <v-row>
+            <v-col cols="11" no-gutters
+              ><div class="v-col-11">Interaktionen</div></v-col
+            >
+            <v-col cols="1" no-gutters align-self="start">
+              <v-row justify="end">
+                <v-icon class="ma-2" @click="interactionListDialog = false">mdi mdi-close</v-icon>
+              </v-row>
+            </v-col>
+          </v-row>
+        </v-card-title>
         <v-list class="ma-2 v-col-12">
           <v-row class="ma-2">
             <v-col><div>Von</div></v-col>
@@ -230,7 +259,11 @@
             <v-col><div>Zeit</div></v-col>
           </v-row>
           <v-divider />
-          <v-row class="ma-2" v-bind="interaction.getId" v-for="interaction in interActionListBuffer.reverse()">
+          <v-row
+            class="ma-2"
+            v-bind="interaction.getId"
+            v-for="interaction in interActionListBuffer.reverse()"
+          >
             <v-col
               ><div>
                 {{ interaction.fromParticipant.firstName }}
@@ -542,6 +575,7 @@ export default defineComponent({
       studentInteractionListDialog,
       interactionListStudentBuffer,
       interActionListBuffer,
+      interactionListStudentBuffer,
       activateInteractionList,
       resetInterActionParams,
       undoClick,
