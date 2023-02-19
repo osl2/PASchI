@@ -2,6 +2,7 @@ package edu.kit.informatik.service;
 
 import edu.kit.informatik.dto.mapper.courses.CourseMapper;
 import edu.kit.informatik.dto.userdata.courses.CourseDto;
+import edu.kit.informatik.exceptions.EntityNotFoundException;
 import edu.kit.informatik.model.userdata.courses.Course;
 import edu.kit.informatik.repositories.CourseRepository;
 import jakarta.transaction.Transactional;
@@ -44,11 +45,8 @@ public class CourseService extends BaseService<Course, CourseDto, CourseDto> {
     public CourseDto update(CourseDto courseDto, Authentication authentication) {
         Optional<Course> repositoryCourseOptional = this.courseRepository.findById(courseDto.getId());
 
-        if (repositoryCourseOptional.isEmpty()) {
-            return null;
-        }
-
-        Course repositoryCourse = repositoryCourseOptional.get();
+        Course repositoryCourse = repositoryCourseOptional.orElseThrow(() ->
+                                                        new EntityNotFoundException(Course.class, courseDto.getId()));
         Course newCourse = this.mapper.dtoToModel(courseDto);
 
         if (!newCourse.getName().equals(repositoryCourse.getName())) {
@@ -70,7 +68,8 @@ public class CourseService extends BaseService<Course, CourseDto, CourseDto> {
     public CourseDto getById(String id, Authentication authentication) {
         Optional<Course> courseOptional = this.courseRepository.findCourseById(id);
 
-        return courseOptional.map(this.mapper::modelToDto).orElse(null);
+        return courseOptional.map(this.mapper::modelToDto).orElseThrow(() ->
+                                                                        new EntityNotFoundException(Course.class, id));
     }
 
     @Override
@@ -80,6 +79,9 @@ public class CourseService extends BaseService<Course, CourseDto, CourseDto> {
 
     @Override
     public String delete(String id, Authentication authentication) {
+        Optional<Course> courseOptional = this.courseRepository.findCourseById(id);
+        courseOptional.orElseThrow(() -> new EntityNotFoundException(Course.class, id));
+
         this.courseRepository.deleteById(id);
         return id;
     }

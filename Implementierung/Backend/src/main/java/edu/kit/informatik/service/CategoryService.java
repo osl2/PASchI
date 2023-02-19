@@ -5,6 +5,7 @@ import edu.kit.informatik.dto.mapper.interactions.CategoryMapper;
 import edu.kit.informatik.dto.mapper.interactions.RatedCategoryMapper;
 import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
 import edu.kit.informatik.dto.userdata.interactions.RatedCategoryDto;
+import edu.kit.informatik.exceptions.EntityNotFoundException;
 import edu.kit.informatik.model.userdata.interactions.Category;
 import edu.kit.informatik.model.userdata.interactions.RatedCategory;
 import edu.kit.informatik.repositories.CategoryBaseRepository;
@@ -69,11 +70,8 @@ public class CategoryService extends BaseService<Category, RatedCategoryDto, Cat
         Optional<Category> repositoryCategoryOptional = this.categoryBaseRepository
                                                                 .findCategoryById(categoryDto.getId());
 
-        if (repositoryCategoryOptional.isEmpty()) {
-            return null;
-        }
-
-        Category repositoryCategory = repositoryCategoryOptional.get();
+        Category repositoryCategory = repositoryCategoryOptional.orElseThrow(() ->
+                                                    new EntityNotFoundException(Category.class, categoryDto.getId()));
         Category newCategory = this.mapper.dtoToModel(categoryDto);
 
         if (!newCategory.getName().equals(repositoryCategory.getName())) {
@@ -92,7 +90,8 @@ public class CategoryService extends BaseService<Category, RatedCategoryDto, Cat
     public CategoryDto getById(String id, Authentication authentication) {
         Optional<Category> categoryOptional = this.categoryBaseRepository.findCategoryById(id);
 
-        return categoryOptional.map(this.mapper::modelToDto).orElse(null);
+        return categoryOptional.map(this.mapper::modelToDto).orElseThrow(() ->
+                                                                    new EntityNotFoundException(Category.class, id));
     }
 
     @Override
@@ -102,6 +101,9 @@ public class CategoryService extends BaseService<Category, RatedCategoryDto, Cat
 
     @Override
     public String delete(String id, Authentication authentication) {
+        Optional<Category> categoryOptional = this.categoryBaseRepository.findCategoryById(id);
+        categoryOptional.orElseThrow(() -> new EntityNotFoundException(Category.class, id));
+
         this.categoryBaseRepository.deleteById(id);
         return id;
     }
