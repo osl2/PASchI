@@ -14,9 +14,6 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
 
   private static mapper: ParticipantMapper = new ParticipantMapper();
   private userController = UserController.getUserController();
-  private studentStore = useStudentStore();
-  private courseStore = useCourseStore();
-  private interactionStore = useInteractionStore();
 
   private constructor() {
   }
@@ -51,7 +48,7 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
   }
 
   dtoToModel(participantDto: ParticipantDto): Participant {
-    let participant = this.studentStore.getStudent(participantDto.id);
+    let participant = useStudentStore().getStudent(participantDto.id);
     if (participant == undefined) {
       participant = new Student(
         participantDto.id,
@@ -60,7 +57,7 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
         participantDto.firstName,
         participantDto.lastName
       )
-      this.studentStore.addStudent(participant);
+      useStudentStore().addStudent(participant);
     } else if (participantDto.updatedAt <= participant.updatedAt && participantDto.createdAt >= participant.createdAt) {
       return participant;
     } else {
@@ -75,7 +72,7 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
     const interactions: Interaction[] = [];
 
     participantDto.courseIds.forEach((id: string) => {
-      let course = this.courseStore.getCourse(id);
+      let course = useCourseStore().getCourse(id);
       // if (course == undefined) {
       //   course = new Course(id, 0, this.userController.getUser(), "", "");
       //   this.courseStore.addCourse(course);
@@ -86,7 +83,7 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
       }
     });
     participantDto.interactionIds.forEach((id: string) => {
-      let interaction = this.interactionStore.getInteraction(id);
+      let interaction = useInteractionStore().getInteraction(id);
       if (interaction !== undefined) {
         interactions.push(interaction);
       }

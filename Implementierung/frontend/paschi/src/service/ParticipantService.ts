@@ -24,7 +24,7 @@ export class ParticipantService extends BaseService<Participant, ParticipantDto>
     const participantDto = this.getMapper().modelToDto(participant);
     axios.post(PARTICIPANT_BASE_URL, participantDto, {
       headers: {
-        'Authorization': token
+        Authorization: `Bearer ${token}`
       }
     }).catch((error) => {
       console.log(error);
