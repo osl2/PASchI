@@ -1,12 +1,16 @@
 import {IModelDtoMapper} from "@/dto/mapper/IModelDtoMapper";
 import {RoomObject} from "@/model/userdata/rooms/RoomObject";
 import {RoomObjectDto} from "@/dto/userdata/rooms/RoomObjectDto";
-import {PositionMapper} from "@/dto/mapper/rooms/PositionMapper";
+import {ChairMapper} from "@/dto/mapper/rooms/ChairMapper";
+import {TableMapper} from "@/dto/mapper/rooms/TableMapper";
+import {Table} from "@/model/userdata/rooms/Table";
+import {Chair} from "@/model/userdata/rooms/Chair";
 
 export class RoomObjectMapper implements IModelDtoMapper<RoomObject, RoomObjectDto> {
 
   private static mapper: RoomObjectMapper = new RoomObjectMapper();
-  private positionMapper = PositionMapper.getMapper();
+  private chairMapper = ChairMapper.getMapper();
+  private tableMapper = TableMapper.getMapper();
 
   private constructor() {
   }
@@ -16,13 +20,11 @@ export class RoomObjectMapper implements IModelDtoMapper<RoomObject, RoomObjectD
   }
 
   modelToDto(roomObject: RoomObject): RoomObjectDto {
-    return new RoomObjectDto(
-      roomObject.getId,
-      roomObject.user.getId,
-      roomObject.createdAt,
-      roomObject.updatedAt,
-      this.positionMapper.modelToDto(roomObject.position)
-    );
+    if (roomObject.isTable()) {
+      return this.tableMapper.modelToDto(<Table> roomObject);
+    } else {
+      return this.chairMapper.modelToDto(<Chair> roomObject);
+    }
   }
 
   dtoToModel(roomObjectDto: RoomObjectDto): RoomObject {
