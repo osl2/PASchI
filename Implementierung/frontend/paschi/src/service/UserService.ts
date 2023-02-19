@@ -128,9 +128,13 @@ export class UserService extends BaseService<User, UserDto> {
   }
 
   adminUpdate(user: User) {
+    const token = this.userStore.getUser()?.token;
     const userDto = this.getMapper().modelToDto(user);
-    userDto.auth = true;
-    axios.put(USER_BASE_URL + '/admin', userDto).catch((error) => {
+    axios.put(USER_BASE_URL + '/admin', userDto, {
+      headers: {
+        'Authorization': token
+      }
+    }).catch((error) => {
       console.log(error);
     });
   }
