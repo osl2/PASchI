@@ -4,6 +4,7 @@ import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.model.userdata.interactions.Participant;
 import edu.kit.informatik.service.ParticipantService;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import java.util.List;
  * @version 1.0
  */
 @RestController
+@CrossOrigin
 @RequestMapping(path = "/api/participant")
 public class ParticipantController extends BaseController<Participant, ParticipantDto, ParticipantDto> {
 

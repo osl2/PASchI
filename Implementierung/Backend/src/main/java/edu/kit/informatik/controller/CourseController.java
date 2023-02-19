@@ -4,6 +4,7 @@ import edu.kit.informatik.dto.userdata.courses.CourseDto;
 import edu.kit.informatik.model.userdata.courses.Course;
 import edu.kit.informatik.service.CourseService;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import java.util.List;
  * @version 1.0
  */
 @RestController
+@CrossOrigin
 @RequestMapping(path = "/api/course")
 public class CourseController extends BaseController<Course, CourseDto, CourseDto> {
 

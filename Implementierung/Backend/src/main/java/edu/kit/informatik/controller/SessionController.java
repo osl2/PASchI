@@ -4,6 +4,7 @@ import edu.kit.informatik.dto.userdata.courses.SessionDto;
 import edu.kit.informatik.model.userdata.courses.Session;
 import edu.kit.informatik.service.SessionService;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import java.util.List;
  * @version 1.0
  */
 @RestController
+@CrossOrigin
 @RequestMapping(path = "/api/session")
 public class SessionController extends BaseController<Session, SessionDto, SessionDto> {
 
