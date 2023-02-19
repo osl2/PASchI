@@ -1,8 +1,10 @@
 package edu.kit.informatik.service;
 
 import edu.kit.informatik.dto.mapper.IModelDtoMapper;
+import edu.kit.informatik.exceptions.NotEntityOfUserException;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -70,5 +72,13 @@ public abstract class BaseService<Entity, ParameterDto, ReturnDto> {
      * @return id
      */
     public abstract String delete(String id, Authentication authentication);
+
+    public void checkAuthorization(Authentication authentication, String userId) throws NotEntityOfUserException {
+        JwtAuthenticationToken jAT = (JwtAuthenticationToken) authentication;
+
+        if (!jAT.getTokenAttributes().get("userId").equals(userId)) {
+            throw  new NotEntityOfUserException(userId);
+        }
+    }
 
 }
