@@ -28,7 +28,7 @@ export class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, S
 
     return new SeatArrangementDto(
       arrangement.getId,
-      this.userController.getUser().getId,
+      arrangement.user.getId,
       arrangement.createdAt,
       arrangement.updatedAt,
       arrangement.name,
