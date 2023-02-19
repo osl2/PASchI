@@ -9,12 +9,13 @@
         color="green"
         rounded
         prepend-icon="mdi mdi-download"
-        @click="downloadClicked()"
+        @click="downloadClicked"
       > Statistiken herunterladen</v-btn>
     </template>
   </navigation-bar>
   <v-main>
     <SideMenu />
+    <div id="content">
     <v-container fluid>
       <v-row justify="space-around" align-content="stretch">
         <v-col>
@@ -45,6 +46,7 @@
         </v-col>
       </v-row>
     </v-container>
+    </div>
 
   </v-main>
 </template>
@@ -56,8 +58,6 @@ import SideMenu from "@/components/navigation/SideMenu.vue";
 import Chart from 'chart.js/auto';
 import {StatsController} from "@/controller/StatsController";
 import {StudentController} from "@/controller/StudentController";
-
-
 
 
 export default defineComponent({
@@ -77,80 +77,74 @@ export default defineComponent({
     const firstName = studentController.getStudent(props.studentId)?.firstName;
     const lastName = studentController.getStudent(props.studentId)?.lastName;
 
-    const a = document.createElement('a');
+    const downloadElement = document.createElement('a');
+
     function downloadClicked() {
-      a.click();
+      downloadElement.click();
     }
     onMounted(() => {
-      const categoryChartId = document.getElementById('categoryChart') as HTMLCanvasElement;
-      const stats  = statsController.getStudentStats(props.studentId);
+        const categoryChartId = document.getElementById('categoryChart') as HTMLCanvasElement;
+        const stats  = statsController.getStudentStats(props.studentId);
 
-      if (stats == undefined) {
-        console.log('stats controller konnte nicht erreicht werden');
-        return;
-      }
-
-      let keys = stats[0].keys();
-      let values = stats[0].values();
-      console.log(keys  + 'das waren die keys');
-      console.log(values);
-
-      const data = {
-        labels:
-          ['Störungsdummy', 'Antwortdummy', 'Fragendummy'],
-        //keys,
-        datasets: [{
-          label: 'Anzahl',
-          data:
-            [5,47,19],
-          //values,
-        }]
-      };
-
-
-      const categoryChart = new Chart(categoryChartId, {
-        type: 'pie',
-        data: data,
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: true,
-              labels: {
-                color: 'rgb(0,0,0)'
-              }
-            }
-          },
-          animation : {
-          onComplete : done
-          }
+        if (stats == undefined) {
+          console.log('stats could not be loaded');
+          return;
         }
-      });
+
+        let keys = stats[0].keys();
+        let values = stats[0].values();
 
 
-      function done(){
-        a.href = categoryChart.toBase64Image();
-        a.download = 'Schülerstatistik.png';
+        const data = {
+          labels:
+            ['Störungsdummy', 'Antwortdummy', 'Fragendummy'],
+          //keys,
+          datasets: [{
+            label: 'Anzahl',
+            data:
+              [5,47,19],
+            //values,
+          }]
+        };
+
+
+        const categoryChart = new Chart(categoryChartId, {
+          type: 'pie',
+          data: data,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: true,
+                labels: {
+                  color: 'rgb(0,0,0)'
+                }
+              }
+            },
+            animation : {
+              onComplete : done
+            }
+          }
+        });
+
+
+        function done(){
+          downloadElement.href = categoryChart.toBase64Image();
+            downloadElement.download = 'Schülerstatistik.png';
+          }
+
+          categoryChart;
+
+        }
+      )
+      return{
+        statsController, firstName, lastName, downloadClicked
       }
+    },
+  }
 
-      categoryChart;
-
-    }
-  )
-    return{
-      statsController, firstName, lastName, downloadClicked
-    }
-  },
-}
-
-
-
-);
-
-
-
-
+)
 
 
 
