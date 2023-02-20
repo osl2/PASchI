@@ -23,6 +23,8 @@ import java.util.Optional;
 @Component
 public class ParticipantService extends BaseService<Participant, ParticipantDto, ParticipantDto> {
 
+    private static final String ID_ATTRIBUTE = "userId";
+
     private final ParticipantRepository participantRepository;
 
     /**
@@ -82,7 +84,7 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
         JwtAuthenticationToken jAT = (JwtAuthenticationToken) authentication;
 
         return this.mapper.modelToDto(this.participantRepository.findParticipantsByUserId(
-                                                                    jAT.getTokenAttributes().get("userId").toString()));
+                                                                jAT.getTokenAttributes().get(ID_ATTRIBUTE).toString()));
     }
 
     @Override

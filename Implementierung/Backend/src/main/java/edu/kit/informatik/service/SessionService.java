@@ -24,6 +24,8 @@ import java.util.Optional;
 @Component
 public class SessionService extends BaseService<Session, SessionDto, SessionDto> {
 
+    private static final String ID_ATTRIBUTE = "userId";
+
     private final SessionRepository sessionRepository;
 
     /**
@@ -80,7 +82,7 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
         JwtAuthenticationToken jAT = (JwtAuthenticationToken) authentication;
 
         return mapper.modelToDto(sessionRepository.findSessionsByUserId(
-                                                                    jAT.getTokenAttributes().get("userId").toString()));
+                                                                jAT.getTokenAttributes().get(ID_ATTRIBUTE).toString()));
     }
 
     @Override

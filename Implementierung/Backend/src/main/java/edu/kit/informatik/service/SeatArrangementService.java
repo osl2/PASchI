@@ -23,6 +23,8 @@ import java.util.Optional;
 @Component
 public class SeatArrangementService extends BaseService<SeatArrangement, SeatArrangementDto, SeatArrangementDto> {
 
+    private static final String ID_ATTRIBUTE = "userId";
+
     private final SeatArrangementRepository seatArrangementRepository;
 
     /**
@@ -78,7 +80,7 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
         JwtAuthenticationToken jAT = (JwtAuthenticationToken) authentication;
 
         return mapper.modelToDto(this.seatArrangementRepository.findSeatArrangementsByUserId(
-                                                                    jAT.getTokenAttributes().get("userId").toString()));
+                                                                jAT.getTokenAttributes().get(ID_ATTRIBUTE).toString()));
     }
 
     @Override

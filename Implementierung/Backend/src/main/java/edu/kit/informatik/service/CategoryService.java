@@ -29,6 +29,8 @@ import java.util.Optional;
 @EnableAutoConfiguration
 public class CategoryService extends BaseService<Category, RatedCategoryDto, CategoryDto> {
 
+    private static final String ID_ATTRIBUTE = "userId";
+
     private final CategoryBaseRepository<Category, String> categoryBaseRepository;
     private final RatedCategoryMapper ratedCategoryMapper;
 
@@ -95,7 +97,7 @@ public class CategoryService extends BaseService<Category, RatedCategoryDto, Cat
         JwtAuthenticationToken jAT = (JwtAuthenticationToken) authentication;
 
         return this.mapper.modelToDto(this.categoryBaseRepository.findCategoryByUserId(
-                                                                    jAT.getTokenAttributes().get("userId").toString()));
+                                                                jAT.getTokenAttributes().get(ID_ATTRIBUTE).toString()));
     }
 
     @Override

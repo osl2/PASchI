@@ -23,6 +23,8 @@ import java.util.Optional;
 @Component
 public class CourseService extends BaseService<Course, CourseDto, CourseDto> {
 
+    private static final String ID_ATTRIBUTE = "userId";
+
     private final CourseRepository courseRepository;
 
     /**
@@ -82,7 +84,7 @@ public class CourseService extends BaseService<Course, CourseDto, CourseDto> {
         JwtAuthenticationToken jAT = (JwtAuthenticationToken) authentication;
 
         return this.mapper.modelToDto(this.courseRepository.findCoursesByUserId(
-                jAT.getTokenAttributes().get("userId").toString()));
+                jAT.getTokenAttributes().get(ID_ATTRIBUTE).toString()));
     }
 
     @Override

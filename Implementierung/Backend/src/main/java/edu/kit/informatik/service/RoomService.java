@@ -23,6 +23,8 @@ import java.util.Optional;
 @Component
 public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
 
+    private static final String ID_ATTRIBUTE = "userId";
+
     private final RoomRepository roomRepository;
 
     /**
@@ -77,7 +79,7 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
         JwtAuthenticationToken jAT = (JwtAuthenticationToken) authentication;
 
         return mapper.modelToDto(this.roomRepository.findRoomsByUserId(
-                                                                    jAT.getTokenAttributes().get("userId").toString()));
+                                                                jAT.getTokenAttributes().get(ID_ATTRIBUTE).toString()));
     }
 
     @Override
