@@ -6,6 +6,7 @@ import edu.kit.informatik.dto.userdata.rooms.TableDto;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.rooms.Position;
 import edu.kit.informatik.model.userdata.rooms.Table;
+import edu.kit.informatik.repositories.TableRepository;
 import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,16 +26,20 @@ import java.util.List;
 @Service
 public class TableMapper implements IModelDtoMapper<Table, TableDto> {
     private final UserRepository userRepository;
+    private final TableRepository tableRepository;
     private final PositionMapper positionMapper;
 
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
-     * @param userRepository {@link UserRepository}
-     * @param positionMapper {@link PositionMapper}
+     *
+     * @param userRepository  {@link UserRepository}
+     * @param tableRepository {@link TableRepository}
+     * @param positionMapper  {@link PositionMapper}
      */
     @Autowired
-    public TableMapper(UserRepository userRepository, PositionMapper positionMapper) {
+    public TableMapper(UserRepository userRepository, TableRepository tableRepository, PositionMapper positionMapper) {
         this.userRepository = userRepository;
+        this.tableRepository = tableRepository;
         this.positionMapper = positionMapper;
     }
 
@@ -74,8 +79,10 @@ public class TableMapper implements IModelDtoMapper<Table, TableDto> {
             updatedAt = tableDto.getUpdatedAt();
         }
 
-        return new Table(user, position, tableDto.getLength(), tableDto.getWidth(),
-                            tableDto.getCreatedAt(), updatedAt);
+        Table table = new Table(user, position, tableDto.getLength(), tableDto.getWidth(),
+                tableDto.getCreatedAt(), updatedAt);
+
+        return tableRepository.save(table);
     }
 
     @Override
