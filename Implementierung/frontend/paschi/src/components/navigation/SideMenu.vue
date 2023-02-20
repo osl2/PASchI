@@ -1,9 +1,9 @@
 <template>
-  <v-navigation-drawer absolute elevation="10" floating expand-on-hover rail>
+  <v-navigation-drawer v-if="!isMobile" permanent absolute elevation="10" floating expand-on-hover rail>
     <v-list
       nav
       density="compact"
-      active-class="sideMenu-active"
+      active-class="isMobile"
       class="mt-12 text-white"
     >
       <v-list-item
@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import {defineComponent, inject, Ref} from "vue";
 import router from "@/plugins/router";
 import { useRoute } from "vue-router";
 
@@ -68,11 +68,14 @@ export default defineComponent({
     },
   },
   setup() {
+    const isMobile: Ref<boolean> = inject('isMobile') as Ref<boolean>
+
     function subRouteOf(route: string): boolean {
       return useRoute().matched.some(({ name }) => name === route);
     }
 
     return {
+      isMobile,
       subRouteOf,
     };
   },
