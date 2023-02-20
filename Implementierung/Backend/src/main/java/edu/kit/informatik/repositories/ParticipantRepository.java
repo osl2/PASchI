@@ -18,14 +18,14 @@ import java.util.Optional;
 public interface ParticipantRepository extends JpaRepository<Participant, String> {
 
     /**
-     * Methode zur Rückgabe eines Optionals von {@link Participant}
-     * @param id Id
+     * Rückgabe eines {@link Optional} von {@link Participant}
+     * @param id Id eines {@link Participant}
      * @return {@link Optional} von {@link Participant}
      */
     Optional<Participant> findParticipantById(String id);
 
     /**
-     * Methode zur Rückgabe eins Optionals von {@link  Participant}
+     * Rückgabe eines {@link Optional} von {@link  Participant}
      * @param userId Id eines {@link User}
      * @return {@link Optional} von {@link Participant}
      */

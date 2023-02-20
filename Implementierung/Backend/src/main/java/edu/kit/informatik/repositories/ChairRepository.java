@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface ChairRepository extends JpaRepository<Chair, String> {
     /**
      * Rückgabe eines {@link Optional} von {@link Chair}
-     * @param id Id
+     * @param id Id eines {@link Chair}
      * @return {@link Optional} von {@link Chair}
      */
     Optional<Chair> findChairById(String id);

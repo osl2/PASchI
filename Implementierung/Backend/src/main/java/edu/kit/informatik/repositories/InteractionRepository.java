@@ -19,7 +19,7 @@ public interface InteractionRepository extends JpaRepository<Interaction, String
 
     /**
      * Rückgabe eines {@link Optional} mit {@link Interaction}
-     * @param id InteraktionId
+     * @param id Id einer {@link Interaction}
      * @return {@link Optional} von {@link Interaction}
      */
     Optional<Interaction> findInteractionById(String id);

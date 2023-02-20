@@ -19,7 +19,7 @@ public interface CourseRepository extends JpaRepository<Course, String> {
 
     /**
      * Rückgabe von Optional von {@link Course}
-     * @param id Id
+     * @param id Id des {@link Course}
      * @return {@link Optional} von {@link Course}
      */
     Optional<Course> findCourseById(String id);
