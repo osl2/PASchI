@@ -58,11 +58,6 @@ public class CategoryService extends BaseService<Category, RatedCategoryDto, Cat
             return this.ratedCategoryMapper.modelToDto(newCategory);
         }
 
-        //System.out.println(categoryDto.getId());
-
-        //this.mapper.dtoToModel(categoryDto);
-        //this.categoryBaseRepository.save(new Category());
-
     }
 
     @Transactional
