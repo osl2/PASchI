@@ -8,7 +8,7 @@ import lombok.Getter;
 import java.sql.Timestamp;
 
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @Getter
 @Entity
 @jakarta.persistence.Table(name = "tables")
