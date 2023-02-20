@@ -4,6 +4,7 @@ import edu.kit.informatik.dto.mapper.rooms.RoomMapper;
 import edu.kit.informatik.dto.userdata.rooms.RoomDto;
 import edu.kit.informatik.exceptions.EntityNotFoundException;
 import edu.kit.informatik.model.userdata.rooms.Chair;
+import edu.kit.informatik.model.userdata.rooms.Position;
 import edu.kit.informatik.model.userdata.rooms.Room;
 import edu.kit.informatik.model.userdata.rooms.Table;
 import edu.kit.informatik.repositories.ChairRepository;
@@ -59,6 +60,7 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
         super.checkAuthorization(authentication, roomDto.getUserId());
         Room room = this.mapper.dtoToModel(roomDto);
 
+        //Room newRoom = this.roomRepository.save(room);
         Room newRoom = this.roomRepository.save(saveRoomObjects(room));
 
         return this.mapper.modelToDto(newRoom);
@@ -70,16 +72,16 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
         super.checkAuthorization(authentication, roomDto.getUserId());
         Optional<Room> repositoryRoomOptional = this.roomRepository.findRoomById(roomDto.getId());
 
-        Room repositoyRoom = repositoryRoomOptional.orElseThrow(() ->
+        Room repositoryRoom = repositoryRoomOptional.orElseThrow(() ->
                                                             new EntityNotFoundException(Room.class, roomDto.getId()));
         Room newRoom = this.mapper.dtoToModel(roomDto);
 
-        if (!newRoom.getName().equals(repositoyRoom.getName())) {
-            repositoyRoom.setName(newRoom.getName());
-        } else if (!newRoom.getTables().equals(repositoyRoom.getTables())) {
-            repositoyRoom.setTables(updateTables(repositoyRoom, newRoom));
-        } else if (!newRoom.getChairs().equals(repositoyRoom.getChairs())) {
-            repositoyRoom.setChairs(updateChair(repositoyRoom, newRoom));
+        if (!newRoom.getName().equals(repositoryRoom.getName())) {
+            repositoryRoom.setName(newRoom.getName());
+        } else if (!newRoom.getTables().equals(repositoryRoom.getTables())) {
+            repositoryRoom.setTables(updateTables(repositoryRoom, newRoom));
+        } else if (!newRoom.getChairs().equals(repositoryRoom.getChairs())) {
+            repositoryRoom.setChairs(updateChair(repositoryRoom, newRoom));
         }
 
         return roomDto;
@@ -126,23 +128,34 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
     }
 
     @Transactional
-    private List<Table> updateTables(Room reposioryRoom, Room newRoom) {
+    private List<Table> updateTables(Room repositoryRoom, Room newRoom) {
         List<Table> returnTables = new ArrayList<>();
 
         for (Table newTable: newRoom.getTables()) {
+            System.out.println(newTable.toString());
             boolean found = false;
-            for (Table repositoryTable: reposioryRoom.getTables())  {
+            for (Table repositoryTable: repositoryRoom.getTables())  {
+                System.out.println(repositoryTable.toString());
                 // Tische werden als gleich befunden, wenn der Erstell-Timestamp gleich ist
                 if (repositoryTable.getCreatedAt().equals(newTable.getCreatedAt())) {
-                    returnTables.add(newTable);
+                    repositoryTable.setWidth(newTable.getWidth());
+                    repositoryTable.setLength(newTable.getLength());
+                    Position oldPosition = repositoryTable.getPosition();
+
+                    oldPosition.setXCoordinate(newTable.getPosition().getXCoordinate());
+                    oldPosition.setYCoordinate(newTable.getPosition().getYCoordinate());
+                    oldPosition.setOrientation(newTable.getPosition().getOrientation());
+
+                    returnTables.add(repositoryTable);
+
                     found = true;
                     break;
                 }
             }
             if (!found) {
                 returnTables.add(newTable);
-                newTable.setPosition(positionRepository.save(newTable.getPosition()));
-                tableRepository.save(newTable);
+                //newTable.setPosition(positionRepository.save(newTable.getPosition()));
+                //tableRepository.save(newTable);
             }
         }
 
@@ -159,11 +172,13 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
             for (Chair repositoryChair: reposioryRoom.getChairs())  {
                 // Stühle werden als gleich befunden, wenn der Erstell-Timestamp gleich ist
                 if (repositoryChair.getCreatedAt().equals(newChair.getCreatedAt())) {
-                    returnChairs.add(newChair);
-                    Chair chair = chairRepository.findChairById(repositoryChair.getId())
-                                                                                    .orElseThrow(null);
-                    chair.setPosition(newChair.getPosition());
-                    chair.setUpdatedAt(newChair.getUpdatedAt());
+                    Position oldPosition = repositoryChair.getPosition();
+
+                    oldPosition.setXCoordinate(newChair.getPosition().getXCoordinate());
+                    oldPosition.setYCoordinate(newChair.getPosition().getYCoordinate());
+                    oldPosition.setOrientation(newChair.getPosition().getOrientation());
+
+                    returnChairs.add(repositoryChair);
 
                     found = true;
                     break;
