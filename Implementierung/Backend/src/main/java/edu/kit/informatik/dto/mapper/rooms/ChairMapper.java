@@ -6,6 +6,7 @@ import edu.kit.informatik.dto.userdata.rooms.PositionDto;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.rooms.Chair;
 import edu.kit.informatik.model.userdata.rooms.Position;
+import edu.kit.informatik.repositories.ChairRepository;
 import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,16 +26,20 @@ import java.util.List;
 public class ChairMapper implements IModelDtoMapper<Chair, ChairDto> {
 
     private final UserRepository userRepository;
+    private final ChairRepository chairRepository;
     private final PositionMapper positionMapper;
 
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
-     * @param userRepository {@link UserRepository}
-     * @param positionMapper {@link PositionMapper}
+     *
+     * @param userRepository  {@link UserRepository}
+     * @param chairRepository {@link ChairRepository}
+     * @param positionMapper  {@link PositionMapper}
      */
     @Autowired
-    public ChairMapper(UserRepository userRepository, PositionMapper positionMapper) {
+    public ChairMapper(UserRepository userRepository, ChairRepository chairRepository, PositionMapper positionMapper) {
         this.userRepository = userRepository;
+        this.chairRepository = chairRepository;
         this.positionMapper = positionMapper;
     }
 
@@ -67,7 +72,9 @@ public class ChairMapper implements IModelDtoMapper<Chair, ChairDto> {
             updatedAt = chairDto.getUpdatedAt();
         }
 
-        return new Chair(user, position, chairDto.getCreatedAt(), updatedAt);
+        Chair chair =  new Chair(user, position, chairDto.getCreatedAt(), updatedAt);
+
+        return chairRepository.save(chair);
     }
 
     @Override
