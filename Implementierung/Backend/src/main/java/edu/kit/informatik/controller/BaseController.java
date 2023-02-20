@@ -35,6 +35,7 @@ public abstract class BaseController<Entity, ParameterDto, ReturnDto> {
     /**
      * REST-Api zum Hinzufügen der Entität
      * @param dto Dto der Entität
+     * @param authentication {@link Authentication}
      * @return Dto der Entität
      */
     public ReturnDto add(ParameterDto dto, Authentication authentication) {
@@ -44,6 +45,7 @@ public abstract class BaseController<Entity, ParameterDto, ReturnDto> {
     /**
      * REST-Api zum Aktualisieren der Entität
      * @param dto Dto der Entität
+     * @param authentication {@link Authentication}
      * @return Dto der Entität
      */
     public ReturnDto update(ParameterDto dto, Authentication authentication) {
@@ -53,6 +55,7 @@ public abstract class BaseController<Entity, ParameterDto, ReturnDto> {
     /**
      * REST-Api zur Rückgabe einer Entität
      * @param id Id der Entität
+     * @param authentication {@link Authentication}
      * @return Dto der Entität
      */
     public ReturnDto getById(String id, Authentication authentication) {
@@ -61,6 +64,7 @@ public abstract class BaseController<Entity, ParameterDto, ReturnDto> {
 
     /**
      * REST-Api Rückgabe aller Entitäten
+     * @param authentication {@link Authentication}
      * @return Liste der Dtos der Entitäten
      */
     public List<ReturnDto> getAll(Authentication authentication) {
@@ -69,6 +73,7 @@ public abstract class BaseController<Entity, ParameterDto, ReturnDto> {
 
     /**
      * REST-Api zum Löschen einer Entität
+     * @param authentication {@link Authentication}
      * @param id Id der Entität
      * @return Dto der Entität
      */
