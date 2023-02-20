@@ -1,5 +1,6 @@
 package edu.kit.informatik.repositories;
 
+import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.interactions.Category;
 import edu.kit.informatik.model.userdata.interactions.RatedCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,17 +22,17 @@ public interface CategoryBaseRepository<CategoryType extends Category>
 
     /**
      * Rückgabe eines {@link Optional} mit {@link CategoryType}
-     * @param id SessionId
+     * @param id Id eines {@link CategoryType}
      * @return {@link Optional} von {@link CategoryType}
      */
     Optional<CategoryType> findCategoryById(java.lang.String id);
 
     /**
      * Rückgabe eines {@link Optional} mit {@link CategoryType}
-     * @param id UserId
+     * @param userId Id eines {@link User}
      * @return {@link Optional} von {@link CategoryType}
      */
-    List<CategoryType> findCategoryByUserId(java.lang.String id);
+    List<CategoryType> findCategoryByUserId(java.lang.String userId);
 /*
     Optional<CategoryType> findCategoryByInteraction();
 
