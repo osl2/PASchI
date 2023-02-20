@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface PositionRepository extends JpaRepository<Position, String> {
 
     /**
-     * Rückgabe eines Optionals von {@link Position}
+     * Rückgabe eines {@link Optional} von {@link Position}
      * @param id Id
      * @return {@link Optional} von {@link Position}
      */

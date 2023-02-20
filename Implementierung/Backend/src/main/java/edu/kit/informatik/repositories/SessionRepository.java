@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Schnittstelle zur Datenbaktabelle mit {@link Session Sitzungen}
+ * Schnittstelle zur Datenbanktabelle mit {@link Session Sitzungen}
  *
  * @author ugqbo
  * @version 1.0
@@ -19,21 +19,21 @@ import java.util.Optional;
 public interface SessionRepository extends JpaRepository<Session, String> {
 
     /**
-     * Rückgabe von Optionals von {@link Session}
+     * Rückgabe von {@link Optional} von {@link Session}
      * @param id Id
      * @return {@link Optional} von {@link Session}
      */
     Optional<Session> findSessionById(String id);
 
     /**
-     * Rückgabe von Optionals von {@link Session}
+     * Rückgabe von {@link Optional} von {@link Session}
      * @param course {@link Course}
      * @return {@link Optional} von {@link Session}
      */
     Optional<List<Session>> findSessionsByCourse(Course course);
 
     /**
-     * Rückgabe von Optionals von {@link Session}
+     * Rückgabe von {@link Optional} von {@link Session}
      * @param userId Id eines {@link User}
      * @return {@link Optional} von {@link Session}
      */

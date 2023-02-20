@@ -17,16 +17,16 @@ import java.util.Optional;
 @Repository
 public interface RoomRepository extends JpaRepository<Room, String> {
     /**
-     * Rückgabe eines Optionals von {@link Room Räumen}
+     * Rückgabe eines {@link Optional} von {@link Room Räumen}
      * @param id Id
      * @return {@link Optional} von {@link Room}
      */
     Optional<Room> findRoomById(String id);
 
     /**
-     * Rückgabe eines Optionals von {@link Room Räumen}
+     * Rückgabe eines {@link Optional} von {@link Room Räumen}
      * @param userId eines {@link User}
      * @return {@link Optional} von {@link Room}
      */
-   List<Room> findRoomsByUserId(String userId);
+    List<Room> findRoomsByUserId(String userId);
 }

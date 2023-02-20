@@ -16,14 +16,14 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, String> {
 
     /**
-     * Rückgabe von Optionals von {@link User}
+     * Rückgabe von {@link Optional} von {@link User}
      * @param id Id
      * @return {@link Optional} von {@link User}
      */
     Optional<User> findUserById(String id);
 
     /**
-     * Rückgabe von Optionals von {@link User}
+     * Rückgabe von {@link Optional} von {@link User}
      * @param email E-Mail
      * @return {@link Optional} von {@link User}
      */

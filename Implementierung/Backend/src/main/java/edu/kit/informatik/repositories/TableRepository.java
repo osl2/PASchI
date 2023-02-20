@@ -15,5 +15,10 @@ import java.util.Optional;
 @Repository
 public interface TableRepository extends JpaRepository<Table, String> {
 
+    /**
+     * Rückgabe von {@link Optional} von {@link Table}
+     * @param id Id eines {@link Table}
+     * @return {@link Optional} von {@link Table}
+     */
     Optional<Table> findTableById(String id);
 }
