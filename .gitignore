@@ -36,3 +36,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+Implementierung/frontend/paschi/node_modules/
+
+Implementierung/frontend/paschi/dist/
+
+Implementierung/frontend/paschi/coverage/
