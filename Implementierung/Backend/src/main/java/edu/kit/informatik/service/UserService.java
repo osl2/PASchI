@@ -25,8 +25,6 @@ import java.util.Optional;
 /**
  * Service für {@link User Benutzer}
  *
- * TODO: Fehler werfen, wie Entity schon in DB, Entity nicht vorhanden...
- *
  * @author ugqbo
  * @version 1.0
  */
@@ -158,8 +156,14 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
         return userDto;
     }
 
+    /**
+     * Methode zum Verändern der Attribute 'auth' und 'role' des Benutzers in der Datenbank
+     * @param userDto {@link UserDto}
+     * @return {@link UserDto}
+     * @throws EntityNotFoundException falls {@link User} mit der übergebenen Id nicht gefunden wurde
+     */
     @Transactional
-    public UserDto adminUpdate(UserDto userDto) {
+    public UserDto adminUpdate(UserDto userDto) throws EntityNotFoundException {
         Optional<User> repositoryUserOptional = userRepository.findUserById(userDto.getId());
 
         User repositoryUser = repositoryUserOptional.orElseThrow(() -> new EntityNotFoundException(
