@@ -7,19 +7,38 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.stream.Collectors;
 
+/**
+ * Service zum Erstellen eines {@link JwtAuthenticationToken JWT-Token} zum Authentifizieren mittels {@link JwtEncoder}
+ *
+ * @author ugqbo
+ * @version 1.0
+ */
 @Service
 public class TokenService {
     private final JwtEncoder jwtEncoder;
 
+    /**
+     * Konstruktor zum Erstellen eines Objektes
+     * @param jwtEncoder {@link JwtEncoder}
+     */
     public TokenService(JwtEncoder jwtEncoder) {
         this.jwtEncoder = jwtEncoder;
     }
 
+    /**
+     * Methode zum Generieren eines {@link JwtAuthenticationToken} bei übergebener {@link Authentication}.
+     * Die Gültigkeit des Tokens beträgt 30 Tage.
+     * Beinhaltet {@link GrantedAuthority} (Claim: "scope") und die Id des {@link User} (Claim: "userId")
+     *
+     * @param authentication benötigte {@link Authentication}
+     * @return {@link JwtAuthenticationToken} als String
+     */
     public String generateToken(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
 
