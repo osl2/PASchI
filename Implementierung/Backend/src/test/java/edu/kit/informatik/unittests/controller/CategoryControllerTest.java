@@ -4,18 +4,14 @@ import com.github.javafaker.Faker;
 import edu.kit.informatik.dto.RoleDto;
 import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.dto.mapper.UserMapper;
-import edu.kit.informatik.dto.mapper.courses.CourseMapper;
 import edu.kit.informatik.dto.mapper.interactions.CategoryMapper;
 import edu.kit.informatik.dto.mapper.interactions.RatedCategoryMapper;
-import edu.kit.informatik.dto.mapper.rooms.RoomMapper;
 import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
 import edu.kit.informatik.dto.userdata.interactions.QualityDto;
 import edu.kit.informatik.dto.userdata.interactions.RatedCategoryDto;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.interactions.RatedCategory;
 import edu.kit.informatik.repositories.CategoryBaseRepository;
-import edu.kit.informatik.repositories.CourseRepository;
-import edu.kit.informatik.repositories.RoomRepository;
 import edu.kit.informatik.repositories.UserRepository;
 import org.junit.After;
 import org.junit.Before;
@@ -49,26 +45,13 @@ public class CategoryControllerTest extends AbstractTest {
     private RatedCategoryMapper ratedCategoryMapper;
 
     @Autowired
-    private CategoryBaseRepository<RatedCategory, String> categoryRepository;
+    private CategoryBaseRepository<RatedCategory> categoryRepository;
 
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private UserMapper userMapper;
-
-    @Autowired
-    private CourseRepository courseRepository;
-
-    @Autowired
-    private CourseMapper courseMapper;
-
-    @Autowired
-    private RoomRepository roomRepository;
-
-    @Autowired
-    private RoomMapper roomMapper;
-
 
     private List<RatedCategoryDto> categories;
 
@@ -110,7 +93,7 @@ public class CategoryControllerTest extends AbstractTest {
         categories.clear();
     }
 
-    private void addCategoryToDatabase() throws Exception {
+    private void addCategoryToDatabase() {
 
         List<RatedCategoryDto> repositoryCategory = new ArrayList<>();
         for (RatedCategoryDto categoryDto: this.categories) {

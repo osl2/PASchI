@@ -28,7 +28,7 @@ public class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
     private final UserRepository userRepository;
     private final ParticipantRepository participantRepository;
     private final SessionRepository sessionRepository;
-    private final CategoryBaseRepository<Category, String> categoryBaseRepository;
+    private final CategoryBaseRepository<Category> categoryBaseRepository;
 
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
@@ -40,7 +40,7 @@ public class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
     @Autowired
     public InteractionMapper(UserRepository userRepository,
                              ParticipantRepository participantRepository, SessionRepository sessionRepository,
-                             CategoryBaseRepository<Category, String> categoryBaseRepository) {
+                             CategoryBaseRepository<Category> categoryBaseRepository) {
         this.userRepository = userRepository;
         this.participantRepository = participantRepository;
         this.sessionRepository = sessionRepository;

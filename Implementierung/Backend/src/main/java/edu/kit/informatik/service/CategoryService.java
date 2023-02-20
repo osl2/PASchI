@@ -31,7 +31,7 @@ public class CategoryService extends BaseService<Category, RatedCategoryDto, Cat
 
     private static final String ID_ATTRIBUTE = "userId";
 
-    private final CategoryBaseRepository<Category, String> categoryBaseRepository;
+    private final CategoryBaseRepository<Category> categoryBaseRepository;
     private final RatedCategoryMapper ratedCategoryMapper;
 
     /**
@@ -41,7 +41,7 @@ public class CategoryService extends BaseService<Category, RatedCategoryDto, Cat
      * @param categoryMapper         {@link CategoryMapper}
      * @param ratedCategoryMapper    {@link RatedCategoryMapper}
      */
-    public CategoryService(CategoryBaseRepository<Category, String> categoryBaseRepository,
+    public CategoryService(CategoryBaseRepository<Category> categoryBaseRepository,
                            CategoryMapper categoryMapper, RatedCategoryMapper ratedCategoryMapper) {
         super(categoryMapper);
         this.categoryBaseRepository = categoryBaseRepository;
