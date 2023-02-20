@@ -15,9 +15,8 @@ import {computed, createApp, ref} from 'vue'
 import { registerPlugins } from '@/plugins'
 
 const app = createApp(App)
-window.addEventListener("resize", ()=>{console.log("res")
+window.addEventListener("resize", ()=>{
   isMobile.value = window.innerWidth < 1000
-  console.log(isMobile.value)
 })
 const isMobile = ref(window.innerWidth < 1000)
 function resize() {
