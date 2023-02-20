@@ -1,9 +1,12 @@
 package edu.kit.informatik.dto.userdata.rooms;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import edu.kit.informatik.model.userdata.rooms.RoomObject;
 import edu.kit.informatik.model.userdata.rooms.Table;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,10 +20,16 @@ import java.sql.Timestamp;
  * @author ugqbo
  * @version 1.0
  */
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@JsonTypeInfo( use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = ChairDto.class, name = "chair"),
+    @JsonSubTypes.Type(value = TableDto.class, name = "table")
+})
 public abstract class RoomObjectDto {
 
     private String id;
