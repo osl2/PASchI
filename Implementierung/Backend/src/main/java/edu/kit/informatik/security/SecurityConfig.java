@@ -28,9 +28,18 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 import static org.springframework.security.authorization.AuthorityAuthorizationManager.hasAuthority;
 
+/**
+ * Konfiguration für Spring Security.
+ *
+ * @author ugqbo
+ * @version 2.0
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -38,11 +47,19 @@ public class SecurityConfig {
 
     private final RsaKeyProperties rsaKeys;
 
+    /**
+     * Konstruktor zum Erstellen eines Objektes
+     * @param rsaKeys {@link RsaKeyProperties}
+     */
     public SecurityConfig(RsaKeyProperties rsaKeys) {
         this.rsaKeys = rsaKeys;
     }
 
-
+    /**
+     * Erstellen eines {@link AuthenticationManager}
+     * @param userDetailsService {@link MyUserDetailsService}
+     * @return {@link AuthenticationManager}
+     */
     @Bean
     public AuthenticationManager authManager(UserDetailsService userDetailsService) {
         var authProvider = new DaoAuthenticationProvider();
@@ -50,6 +67,15 @@ public class SecurityConfig {
         return new ProviderManager(authProvider);
     }
 
+    /**
+     * Setzten der {@link SecurityFilterChain}.
+     * Hier wird z.B. festgelegt welche Pfade mittels {@link Authentication} gesichert werden sollen und welche Pfade
+     * zusätzlich nur mit bestimmten {@link GrantedAuthority} erreichbar sind
+     *
+     * @param httpSecurity {@link HttpSecurity}
+     * @return {@link SecurityFilterChain}
+     * @throws Exception falls deaktivieren der 'CSRF protection' nicht möglich
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
@@ -70,11 +96,19 @@ public class SecurityConfig {
                 .build();
     }
 
+    /**
+     * Dencodieren des {@link JwtAuthenticationToken}
+     * @return {@link JwtDecoder}
+     */
     @Bean
     public JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withPublicKey(rsaKeys.publicKey()).build();
     }
 
+    /**
+     * Encodieren des {@link JwtAuthenticationToken}
+     * @return {@link JwtEncoder}
+     */
     @Bean
     public JwtEncoder jwtEncoder() {
         JWK jwk = new RSAKey.Builder(rsaKeys.publicKey()).privateKey(rsaKeys.privateKey()).build();
@@ -83,6 +117,10 @@ public class SecurityConfig {
         return new NimbusJwtEncoder(jwkSource);
     }
 
+    /**
+     * PasswordEncoder zum Verschlüssel der Passwörter
+     * @return {@link BCryptPasswordEncoder}
+     */
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
