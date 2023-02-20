@@ -2,23 +2,17 @@ package edu.kit.informatik.model.userdata.rooms;
 
 import edu.kit.informatik.model.User;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.sql.Timestamp;
 
+
+@EqualsAndHashCode(callSuper = false)
 @Getter
 @Entity
 @jakarta.persistence.Table(name = "tables")
 public class Table extends RoomObject {
-    /*
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-
-     */
 
     private double length;
     private double width;
@@ -44,4 +38,5 @@ public class Table extends RoomObject {
     public void setWidth(double width) {
         this.width = width;
     }
+
 }
