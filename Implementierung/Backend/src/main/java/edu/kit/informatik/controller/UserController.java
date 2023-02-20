@@ -1,6 +1,7 @@
 package edu.kit.informatik.controller;
 
 import edu.kit.informatik.dto.UserDto;
+import edu.kit.informatik.exceptions.EntityNotFoundException;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.service.UserService;
 import org.springframework.security.core.Authentication;
@@ -19,7 +20,6 @@ import java.util.List;
 
 /**
  * Controller für {@link User Benutzer}.
- * TODO: Spring-Security
  *
  * @author ugqbo
  * @version 1.0
@@ -91,8 +91,15 @@ public class UserController extends BaseController<User, UserDto, UserDto> {
         return this.userService.getToken(authentication);
     }
 
+    /**
+     * Aktualisieren eines {@link User}.
+     * Verändern der Attribute 'auth' und 'role' des Benutzers in der Datenbank möglich.
+     * @param userDto {@link UserDto}
+     * @return {@link UserDto}
+     * @throws EntityNotFoundException falls {@link User} mit der übergebenen Id nicht gefunden wurde
+     */
     @PutMapping(path = "/admin")
-    public UserDto adminUpdate(@RequestBody UserDto userDto) {
+    public UserDto adminUpdate(@RequestBody UserDto userDto) throws EntityNotFoundException {
         return this.userService.adminUpdate(userDto);
     }
 }
