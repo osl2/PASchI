@@ -212,7 +212,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const isMobile: ComputedRef<boolean> = inject('isMobile') as ComputedRef<boolean>
+    const isMobile: Ref<boolean> = inject('isMobile') as Ref<boolean>
 
     const router = useRouter();
 
@@ -344,6 +344,8 @@ export default defineComponent({
       addStudentSelectionDialog.value = true;
     }
     function addSessionClick() {
+      console.log(window.innerWidth)
+      console.log(isMobile.value)
       if(isMobile.value) {
         router.push({
           name: "SessionPage",
