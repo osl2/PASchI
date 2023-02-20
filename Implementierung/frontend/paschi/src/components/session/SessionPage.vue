@@ -200,7 +200,7 @@
           <v-row
             class="ma-2"
             :key="interaction.getId"
-            v-for="interaction in interActionListBuffer.reverse()"
+            v-for="interaction in interactions.reverse()"
           >
             <v-col
               ><div>
@@ -262,7 +262,7 @@
           <v-row
             class="ma-2"
             key="interaction.getId"
-            v-for="interaction in interActionListBuffer.reverse()"
+            v-for="interaction in interactions.reverse()"
           >
             <v-col
               ><div>
@@ -368,20 +368,6 @@ export default defineComponent({
     const interactionListStudentBuffer: Ref<Participant | undefined> = ref<
       Participant | undefined
     >(undefined) as Ref<Participant | undefined>;
-    const interActionListBuffer = computed<Interaction[]>(() => {
-      if (typeof interactionListStudentBuffer.value === "undefined") {
-        return [];
-      }
-      let interactions: Interaction[] | undefined =
-        sessionController.getInteractionsOfStudent(
-          props.sessionId,
-          interactionListStudentBuffer.value.getId
-        );
-      if (typeof interactions === "undefined") {
-        return [];
-      }
-      return interactions;
-    });
     const interactions = computed<Interaction[]>(() => {
       let interactions = sessionController.getInteractionsOfSession(
         props.sessionId
@@ -574,7 +560,7 @@ export default defineComponent({
       interactionListDialog,
       studentInteractionListDialog,
       interactionListStudentBuffer,
-      interActionListBuffer,
+      interactions,
       activateInteractionList,
       resetInterActionParams,
       undoClick,
