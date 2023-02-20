@@ -196,7 +196,7 @@ import SideMenu from "@/components/navigation/SideMenu.vue";
 import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
 import { Session } from "@/model/userdata/courses/Session";
 import { Student } from "@/model/userdata/interactions/Student";
-import { computed, defineComponent, Ref, ref } from "vue";
+import { computed, ComputedRef, defineComponent, inject, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
 import { SessionController } from "@/controller/SessionController";
 import { useRouter } from "vue-router";
@@ -212,6 +212,8 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const isMobile: ComputedRef<boolean> = inject('isMobile') as ComputedRef<boolean>
+
     const router = useRouter();
 
     const courseController: CourseController =
@@ -342,7 +344,7 @@ export default defineComponent({
       addStudentSelectionDialog.value = true;
     }
     function addSessionClick() {
-      if(window.innerWidth < 1500) {
+      if(isMobile.value) {
         router.push({
           name: "SessionPage",
           params: {
