@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Schnittstelle zur Datenbanktabelle mit {@link Interaction Interactionen}.
+ * Schnittstelle zur Datenbanktabelle mit {@link Interaction Interaktionen}.
  *
  * @author ugqbo
  * @version 1.0
@@ -24,5 +24,10 @@ public interface InteractionRepository extends JpaRepository<Interaction, String
      */
     Optional<Interaction> findInteractionById(String id);
 
+    /**
+     * Rückgabe eines Optionals mit {@link Interaction}
+     * @param session {@link Session}
+     * @return {@link Optional} von {@link Interaction}
+     */
     Optional<List<Interaction>> findInteractionBySession(Session session);
 }
