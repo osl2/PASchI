@@ -27,6 +27,10 @@
             ? 'error'
             : 'notError',
         ]"
+        @mousedown="mouseDown($event, chair)"
+        @touchstart="touchStart($event, chair)"
+        @touchmove="touchMove"
+        @touchend="touchEnd"
       >
         <slot name="chair" :chair="chair">
           <v-card
@@ -36,10 +40,7 @@
             draggable="false"
             :width="getRoomObjectWidth(chair)"
             :height="getRoomObjectHeight(chair)"
-            @mousedown="mouseDown($event, chair)"
-            @touchstart="touchStart($event, chair)"
-            @touchmove="touchMove"
-            @touchend="touchEnd"
+
           >
             <v-icon
               class="v-col-auto"
@@ -59,6 +60,10 @@
             ? 'error'
             : 'notError',
         ]"
+        @mousedown="mouseDown($event, table)"
+        @touchstart="touchStart($event, table)"
+        @touchmove="touchMove"
+        @touchend="touchEnd"
       >
         <slot name="table" v-bind:table="table">
           <v-card
@@ -68,10 +73,7 @@
             draggable="false"
             :width="getRoomObjectWidth(table)"
             :height="getRoomObjectHeight(table)"
-            @mousedown="mouseDown($event, table)"
-            @touchstart="touchStart($event, table)"
-            @touchmove="touchMove"
-            @touchend="touchEnd"
+
           >
             <v-icon
               class="v-col-auto"

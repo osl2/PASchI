@@ -1,9 +1,9 @@
 <template>
-  <canvas style="width: 100vw; height: 100vh; top: 0; left: 0; position: fixed" :width="overlayWidth" :height="overlayHeight" ref="canvas"> </canvas>
+  <canvas style="z-index: 10; width: 100vw; height: 100vh; top: 0; left: 0; position: fixed; pointer-events: none" :width="overlayWidth" :height="overlayHeight" ref="canvas"> </canvas>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, PropType, Ref, ref } from "vue";
+import {defineComponent, onBeforeUpdate, onMounted, onUpdated, PropType, Ref, ref, watch} from "vue";
 interface Line {
   x1: number;
   y1: number;
@@ -21,9 +21,8 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
+  setup: function (props) {
     const canvas: Ref<HTMLCanvasElement | null> = ref(null);
-    const lines = props.lines;
 
     const overlayWidth = window.innerWidth;
     const overlayHeight = window.innerHeight;
@@ -54,11 +53,16 @@ export default defineComponent({
       context.stroke();
     }
 
-    onMounted(() => {
-      const context = canvas.value?.getContext("2d");
+    let context: CanvasRenderingContext2D | null | undefined = null;
 
-      if (context) {
-        for (let line of lines) {
+    onMounted(() => {
+      context = canvas.value?.getContext("2d")
+    });
+
+    onBeforeUpdate(() => {
+      if (context && props.lines && props.lines.length > 0) {
+        context.clearRect(0, 0, canvas.value?.width ?? 0,canvas.value?.height ?? 0);
+        for (let line of props.lines) {
           drawBezierCurve(context, line);
         }
       }
