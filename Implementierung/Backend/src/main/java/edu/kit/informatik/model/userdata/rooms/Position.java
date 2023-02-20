@@ -3,15 +3,15 @@ package edu.kit.informatik.model.userdata.rooms;
 import edu.kit.informatik.model.DataObject;
 import edu.kit.informatik.model.User;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.sql.Timestamp;
 
+@EqualsAndHashCode(callSuper = false)
+@Setter
 @Getter
 @NoArgsConstructor
 @Entity
