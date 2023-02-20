@@ -12,6 +12,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import java.sql.Timestamp;
 
@@ -34,6 +36,7 @@ public abstract class RoomObject extends DataObject {
      */
 
     @OneToOne
+    @Cascade(CascadeType.ALL)
     private Position position;
 
     public RoomObject(User user, Position position, Timestamp createdAt, Timestamp updatedAt) {
