@@ -57,7 +57,7 @@
         </v-list-item>
         <v-row no-gutters>
           <template
-            v-bind="participant.getId"
+            key="participant.getId"
             v-for="participant in filterParticipants(
               courseParticipantsSortedByName
             )"
@@ -199,7 +199,7 @@
           <v-divider />
           <v-row
             class="ma-2"
-            v-bind="interaction.getId"
+            :key="interaction.getId"
             v-for="interaction in interActionListBuffer.reverse()"
           >
             <v-col
@@ -261,7 +261,7 @@
           <v-divider />
           <v-row
             class="ma-2"
-            v-bind="interaction.getId"
+            key="interaction.getId"
             v-for="interaction in interActionListBuffer.reverse()"
           >
             <v-col
