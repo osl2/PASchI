@@ -24,6 +24,8 @@ import java.util.List;
 @EnableAutoConfiguration
 public abstract class BaseService<Entity, ParameterDto, ReturnDto> {
 
+    private static final String ID_ATTRIBUTE = "userId";
+
     /**
      * Allgemeiner {@link IModelDtoMapper Mapper} zum Abbilden einer Entität auf das dazugehörige Dto und
      * Abbilden eines Dto auf die dazugehörige Entität.
@@ -87,7 +89,7 @@ public abstract class BaseService<Entity, ParameterDto, ReturnDto> {
     public void checkAuthorization(Authentication authentication, String userId) throws NotEntityOfUserException {
         JwtAuthenticationToken jAT = (JwtAuthenticationToken) authentication;
 
-        if (!jAT.getTokenAttributes().get("userId").equals(userId)) {
+        if (!jAT.getTokenAttributes().get(ID_ATTRIBUTE).equals(userId)) {
             throw new NotEntityOfUserException(userId);
         }
     }
