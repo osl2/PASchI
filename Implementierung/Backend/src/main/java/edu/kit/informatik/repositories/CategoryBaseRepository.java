@@ -19,8 +19,18 @@ import java.util.Optional;
 public interface CategoryBaseRepository<CategoryType extends Category>
         extends JpaRepository<CategoryType, java.lang.String> {
 
+    /**
+     * Rückgabe eines {@link Optional} mit {@link CategoryType}
+     * @param id SessionId
+     * @return {@link Optional} von {@link CategoryType}
+     */
     Optional<CategoryType> findCategoryById(java.lang.String id);
 
+    /**
+     * Rückgabe eines {@link Optional} mit {@link CategoryType}
+     * @param id UserId
+     * @return {@link Optional} von {@link CategoryType}
+     */
     List<CategoryType> findCategoryByUserId(java.lang.String id);
 /*
     Optional<CategoryType> findCategoryByInteraction();

@@ -18,14 +18,14 @@ import java.util.Optional;
 public interface InteractionRepository extends JpaRepository<Interaction, String> {
 
     /**
-     * Rückgabe eines Optionals mit {@link Interaction}
-     * @param id Id
+     * Rückgabe eines {@link Optional} mit {@link Interaction}
+     * @param id InteraktionId
      * @return {@link Optional} von {@link Interaction}
      */
     Optional<Interaction> findInteractionById(String id);
 
     /**
-     * Rückgabe eines Optionals mit {@link Interaction}
+     * Rückgabe eines {@link Optional} mit {@link Interaction}
      * @param session {@link Session}
      * @return {@link Optional} von {@link Interaction}
      */
