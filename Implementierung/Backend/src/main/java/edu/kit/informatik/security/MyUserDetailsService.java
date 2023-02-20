@@ -9,12 +9,22 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Unterklasse des {@link UserDetailsService}.
+ * Sucht {@link User} anhand seiner E-Mail aus dem {@link UserRepository}
+ *
+ * @author ugqbo
+ * @version 1.0
+ */
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 
-    //@Autowired
     private final UserRepository userRepository;
 
+    /**
+     * Konstruktor zum Erstellen eines Objektes
+     * @param userRepository {@link UserRepository}
+     */
     public MyUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
