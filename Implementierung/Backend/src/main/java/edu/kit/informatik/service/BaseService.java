@@ -42,12 +42,14 @@ public abstract class BaseService<Entity, ParameterDto, ReturnDto> {
     /**
      * Hinzufügen einer Entität
      * @param dto Dto
+     * @param authentication {@link Authentication}
      * @return Dto
      */
     public abstract ReturnDto add(ParameterDto dto, Authentication authentication);
     /**
      * Aktualisieren einer Entität
      * @param dto Dto
+     * @param authentication {@link Authentication}
      * @return Dto
      */
 
@@ -56,12 +58,14 @@ public abstract class BaseService<Entity, ParameterDto, ReturnDto> {
     /**
      * Rückgabe einer Entität
      * @param id id der Entität
+     * @param authentication {@link Authentication}
      * @return Dto
      */
     public abstract ReturnDto getById(String id, Authentication authentication);
 
     /**
      * Rückgabe aller Entitäten
+     * @param authentication {@link Authentication}
      * @return Liste der Entitäten
      */
     public abstract List<ReturnDto> getAll(Authentication authentication);
@@ -69,10 +73,17 @@ public abstract class BaseService<Entity, ParameterDto, ReturnDto> {
     /**
      * Löschen einer Entität
      * @param id id der Entität
+     * @param authentication {@link Authentication}
      * @return id
      */
     public abstract String delete(String id, Authentication authentication);
 
+    /**
+     * Check if UserId and userId of Authentication are the equals
+     * @param authentication {@link Authentication}
+     * @param userId Id des {@link edu.kit.informatik.model.User} einer Identität
+     * @throws NotEntityOfUserException if UserId and userId of Authentication are not the equals
+     */
     public void checkAuthorization(Authentication authentication, String userId) throws NotEntityOfUserException {
         JwtAuthenticationToken jAT = (JwtAuthenticationToken) authentication;
 
