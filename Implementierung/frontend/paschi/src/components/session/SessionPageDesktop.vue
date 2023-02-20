@@ -3,6 +3,7 @@
   <RoomDisplay :room-id="roomId">
     <template v-slot:chair="chair">
       <SeatLabel
+        :ref="(el) => seatLabels[chair.chair.getId] = el"
         :chair="chair.chair"
         :participant="getParticipant(chair.chair)"
         @click="selectStudent(getParticipant(chair.chair))"
@@ -16,14 +17,15 @@ import {defineComponent, Ref, ref} from "vue";
 import { SessionController } from "@/controller/SessionController";
 import RoomDisplay from "@/components/room/RoomDisplay.vue";
 import SeatLabel from "@/components/room/SeatLabel.vue";
-import {Participant} from "@/model/userdata/interactions/Participant";
-import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
-import {Chair} from "@/model/userdata/rooms/Chair";
+import { Participant } from "@/model/userdata/interactions/Participant";
+import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
+import { Chair } from "@/model/userdata/rooms/Chair";
 import LineOverlay from "@/components/room/LineOverlay.vue";
+import {SeatArrangementController} from "@/controller/SeatArrangementController";
 
 export default defineComponent({
   name: "SessionPageDesktop",
-  components: {LineOverlay, SeatLabel, RoomDisplay },
+  components: { LineOverlay, SeatLabel, RoomDisplay },
   props: {
     sessionId: {
       type: String,
@@ -31,10 +33,12 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const sessionId = props.sessionId;
     const sessionController = SessionController.getSessionController();
+    const sessionId = props.sessionId;
+    const seatArrangement = sessionController.getSeatArrangementOfSession(sessionId)
+    const roomId = seatArrangement?.room.getId
+    const interactions = sessionController.getInteractionsOfSession(sessionId);
     const session = sessionController.getSession(sessionId);
-    const seatArrangement: SeatArrangement | undefined = sessionController.getSeatArrangementOfSession(sessionId);
 
     let selectedStudent: Participant | undefined = undefined;
 
@@ -42,14 +46,17 @@ export default defineComponent({
       return seatArrangement?.getParticipantForSeat(chair);
     }
 
+    const seatLabels = ref([])
+
     function selectStudent(participant: Participant) {
       if (participant) {
       }
     }
 
+
     return {
-      roomId: seatArrangement?.room.getId,
-      seatArrangement,
+      roomId,
+      seatLabels,
       getParticipant,
       selectStudent,
     };

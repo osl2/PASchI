@@ -113,9 +113,10 @@ const routes = [
     props: true,
   },
   {
-    path: "/interaction-map",
+    path: "/interaction-map/:sessionId",
     name: "InteractionMapPage",
     component: InteractionMap,
+    props: true,
   },
   {
     path: "/:catchAll(.*)",

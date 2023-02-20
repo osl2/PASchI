@@ -18,9 +18,9 @@ import VueAxios from 'vue-axios';
 const pinia = createPinia()
 
 export function registerPlugins (app: App) {
+  app.use(pinia)
   loadFonts()
   app.use(vuetify)
   app.use(router)
-  app.use(pinia)
   app.use(VueAxios, axios);
 }
