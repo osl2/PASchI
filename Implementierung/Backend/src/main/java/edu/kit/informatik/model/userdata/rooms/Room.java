@@ -3,13 +3,11 @@ package edu.kit.informatik.model.userdata.rooms;
 import edu.kit.informatik.model.DataObject;
 import edu.kit.informatik.model.User;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -31,9 +29,11 @@ public class Room extends DataObject {
     private String name;
 
     @OneToMany
+    @Cascade(CascadeType.ALL)
     private List<Table> tables;
 
     @OneToMany
+    @Cascade(CascadeType.ALL)
     private  List<Chair> chairs;
 
     public Room(User user, String name, Timestamp createdAt, Timestamp updatedAt) {
