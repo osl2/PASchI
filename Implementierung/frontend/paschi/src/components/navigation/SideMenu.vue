@@ -3,7 +3,7 @@
     <v-list
       nav
       density="compact"
-      active-class="isMobile"
+      active-class="sideMenu-active"
       class="mt-12 text-white"
     >
       <v-list-item
