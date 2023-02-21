@@ -40,10 +40,10 @@ export class AdminController {
 
   async authUser(userId: string) {
     await this.getUsersNotAuthenticated().then((response: User[]) => {
-      response.forEach((user: User) => {
+      response.forEach(async (user: User) => {
         if (user.getId === userId) {
           user.auth = true;
-          this.userService.adminUpdate(user);
+          await this.userService.adminUpdate(user);
           return;
         }
       });
