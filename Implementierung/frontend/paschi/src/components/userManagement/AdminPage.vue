@@ -3,10 +3,10 @@
     <v-container fluid>
       <v-row justify="space-around" align-content="stretch">
         <v-col>
-          <RequestListCard :requests="requests" class="ma-3" />
+          <RequestListCard :requests="requests" @update-requests="updateUsers" class="ma-3" />
         </v-col>
         <v-col>
-          <UserListCard :users="users" class="ma-3" />
+          <UserListCard :users="users" @update-users="updateUsers" class="ma-3" />
         </v-col>
       </v-row>
     </v-container>
@@ -27,7 +27,7 @@ export default {
   setup() {
     const adminController = AdminController.getAdminController();
 
-    const users = ref<User[]>([]);
+    const users = ref<User[]>();
     const requests = ref<User[]>();
 
     async function updateUsers() {
