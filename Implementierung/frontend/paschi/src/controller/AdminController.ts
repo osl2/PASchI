@@ -52,8 +52,8 @@ export class AdminController {
     });
   }
 
-  deleteUser(userId: string) {
-    this.userService.delete(userId);
+  async deleteUser(userId: string) {
+    await this.userService.delete(userId);
   }
 
   // resetPassword(userId: string) {

@@ -115,8 +115,8 @@ export default defineComponent({
           user.email.includes(searchInput.value))
       );
     }
-    function deleteUser(user: User) {
-      adminController.deleteUser(user.getId);
+    async function deleteUser(user: User) {
+      await adminController.deleteUser(user.getId);
     }
     function toggleCollapse() {
       collapsed.value = !collapsed.value;

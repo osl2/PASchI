@@ -75,9 +75,9 @@ export class UserService extends BaseService<User, UserDto> {
     return users;
   }
 
-  delete(id: string) {
+  async delete(id: string) {
     const token = useUserStore().getUser()?.token;
-    axios.delete(USER_BASE_URL, {
+    await axios.delete(USER_BASE_URL, {
       params: {
         id
       },
