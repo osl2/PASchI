@@ -17,6 +17,7 @@ import java.util.List;
 /**
  * Entität eines Kurses
  *
+ * @author uekai
  * @author ugqbo
  * @version 1.0
  */

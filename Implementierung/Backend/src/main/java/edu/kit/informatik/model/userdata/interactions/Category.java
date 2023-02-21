@@ -24,12 +24,23 @@ public class Category extends DataObject {
 
     private String name;
 
+    /**
+     * Konstruktor zum Erstellen eines Objektes
+     * @param user {@link User}
+     * @param name Name
+     * @param createdAt {@link Timestamp} der Erstellung
+     * @param updatedAt {@link Timestamp} der letzten Änderung
+     */
     public Category(User user, String name, Timestamp createdAt, Timestamp updatedAt) {
         super(user, createdAt, updatedAt);
         //this.user = user;
         this.name = name;
     }
 
+    /**
+     * Setzen des Namens
+     * @param name name
+     */
     public void setName(String name) {
         this.name = name;
     }
