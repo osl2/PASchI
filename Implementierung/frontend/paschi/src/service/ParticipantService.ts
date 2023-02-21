@@ -5,7 +5,7 @@ import {ParticipantMapper} from "@/dto/mapper/interactions/ParticipantMapper";
 import axios, {AxiosResponse} from "axios";
 import {useUserStore} from "@/store/UserStore";
 
-const PARTICIPANT_BASE_URL: string = 'http://193.196.37.141/api/participant';
+const PARTICIPANT_BASE_URL: string = 'http://localhost:8080/api/participant';
 
 export class ParticipantService extends BaseService<Participant, ParticipantDto> {
 
@@ -19,16 +19,25 @@ export class ParticipantService extends BaseService<Participant, ParticipantDto>
     return this.participantService;
   }
 
-  add(participant: Participant) {
+  async add(participant: Participant): Promise<Participant | undefined> {
     const token = useUserStore().getUser()?.token;
     const participantDto = this.getMapper().modelToDto(participant);
-    axios.post(PARTICIPANT_BASE_URL, participantDto, {
+    let databaseParticipant;
+    await axios.post(PARTICIPANT_BASE_URL, participantDto, {
       headers: {
         Authorization: `Bearer ${token}`
       }
+    }).then((response: AxiosResponse<ParticipantDto>) => {
+      databaseParticipant = this.getMapper().dtoToModel(response.data);
     }).catch((error) => {
       console.log(error);
     });
+
+    if (databaseParticipant != undefined) {
+      return databaseParticipant;
+    } else {
+      return undefined;
+    }
   }
 
   update(participant: Participant) {
@@ -81,9 +90,9 @@ export class ParticipantService extends BaseService<Participant, ParticipantDto>
     return participants;
   }
 
-  delete(id: string) {
+  async delete(id: string) {
     const token = useUserStore().getUser()?.token;
-    axios.delete(PARTICIPANT_BASE_URL, {
+    await axios.delete(PARTICIPANT_BASE_URL, {
       params: {
         id
       },

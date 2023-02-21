@@ -83,11 +83,8 @@ export default {
     const password = ref("");
 
     function login() {
-      userController.login(email.value, password.value).then((res) => {
-        if (res) {
-          router.push("/admin");
-        }
-      });
+      userController.login(email.value, password.value);
+      router.push('Dashboard');
     }
 
     return {
