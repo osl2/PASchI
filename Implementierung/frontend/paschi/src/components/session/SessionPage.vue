@@ -321,9 +321,6 @@ export default defineComponent({
       }
     }
     function createInteraction() {
-      console.log(selectedCategory.value!.getId);
-      console.log(firstParticipant.value!.getId);
-      console.log(secondParticipant.value!.getId);
 
       if (selectedCategory.value!.hasQuality()) {
         let quality: Quality;
