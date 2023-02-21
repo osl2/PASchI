@@ -11,6 +11,13 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
+/**
+ * Entität einer Interaktion
+ *
+ * @author uqkai
+ * @author ugqbo
+ * @version 1.0
+ */
 @Getter
 @NoArgsConstructor
 @Entity
@@ -31,10 +38,20 @@ public class Interaction extends DataObject {
     @ManyToOne
     private Category category;
 
+    /**
+     *
+     * @param user {@link User}
+     * @param timeStamp Zeitstempel
+     * @param session {@link Session Sitzung}
+     * @param from {@link Participant From-Participant} von dem die Interaktion ausgeht
+     * @param to {@link Participant To-Participant} zu dem die Interaktion geht
+     * @param category {@link Category Kategorie}
+     * @param createdAt {@link Timestamp} der Erstellung
+     * @param updatedAt {@link Timestamp} der letzten Änderung
+     */
     public Interaction(User user, String timeStamp, Session session, Participant from, Participant to,
                        Category category, Timestamp createdAt, Timestamp updatedAt) {
         super(user, createdAt, updatedAt);
-        //this.user = user;
         this.timeStamp = timeStamp;
         this.session = session;
         this.from = from;

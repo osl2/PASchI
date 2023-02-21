@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
 
 /**
- * Entität einer Kateorie
+ * Entität einer Kategorie
  *
  * @author uekai
  * @author ugqbo
