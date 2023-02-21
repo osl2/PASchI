@@ -1,3 +1,3 @@
 export enum RoleDto {
-  ADMIN, USER
+  ADMIN = "ADMIN", USER = "USER"
 }
