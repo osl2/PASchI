@@ -58,15 +58,15 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
         participantDto.lastName
       )
       useStudentStore().addStudent(participant);
-    } else if (participantDto.updatedAt <= participant.updatedAt && participantDto.createdAt >= participant.createdAt) {
-      return participant;
+      // } else if (participantDto.updatedAt <= participant.updatedAt && participantDto.createdAt >= participant.createdAt) {
+      //   return participant;
     } else {
       participant.firstName = participantDto.firstName;
       participant.lastName = participantDto.lastName;
     }
-    if (participantDto.createdAt < participant.createdAt) {
-      participant.createdAt = participantDto.createdAt;
-    }
+    // if (participantDto.createdAt < participant.createdAt) {
+    //   participant.createdAt = participantDto.createdAt;
+    // }
 
     const courses: Course[] = [];
     const interactions: Interaction[] = [];

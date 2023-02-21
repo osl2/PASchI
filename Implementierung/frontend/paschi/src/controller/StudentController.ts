@@ -22,7 +22,7 @@ export class StudentController {
     return this.controller;
   }
 
-  createStudent(firstName: string, lastName: string): string {
+  async createStudent(firstName: string, lastName: string): Promise<string> {
     const student = new Student(
       undefined,
       useStudentStore().getNextId(),
@@ -30,7 +30,7 @@ export class StudentController {
       firstName,
       lastName
     );
-    this.studentService.add(student);
+    await this.studentService.add(student)
     return useStudentStore().addStudent(student);
   }
 
@@ -43,12 +43,13 @@ export class StudentController {
     }
   }
 
-  deleteStudent(id: string) {
+  async deleteStudent(id: string) {
     let student = useStudentStore().getStudent(id);
     if (student !== undefined) {
       student.courses.forEach((course: Course) => {
         CourseController.getCourseController().removeStudentFromCourse(course.getId, id);
       });
+      await this.studentService.delete(id);
       useStudentStore().deleteStudent(id);
     }
   }

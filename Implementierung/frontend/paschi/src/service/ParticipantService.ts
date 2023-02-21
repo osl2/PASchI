@@ -19,13 +19,15 @@ export class ParticipantService extends BaseService<Participant, ParticipantDto>
     return this.participantService;
   }
 
-  add(participant: Participant) {
+  async add(participant: Participant) {
     const token = useUserStore().getUser()?.token;
     const participantDto = this.getMapper().modelToDto(participant);
-    axios.post(PARTICIPANT_BASE_URL, participantDto, {
+    await axios.post(PARTICIPANT_BASE_URL, participantDto, {
       headers: {
         Authorization: `Bearer ${token}`
       }
+    }).then((response: AxiosResponse<ParticipantDto>) => {
+      participant.setId = response.data.id;
     }).catch((error) => {
       console.log(error);
     });
@@ -81,9 +83,9 @@ export class ParticipantService extends BaseService<Participant, ParticipantDto>
     return participants;
   }
 
-  delete(id: string) {
+  async delete(id: string) {
     const token = useUserStore().getUser()?.token;
-    axios.delete(PARTICIPANT_BASE_URL, {
+    await axios.delete(PARTICIPANT_BASE_URL, {
       params: {
         id
       },
