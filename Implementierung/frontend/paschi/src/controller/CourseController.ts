@@ -27,7 +27,7 @@ export class CourseController {
     return this.controller;
   }
 
-  createCourse(name: string, subject: string): string {
+  async createCourse(name: string, subject: string): Promise<string> {
     return useCourseStore().addCourse(new Course(
       undefined,
       useCourseStore().getNextId(),
