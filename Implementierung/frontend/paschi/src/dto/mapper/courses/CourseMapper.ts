@@ -5,17 +5,21 @@ import {Session} from "@/model/userdata/courses/Session";
 import {Participant} from "@/model/userdata/interactions/Participant";
 import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {UserController} from "@/controller/UserController";
-// import {SessionService} from "@/service/SessionService";
-// import {ParticipantService} from "@/service/ParticipantService";
-// import {SeatArrangementService} from "@/service/SeatArrangementService";
+import {useCourseStore} from "@/store/CourseStore";
+import {useStudentStore} from "@/store/StudentStore";
+import {ParticipantService} from "@/service/ParticipantService";
+import {useSessionStore} from "@/store/SessionStore";
+import {SessionService} from "@/service/SessionService";
+import {SeatArrangementService} from "@/service/SeatArrangementService";
+import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 
 export class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
 
   private static mapper: CourseMapper = new CourseMapper();
   private userController = UserController.getUserController();
-  // private sessionService = new SessionService();
-  // private participantService = new ParticipantService();
-  // private arrangementService = new SeatArrangementService();
+  private participantService = ParticipantService.getService();
+  private sessionService = SessionService.getService();
+  private arrangementService = SeatArrangementService.getService();
 
   private constructor() {
   }
@@ -46,32 +50,60 @@ export class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
     );
   }
 
-  dtoToModel(courseDto: any): Course {
+  async dtoToModel(courseDto: CourseDto): Promise<Course> {
+    let course = useCourseStore().getCourse(courseDto.id);
+    if (course == undefined) {
+      course = new Course(
+        courseDto.id,
+        0,
+        this.userController.getUser(),
+        courseDto.name,
+        courseDto.subject
+      );
+      course.createdAt = courseDto.createdAt;
+      course.updatedAt = courseDto.updatedAt;
+      useCourseStore().addCourse(course);
+    } else {
+      course.name = courseDto.name;
+      course.subject = courseDto.subject;
+    }
+
     const sessions: Session[] = [];
     const participants: Participant[] = [];
     const arrangements: SeatArrangement[] = [];
-    const user = this.userController.getUser();
 
-    courseDto.sessionIds.forEach((id: string) => {
-      // TODO: Service implementieren
-      // sessions.push(this.sessionService.getById(id));
-    });
-    courseDto.participantIds.forEach((id: string) => {
-      // TODO: Service implementieren
-      // participants.push(this.participantService.getById(id));
-      // const student = useStudentStore().getStudent(id);
-      // if (student !== undefined) {
-      //   participants.push();
-      // }
-    });
-    courseDto.seatArrangementIds.forEach((id: string) => {
-      // TODO: Service implementieren
-      // arrangements.push(this.arrangementService.getById(id));
-    });
+    for (const id of courseDto.participantIds) {
+      let participant = useStudentStore().getStudent(id);
+      if (participant == undefined) {
+        participant = await this.participantService.getById(id);
+      }
+      if (participant !== undefined) {
+        participants.push(participant);
+      }
+    }
 
-    const course = new Course(courseDto.id, 0, user, courseDto.name, courseDto.subject);
-    course.sessions = sessions;
+    for (const id of courseDto.sessionIds) {
+      let session = useSessionStore().getSession(id);
+      if (session == undefined) {
+        session = await this.sessionService.getById(id);
+      }
+      if (session !== undefined) {
+        sessions.push(session);
+      }
+    }
+
+    for (const id of courseDto.seatArrangementIds) {
+      let arrangement = useSeatArrangementStore().getSeatArrangement(id);
+      if (arrangement == undefined) {
+        arrangement = await this.arrangementService.getById(id);
+      }
+      if (arrangement !== undefined) {
+        arrangements.push(arrangement);
+      }
+    }
+
     course.participants = participants;
+    course.sessions = sessions;
     course.seatArrangements = arrangements;
 
     return course;
