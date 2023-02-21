@@ -13,6 +13,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -37,9 +39,11 @@ public class Course extends DataObject {
     private String subject;
 
     @ManyToMany
+    @Cascade(CascadeType.SAVE_UPDATE)
     private List<Participant> participants;
 
     @OneToMany
+    @Cascade(CascadeType.ALL)
     private List<Session> sessions;
 
     @OneToMany
