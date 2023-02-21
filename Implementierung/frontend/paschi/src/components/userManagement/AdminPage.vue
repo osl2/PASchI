@@ -19,7 +19,7 @@ import router from "@/plugins/router";
 import UserListCard from "@/components/userManagement/UserListCard.vue";
 import RequestListCard from "@/components/userManagement/RequestListCard.vue";
 import {AdminController} from "@/controller/AdminController";
-import {ref} from "vue";
+import {onBeforeMount, ref} from "vue";
 import {User} from "@/model/User";
 export default {
   name: "AdminPage",
@@ -30,11 +30,15 @@ export default {
     const users = ref<User[]>();
     const requests = ref<User[]>();
 
+
     async function updateUsers() {
       await adminController.getUsers().then((res) => users.value = res);
       await adminController.getUsersNotAuthenticated().then((res) => requests.value = res);
     }
 
+    onBeforeMount(() => {
+      updateUsers();
+    });
 
     return {
       router,
