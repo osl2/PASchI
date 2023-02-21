@@ -100,7 +100,6 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
 
     @Override
     public UserDto getById(String id, Authentication authentication) {
-        super.checkAuthorization(authentication, id);
         Optional<User> userOptional = userRepository.findUserById(id);
 
         User user = userOptional.orElseThrow(() -> new EntityNotFoundException(User.class, id));
@@ -115,7 +114,6 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
 
     @Override
     public String delete(String id, Authentication authentication) {
-        super.checkAuthorization(authentication, id);
         Optional<User> repositoryUserOptional = userRepository.findUserById(id);
         repositoryUserOptional.orElseThrow(() -> new EntityNotFoundException(User.class, id));
 
