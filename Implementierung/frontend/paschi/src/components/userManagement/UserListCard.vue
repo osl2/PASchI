@@ -70,7 +70,7 @@ export default defineComponent({
     const users: Ref<User[]> = ref<User[]>() as Ref<User[]>;
     onBeforeMount(() => {
       adminController
-        .getUsersNotAuthenticated()
+        .getUsers()
         .then((notAuthenticatedUsers) => {
           users.value = notAuthenticatedUsers;
         });
