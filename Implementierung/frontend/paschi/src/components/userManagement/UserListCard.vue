@@ -46,7 +46,7 @@
           {{ user.getId }}
         </v-col>
         <v-col cols="2">
-          <v-btn color="#ff0000" @click="deleteUser(user)">
+          <v-btn :loading="loading.includes(user.getId)" color="#ff0000" @click="deleteUser(user)">
             <v-icon icon="fas fa-trash"></v-icon>
           </v-btn>
         </v-col>
@@ -71,10 +71,11 @@ export default defineComponent({
     onBeforeMount(() => {
       adminController
         .getUsers()
-        .then((notAuthenticatedUsers) => {
-          users.value = notAuthenticatedUsers;
+        .then((authenticatedUsers) => {
+          users.value = authenticatedUsers;
         });
     });
+    const loading = ref<String[]>([]);
     const searchInput = ref("");
     const searchParameters = computed(() => {
       if (
@@ -116,7 +117,13 @@ export default defineComponent({
       );
     }
     async function deleteUser(user: User) {
+      loading.value.push(user.getId);
       await adminController.deleteUser(user.getId);
+      await adminController
+        .getUsers()
+        .then((authenticatedUsers) => {
+          users.value = authenticatedUsers;
+        });
     }
     function toggleCollapse() {
       collapsed.value = !collapsed.value;
@@ -140,6 +147,7 @@ export default defineComponent({
       toggleCollapseMessage,
       searchInput,
       users,
+      loading,
     };
   },
 });

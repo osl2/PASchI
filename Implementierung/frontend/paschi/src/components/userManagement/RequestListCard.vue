@@ -46,10 +46,10 @@
           {{ request.getId }}
         </v-col>
         <v-col cols="3">
-          <v-btn color="#00ff00" @click="authUser(request)">
+          <v-btn :loading="loading.includes(request.getId)" color="#00ff00" @click="authUser(request)">
             <v-icon icon="fas fa-check"></v-icon>
           </v-btn>
-          <v-btn color="#ff0000" @click="deleteUser(request)">
+          <v-btn :loading="loading.includes(request.getId)" color="#ff0000" @click="deleteUser(request)">
             <v-icon icon="fas fa-xmark"></v-icon>
           </v-btn>
         </v-col>
@@ -71,6 +71,7 @@ export default defineComponent({
     const adminController: AdminController =
       AdminController.getAdminController();
     const requests: Ref<User[]> = ref<User[]>() as Ref<User[]>;
+    const loading = ref<String[]>([]);
 
     onBeforeMount(() => {
       adminController.getUsersNotAuthenticated().then((users) => {
@@ -117,11 +118,19 @@ export default defineComponent({
           request.email.includes(searchInput.value))
       );
     }
-    function authUser(user: User) {
-      adminController.authUser(user.getId);
+    async function authUser(user: User) {
+      loading.value.push(user.getId);
+      await adminController.authUser(user.getId);
+      await adminController.getUsersNotAuthenticated().then((users) => {
+        requests.value = users;
+      });
     }
-    function deleteUser(user: User) {
-      adminController.deleteUser(user.getId);
+    async function deleteUser(user: User) {
+      loading.value.push(user.getId);
+      await adminController.deleteUser(user.getId);
+      await adminController.getUsersNotAuthenticated().then((users) => {
+        requests.value = users;
+      });
     }
     function toggleCollapse() {
       collapsed.value = !collapsed.value;
@@ -146,6 +155,7 @@ export default defineComponent({
       toggleCollapseMessage,
       searchInput,
       requests,
+      loading,
     };
   },
 });
