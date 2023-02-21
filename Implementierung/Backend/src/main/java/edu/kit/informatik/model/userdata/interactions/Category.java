@@ -9,6 +9,13 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
+/**
+ * Entität einer Kateorie
+ *
+ * @author uekai
+ * @author ugqbo
+ * @version 1.0
+ */
 @Getter
 @NoArgsConstructor
 @Entity

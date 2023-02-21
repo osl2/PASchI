@@ -20,6 +20,13 @@ import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
 import java.util.Map;
 
+/**
+ * Entität einer Sitzordnung
+ *
+ * @author uekai
+ * @author ugqbo
+ * @version 1.0
+ */
 @Getter
 @NoArgsConstructor
 @Entity
@@ -44,6 +51,16 @@ public class SeatArrangement extends DataObject {
 
     private Map<Chair, Participant> seatMap;
 
+    /**
+     * Konstruktor zum Erstellen eines Objektes
+     * @param user {@link User}
+     * @param name Name
+     * @param room {@link Room}
+     * @param course {@link Course}
+     * @param seatMap {@link Map} mit Key {@link Chair} und Value {@link Participant}
+     * @param createdAt {@link Timestamp} der Erstellung
+     * @param updatedAt {@link Timestamp} der letzten Änderung
+     */
     public SeatArrangement(User user, String name, Room room, Course course, Map<Chair,
                             Participant> seatMap, Timestamp createdAt, Timestamp updatedAt) {
         super(user, createdAt, updatedAt);
@@ -58,10 +75,18 @@ public class SeatArrangement extends DataObject {
         return seatMap.get(seat);
     }
 
+    /**
+     * Setzen der Sitzplatz-Map
+     * @param seatMap {@link Map} mit Key {@link Chair} und Value {@link Participant}
+     */
     public void setSeatMap(Map<Chair, Participant> seatMap) {
         this.seatMap = seatMap;
     }
 
+    /**
+     * Setzen des Namens
+     * @param name Name
+     */
     public void setName(String name) {
         this.name = name;
     }
