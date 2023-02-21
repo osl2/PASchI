@@ -22,16 +22,23 @@ export class StudentController {
     return this.controller;
   }
 
-  createStudent(firstName: string, lastName: string): string {
-    const student = new Student(
+  createStudent(firstName: string, lastName: string): string | undefined {
+    let student = new Student(
       undefined,
       useStudentStore().getNextId(),
       this.userController.getUser(),
       firstName,
       lastName
     );
-    this.studentService.add(student);
-    return useStudentStore().addStudent(student);
+    let participant : Student | undefined;
+    this.studentService.add(student).then((response : Student| undefined) => participant = response);
+
+
+    if (participant != undefined) {
+      return participant.getId;
+    } else {
+      return undefined;
+    }
   }
 
   updateStudent(id: string, firstName: string, lastName: string) {
@@ -43,13 +50,16 @@ export class StudentController {
     }
   }
 
-  deleteStudent(id: string) {
+  async deleteStudent(id: string) {
     let student = useStudentStore().getStudent(id);
     if (student !== undefined) {
       student.courses.forEach((course: Course) => {
         CourseController.getCourseController().removeStudentFromCourse(course.getId, id);
       });
+
+      await this.studentService.delete(student.getId);
       useStudentStore().deleteStudent(id);
+
     }
   }
 
