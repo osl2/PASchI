@@ -144,7 +144,6 @@ export default defineComponent({
       collapsed,
       toggleCollapseMessage,
       searchInput,
-      users: props.users,
       loading,
     };
   },

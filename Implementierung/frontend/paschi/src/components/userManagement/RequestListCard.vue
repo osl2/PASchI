@@ -149,7 +149,6 @@ export default defineComponent({
       collapsed,
       toggleCollapseMessage,
       searchInput,
-      requests: props.requests,
       loading,
     };
   },
