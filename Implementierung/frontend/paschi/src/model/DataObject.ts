@@ -37,6 +37,10 @@ export abstract class DataObject {
     this._createdAt = value;
   }
 
+  set updatedAt(value: string) {
+    this._updatedAt = value;
+  }
+
   get createdAt(): string {
     return this._createdAt;
   }
