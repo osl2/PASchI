@@ -14,7 +14,7 @@ export abstract class DataObject {
   }
 
   update() {
-    const date = new Date();
+    const date = new Date().toISOString();
     this._updatedAt = date.toString();
   }
 
