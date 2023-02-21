@@ -59,25 +59,24 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, onBeforeMount, ref, Ref} from "vue";
+import {computed, defineComponent, ref} from "vue";
 import { AdminController } from "@/controller/AdminController";
 import { User } from "@/model/User";
-import { Role } from "@/model/Role";
-import { UserController } from "@/controller/UserController";
 
 export default defineComponent({
   name: "RequestListCard",
-  setup() {
+  props: {
+    requests: {
+      type: Array as () => User[],
+      required: true,
+    },
+  },
+  emits: ["updateRequests"],
+  setup(props, { emit }) {
     const adminController: AdminController =
       AdminController.getAdminController();
-    const requests: Ref<User[]> = ref<User[]>() as Ref<User[]>;
     const loading = ref<String[]>([]);
 
-    onBeforeMount(() => {
-      adminController.getUsersNotAuthenticated().then((users) => {
-        requests.value = users;
-      });
-    });
     const searchInput = ref("");
     const searchParameters = computed(() => {
       if (
@@ -121,16 +120,12 @@ export default defineComponent({
     async function authUser(user: User) {
       loading.value.push(user.getId);
       await adminController.authUser(user.getId);
-      await adminController.getUsersNotAuthenticated().then((users) => {
-        requests.value = users;
-      });
+      emit("updateRequests");
     }
     async function deleteUser(user: User) {
       loading.value.push(user.getId);
       await adminController.deleteUser(user.getId);
-      await adminController.getUsersNotAuthenticated().then((users) => {
-        requests.value = users;
-      });
+      emit("updateRequests");
     }
     function toggleCollapse() {
       collapsed.value = !collapsed.value;
@@ -154,7 +149,7 @@ export default defineComponent({
       collapsed,
       toggleCollapseMessage,
       searchInput,
-      requests,
+      requests: props.requests,
       loading,
     };
   },
