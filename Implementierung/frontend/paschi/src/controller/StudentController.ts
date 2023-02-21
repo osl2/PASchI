@@ -39,7 +39,7 @@ export class StudentController {
     if (student !== undefined) {
       student.firstName = firstName;
       student.lastName = lastName;
-      this.studentService.update(student);
+      this.studentService.update(student).then();
     }
   }
 
