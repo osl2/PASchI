@@ -82,7 +82,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/api/*").permitAll()//allow CORS option calls
+                        .requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()//allow CORS option calls
                         .requestMatchers("/api/user/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/user").permitAll()
                         .requestMatchers("/api/user/admin").access(hasAuthority("SCOPE_ADMIN"))
