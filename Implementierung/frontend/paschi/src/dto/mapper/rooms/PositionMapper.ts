@@ -8,7 +8,6 @@ export class PositionMapper implements IModelDtoMapper<Position, PositionDto> {
 
   private static mapper: PositionMapper = new PositionMapper();
   private userController = UserController.getUserController();
-  private positionStore = usePositionStore();
 
   private constructor() {
   }
@@ -30,7 +29,7 @@ export class PositionMapper implements IModelDtoMapper<Position, PositionDto> {
   }
 
   dtoToModel(positionDto: PositionDto): Position {
-    let position = this.positionStore.getPosition(positionDto.id);
+    let position = usePositionStore().getPosition(positionDto.id);
     if (position == undefined) {
       position = new Position(
         positionDto.id,
@@ -40,7 +39,7 @@ export class PositionMapper implements IModelDtoMapper<Position, PositionDto> {
         positionDto.yCoordinate,
         positionDto.orientation
       );
-      this.positionStore.addPosition(position);
+      usePositionStore().addPosition(position);
     } else if (positionDto.updatedAt <= position.updatedAt && positionDto.createdAt >= position.createdAt) {
       return position;
     } else {
@@ -49,7 +48,7 @@ export class PositionMapper implements IModelDtoMapper<Position, PositionDto> {
       position.orientation = positionDto.orientation;
     }
     if (positionDto.createdAt < position.createdAt) {
-      this.positionStore.addPosition(position);
+      usePositionStore().addPosition(position);
     }
 
     return position;
