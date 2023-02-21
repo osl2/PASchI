@@ -17,9 +17,7 @@ export class UserController {
 
   async login(email: string, password: string): Promise<string | undefined> {
     let user: User | undefined;
-    await this.userService.login(email, password).then((response: User | undefined) => {
-      user = response;
-    });
+    user = await this.userService.login(email, password);
 
     if (user == undefined) {
       return undefined;
