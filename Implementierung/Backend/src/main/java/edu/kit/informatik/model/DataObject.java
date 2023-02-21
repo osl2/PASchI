@@ -13,6 +13,12 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
+/**
+ * Datenbankobjekt
+ *
+ * @author ugqbo
+ * @version 1.0
+ */
 @Entity
 @Getter
 @NoArgsConstructor
@@ -30,12 +36,22 @@ public abstract class DataObject {
 
     private Timestamp updatedAt;
 
+    /**
+     *
+     * @param user {@link User}
+     * @param createdAt {@link Timestamp} der Erstellung
+     * @param updatedAt {@link Timestamp} der letzten Änderung
+     */
     public DataObject(User user, Timestamp createdAt, Timestamp updatedAt) {
         this.user = user;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
+    /**
+     * Setzen des {@link Timestamp} der letzten Änderung
+     * @param updatedAt {@link Timestamp} der letzten Änderung
+     */
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
     }

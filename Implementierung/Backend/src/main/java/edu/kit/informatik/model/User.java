@@ -47,6 +47,17 @@ public class User implements Comparable<User>, UserDetails {
 
     private Timestamp updatedAt;
 
+    /**
+     *
+     * @param firstName Vorname
+     * @param lastName Nachname
+     * @param email Email
+     * @param password Password
+     * @param auth {@code true}, wenn Nutzer freigeschaltet ist
+     * @param role {@link Role}
+     * @param createdAt {@link Timestamp} der Erstellung
+     * @param updatedAt {@link Timestamp} der letzten Änderung
+     */
     public User(String firstName, String lastName, String email, String password,
                 boolean auth, Role role, Timestamp createdAt, Timestamp updatedAt) {
         this.firstName = firstName;
@@ -59,10 +70,18 @@ public class User implements Comparable<User>, UserDetails {
         this.updatedAt = updatedAt;
     }
 
+    /**
+     * Setzen des Vornamens
+     * @param firstName Vorname
+     */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
+    /**
+     * Setzen des Nachnamens
+     * @param lastName Nachname
+     */
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
@@ -71,22 +90,42 @@ public class User implements Comparable<User>, UserDetails {
         this.email = email;
     }
 
+    /**
+     * Setzen des Passwortes
+     * @param password Passwort
+     */
     public void setPassword(String password) {
         this.password = password;
     }
 
+    /**
+     * Setzen der Freigabe
+     * @param auth {@code boolescher Wert}
+     */
     public void setAuth(boolean auth) {
         this.auth = auth;
     }
 
+    /**
+     * Setzen der {@link Role}
+     * @param role {@link Role}
+     */
     public void setRole(Role role) {
         this.role = role;
     }
 
+    /**
+     * Setzen des {@link Timestamp} der Erstellung
+     * @param createdAt {@link Timestamp} der Erstellung
+     */
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 
+    /**
+     * Setzen des {@link Timestamp} der letzten Änderung
+     * @param updatedAt {@link Timestamp} der letzten Änderung
+     */
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
     }

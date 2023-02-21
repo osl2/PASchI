@@ -12,7 +12,11 @@ import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
 
 /**
+ * Abstrakte Klasse eines Raumobjektes
  *
+ * @author uekai
+ * @author ugqbo
+ * @version 1.0
  */
 @Entity
 @Getter
@@ -23,15 +27,29 @@ public abstract class RoomObject extends DataObject {
     @OneToOne
     private Position position;
 
+    /**
+     * Konstruktor zum Erstellen eines Objektes
+     * @param user {@link User}
+     * @param position {@link Position}
+     * @param createdAt {@link Timestamp} der Erstellung
+     * @param updatedAt {@link Timestamp} der letzten Änderung
+     */
     public RoomObject(User user, Position position, Timestamp createdAt, Timestamp updatedAt) {
         super(user, createdAt, updatedAt);
         //this.user = user;
         this.position = position;
     }
 
+    /**
+     * Rückgabe, ob Raumobjekt ein Tisch ist
+     * @return {@code true}, wenn Raumobjekt ein Tisch ist
+     */
     public abstract boolean isTable();
 
-
+    /**
+     * Setzen der {@link Position}
+     * @param position {@link Position}
+     */
     public void setPosition(Position position) {
         this.position = position;
     }
