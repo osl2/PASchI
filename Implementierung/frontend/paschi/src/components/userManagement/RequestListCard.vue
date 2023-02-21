@@ -46,10 +46,18 @@
           {{ request.getId }}
         </v-col>
         <v-col cols="3">
-          <v-btn :loading="loading.includes(request.getId)" color="#00ff00" @click="authUser(request)">
+          <v-btn
+            :loading="loading.includes(request.getId)"
+            color="#00ff00"
+            @click="authUser(request)"
+          >
             <v-icon icon="fas fa-check"></v-icon>
           </v-btn>
-          <v-btn :loading="loading.includes(request.getId)" color="#ff0000" @click="deleteUser(request)">
+          <v-btn
+            :loading="loading.includes(request.getId)"
+            color="#ff0000"
+            @click="deleteUser(request)"
+          >
             <v-icon icon="fas fa-xmark"></v-icon>
           </v-btn>
         </v-col>
@@ -119,13 +127,17 @@ export default defineComponent({
     }
     async function authUser(user: User) {
       loading.value.push(user.getId);
-      await adminController.authUser(user.getId);
-      emit("updateRequests");
+      await adminController.authUser(user.getId).then(() => {
+        loading.value = loading.value.filter((id) => id !== user.getId);
+        emit("updateRequests");
+      })
     }
     async function deleteUser(user: User) {
       loading.value.push(user.getId);
-      await adminController.deleteUser(user.getId);
-      emit("updateRequests");
+      await adminController.deleteUser(user.getId).then(() => {
+        loading.value = loading.value.filter((id) => id !== user.getId);
+        emit("updateRequests");
+      });
     }
     function toggleCollapse() {
       collapsed.value = !collapsed.value;

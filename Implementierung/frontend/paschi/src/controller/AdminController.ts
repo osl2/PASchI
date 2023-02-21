@@ -1,14 +1,12 @@
-import {User} from "@/model/User";
-import {UserService} from "@/service/UserService";
+import { User } from "@/model/User";
+import { UserService } from "@/service/UserService";
 
 export class AdminController {
-
   private static controller: AdminController = new AdminController();
   private userService = UserService.getService();
   static readonly defaultPassword: string = "default";
 
-  private constructor() {
-  }
+  private constructor() {}
 
   static getAdminController(): AdminController {
     return this.controller;
@@ -40,8 +38,8 @@ export class AdminController {
     return users;
   }
 
-  authUser(userId: string) {
-    this.getUsersNotAuthenticated().then((response: User[]) => {
+  async authUser(userId: string) {
+    await this.getUsersNotAuthenticated().then((response: User[]) => {
       response.forEach((user: User) => {
         if (user.getId === userId) {
           user.auth = true;

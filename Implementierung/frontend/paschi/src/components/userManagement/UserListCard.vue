@@ -120,8 +120,10 @@ export default defineComponent({
     }
     async function deleteUser(user: User) {
       loading.value.push(user.getId);
-      await adminController.deleteUser(user.getId);
-      emit("updateUsers");
+      await adminController.deleteUser(user.getId).then(() => {
+        loading.value = loading.value.filter((id) => id !== user.getId);
+        emit("updateUsers");
+      });
     }
     function toggleCollapse() {
       collapsed.value = !collapsed.value;
