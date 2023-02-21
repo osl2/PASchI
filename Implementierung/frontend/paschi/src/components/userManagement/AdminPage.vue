@@ -32,8 +32,9 @@ export default {
 
 
     async function updateUsers() {
-      await adminController.getUsers().then((res) => users.value = res);
       await adminController.getUsersNotAuthenticated().then((res) => requests.value = res);
+      await adminController.getUsers().then((res) => users.value = res);
+
     }
 
     onBeforeMount(() => {
