@@ -18,7 +18,7 @@
       label="Fach"
       type="input"
     ></v-text-field>
-    <v-btn @click="editSeatArrangementClick()">Sitzordnungen bearbeiten</v-btn>
+    <v-btn v-if="!isMobile" @click="editSeatArrangementClick()">Sitzordnungen bearbeiten</v-btn>
     <v-dialog max-width="700" v-model="seatArrangementDialog">
       <v-card>
         <v-list>
@@ -31,7 +31,7 @@
         </v-list>
       </v-card>
     </v-dialog>
-    <v-btn @click="addSeatArrangementClick">Sitzordung hinzufügen</v-btn>
+    <v-btn v-if="!isMobile" @click="addSeatArrangementClick">Sitzordung hinzufügen</v-btn>
     <v-dialog max-width="700" v-model="roomSelectionDialog">
       <v-card>
         <v-list>
@@ -99,7 +99,7 @@
 
 <script lang="ts">
 import { CourseController } from "@/controller/CourseController";
-import { defineComponent, Ref, ref } from "vue";
+import {defineComponent, inject, Ref, ref} from "vue";
 import { RoomController } from "@/controller/RoomController";
 import { Room } from "@/model/userdata/rooms/Room";
 import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
@@ -119,6 +119,8 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const isMobile: Ref<boolean> = inject('isMobile') as Ref<boolean>
+
     const router = useRouter();
 
     const courseController = CourseController.getCourseController();
@@ -245,7 +247,8 @@ export default defineComponent({
       courseName,
       courseSubject,
       newSeatArrangementNameDialog,
-      newSetArrangementName
+      newSetArrangementName,
+      isMobile
     };
   },
 });
