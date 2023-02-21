@@ -7,9 +7,6 @@ import edu.kit.informatik.model.userdata.rooms.Chair;
 import edu.kit.informatik.model.userdata.rooms.Room;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
@@ -28,15 +25,6 @@ import java.util.Map;
 @Entity
 @Table(name = "seatarrangements")
 public class SeatArrangement extends DataObject {
-    /*
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-
-    @ManyToOne
-
-    private User user;
-     */
 
     private String name;
 

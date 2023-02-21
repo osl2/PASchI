@@ -26,15 +26,6 @@ import java.util.List;
 @Table(name = "courses")
 public class Course extends DataObject {
 
-    /*
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-
-    @ManyToOne
-    private User user;
-
-    */
     private String name;
     private String subject;
 

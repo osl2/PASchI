@@ -4,9 +4,6 @@ import edu.kit.informatik.model.DataObject;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.interactions.Interaction;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -22,15 +19,7 @@ import java.util.List;
 @Entity
 @Table(name = "sessions")
 public class Session extends DataObject {
-    /*
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
 
-    @ManyToOne
-    private User user;
-
-     */
     private String name;
     private String date;
     @ManyToOne

@@ -5,11 +5,7 @@ import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.courses.Course;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,14 +19,6 @@ import java.util.List;
 @Entity
 @Table(name = "participants")
 public class Participant extends DataObject {
-    /*
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-
-    @ManyToOne
-    private User user;
-     */
 
     private String firstName;
     private String lastName;

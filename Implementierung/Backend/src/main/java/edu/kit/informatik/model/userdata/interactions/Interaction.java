@@ -4,9 +4,6 @@ import edu.kit.informatik.model.DataObject;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.courses.Session;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -19,14 +16,6 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "interactions")
 public class Interaction extends DataObject {
-    /*
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-
-    @ManyToOne
-    private User user;
-     */
 
     private String timeStamp;
 
