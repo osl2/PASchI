@@ -32,8 +32,9 @@
       </v-row>
     </v-card-item>
     <v-card-item
-      v-for="user in users"
+      v-for="user in users.sort((a, b) => a.email.localeCompare(b.email))"
       v-show="!collapsed && includesSearch(user)"
+      :key="user.getId"
     >
       <v-row align="center">
         <v-col v-show="showName">
