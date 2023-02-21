@@ -1,6 +1,5 @@
 package edu.kit.informatik.model;
 
-import edu.kit.informatik.model.userdata.interactions.ParticipantType;
 
 /**
  * Enum zur Implementierung verschiedener Rollen
