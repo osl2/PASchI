@@ -9,11 +9,13 @@ import {useCourseStore} from "@/store/CourseStore";
 import {useInteractionStore} from "@/store/InteractionStore";
 import {useStudentStore} from "@/store/StudentStore";
 import {Student} from "@/model/userdata/interactions/Student";
+import {CourseService} from "@/service/CourseService";
 
 export class ParticipantMapper implements IModelDtoMapper<Participant, ParticipantDto> {
 
   private static mapper: ParticipantMapper = new ParticipantMapper();
   private userController = UserController.getUserController();
+  private courseSerivce = CourseService.getService();
 
   private constructor() {
   }
@@ -47,7 +49,7 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
     );
   }
 
-  dtoToModel(participantDto: ParticipantDto): Participant {
+  async dtoToModel(participantDto: ParticipantDto): Promise<Participant> {
     let participant = useStudentStore().getStudent(participantDto.id);
     if (participant == undefined) {
       participant = new Student(
@@ -56,38 +58,35 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
         this.userController.getUser(),
         participantDto.firstName,
         participantDto.lastName
-      )
+      );
+      participant.createdAt = participantDto.createdAt;
+      participant.updatedAt = participantDto.updatedAt;
       useStudentStore().addStudent(participant);
-      // } else if (participantDto.updatedAt <= participant.updatedAt && participantDto.createdAt >= participant.createdAt) {
-      //   return participant;
     } else {
       participant.firstName = participantDto.firstName;
       participant.lastName = participantDto.lastName;
     }
-    // if (participantDto.createdAt < participant.createdAt) {
-    //   participant.createdAt = participantDto.createdAt;
-    // }
 
     const courses: Course[] = [];
     const interactions: Interaction[] = [];
 
-    participantDto.courseIds.forEach((id: string) => {
+    for (const id of participantDto.courseIds) {
       let course = useCourseStore().getCourse(id);
-      // if (course == undefined) {
-      //   course = new Course(id, 0, this.userController.getUser(), "", "");
-      //   this.courseStore.addCourse(course);
-      // }
-      // courses.push(course);
+      if (course == undefined) {
+        course = await this.courseSerivce.getById(id);
+      }
       if (course !== undefined) {
         courses.push(course);
       }
-    });
-    participantDto.interactionIds.forEach((id: string) => {
+    }
+
+    for (const id of participantDto.interactionIds) {
       let interaction = useInteractionStore().getInteraction(id);
       if (interaction !== undefined) {
         interactions.push(interaction);
       }
-    });
+    }
+
     participant.courses = courses;
     participant.interactions = interactions;
 

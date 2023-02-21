@@ -33,10 +33,10 @@ export class ParticipantService extends BaseService<Participant, ParticipantDto>
     });
   }
 
-  update(participant: Participant) {
+  async update(participant: Participant) {
     const token = useUserStore().getUser()?.token;
     const participantDto = this.getMapper().modelToDto(participant);
-    axios.put(PARTICIPANT_BASE_URL, participantDto, {
+    await axios.put(PARTICIPANT_BASE_URL, participantDto, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -72,10 +72,10 @@ export class ParticipantService extends BaseService<Participant, ParticipantDto>
       headers: {
         Authorization: `Bearer ${token}`
       }
-    }).then((response: AxiosResponse<ParticipantDto[]>) => {
-      response.data.forEach((participantDto: ParticipantDto) => {
-        participants.push(this.getMapper().dtoToModel(participantDto));
-      });
+    }).then(async (response: AxiosResponse<ParticipantDto[]>) => {
+      for(const participantDto of response.data) {
+        participants.push(await this.getMapper().dtoToModel(participantDto));
+      }
     }).catch((error) => {
       console.log(error);
     });
