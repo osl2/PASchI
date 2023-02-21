@@ -51,7 +51,6 @@ public class Session extends DataObject {
     public Session(User user, String name, String date, Course course,
                    SeatArrangement seatArrangement, Timestamp createdAt, Timestamp updatedAt) {
         super(user, createdAt, updatedAt);
-        //this.user = user;
         this.name = name;
         this.date = date;
         this.course = course;
