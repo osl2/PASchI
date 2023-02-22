@@ -3,13 +3,11 @@ package edu.kit.informatik.service;
 
 import edu.kit.informatik.dto.mapper.courses.SessionMapper;
 import edu.kit.informatik.dto.userdata.courses.SessionDto;
-import edu.kit.informatik.dto.userdata.interactions.InteractionDto;
 import edu.kit.informatik.exceptions.EntityNotFoundException;
 import edu.kit.informatik.model.userdata.courses.Session;
 import edu.kit.informatik.model.userdata.interactions.Interaction;
 import edu.kit.informatik.repositories.InteractionRepository;
 import edu.kit.informatik.repositories.SessionRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -41,7 +39,8 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
      * @param sessionMapper         {@link SessionMapper}
      * @param interactionRepository {@link InteractionRepository}
      */
-    public SessionService(SessionRepository sessionRepository, SessionMapper sessionMapper, InteractionRepository interactionRepository) {
+    public SessionService(SessionRepository sessionRepository, SessionMapper sessionMapper,
+                          InteractionRepository interactionRepository) {
         super(sessionMapper);
         this.sessionRepository = sessionRepository;
         this.interactionRepository = interactionRepository;
