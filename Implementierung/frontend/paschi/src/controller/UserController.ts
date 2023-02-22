@@ -58,11 +58,11 @@ export class UserController {
     return useUserStore().getUser()!;
   }
 
-  delete() {
+  async delete() {
     const user = useUserStore().getUser();
     if (user !== undefined) {
       useUserStore().deleteUser();
-      this.userService.delete(user.getId);
+      await this.userService.delete(user.getId);
     }
   }
 }

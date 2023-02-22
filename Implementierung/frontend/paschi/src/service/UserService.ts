@@ -5,7 +5,7 @@ import axios, {AxiosResponse} from "axios";
 import {UserMapper} from "@/dto/mapper/UserMapper";
 import {useUserStore} from "@/store/UserStore";
 
-const USER_BASE_URL: string = 'http://193.196.37.141/api/user';
+const USER_BASE_URL: string = 'http://localhost:8080/api/user';
 
 export class UserService extends BaseService<User, UserDto> {
 
@@ -75,9 +75,9 @@ export class UserService extends BaseService<User, UserDto> {
     return users;
   }
 
-  delete(id: string) {
+  async delete(id: string) {
     const token = useUserStore().getUser()?.token;
-    axios.delete(USER_BASE_URL, {
+    await axios.delete(USER_BASE_URL, {
       params: {
         id
       },

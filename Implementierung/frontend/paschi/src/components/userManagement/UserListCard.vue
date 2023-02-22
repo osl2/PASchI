@@ -32,8 +32,9 @@
       </v-row>
     </v-card-item>
     <v-card-item
-      v-for="user in users"
+      v-for="user in users.sort((a, b) => a.email.localeCompare(b.email))"
       v-show="!collapsed && includesSearch(user)"
+      :key="user.getId"
     >
       <v-row align="center">
         <v-col v-show="showName">
@@ -46,7 +47,11 @@
           {{ user.getId }}
         </v-col>
         <v-col cols="2">
-          <v-btn color="#ff0000" @click="deleteUser(user)">
+          <v-btn
+            :loading="loading.includes(user.getId)"
+            color="#ff0000"
+            @click="deleteUser(user)"
+          >
             <v-icon icon="fas fa-trash"></v-icon>
           </v-btn>
         </v-col>
@@ -56,25 +61,24 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onBeforeMount, ref, Ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { AdminController } from "@/controller/AdminController";
 import { User } from "@/model/User";
-import { Role } from "@/model/Role";
-import { UserController } from "@/controller/UserController";
 
 export default defineComponent({
   name: "UserListCard",
-  setup() {
+  props: {
+    users: {
+      type: Array as () => User[],
+      required: true,
+    },
+  },
+  emits: ["updateUsers"],
+
+  setup(props, { emit }) {
     const adminController: AdminController =
       AdminController.getAdminController();
-    const users: Ref<User[]> = ref<User[]>() as Ref<User[]>;
-    onBeforeMount(() => {
-      adminController
-        .getUsersNotAuthenticated()
-        .then((notAuthenticatedUsers) => {
-          users.value = notAuthenticatedUsers;
-        });
-    });
+    const loading = ref<String[]>([]);
     const searchInput = ref("");
     const searchParameters = computed(() => {
       if (
@@ -115,8 +119,12 @@ export default defineComponent({
           user.email.includes(searchInput.value))
       );
     }
-    function deleteUser(user: User) {
-      adminController.deleteUser(user.getId);
+    async function deleteUser(user: User) {
+      loading.value.push(user.getId);
+      await adminController.deleteUser(user.getId).then(() => {
+        loading.value = loading.value.filter((id) => id !== user.getId);
+        emit("updateUsers");
+      });
     }
     function toggleCollapse() {
       collapsed.value = !collapsed.value;
@@ -139,7 +147,7 @@ export default defineComponent({
       collapsed,
       toggleCollapseMessage,
       searchInput,
-      users,
+      loading,
     };
   },
 });
