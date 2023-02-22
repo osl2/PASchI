@@ -1,6 +1,5 @@
 package edu.kit.informatik.service;
 
-
 import edu.kit.informatik.dto.mapper.courses.SessionMapper;
 import edu.kit.informatik.dto.userdata.courses.SessionDto;
 import edu.kit.informatik.exceptions.EntityNotFoundException;
