@@ -175,10 +175,6 @@ export default {
         );
         router.push("login");
       }
-      else {
-        firstName.value += "a"
-        firstName.value = ""
-      }
     }
 
     return {
