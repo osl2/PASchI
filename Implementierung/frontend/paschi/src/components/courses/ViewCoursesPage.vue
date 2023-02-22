@@ -143,11 +143,11 @@ export default defineComponent({
     function abortNewCourseClick() {
       enterCourseNameDialog.value = false;
     }
-    function confirmNewCourseClick() {
-      router.push({
+    async function confirmNewCourseClick() {
+      await router.push({
         name: "CourseDetailsPage",
         params: {
-          courseId: courseController.createCourse(
+          courseId: await courseController.createCourse(
             courseName.value,
             courseSubject.value
           ),
