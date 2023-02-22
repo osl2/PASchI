@@ -27,6 +27,7 @@
   <LineOverlay :lines="interactionLines" style="z-index: 10" />
   <RoomDisplay
     style="z-index: 5"
+    no-drag
     :room-id="roomId"
     @selectRoomObject="selectStudent"
     @dragRoomObject="drag"
@@ -217,7 +218,7 @@ export default defineComponent({
       roomCoordinates: Coordinate,
       displayCoordinates: Coordinate
     ) {
-      if (roomObject instanceof Chair && getParticipant(roomObject)) {
+      if (roomObject instanceof Chair && getParticipant(roomObject) && getParticipant(roomObject) != selectedStudent) {
         targetStudent = getParticipant(roomObject);
         dragPosition.value = displayCoordinates;
         categoryDialog.value = true;
