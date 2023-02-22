@@ -26,8 +26,11 @@
                   <v-spacer />
                 </v-row>
               </v-card-title>
-              <v-card-item>
+              <v-card-item v-if="stats !== undefined && stats[5].values().length !== 0">
                 <canvas id = "categoryChart"/>
+              </v-card-item>
+              <v-card-item v-else>
+               Keine Daten verfügbar.
               </v-card-item>
             </v-card>
           </v-col>
@@ -39,8 +42,11 @@
                   <v-spacer />
                 </v-row>
               </v-card-title>
-              <v-card-item>
+              <v-card-item v-if="statsController.getSessionStats(sessionId) !== undefined">
                 {{statsController.getSessionStats(sessionId)[6]}}
+              </v-card-item>
+              <v-card-item v-else>
+                Keine Daten verfügbar.
               </v-card-item>
             </v-card>
           </v-col>
@@ -55,7 +61,7 @@
                   <v-spacer />
                 </v-row>
               </v-card-title>
-              <v-card-item>
+              <v-card-item v-if="stats[0].length !== 0">
                 <v-list>
                   <v-list-item v-for="studentId in top5InteractionArray">
                     <v-list-item-title>
@@ -63,6 +69,9 @@
                     </v-list-item-title>
                   </v-list-item>
                 </v-list>
+              </v-card-item>
+              <v-card-item v-else>
+                Keine Daten verfügbar.
               </v-card-item>
             </v-card>
           </v-col>
@@ -74,7 +83,7 @@
                   <v-spacer />
                 </v-row>
               </v-card-title>
-              <v-card-item>
+              <v-card-item  v-if="stats[4].length !== 0">
                 <v-list>
                   <v-list-item v-for="studentId in top5DisturberArray">
                     <v-list-item-title>
@@ -82,6 +91,9 @@
                     </v-list-item-title>
                   </v-list-item>
                 </v-list>
+              </v-card-item>
+              <v-card-item v-else>
+                Keine Daten verfügbar.
               </v-card-item>
             </v-card>
           </v-col>
@@ -131,12 +143,12 @@ export default defineComponent({
         downloadElementCategoryChart.click();
 
       }
+      const stats  = statsController.getSessionStats(props.sessionId);
       onMounted(() => {
           const categoryChartId = document.getElementById('categoryChart') as HTMLCanvasElement;
          // const top5InteractionChartId = document.getElementById('top5InteractionChart') as HTMLCanvasElement;
           //const top5DisturberChartId = document.getElementById('top5DisturberChart') as HTMLCanvasElement;
 
-          const stats  = statsController.getSessionStats(props.sessionId);
 
           if (stats == undefined) {
             console.log('stats could not be loaded');
@@ -193,7 +205,7 @@ export default defineComponent({
         }
       )
       return{
-        statsController, studentController, downloadClicked, top5InteractionArray, top5DisturberArray, sessionCourseSubject, sessionCourse, sessionDate, sessionName
+        stats, statsController, studentController, downloadClicked, top5InteractionArray, top5DisturberArray, sessionCourseSubject, sessionCourse, sessionDate, sessionName
       }
     },
   }
