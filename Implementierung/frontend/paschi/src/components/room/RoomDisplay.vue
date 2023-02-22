@@ -27,6 +27,11 @@
             ? 'error'
             : 'notError',
         ]"
+        @mousedown="mouseDown($event, chair)"
+        @mouseenter="mouseEnter($event, chair)"
+        @touchstart="touchStart($event, chair)"
+        @touchmove="touchMove($event, chair)"
+        @touchend="touchEnd"
       >
         <slot name="chair" :chair="chair">
           <v-card
@@ -36,10 +41,7 @@
             draggable="false"
             :width="getRoomObjectWidth(chair)"
             :height="getRoomObjectHeight(chair)"
-            @mousedown="mouseDown($event, chair)"
-            @touchstart="touchStart($event, chair)"
-            @touchmove="touchMove"
-            @touchend="touchEnd"
+
           >
             <v-icon
               class="v-col-auto"
@@ -59,6 +61,11 @@
             ? 'error'
             : 'notError',
         ]"
+        @mousedown="mouseDown($event, table)"
+        @mouseenter="mouseEnter($event, table)"
+        @touchstart="touchStart($event, table)"
+        @touchmove="touchMove($event, table)"
+        @touchend="touchEnd"
       >
         <slot name="table" v-bind:table="table">
           <v-card
@@ -68,10 +75,7 @@
             draggable="false"
             :width="getRoomObjectWidth(table)"
             :height="getRoomObjectHeight(table)"
-            @mousedown="mouseDown($event, table)"
-            @touchstart="touchStart($event, table)"
-            @touchmove="touchMove"
-            @touchend="touchEnd"
+
           >
             <v-icon
               class="v-col-auto"
@@ -105,6 +109,10 @@ export default defineComponent({
       required: true,
     },
     roomObjectOverlaps: {
+      type: Boolean,
+      required: false,
+    },
+    noDrag: {
       type: Boolean,
       required: false,
     },
@@ -242,6 +250,12 @@ export default defineComponent({
       selectedRoomObject.value = undefined;
     }
 
+    function mouseEnter(event: MouseEvent, roomObject: RoomObject) {
+      if (selectedRoomObject.value && selectedRoomObject.value !== roomObject && props.noDrag) {
+        selectedRoomObject.value = roomObject;
+      }
+    }
+
     function touchStart(event: TouchEvent, roomObject: RoomObject) {
       selectedRoomObject.value = roomObject;
       const displayCoordinate: Coordinate = {
@@ -255,7 +269,7 @@ export default defineComponent({
       emit("selectRoomObject", roomObject, roomCoordinate, displayCoordinate);
     }
 
-    function touchMove(event: TouchEvent) {
+    function touchMove(event: TouchEvent, roomObject: RoomObject) {
       const displayCoordinate: Coordinate = {
         x: event.touches[0].clientX,
         y: event.touches[0].clientY,
@@ -266,7 +280,7 @@ export default defineComponent({
       );
       emit(
         "dragRoomObject",
-        selectedRoomObject.value,
+        props.noDrag ? roomObject : selectedRoomObject.value,
         roomCoordinate,
         displayCoordinate
       );
@@ -298,6 +312,7 @@ export default defineComponent({
       touchEnd,
       mouseDown,
       mouseMove,
+      mouseEnter,
       mouseUp,
       getRoomObjectStyle,
       getRoomObjectHeight,
