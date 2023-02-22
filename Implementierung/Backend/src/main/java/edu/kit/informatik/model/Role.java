@@ -10,19 +10,9 @@ import edu.kit.informatik.model.userdata.interactions.ParticipantType;
  * @version 1.0
  */
 public enum Role {
-    ADMIN("admin"),
-    USER("user");
+    ADMIN(),
+    USER();
 
-    Role(String string) {
-    }
-
-    public static Role getRoleByString(String string) {
-        for (Role role: Role.values()) {
-            if (role.toString().toLowerCase().equals(string)) {
-                return role;
-            }
-        }
-
-        return null;
+    Role() {
     }
 }
