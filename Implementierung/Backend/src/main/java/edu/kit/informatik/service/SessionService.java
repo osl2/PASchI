@@ -50,7 +50,7 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
     public SessionDto add(SessionDto sessionDto, Authentication authentication) {
         super.checkAuthorization(authentication, sessionDto.getUserId());
         Session session = this.mapper.dtoToModel(sessionDto);
-        Session newSession = sessionRepository.save(session);
+        Session newSession = sessionRepository.save(saveInteractions(session));
 
         return this.mapper.modelToDto(newSession);
     }
@@ -138,5 +138,15 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
         }
 
         return returnInteractions;
+    }
+
+    private Session saveInteractions(Session session) {
+        Session newSession = new Session(session.getUser(), session.getName(), session.getDate(), session.getCourse(),
+                session.getSeatArrangement(), session.getCreatedAt(), session.getUpdatedAt());
+        for (int i = 0; i < session.getInteractions().size(); i++) {
+            newSession.addInteraction(interactionRepository.save(session.getInteractions().get(i)));
+        }
+
+        return newSession;
     }
 }
