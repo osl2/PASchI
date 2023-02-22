@@ -72,6 +72,7 @@ public class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
 
     @Override
     public Interaction dtoToModel(InteractionDto interactionDto) {
+        //System.out.println(interactionDto.getId() + " interactionDTO");
         User user = userRepository.findUserById(interactionDto.getUserId()).orElse(null);
         Session session = sessionRepository.findSessionById(interactionDto.getSessionId()).orElse(null);
         Participant fromParticipant = participantRepository.
@@ -88,7 +89,7 @@ public class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
             updatedAt = interactionDto.getUpdatedAt();
         }
 
-        return new Interaction(user, interactionDto.getTimeStamp(), session,
+        return new Interaction(interactionDto.getId(), user, interactionDto.getTimeStamp(), session,
                                 fromParticipant, toParticipant, category, interactionDto.getCreatedAt(), updatedAt);
     }
 
