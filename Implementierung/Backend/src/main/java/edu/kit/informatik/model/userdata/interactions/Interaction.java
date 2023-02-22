@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -42,9 +43,9 @@ public class Interaction extends DataObject {
     @ManyToOne
     private Category category;
 
-    public Interaction(User user, String timeStamp, Session session, Participant from, Participant to,
+    public Interaction(String id, User user, String timeStamp, Session session, Participant from, Participant to,
                        Category category, Timestamp createdAt, Timestamp updatedAt) {
-        super(user, createdAt, updatedAt);
+        super(id, user, createdAt, updatedAt);
         //this.user = user;
         this.timeStamp = timeStamp;
         this.session = session;
