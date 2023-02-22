@@ -132,10 +132,10 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
         List<Table> returnTables = new ArrayList<>();
 
         for (Table newTable: newRoom.getTables()) {
-            System.out.println(newTable.toString());
+            //System.out.println(newTable.toString());
             boolean found = false;
             for (Table repositoryTable: repositoryRoom.getTables())  {
-                System.out.println(repositoryTable.toString());
+                //System.out.println(repositoryTable.toString());
                 // Tische werden als gleich befunden, wenn der Erstell-Timestamp gleich ist
                 if (repositoryTable.getCreatedAt().equals(newTable.getCreatedAt())) {
                     repositoryTable.setWidth(newTable.getWidth());
