@@ -67,10 +67,6 @@ public class User implements Comparable<User>, UserDetails {
         this.lastName = lastName;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }
