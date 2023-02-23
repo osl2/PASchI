@@ -130,4 +130,14 @@ const router = createRouter({
   routes,
 });
 
+router.beforeEach(async (to, from) => {
+  if (false
+    // make sure the user is authenticated
+    // TODO !isAuthenticated && to.name !== 'Login' && to.name !== 'Register'
+  ) {
+    // redirect the user to the login page
+    return { name: 'Login' }
+  }
+})
+
 export default router;
