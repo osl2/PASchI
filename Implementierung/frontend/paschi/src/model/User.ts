@@ -6,7 +6,7 @@ export class User extends DataObject {
   private _firstName: string;
   private _lastName: string;
   private _email: string;
-  private readonly _password: string;
+  private _password: string;
   private _auth: boolean;
   private _role: Role;
   private _token: string | undefined;
@@ -79,5 +79,9 @@ export class User extends DataObject {
   set token(value: string | undefined) {
     this._token = value;
     this.update();
+  }
+
+  deletePassword() {
+    this._password = "";
   }
 }

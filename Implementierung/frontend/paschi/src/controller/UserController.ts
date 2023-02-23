@@ -42,6 +42,7 @@ export class UserController {
       undefined
     );
     await this.userService.add(user);
+    user.deletePassword();
   }
 
   async update(firstName: string, lastName: string, email: string) {
