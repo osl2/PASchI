@@ -36,15 +36,31 @@ export default defineComponent({
   setup() {
     // TODO
     const courses: Course[] = [];
+
+    /**
+     * Methode, die zur Kursübersichtsseite Leitet
+     */
     function navigateToCourses() {
       router.push({ name: "ViewCoursesPage" });
     }
+
+    /**
+     * Methode, die zur Kursdetailansicht leitet
+     *
+     * @param course Der Kurs der angezeigt wird
+     */
     function navigateToCourse(course: Course) {
       router.push({
         name: "CourseDetailsPage",
         params: { courseId: course.getId },
       });
     }
+
+    /**
+     * Methode, die zur Kursstatistikseite leitet
+     *
+     * @param course Der Kurs der Statistik
+     */
     function navigateToStatistic(course: Course) {
       router.push({
         name: "CourseStatisticPage",
