@@ -16,10 +16,6 @@ import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 export class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
 
   private static mapper: CourseMapper = new CourseMapper();
-  private userController = UserController.getUserController();
-  private sessionService = SessionService.getService();
-  private participantService = ParticipantService.getService();
-  private arrangementService = SeatArrangementService.getService();
 
   private constructor() {
   }
@@ -51,12 +47,14 @@ export class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
   }
 
   async dtoToModel(courseDto: CourseDto): Promise<Course> {
+    const userController = UserController.getUserController();
+
     let course = useCourseStore().getCourse(courseDto.id);
     if (course == undefined) {
       course = new Course(
         courseDto.id,
         0,
-        this.userController.getUser(),
+        userController.getUser(),
         courseDto.name,
         courseDto.subject
       );
@@ -70,6 +68,10 @@ export class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
       course.subject = courseDto.subject;
     }
 
+    const sessionService = SessionService.getService();
+    const participantService = ParticipantService.getService();
+    const arrangementService = SeatArrangementService.getService();
+
     const sessions: Session[] = [];
     const participants: Participant[] = [];
     const arrangements: SeatArrangement[] = [];
@@ -77,7 +79,7 @@ export class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
     for (const id of courseDto.participantIds) {
       let participant = useStudentStore().getStudent(id);
       if (participant == undefined) {
-        participant = await this.participantService.getById(id);
+        participant = await participantService.getById(id);
       }
       if (participant !== undefined) {
         participants.push(participant);
@@ -87,7 +89,7 @@ export class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
     for (const id of courseDto.sessionIds) {
       let session = useSessionStore().getSession(id);
       if (session == undefined) {
-        session = await this.sessionService.getById(id);
+        session = await sessionService.getById(id);
       }
       if (session !== undefined) {
         sessions.push(session);
@@ -97,7 +99,7 @@ export class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
     for (const id of courseDto.seatArrangementIds) {
       let arrangement = useSeatArrangementStore().getSeatArrangement(id);
       if (arrangement == undefined) {
-        arrangement = await this.arrangementService.getById(id);
+        arrangement = await arrangementService.getById(id);
       }
       if (arrangement !== undefined) {
         arrangements.push(arrangement);

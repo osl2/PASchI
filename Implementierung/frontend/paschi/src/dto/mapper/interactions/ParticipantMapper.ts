@@ -14,8 +14,6 @@ import {CourseService} from "@/service/CourseService";
 export class ParticipantMapper implements IModelDtoMapper<Participant, ParticipantDto> {
 
   private static mapper: ParticipantMapper = new ParticipantMapper();
-  private userController = UserController.getUserController();
-  private courseSerivce = CourseService.getService();
 
   private constructor() {
   }
@@ -50,12 +48,14 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
   }
 
   async dtoToModel(participantDto: ParticipantDto): Promise<Participant> {
+    const userController = UserController.getUserController();
+
     let participant = useStudentStore().getStudent(participantDto.id);
     if (participant == undefined) {
       participant = new Student(
         participantDto.id,
         0,
-        this.userController.getUser(),
+        userController.getUser(),
         participantDto.firstName,
         participantDto.lastName
       );
@@ -71,11 +71,12 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
 
     const courses: Course[] = [];
     const interactions: Interaction[] = [];
+    const courseSerivce = CourseService.getService();
 
     for (const id of participantDto.courseIds) {
       let course = useCourseStore().getCourse(id);
       if (course == undefined) {
-        course = await this.courseSerivce.getById(id);
+        course = await courseSerivce.getById(id);
       }
       if (course !== undefined) {
         courses.push(course);

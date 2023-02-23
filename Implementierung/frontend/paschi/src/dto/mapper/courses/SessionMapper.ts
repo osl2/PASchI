@@ -14,10 +14,7 @@ import {InteractionMapper} from "@/dto/mapper/interactions/InteractionMapper";
 export class SessionMapper implements IModelDtoMapper<Session, SessionDto> {
 
   private static mapper: SessionMapper = new SessionMapper();
-  private userController = UserController.getUserController();
   private interactionMapper = InteractionMapper.getMapper();
-  private arrangementService = SeatArrangementService.getService();
-  //private courseSerivce = CourseService.getService();
 
   private constructor() {
   }
@@ -49,15 +46,19 @@ export class SessionMapper implements IModelDtoMapper<Session, SessionDto> {
   }
 
   async dtoToModel(sessionDto: SessionDto): Promise<Session> {
+    const userController = UserController.getUserController();
+    const arrangementService = SeatArrangementService.getService();
+    const courseSerivce = CourseService.getService();
+
     let course = useCourseStore().getCourse(sessionDto.courseId);
     if (course == undefined) {
-      //course = await this.courseSerivce.getById(sessionDto.courseId);
+      course = await courseSerivce.getById(sessionDto.courseId);
     }
     let arrangement;
     if (sessionDto.seatArrangementId !== undefined) {
       arrangement = useSeatArrangementStore().getSeatArrangement(sessionDto.seatArrangementId);
       if (arrangement == undefined) {
-        arrangement = await this.arrangementService.getById(sessionDto.seatArrangementId);
+        arrangement = await arrangementService.getById(sessionDto.seatArrangementId);
       }
     }
 
@@ -66,7 +67,7 @@ export class SessionMapper implements IModelDtoMapper<Session, SessionDto> {
       session = new Session(
         sessionDto.id,
         0,
-        this.userController.getUser(),
+        userController.getUser(),
         sessionDto.name,
         sessionDto.date,
         course!,
@@ -84,7 +85,7 @@ export class SessionMapper implements IModelDtoMapper<Session, SessionDto> {
 
     const interactions: Interaction[] = [];
     for (const interactionDto of sessionDto.interactionDtos) {
-      interactions.push(this.interactionMapper.dtoToModel(interactionDto));
+      interactions.push(await this.interactionMapper.dtoToModel(interactionDto));
     }
 
     session.interactions = interactions;
