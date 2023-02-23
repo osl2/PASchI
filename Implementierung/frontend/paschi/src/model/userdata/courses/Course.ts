@@ -137,13 +137,16 @@ export class Course extends DataObject {
 
   set participants(value: Participant[]) {
     this._participants = value;
+    this.update();
   }
 
   set sessions(value: Session[]) {
     this._sessions = value;
+    this.update();
   }
 
   set seatArrangements(value: SeatArrangement[]) {
     this._seatArrangements = value;
+    this.update();
   }
 }
