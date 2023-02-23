@@ -26,9 +26,9 @@ export class UserService extends BaseService<User, UserDto> {
     });
   }
 
-  update(user: User) {
+  async update(user: User) {
     const userDto = this.getMapper().modelToDto(user);
-    axios.put(USER_BASE_URL, userDto, {
+    await axios.put(USER_BASE_URL, userDto, {
       headers: {
         Authorization: `Bearer ${userDto.token}`
       }
@@ -126,10 +126,10 @@ export class UserService extends BaseService<User, UserDto> {
     })
   }
 
-  adminUpdate(user: User) {
+  async adminUpdate(user: User) {
     const token = useUserStore().getUser()?.token;
     const userDto = this.getMapper().modelToDto(user);
-    axios.put(USER_BASE_URL + '/admin', userDto, {
+    await axios.put(USER_BASE_URL + '/admin', userDto, {
       headers: {
         Authorization: `Bearer ${token}`
       }

@@ -19,10 +19,10 @@ export class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
     return this.seatArrangementService;
   }
 
-  add(arrangement: SeatArrangement) {
+  async add(arrangement: SeatArrangement) {
     const token = useUserStore().getUser()?.token;
     const arrangementDto = this.getMapper().modelToDto(arrangement);
-    axios.post(SEAT_ARRANGEMENT_BASE_URL, arrangementDto, {
+    await axios.post(SEAT_ARRANGEMENT_BASE_URL, arrangementDto, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -33,10 +33,10 @@ export class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
     });
   }
 
-  update(arrangement: SeatArrangement) {
+  async update(arrangement: SeatArrangement) {
     const token = useUserStore().getUser()?.token;
     const arrangementDto = this.getMapper().modelToDto(arrangement);
-    axios.put(SEAT_ARRANGEMENT_BASE_URL, arrangementDto, {
+    await axios.put(SEAT_ARRANGEMENT_BASE_URL, arrangementDto, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -83,9 +83,9 @@ export class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
     return arrangements;
   }
 
-  delete(id: string) {
+  async delete(id: string) {
     const token = useUserStore().getUser()?.token;
-    axios.delete(SEAT_ARRANGEMENT_BASE_URL, {
+    await axios.delete(SEAT_ARRANGEMENT_BASE_URL, {
       params: {
         id
       },

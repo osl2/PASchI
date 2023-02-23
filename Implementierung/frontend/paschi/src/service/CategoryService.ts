@@ -19,10 +19,10 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
     return this.categoryService;
   }
 
-  add(category: Category) {
+  async add(category: Category) {
     const token = useUserStore().getUser()?.token;
     const categoryDto = this.getMapper().modelToDto(category);
-    axios.post(CATEGORY_BASE_URL, categoryDto, {
+    await axios.post(CATEGORY_BASE_URL, categoryDto, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -33,10 +33,10 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
     });
   }
 
-  update(category: Category) {
+  async update(category: Category) {
     const token = useUserStore().getUser()?.token;
     const categoryDto = this.getMapper().modelToDto(category);
-    axios.put(CATEGORY_BASE_URL, categoryDto, {
+    await axios.put(CATEGORY_BASE_URL, categoryDto, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -83,9 +83,9 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
     return categories;
   }
 
-  delete(id: string) {
+  async delete(id: string) {
     const token = useUserStore().getUser()?.token;
-    axios.delete(CATEGORY_BASE_URL, {
+    await axios.delete(CATEGORY_BASE_URL, {
       params: {
         id
       },

@@ -19,10 +19,10 @@ export class SessionService extends BaseService<Session, SessionDto> {
     return this.sessionService;
   }
 
-  add(session: Session) {
+  async add(session: Session) {
     const token = useUserStore().getUser()?.token;
     const sessionDto = this.getMapper().modelToDto(session);
-    axios.post(SESSION_BASE_URL, sessionDto, {
+    await axios.post(SESSION_BASE_URL, sessionDto, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -33,10 +33,10 @@ export class SessionService extends BaseService<Session, SessionDto> {
     });
   }
 
-  update(session: Session) {
+  async update(session: Session) {
     const token = useUserStore().getUser()?.token;
     const sessionDto = this.getMapper().modelToDto(session);
-    axios.post(SESSION_BASE_URL, sessionDto, {
+    await axios.post(SESSION_BASE_URL, sessionDto, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -83,9 +83,9 @@ export class SessionService extends BaseService<Session, SessionDto> {
     return sessions;
   }
 
-  delete(id: string) {
+  async delete(id: string) {
     const token = useUserStore().getUser()?.token;
-    axios.post(SESSION_BASE_URL, {
+    await axios.post(SESSION_BASE_URL, {
       params: {
         id
       },

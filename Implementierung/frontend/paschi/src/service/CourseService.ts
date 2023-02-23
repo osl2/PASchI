@@ -19,10 +19,10 @@ export class CourseService extends BaseService<Course, CourseDto> {
     return this.courseService;
   }
 
-  add(course: Course) {
+  async add(course: Course) {
     const token = useUserStore().getUser()?.token;
     const courseDto = this.getMapper().modelToDto(course);
-    axios.post(COURSE_BASE_URL, courseDto, {
+    await axios.post(COURSE_BASE_URL, courseDto, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -33,10 +33,10 @@ export class CourseService extends BaseService<Course, CourseDto> {
     });
   }
 
-  update(course: Course) {
+  async update(course: Course) {
     const token = useUserStore().getUser()?.token;
     const courseDto = this.getMapper().modelToDto(course);
-    axios.put(COURSE_BASE_URL, courseDto, {
+    await axios.put(COURSE_BASE_URL, courseDto, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -83,9 +83,9 @@ export class CourseService extends BaseService<Course, CourseDto> {
     return courses;
   }
 
-  delete(id: string) {
+  async delete(id: string) {
     const token = useUserStore().getUser()?.token;
-    axios.delete(COURSE_BASE_URL, {
+    await axios.delete(COURSE_BASE_URL, {
       params: {
         id
       },
