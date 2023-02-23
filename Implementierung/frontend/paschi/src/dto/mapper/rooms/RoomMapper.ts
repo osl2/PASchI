@@ -33,7 +33,7 @@ export class RoomMapper implements IModelDtoMapper<Room, RoomDto> {
     );
   }
 
-  dtoToModel(roomDto: RoomDto): Room {
+  async dtoToModel(roomDto: RoomDto): Promise<Room> {
     return undefined;
   }
 }

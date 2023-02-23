@@ -27,7 +27,7 @@ export class TableMapper implements IModelDtoMapper<Table, TableDto> {
     );
   }
 
-  dtoToModel(tableDto: TableDto): Table {
+  async dtoToModel(tableDto: TableDto): Promise<Table> {
     return undefined;
   }
 }

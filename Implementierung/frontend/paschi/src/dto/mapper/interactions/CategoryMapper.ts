@@ -30,7 +30,7 @@ export class CategoryMapper implements IModelDtoMapper<Category, CategoryDto> {
     );
   }
 
-  dtoToModel(categoryDto: CategoryDto): Category {
+  async dtoToModel(categoryDto: CategoryDto): Promise<Category> {
     return undefined;
   }
 }

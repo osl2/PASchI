@@ -25,7 +25,7 @@ export class ChairMapper implements IModelDtoMapper<Chair, ChairDto> {
     );
   }
 
-  dtoToModel(chairDto: ChairDto): Chair {
+  async dtoToModel(chairDto: ChairDto): Promise<Chair> {
     return undefined;
   }
 }

@@ -71,8 +71,8 @@ export class RoomService extends BaseService<Room, RoomDto> {
         Authorization: `Bearer ${token}`
       }
     }).then((response: AxiosResponse<RoomDto[]>) => {
-      response.data.forEach((roomDto: RoomDto) => {
-        rooms.push(this.getMapper().dtoToModel(roomDto));
+      response.data.forEach(async (roomDto: RoomDto) => {
+        rooms.push(await this.getMapper().dtoToModel(roomDto));
       });
     }).catch((error) => {
       console.log(error);

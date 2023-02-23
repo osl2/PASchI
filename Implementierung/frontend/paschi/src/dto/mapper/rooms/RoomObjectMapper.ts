@@ -27,7 +27,7 @@ export class RoomObjectMapper implements IModelDtoMapper<RoomObject, RoomObjectD
     }
   }
 
-  dtoToModel(roomObjectDto: RoomObjectDto): RoomObject {
+  async dtoToModel(roomObjectDto: RoomObjectDto): Promise<RoomObject> {
     return undefined;
   }
 }

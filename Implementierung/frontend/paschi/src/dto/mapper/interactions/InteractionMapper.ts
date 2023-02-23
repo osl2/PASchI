@@ -32,7 +32,7 @@ export class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
     );
   }
 
-  dtoToModel(interactionDto: InteractionDto): Interaction {
+  async dtoToModel(interactionDto: InteractionDto): Promise<Interaction> {
     return undefined;
   }
 }

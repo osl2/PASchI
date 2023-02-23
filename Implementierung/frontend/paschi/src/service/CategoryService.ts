@@ -71,8 +71,8 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
         Authorization: `Bearer ${token}`
       }
     }).then((response: AxiosResponse<CategoryDto[]>) => {
-      response.data.forEach((categoryDto: CategoryDto) => {
-        categories.push(this.getMapper().dtoToModel(categoryDto));
+      response.data.forEach(async (categoryDto: CategoryDto) => {
+        categories.push(await this.getMapper().dtoToModel(categoryDto));
       });
     }).catch((error) => {
       console.log(error);

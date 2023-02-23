@@ -28,7 +28,7 @@ export class PositionMapper implements IModelDtoMapper<Position, PositionDto> {
     );
   }
 
-  dtoToModel(positionDto: PositionDto): Position {
+  async dtoToModel(positionDto: PositionDto): Promise<Position> {
     let position = usePositionStore().getPosition(positionDto.id);
     if (position == undefined) {
       position = new Position(

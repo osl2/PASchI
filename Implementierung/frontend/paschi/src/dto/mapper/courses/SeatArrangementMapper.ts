@@ -39,7 +39,7 @@ export class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, S
   }
 
 
-  dtoToModel(arrangementDto: SeatArrangementDto): SeatArrangement {
+  async dtoToModel(arrangementDto: SeatArrangementDto): Promise<SeatArrangement> {
     return undefined;
   }
 }

@@ -13,7 +13,7 @@ export class QualityMapper implements IModelDtoMapper<Quality, QualityDto> {
     return QualityMapper.mapper;
   }
 
-  dtoToModel(qualityDto: QualityDto): Quality {
+  async dtoToModel(qualityDto: QualityDto): Promise<Quality> {
     switch (qualityDto) {
       case QualityDto.ONE_STAR:
         return Quality.ONE_STAR;

@@ -28,7 +28,7 @@ export class RatedCategoryMapper implements IModelDtoMapper<RatedCategory, Rated
     );
   }
 
-  dtoToModel(ratedCategoryDto: RatedCategoryDto): RatedCategory {
+  async dtoToModel(ratedCategoryDto: RatedCategoryDto): Promise<RatedCategory> {
     return undefined;
   }
 }
