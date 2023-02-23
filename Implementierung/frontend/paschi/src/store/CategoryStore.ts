@@ -9,11 +9,13 @@ export const useCategoryStore = defineStore('categories', {
     nextId: 0
   }),
   actions: {
-    addCategory(category: Category) {
+    addCategory(category: Category): string {
       this.categories.push(category);
+      return category.getId;
     },
-    addRatedCategory(catgeory: RatedCategory) {
+    addRatedCategory(catgeory: RatedCategory): string {
       this.ratedCategories.push(catgeory);
+      return catgeory.getId;
     },
     deleteCategory(name: string) {
       this.categories.forEach((element, index) => {

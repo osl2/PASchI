@@ -33,12 +33,12 @@ export class StudentController {
     return useStudentStore().addStudent(student);
   }
 
-  updateStudent(id: string, firstName: string, lastName: string) {
+  async updateStudent(id: string, firstName: string, lastName: string) {
     let student = useStudentStore().getStudent(id);
     if (student !== undefined) {
       student.firstName = firstName;
       student.lastName = lastName;
-      this.studentService.update(student).then();
+      await this.studentService.update(student).then();
     }
   }
 

@@ -98,13 +98,13 @@ export default defineComponent({
       deleteStudentDialog.value = true;
     }
 
-    function saveChangesClick() {
-      studentController.updateStudent(
+    async function saveChangesClick() {
+      await studentController.updateStudent(
         props.studentId,
         firstName.value,
         lastName.value
       );
-      router.push({ name: "ViewStudentsPage" });
+      await router.push({ name: "ViewStudentsPage" });
     }
 
     function deleteStudentClick() {

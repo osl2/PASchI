@@ -43,12 +43,12 @@ export class CourseController {
     return useCourseStore().addCourse(course);
   }
 
-  updateCourse(courseId: string, name: string, subject: string) {
+  async updateCourse(courseId: string, name: string, subject: string) {
     let course = useCourseStore().getCourse(courseId);
     if (course !== undefined) {
       course.name = name;
       course.subject = subject;
-      this.courseService.update(course).then();
+      await this.courseService.update(course).then();
     }
   }
 
