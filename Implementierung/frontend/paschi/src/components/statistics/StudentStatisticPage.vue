@@ -26,7 +26,7 @@
                 <v-spacer />
               </v-row>
             </v-card-title>
-            <v-card-item v-if="statsController.getSessionStats(studentId) !== undefined && statsController.getSessionStats(studentId)[1]!== 0">
+            <v-card-item v-if="statsController.getStudentStats(studentId) !== undefined && statsController.getStudentStats(studentId)[1]!== 0">
               {{statsController.getStudentStats(studentId)[1]}} / 5
             </v-card-item>
             <v-card-item v-else>
@@ -42,7 +42,7 @@
                 <v-spacer />
               </v-row>
             </v-card-title>
-            <v-card-item v-if="stats !== undefined && stats[0].values().length() !== 0">
+            <v-card-item v-if="stats !== undefined && stats[0].values().length() != 0">
               <canvas id = "categoryChart"/>
             </v-card-item>
             <v-card-item v-else>
@@ -82,7 +82,6 @@ export default defineComponent({
     const studentController = StudentController.getStudentConroller();
     const firstName = studentController.getStudent(props.studentId)?.firstName;
     const lastName = studentController.getStudent(props.studentId)?.lastName;
-    let error = 0;
     let stats;
 
     const downloadElement = document.createElement('a');
@@ -92,7 +91,7 @@ export default defineComponent({
     }
 
     onMounted(() => {
-        if (error == 1 || document.getElementById('categoryChart') == null) {
+        if (document.getElementById('categoryChart') == null) {
           return;
         }
         const categoryChartId = document.getElementById('categoryChart') as HTMLCanvasElement;
@@ -100,7 +99,6 @@ export default defineComponent({
 
         if (stats == undefined) {
           console.log('stats could not be loaded');
-          error = 1;
           return;
         }
 
@@ -152,7 +150,7 @@ export default defineComponent({
         }
       )
       return{
-        statsController, firstName, lastName, downloadClicked, stats, error,
+        statsController, firstName, lastName, downloadClicked, stats,
       }
     },
 
