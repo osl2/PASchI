@@ -7,8 +7,9 @@ export const useSeatArrangementStore = defineStore('seatArrangements', {
     nextId: 0
   }),
   actions: {
-    addSeatArrangement(arrangement: SeatArrangement) {
+    addSeatArrangement(arrangement: SeatArrangement): string {
       this.seatArrangements.push(arrangement);
+      return arrangement.getId;
     },
     deleteSeatArrangement(id: string) {
       this.seatArrangements.forEach((element, index) => {
