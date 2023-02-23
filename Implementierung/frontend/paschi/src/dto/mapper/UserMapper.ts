@@ -45,7 +45,7 @@ export class UserMapper implements IModelDtoMapper<User, UserDto> {
       userDto.email,
       userDto.password,
       userDto.auth,
-      this.roleMapper.dtoToModel(userDto.role),
+      await this.roleMapper.dtoToModel(userDto.role),
       userDto.token
     );
   }
