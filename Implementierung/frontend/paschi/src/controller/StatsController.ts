@@ -165,10 +165,6 @@ export class StatsController {
     statsArray.push(participantionRate);
   }
 
-  // TODO
-  getInteractionMap(sessionId: string) {
-
-  }
 
   private getInteractionStats(sessionId: string, categories: Map<string, number>,
                               students: Map<string, [number, number, number, number]>,
