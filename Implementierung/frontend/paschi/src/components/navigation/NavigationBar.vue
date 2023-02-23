@@ -82,7 +82,7 @@ export default defineComponent({
     /**
      * Methode, die bestimmt, ob die aktuelle Rute eine Unterroute der angegebenen Seite ist.
      *
-     * @param route
+     * @param route Die Route mit der verglichen werden soll
      */
     function subRouteOf(route: string): boolean {
       return useRoute().matched.some(({ name }) => name === route);
