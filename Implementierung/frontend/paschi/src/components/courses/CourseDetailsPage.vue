@@ -9,72 +9,72 @@
   <side-menu></side-menu>
   <v-main>
     <v-container fluid class="v-row align-start justify-space-around">
-        <v-card  max-width="800" min-width="570" rounded class="ma-1 v-col-5">
-          <v-row class="v-col-12">
-            <h2 class="ma-2">Sitzungsliste</h2>
-            <v-spacer />
-            <v-btn
-              min-width="228"
-              class="ml-15 ma-2"
-              variant="flat"
-              color="green"
-              rounded
-              prepend-icon="mdi mdi-plus"
-              @click="addSessionClick"
-              >Sitzung starten</v-btn
-            >
-            <v-icon
-              v-if="sessionListCollapsed"
-              icon="mdi mdi-arrow-up-drop-circle"
-              size="40"
-              @click="toggleSessionListCollapsed"
-              class="ma-2"
-              color="primary"
-            />
-            <v-icon
-              v-if="!sessionListCollapsed"
-              icon="mdi mdi-arrow-down-drop-circle"
-              size="40"
-              @click="toggleSessionListCollapsed"
-              class="ma-2"
-              color="primary"
-            />
-          </v-row>
-          <v-row class="v-card justify-center" v-if="!sessionListCollapsed">
-            <v-card class="v-col-12" max-height="1000">
-              <v-list max-height="500">
-                <v-row class="ma-2" v-for="session in sessions"
-                  >{{ session.name }} {{ session.date }}
-                  <v-spacer />
-                  <v-btn
-                    variant="tonal"
-                    color="primary"
-                    @click="interactionMapClick(session)"
-                    >InteraktionsKarte</v-btn
-                  >
-                  <v-btn
-                    class="ml-2"
-                    variant="tonal"
-                    color="primary"
-                    @click="sessionStatisticClick(session)"
-                  >
-                    <v-icon> fas fa-chart-line </v-icon>
-                  </v-btn>
-                  <v-btn
-                    class="ml-2"
-                    variant="tonal"
-                    color="red"
-                    @click="deleteSessionClick(session)"
-                  >
-                    <v-icon>mdi mdi-minus</v-icon>
-                  </v-btn>
-                </v-row>
-              </v-list>
-            </v-card>
-          </v-row>
-        </v-card>
-        <v-card  max-width="800" min-width="570" rounded class="ma-1 v-col-5">
-          <v-row class="v-col-12">
+      <v-card max-width="800" min-width="570" rounded class="ma-1 v-col-5">
+        <v-row class="v-col-12">
+          <h2 class="ma-2">Sitzungsliste</h2>
+          <v-spacer />
+          <v-btn
+            min-width="228"
+            class="ml-15 ma-2"
+            variant="flat"
+            color="green"
+            rounded
+            prepend-icon="mdi mdi-plus"
+            @click="addSessionClick"
+            >Sitzung starten</v-btn
+          >
+          <v-icon
+            v-if="sessionListCollapsed"
+            icon="mdi mdi-arrow-up-drop-circle"
+            size="40"
+            @click="toggleSessionListCollapsed"
+            class="ma-2"
+            color="primary"
+          />
+          <v-icon
+            v-if="!sessionListCollapsed"
+            icon="mdi mdi-arrow-down-drop-circle"
+            size="40"
+            @click="toggleSessionListCollapsed"
+            class="ma-2"
+            color="primary"
+          />
+        </v-row>
+        <v-row class="v-card justify-center" v-if="!sessionListCollapsed">
+          <v-card class="v-col-12" max-height="1000">
+            <v-list max-height="500">
+              <v-row class="ma-2" v-for="session in sessions"
+                >{{ session.name }} {{ session.date }}
+                <v-spacer />
+                <v-btn
+                  variant="tonal"
+                  color="primary"
+                  @click="interactionMapClick(session)"
+                  >InteraktionsKarte</v-btn
+                >
+                <v-btn
+                  class="ml-2"
+                  variant="tonal"
+                  color="primary"
+                  @click="sessionStatisticClick(session)"
+                >
+                  <v-icon> fas fa-chart-line </v-icon>
+                </v-btn>
+                <v-btn
+                  class="ml-2"
+                  variant="tonal"
+                  color="red"
+                  @click="deleteSessionClick(session)"
+                >
+                  <v-icon>mdi mdi-minus</v-icon>
+                </v-btn>
+              </v-row>
+            </v-list>
+          </v-card>
+        </v-row>
+      </v-card>
+      <v-card max-width="800" min-width="570" rounded class="ma-1 v-col-5">
+        <v-row class="v-col-12">
           <h2 class="ma-2">Schülerliste</h2>
           <v-spacer />
           <v-btn
@@ -134,7 +134,6 @@
                 </v-btn>
               </v-row>
             </v-list>
-
           </v-card>
         </v-row>
       </v-card>
@@ -182,7 +181,7 @@
             variant="tonal"
             @click="confirmDeleteSessionClick"
             color="primary"
-          >Bestätigen</v-btn
+            >Bestätigen</v-btn
           >
         </v-card-actions>
       </v-card>
@@ -210,7 +209,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const isMobile: Ref<boolean> = inject('isMobile') as Ref<boolean>
+    const isMobile: Ref<boolean> = inject("isMobile") as Ref<boolean>;
 
     const router = useRouter();
 
@@ -221,7 +220,9 @@ export default defineComponent({
 
     const studentListCollapsed: Ref<boolean> = ref<boolean>(false);
     const sessionListCollapsed: Ref<boolean> = ref<boolean>(false);
-    const deleteSessionBuffer: Ref<Session|undefined> = ref<Session|undefined>(undefined) as Ref<Session|undefined>
+    const deleteSessionBuffer: Ref<Session | undefined> = ref<
+      Session | undefined
+    >(undefined) as Ref<Session | undefined>;
 
     const sessionStatisticDialog: Ref<boolean> = ref<boolean>(false);
     const interactionMapSelectionDialog: Ref<boolean> = ref<boolean>(false);
@@ -241,7 +242,6 @@ export default defineComponent({
     const seatArrangements: Ref<SeatArrangement[]> = ref<SeatArrangement[]>(
       getSeatArrangements()
     ) as Ref<SeatArrangement[]>;
-
 
     //Hilfsmethoden
     function getSessions(): Session[] {
@@ -279,70 +279,139 @@ export default defineComponent({
     }
 
     //normale Methoden
+    /**
+     * Methode zur Vorbereitung der Löschung eines Kurses.
+     *
+     * @param session Die zu löschende Sitzung
+     */
     function deleteSessionClick(session: Session) {
-      deleteSessionBuffer.value = session
-      deleteSessionDialog.value = true
+      deleteSessionBuffer.value = session;
+      deleteSessionDialog.value = true;
     }
+
+    /**
+     * Methode zum Abbruch der Löschung einer Sitzung.
+     */
     function cancelDeleteSessionClick() {
-      deleteSessionDialog.value = false
+      deleteSessionDialog.value = false;
     }
+
+    /**
+     * Methode zur Bestätigung der Löschung des zuvor bestimmten Kurses.
+     */
     function confirmDeleteSessionClick() {
-      courseController.deleteSession(props.courseId, deleteSessionBuffer.value!.getId);
-      deleteSessionDialog.value = false
+      courseController.deleteSession(
+        props.courseId,
+        deleteSessionBuffer.value!.getId
+      );
+      deleteSessionDialog.value = false;
     }
+
+    /**
+     * Methode um den Zustand der Sitzungsliste (geöffnet/ zugeklappt) zu wechseln.
+     */
     function toggleSessionListCollapsed() {
       sessionListCollapsed.value = !sessionListCollapsed.value;
     }
+
+    /**
+     * Methode um den Zustand von der Schülerliste (geöffnet/ zugeklappt) zu wechseln.
+     */
     function toggleStudentListCollapsed() {
       studentListCollapsed.value = !studentListCollapsed.value;
     }
+
+    /**
+     * Methode um einen Schüler aus dem Kurs zu entfernen
+     *
+     * @param student Der zu entfernende Schüler
+     */
     function removeStudentFromCourse(student: Student) {
       courseController.removeStudentFromCourse(props.courseId, student.getId);
     }
+
+    /**
+     * Methode zur Anzeige der Kursstatistiken
+     */
     function showCourseStatisticsClick() {
       router.push({
         name: "CourseStatisticPage",
         params: { courseId: props.courseId },
       });
     }
+
+    /**
+     * Methode zum Bearbeiten eines Kurses.
+     */
     function editCourseDetailsClick() {
       router.push({
         name: "EditCoursePage",
         params: { courseId: props.courseId },
       });
     }
+
+    /**
+     * Methode um die Bearbeitungsseite eines Schülers aufzurufen.
+     *
+     * @param student
+     */
     function editStudentClick(student: Student) {
       router.push({
         name: "EditStudentPage",
         params: { studentId: student.getId },
       });
     }
-    function deleteStudentClick(student: Student) {
-      courseController.removeStudentFromCourse(props.courseId, student.getId);
-    }
+
+    /**
+     * Methode zur Anzeige einer Sitzungsstatistik
+     *
+     * @param session Die Sitzung der Statistik
+     */
     function sessionStatisticClick(session: Session) {
       router.push({
         name: "SessionStatisticPage",
         params: { sessionId: session.getId },
       });
     }
+
+    /**
+     * Methode zur Anzeige einer Interaktionskarte
+     *
+     * @param session Die Sitzung der Interaktionskarte
+     */
     function interactionMapClick(session: Session) {
       router.push({
         name: "ShowInteractionMapPage",
         params: { sessionId: session.getId },
       });
     }
+
+    /**
+     * Methode zum Hinzufügen eines Schülers zu einem Kurs
+     *
+     * @param student Der Schüler der hinzugefügt werden soll
+     */
     function addStudent(student: Student) {
       courseController.addStudentToCourse(props.courseId, student.getId);
       if (studentsNotInCourse.value.length == 0) {
         addStudentSelectionDialog.value = false;
       }
     }
+
+    /**
+     * Methode zum Aktivieren der Anzeige der SchülerListe
+     */
     function activateStudentCard() {
       addStudentSelectionDialog.value = true;
     }
+
+    /**
+     * Methode zum Starten einer Sitzung.
+     * Bei mobiler Version wird eine Sizung gestartet,
+     * bei Desktop eine Liste mit Sitzornungen geöffnet
+     */
     function addSessionClick() {
-      if(isMobile.value) {
+      if (isMobile.value) {
         router.push({
           name: "SessionPage",
           params: {
@@ -353,11 +422,16 @@ export default defineComponent({
             ),
           }, //TODO session name
         });
-      }
-      else {
+      } else {
         seatArrangementSelectionDialog.value = true;
       }
     }
+
+    /**
+     * Methode zum Starten einer Desktop- Sitzung
+     *
+     * @param seatArrangement Die Sitzordnung für die Sitzung
+     */
     function startSessionClick(seatArrangement: SeatArrangement) {
       router.push({
         name: "SessionPageDesktop",
@@ -370,6 +444,12 @@ export default defineComponent({
         }, //TODO session name
       });
     }
+
+    /**
+     * Methode zur Anzeige der Schülerstatistik.
+     *
+     * @param student Schüler der Statistik
+     */
     function studentStatisticClick(student: Student) {
       router.push({
         name: "StudentStatisticPage",
@@ -381,7 +461,6 @@ export default defineComponent({
       showCourseStatisticsClick,
       editCourseDetailsClick,
       editStudentClick,
-      deleteStudentClick,
       sessionStatisticClick,
       interactionMapClick,
       addStudent,
