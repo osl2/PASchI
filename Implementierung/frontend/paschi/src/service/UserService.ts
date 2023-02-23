@@ -98,6 +98,9 @@ export class UserService extends BaseService<User, UserDto> {
       }
     }).then((response: AxiosResponse<UserDto>) => {
       user = this.getMapper().dtoToModel(response.data);
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+      }
     }).catch((error) => {
       console.log(error);
     });
@@ -110,17 +113,20 @@ export class UserService extends BaseService<User, UserDto> {
   }
 
   async getToken() {
-    const user = useUserStore().getUser();
-    if (user == undefined) {
-      return;
-    }
-
     await axios.post(USER_BASE_URL + '/token', null, {
       headers: {
-        Authorization: `Bearer ${user.token}`
+        Authorization: `Bearer ${localStorage.getItem('token')}`
       }
-    }).then((response: AxiosResponse<UserDto>) => {
-      user.token = response.data.token;
+    }).then(async (response: AxiosResponse<UserDto>) => {
+      let user = useUserStore().getUser();
+      if (user) {
+        user.token = response.data.token;
+      } else {
+        useUserStore().setUser(await this.getMapper().dtoToModel(response.data));
+      }
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+      }
     }).catch((error) => {
       console.log(error);
     })

@@ -27,6 +27,11 @@ export class UserController {
     return user.getId;
   }
 
+  async loginWithToken(): Promise<string | undefined>  {
+    await this.userService.getToken();
+    return useUserStore().getUser()?.getId;
+  }
+
   async register(firstName: string, lastName: string, email: string, password: string, repeatPassword: string) {
     if (password !== repeatPassword) {
       return;
