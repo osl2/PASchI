@@ -26,7 +26,7 @@
                 <v-spacer />
               </v-row>
             </v-card-title>
-            <v-card-item v-if="statsController.getStudentStats(studentId) !== undefined && statsController.getStudentStats(studentId)[1]!== 0">
+            <v-card-item v-if="statsController.getStudentStats(studentId) !== undefined && !(isNaN(statsController.getStudentStats(studentId)[1]))">
               {{statsController.getStudentStats(studentId)[1]}} / 5
             </v-card-item>
             <v-card-item v-else>
