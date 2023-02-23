@@ -200,7 +200,6 @@ import { computed, defineComponent, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
 import { SessionController } from "@/controller/SessionController";
 import { useRouter } from "vue-router";
-import App from "@/App.vue";
 
 export default defineComponent({
   name: "CourseDetailsPage",
@@ -341,12 +340,12 @@ export default defineComponent({
     function activateStudentCard() {
       addStudentSelectionDialog.value = true;
     }
-    function addSessionClick() {
+    async function addSessionClick() {
       if(window.innerWidth < 1500) {
-        router.push({
+        await router.push({
           name: "SessionPage",
           params: {
-            sessionId: sessionController.createSession(
+            sessionId: await sessionController.createSession(
               props.courseId,
               undefined,
               ""
@@ -358,11 +357,11 @@ export default defineComponent({
         seatArrangementSelectionDialog.value = true;
       }
     }
-    function startSessionClick(seatArrangement: SeatArrangement) {
-      router.push({
+    async function startSessionClick(seatArrangement: SeatArrangement) {
+      await router.push({
         name: "SessionPageDesktop",
         params: {
-          sessionId: sessionController.createSession(
+          sessionId: await sessionController.createSession(
             props.courseId,
             seatArrangement.getId,
             ""

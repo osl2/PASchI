@@ -27,8 +27,8 @@ export default {
   setup() {
     const adminController = AdminController.getAdminController();
 
-    const users = ref<User[]>();
-    const requests = ref<User[]>();
+    const users = ref<User[]>([]);
+    const requests = ref<User[]>([]);
 
 
     async function updateUsers() {

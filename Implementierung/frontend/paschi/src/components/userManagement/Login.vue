@@ -85,7 +85,7 @@ export default {
     function login() {
       userController.login(email.value, password.value).then((res) => {
         if (res) {
-          router.push("/admin");
+          router.push("/dashboard");
         }
       });
     }
