@@ -88,6 +88,7 @@ export class SessionMapper implements IModelDtoMapper<Session, SessionDto> {
       interactions.push(await this.interactionMapper.dtoToModel(interactionDto));
     }
 
+    session.seatArrangement = arrangement;
     session.interactions = interactions;
     return session;
   }
