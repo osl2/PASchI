@@ -62,6 +62,8 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
       participant.createdAt = participantDto.createdAt;
       participant.updatedAt = participantDto.updatedAt;
       useStudentStore().addStudent(participant);
+    } else if (participant.updatedAt === participantDto.updatedAt) {
+      return participant;
     } else {
       participant.firstName = participantDto.firstName;
       participant.lastName = participantDto.lastName;

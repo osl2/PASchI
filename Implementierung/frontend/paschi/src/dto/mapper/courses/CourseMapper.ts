@@ -63,6 +63,8 @@ export class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
       course.createdAt = courseDto.createdAt;
       course.updatedAt = courseDto.updatedAt;
       useCourseStore().addCourse(course);
+    } else if (course.updatedAt === courseDto.updatedAt) {
+      return course;
     } else {
       course.name = courseDto.name;
       course.subject = courseDto.subject;

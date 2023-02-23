@@ -8,7 +8,6 @@ import {useCourseStore} from "@/store/CourseStore";
 import {CourseService} from "@/service/CourseService";
 import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 import {SeatArrangementService} from "@/service/SeatArrangementService";
-import {useInteractionStore} from "@/store/InteractionStore";
 import {InteractionDto} from "@/dto/userdata/interactions/InteractionDto";
 import {InteractionMapper} from "@/dto/mapper/interactions/InteractionMapper";
 
