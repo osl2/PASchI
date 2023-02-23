@@ -88,7 +88,22 @@
           Schon registriert? &middot; Zum Login
         </v-card-title>
       </v-card>
-    </v-container>
+    </v-container>#
+    <v-snackbar
+      v-model="errorSnackbar"
+      :timeout="errorSnackbarTimeout"
+    >
+      {{ errorSnackbarText }}
+
+      <template v-slot:actions>
+        <v-btn
+          color="blue"
+          icon="mdi mdi-close"
+          @click="errorSnackbar = false"
+        >
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-main>
 </template>
 
@@ -108,6 +123,9 @@ export default {
     const password = ref("");
     const passwordRepeat = ref("");
     const userController = UserController.getUserController();
+    const errorSnackbar = ref(false);
+    const errorSnackbarText = 'Alle Felder müssen ausgefüllt sein.';
+    const errorSnackbarTimeout = 2000;
     function requiredRule(value: string) {
       if (value === "") {
         return "Dieses Feld muss ausgefüllt sein.";
@@ -177,6 +195,17 @@ export default {
         );
         router.push("login");
       }
+      else if (
+        error([
+          requiredRule(firstName.value),
+          requiredRule(lastName.value),
+          requiredRule(mail.value),
+          requiredRule(password.value),
+          requiredRule(passwordRepeat.value)
+        ])
+      ) {
+        errorSnackbar.value = true
+      }
     }
 
     return {
@@ -185,6 +214,9 @@ export default {
       mail,
       password,
       passwordRepeat,
+      errorSnackbar,
+      errorSnackbarText,
+      errorSnackbarTimeout,
       register,
       emailRule,
       requiredRule,
