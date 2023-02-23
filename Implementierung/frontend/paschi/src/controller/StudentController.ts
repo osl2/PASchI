@@ -33,12 +33,12 @@ export class StudentController {
     return useStudentStore().addStudent(student);
   }
 
-  async updateStudent(id: string, firstName: string, lastName: string) {
+  updateStudent(id: string, firstName: string, lastName: string) {
     let student = useStudentStore().getStudent(id);
     if (student !== undefined) {
       student.firstName = firstName;
       student.lastName = lastName;
-      await this.studentService.update(student);
+      this.studentService.update(student).then();
     }
   }
 
@@ -57,62 +57,62 @@ export class StudentController {
     return useStudentStore().getStudent(id);
   }
 
-  async getAllStudents(): Promise<Student[]> {
-    await this.studentService.getAll().then();
+  getAllStudents(): Student[] {
+    this.studentService.getAll().then();
     return useStudentStore().getAllStudents();
   }
 
-  getCoursesOfStudent(studentId: string): Course[] | undefined {
-    let student = useStudentStore().getStudent(studentId);
-    if (student == undefined) {
-      return undefined;
-    }
-
-    return student.courses;
-  }
-
-  addCourseToStudent(studentId: string, courseId: string) {
-    let student = useStudentStore().getStudent(studentId);
-    let course = useCourseStore().getCourse(courseId);
-    if (student !== undefined && course !== undefined) {
-      student.addCourse(course);
-      course.addParticipant(student);
-    }
-  }
-
-  removeCourseFromStudent(studentId: string, courseId: string) {
-    let student = useStudentStore().getStudent(studentId);
-    let course = useCourseStore().getCourse(courseId);
-    if (student !== undefined && course !== undefined) {
-      student.removeCourse(courseId);
-      course.removeParticipant(studentId);
-    }
-  }
-
-  getInteractionsOfStudent(studentId: string): Interaction[] | undefined {
-    let student = useStudentStore().getStudent(studentId);
-    if (student == undefined) {
-      return undefined;
-    }
-
-    return student.interactions;
-  }
-
-  addInteraction(studentId: string, sessionId: string, interactionId: string) {
-    let student = useStudentStore().getStudent(studentId);
-    let session = useSessionStore().getSession(sessionId);
-    if (student !== undefined && session !== undefined) {
-      let interaction = session.getInteraction(interactionId);
-      if (interaction !== undefined) {
-        student.addInteraction(interaction);
-      }
-    }
-  }
-
-  removeInteraction(studentId: string, interactionId: string) {
-    let student = useStudentStore().getStudent(studentId);
-    if (student !== undefined) {
-      student.removeInteraction(interactionId);
-    }
-  }
+  // getCoursesOfStudent(studentId: string): Course[] | undefined {
+  //   let student = useStudentStore().getStudent(studentId);
+  //   if (student == undefined) {
+  //     return undefined;
+  //   }
+  //
+  //   return student.courses;
+  // }
+  //
+  // addCourseToStudent(studentId: string, courseId: string) {
+  //   let student = useStudentStore().getStudent(studentId);
+  //   let course = useCourseStore().getCourse(courseId);
+  //   if (student !== undefined && course !== undefined) {
+  //     student.addCourse(course);
+  //     course.addParticipant(student);
+  //   }
+  // }
+  //
+  // removeCourseFromStudent(studentId: string, courseId: string) {
+  //   let student = useStudentStore().getStudent(studentId);
+  //   let course = useCourseStore().getCourse(courseId);
+  //   if (student !== undefined && course !== undefined) {
+  //     student.removeCourse(courseId);
+  //     course.removeParticipant(studentId);
+  //   }
+  // }
+  //
+  // getInteractionsOfStudent(studentId: string): Interaction[] | undefined {
+  //   let student = useStudentStore().getStudent(studentId);
+  //   if (student == undefined) {
+  //     return undefined;
+  //   }
+  //
+  //   return student.interactions;
+  // }
+  //
+  // addInteraction(studentId: string, sessionId: string, interactionId: string) {
+  //   let student = useStudentStore().getStudent(studentId);
+  //   let session = useSessionStore().getSession(sessionId);
+  //   if (student !== undefined && session !== undefined) {
+  //     let interaction = session.getInteraction(interactionId);
+  //     if (interaction !== undefined) {
+  //       student.addInteraction(interaction);
+  //     }
+  //   }
+  // }
+  //
+  // removeInteraction(studentId: string, interactionId: string) {
+  //   let student = useStudentStore().getStudent(studentId);
+  //   if (student !== undefined) {
+  //     student.removeInteraction(interactionId);
+  //   }
+  // }
 }
