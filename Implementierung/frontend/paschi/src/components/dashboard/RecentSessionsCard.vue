@@ -39,12 +39,24 @@ export default defineComponent({
     // TODO
     //const sessions = sessionController.
     const sessions: Session[] = [];
+
+    /**
+     * Methode, die zur Sitzungsstatistik leitet
+     *
+     * @param session Die Sitzung der Statistik
+     */
     function navigateToSessionStatistic(session: Session) {
       router.push({
         name: "SessionStatisticPage",
         params: { sessionId: session.getId },
       });
     }
+
+    /**
+     * Methode, die zur Interaktionskarte leitet
+     *
+     * @param session Die Sitzung, die die Interaktionskarte abbildet
+     */
     function navigateToInteractionMap(session: Session) {
       router.push({
         name: "ShowInteractionMapPage",

@@ -337,9 +337,6 @@ export default defineComponent({
     const categories: Ref<Category[]> = ref(
       categoryController.getCategories()
     ) as Ref<Category[]>;
-    const roomObjects: Ref<RoomObject[]> = ref(getRoomObjects()) as Ref<
-      RoomObject[]
-    >;
     const starDialog = ref(false);
     const sessionName = sessionController.getSession(props.sessionId)?.name;
     const courseParticipantsSortedByName: Participant[] =
@@ -377,6 +374,12 @@ export default defineComponent({
       }
       return interactions;
     });
+
+    /**
+     * Methode, die die Schüler ausfiltern, deren Name nicht mit der Eingabe im Textfeld übereinstimmt.
+     *
+     * @param participants
+     */
     function filterParticipants(participants: Participant[]): Participant[] {
       let searchInputUpperCase = searchInput.value.toUpperCase();
       return participants.filter((participant) => {
@@ -388,6 +391,10 @@ export default defineComponent({
         );
       });
     }
+
+    /**
+     * Methode, die alle Parameter für die Interaktionen zurücksetzt
+     */
     function resetInterActionParams() {
       setFirstParticipant(undefined);
       setSecondParticipant(undefined);
@@ -396,6 +403,10 @@ export default defineComponent({
       categoryDialog.value = false;
       starDialog.value = false;
     }
+
+    /**
+     * Methode, die zurückgibt, ob ein undo möglich ist
+     */
     function getUndoPossible(): boolean {
       let undoPossible = sessionController.hasUndo(props.sessionId);
       if (typeof undoPossible === "boolean") {
@@ -403,6 +414,10 @@ export default defineComponent({
       }
       return false;
     }
+
+    /**
+     * Methode, die zurückgibt, ob ein redo möglich ist
+     */
     function getRedoPossible(): boolean {
       let redoPossible = sessionController.hasRedo(props.sessionId);
       if (typeof redoPossible === "boolean") {
@@ -410,19 +425,24 @@ export default defineComponent({
       }
       return false;
     }
+
+    /**
+     * Methode, die ein undo auf den Interaktionen ausführt
+     */
     function undoClick() {
       sessionController.undoInteraction(props.sessionId);
     }
+
+    /**
+     * Methode, die ein redo auf den Interaktionen ausführt
+     */
     function redoClick() {
       sessionController.redoInteraction(props.sessionId);
     }
-    function getRoomObjects(): RoomObject[] {
-      if (seatArrangement instanceof SeatArrangement) {
-        return seatArrangement.room.roomObjects as RoomObject[];
-      }
-      return [];
-    }
-    //Participants for mobile session
+
+    /**
+     * Methode, die alle Kursmitglieder sortiert nach Namen zurückgibt
+     */
     function getCourseParticipantsSortedByName(): Participant[] {
       let course = sessionController.getCourseOfSession(props.sessionId);
       if (course instanceof Course) {
@@ -438,19 +458,35 @@ export default defineComponent({
       }
       return [];
     }
+
+    /**
+     * Methode, die die Sitzung beendet, indem sie zum Dashboard leitet
+     */
     function finishSessionClick() {
       router.push({
         name: "Dashboard",
       });
     }
+
+    /**
+     * Methode, die einen Dialog zur Erstellung von Kategorien aktiviert
+     */
     function addCategoryClick() {
       newCategoryName.value = "";
       newCategoryIsRated.value = false;
       newCategoryDialog.value = true;
     }
+
+    /**
+     * Methode, die die erstellung einer Interaktion abbricht, indem sie das DialogFeld zum Erstellen von Kategorien schließt
+     */
     function cancelAddCategory() {
       newCategoryDialog.value = false;
     }
+
+    /**
+     * Methode, die die Kategorie mit den zuvor bestimmten Parametern erstellt
+     */
     function confirmAddCategory() {
       if (newCategoryIsRated.value) {
         categoryController.createRatedCategory(newCategoryName.value);
@@ -459,12 +495,30 @@ export default defineComponent({
       }
       newCategoryDialog.value = false;
     }
+
+    /**
+     * Methode, die den ersten Teilnehmer der Interaktion setzt
+     *
+     * @param participant Der zu setzende Teilnehmer
+     */
     function setFirstParticipant(participant: Participant | undefined) {
       firstParticipant.value = participant;
     }
+
+    /**
+     * Methode, die den zweiten Teilnehmer der Interaktion setzt
+     *
+     * @param participant Der zu setzende Teilnehmer
+     */
     function setSecondParticipant(participant: Participant | undefined) {
       secondParticipant.value = participant;
     }
+
+    /**
+     * Methode, die den ersten Teilnehmer setzt, falls noch nicht gesetzt und andernfalls den zweiten setzt und direkt den Kategoriedialog öffnet
+     *
+     * @param participant Der zu setzende Teilnehmer
+     */
     function selectParticipant(participant: Participant) {
       if (typeof firstParticipant.value === "undefined") {
         setFirstParticipant(participant);
@@ -473,6 +527,10 @@ export default defineComponent({
         categoryDialog.value = true;
       }
     }
+
+    /**
+     * Methode, die eine Interaktion mit den zuvor bestimmten Parametern erstellt
+     */
     function createInteraction() {
       if (selectedCategory.value!.hasQuality()) {
         let quality: Quality;
@@ -516,9 +574,21 @@ export default defineComponent({
       selectedCategory.value = undefined;
       categoryQuality.value = 0;
     }
+
+    /**
+     * Setzt die Kategorie für die Interaktion
+     *
+     * @param category Die zu setzende Interaktion
+     */
     function setCategory(category: Category | undefined) {
       selectedCategory.value = category;
     }
+
+    /**
+     * Setzt die Kategorie und öffnet, falls nötig den InteraktionsbewertungsDialog
+     *
+     * @param category Die zu setzende Kategorie
+     */
     function selectCategory(category: Category) {
       setCategory(category);
       categoryDialog.value = false;
@@ -528,15 +598,28 @@ export default defineComponent({
         createInteraction();
       }
     }
+
+    /**
+     * Erstellt eine Interaktion mit den zuvor bestimmten Parametern und schließt den Interaktionsbewertungsdialog
+     */
     function selectQuality() {
       createInteraction();
       starDialog.value = false;
     }
 
+    /**
+     * Aktiviert die Interaktionsliste eines Schülers
+     *
+     * @param participant Schüler der Interaktionsliste
+     */
     function activateStudentInteractionList(participant: Participant) {
       interactionListStudentBuffer.value = participant;
       studentInteractionListDialog.value = true;
     }
+
+    /**
+     * Aktiviert die Interaktionsliste
+     */
     function activateInteractionList() {
       interactionListDialog.value = true;
     }
@@ -547,7 +630,6 @@ export default defineComponent({
       sessionName,
       searchInput,
       categories,
-      roomObjects,
       courseParticipantsSortedByName,
       secondParticipant,
       categoryDialog,
