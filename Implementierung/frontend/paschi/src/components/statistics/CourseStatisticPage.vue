@@ -26,7 +26,7 @@
                   <v-spacer />
                 </v-row>
               </v-card-title>
-              <v-card-item v-if="stats !== undefined && stats[6].values().length() !== 0">
+              <v-card-item v-if="stats !== undefined && involvementKeys.length !== 0">
                 <canvas id = "involvementChart"/>
               </v-card-item>
               <v-card-item v-else>
@@ -42,7 +42,7 @@
                   <v-spacer />
                 </v-row>
               </v-card-title>
-              <v-card-item v-if="stats !== undefined && stats[5].values().length() !== 0">
+              <v-card-item v-if="stats !== undefined && categoryKeys.length !== 0">
                 <canvas id = "categoryChart"/>
               </v-card-item>
               <v-card-item v-else>
@@ -65,7 +65,7 @@
                 <v-list>
                   <v-list-item v-for="studentId in top5InteractionArray">
                       <v-list-item-title>
-                        {{studentController.getStudent(studentId).firstName + " " + studentController.getStudent(studentId).firstName}}
+                        {{studentController.getStudent(studentId[0]).firstName + " " + studentController.getStudent(studentId[0]).lastName}}: {{studentId[1]}} Interaktionen
                       </v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -87,7 +87,7 @@
                 <v-list>
                   <v-list-item v-for="studentId in top5DisturberArray">
                     <v-list-item-title>
-                      {{studentController.getStudent(studentId).firstName + " " + studentController.getStudent(studentId).firstName}}
+                      {{studentController.getStudent(studentId[0]).firstName + " " + studentController.getStudent(studentId[0]).lastName}}: {{studentId[1]}} Störungen
                     </v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -129,8 +129,8 @@ export default defineComponent({
       const courseController = CourseController.getCourseController();
       const course = courseController.getCourse(props.courseId);
 
-      const top5InteractionArray: never[] = [];
-      const top5DisturberArray: never[] = [];
+      let top5InteractionArray: Map<string, number> | any[] = [];
+      let top5DisturberArray: Map<string, number> | any[] = [];
 
       const courseName = course?.name;
       const courseSubject = course?.subject;
@@ -138,7 +138,35 @@ export default defineComponent({
       const downloadElementCategoryChart = document.createElement( 'a' );
       const downloadElementInvolvementChart = document.createElement( 'a' );
 
-      let stats;
+      const stats  = statsController.getCourseStats(props.courseId);
+
+      if (stats !== undefined) {
+        top5InteractionArray = stats[0];
+        top5DisturberArray = stats[4];
+      }
+      let categoryMap = getCategoryMap();
+      let categoryKeys = Array.from(categoryMap!.keys());
+      let categoryValues = Array.from(categoryMap!.values());
+
+      let involvementMap = getInvolvementMap();
+      let involvementKeys = Array.from(involvementMap!.keys());
+      let involvementValues = Array.from(involvementMap!.values());
+      console.log(involvementKeys);
+      console.log(involvementValues);
+
+
+      function getCategoryMap() {
+        if (stats !== undefined) {
+          return stats[5] as Map<string, number>
+        }
+      }
+
+      function getInvolvementMap() {
+        if (stats !== undefined) {
+          return stats[6] as Map<string, number>
+        }
+      }
+
 
       function downloadClicked() {
         downloadElementInvolvementChart.click();
@@ -154,7 +182,6 @@ export default defineComponent({
          // const top5InteractionChartId = document.getElementById('top5InteractionChart') as HTMLCanvasElement;
          // const top5DisturberChartId = document.getElementById('top5DisturberChart') as HTMLCanvasElement;
 
-          const stats  = statsController.getCourseStats(props.courseId);
 
           if (stats == undefined) {
             console.log('stats could not be loaded');
@@ -162,36 +189,30 @@ export default defineComponent({
           }
 
 
-          //let keysInvolvementChart= stats[6].keys();
-          //let valuesInvolvementChart = stats[6].values();
 
-          //let keysCategoryChart = stats[5].keys();
-          //let valuesCategoryChart = stats[5].values();
 
-          //let top5InteractionArray = stats[0];
-          //let top5DisturberArray = stats[4];
 
           const involvementChartData = {
             labels:
-              ['5.12 dummy', '6.12 dummy', '9.12 dummy', '10.12 dummy', '11.12 dummy'],
-            //keysInvolvementChart,
+              //['5.12 dummy', '6.12 dummy', '9.12 dummy', '10.12 dummy', '11.12 dummy'],
+            involvementKeys,
             datasets: [{
               label: 'Anzahl',
               data:
-                [5,3,2,1,4],
-              //valuesInvolvementChart,
+                //[5,3,2,1,4],
+              involvementValues,
             }]
           };
 
         const categoryChartData = {
           labels:
-            ['Störungsdummy', 'Antwortdummy', 'Fragendummy'],
-          //keysCategoryChart,
+           // ['Störungsdummy', 'Antwortdummy', 'Fragendummy'],
+          categoryKeys,
           datasets: [{
             label: 'Anzahl',
             data:
-              [5,3,2],
-            //valuesCategoryChart,
+              //[5,3,2],
+            categoryValues,
           }]
         };
 
@@ -251,7 +272,7 @@ export default defineComponent({
         }
       )
       return{
-        statsController, stats, studentController, courseName, courseSubject, downloadClicked, top5InteractionArray, top5DisturberArray
+        statsController, stats, studentController, courseName, courseSubject, downloadClicked, top5InteractionArray, top5DisturberArray, categoryKeys, involvementKeys
       }
     },
   }

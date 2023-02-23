@@ -102,14 +102,14 @@ export class StatsController {
       // Beteiligunsquote der Sitzung.
       let sessionStats = this.getSessionStats(session.getId);
       if (sessionStats != undefined) {
-        participation.set(session.date, sessionStats[1]);
+        participation.set(session.date, sessionStats[6]);
       }
     });
 
-    // Relative Häufigkeit der Kategorien berechnen.
+    /*// Relative Häufigkeit der Kategorien berechnen.
     categories.forEach((value: number, category: string) => {
       categories.set(category, (value / numCategories) * 100);
-    });
+    });*/
 
     const statsArray = this.getTopStudents(students);
     statsArray.push(categories);
