@@ -1,6 +1,14 @@
 import {IModelDtoMapper} from "@/dto/mapper/IModelDtoMapper";
 import {Interaction} from "@/model/userdata/interactions/Interaction";
 import {InteractionDto} from "@/dto/userdata/interactions/InteractionDto";
+import {useInteractionStore} from "@/store/InteractionStore";
+import {UserController} from "@/controller/UserController";
+import {SessionService} from "@/service/SessionService";
+import {ParticipantService} from "@/service/ParticipantService";
+import {useSessionStore} from "@/store/SessionStore";
+import {useStudentStore} from "@/store/StudentStore";
+import {useCategoryStore} from "@/store/CategoryStore";
+import {CategoryService} from "@/service/CategoryService";
 
 export class InteractionMapper implements IModelDtoMapper<Interaction, InteractionDto> {
 
@@ -33,6 +41,46 @@ export class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
   }
 
   async dtoToModel(interactionDto: InteractionDto): Promise<Interaction> {
-    return undefined;
+    const userController = UserController.getUserController();
+    const sessionService = SessionService.getService();
+    const participantService = ParticipantService.getService();
+    const categoryService = CategoryService.getService();
+
+    let session = useSessionStore().getSession(interactionDto.sessionId);
+    let toParticipant = useStudentStore().getStudent(interactionDto.toParticipantId);
+    let fromParticipant = useStudentStore().getStudent(interactionDto.fromParticipantId);
+    let category = useCategoryStore().getCategory(interactionDto.categoryId);
+
+    if (session === undefined) {
+      session = await sessionService.getById(interactionDto.sessionId);
+    }
+    if (toParticipant === undefined) {
+      toParticipant = await participantService.getById(interactionDto.toParticipantId);
+    }
+    if (fromParticipant === undefined) {
+      fromParticipant = await participantService.getById(interactionDto.fromParticipantId);
+    }
+    if (category === undefined) {
+      category = await categoryService.getById(interactionDto.categoryId);
+    }
+
+    let interaction = useInteractionStore().getInteraction(interactionDto.id);
+    if (interaction == undefined) {
+      interaction = new Interaction(
+        interactionDto.id,
+        0,
+        userController.getUser(),
+        interactionDto.timeStamp,
+        session!,
+        fromParticipant!,
+        toParticipant!,
+        category!
+      );
+      interaction.updatedAt = interactionDto.updatedAt;
+      interaction.createdAt = interactionDto.createdAt;
+      useInteractionStore().addInteraction(interaction);
+    }
+
+    return interaction;
   }
 }
