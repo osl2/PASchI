@@ -4,7 +4,6 @@ import {RatedCategoryDto} from "@/dto/userdata/interactions/RatedCategoryDto";
 import {QualityMapper} from "@/dto/mapper/interactions/QualityMapper";
 import {UserController} from "@/controller/UserController";
 import {useCategoryStore} from "@/store/CategoryStore";
-import {Category} from "@/model/userdata/interactions/Category";
 
 export class RatedCategoryMapper implements IModelDtoMapper<RatedCategory, RatedCategoryDto> {
 

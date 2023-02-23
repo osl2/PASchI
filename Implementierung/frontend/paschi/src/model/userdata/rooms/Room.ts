@@ -6,7 +6,7 @@ export class Room extends DataObject {
 
   private readonly _user: User;
   private _name: string;
-  private readonly _roomObjects: RoomObject[];
+  private _roomObjects: RoomObject[];
 
   constructor(id: string | undefined, localId: number, user: User, name: string) {
     super(id, localId);
@@ -56,6 +56,10 @@ export class Room extends DataObject {
   set name(value: string) {
     this._name = value;
     this.update();
+  }
+
+  set roomObjects(value: RoomObject[]) {
+    this._roomObjects = value;
   }
 
   copy(): Room {
