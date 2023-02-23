@@ -7,8 +7,9 @@ export const useSessionStore = defineStore('sessions', {
     nextId: 0
   }),
   actions: {
-    addSession(session: Session) {
+    addSession(session: Session): string {
       this.sessions.push(session);
+      return session.getId;
     },
     deleteSession(id: string) {
       this.sessions.forEach((element, index) => {
