@@ -5,9 +5,22 @@
     </v-card-title>
     <v-card-item v-for="session in sessions">
       <v-row class="ma-2">
-        {{ session.name }}
+        {{ session.name }} {{ session.date }}
         <v-spacer />
-        <v-btn @click="navigateTo(session)"></v-btn>
+        <v-btn
+          variant="tonal"
+          color="primary"
+          @click="navigateToInteractionMap(session)"
+        >InteraktionsKarte</v-btn
+        >
+        <v-btn
+          class="ml-2"
+          variant="tonal"
+          color="primary"
+          @click="navigateToSessionStatistic(session)"
+        >
+          <v-icon> fas fa-chart-line </v-icon>
+        </v-btn>
       </v-row>
     </v-card-item>
   </v-card>
@@ -16,27 +29,33 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { SessionController } from "@/controller/SessionController";
+import { Session } from "@/model/userdata/courses/Session";
+import router from "@/plugins/router";
 
 export default defineComponent({
   name: "RecentSessionsCard",
   setup() {
     const sessionController = SessionController.getSessionController();
-
-    //const sessions = sessionController.getAllSessions()
-    const sessions = [
-      {
-        name: "Test",
-      },
-      {
-        name: "Test2",
-      },
-      {
-        name: "Test3",
-      },
-    ];
+    // TODO
+    //const sessions = sessionController.
+    const sessions: Session[] = [];
+    function navigateToSessionStatistic(session: Session) {
+      router.push({
+        name: "SessionStatisticPage",
+        params: { sessionId: session.getId },
+      });
+    }
+    function navigateToInteractionMap(session: Session) {
+      router.push({
+        name: "ShowInteractionMapPage",
+        params: { sessionId: session.getId },
+      });
+    }
 
     return {
       sessions,
+      navigateToSessionStatistic,
+      navigateToInteractionMap
     };
   },
 });
