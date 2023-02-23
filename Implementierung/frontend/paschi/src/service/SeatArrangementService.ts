@@ -26,6 +26,8 @@ export class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
       headers: {
         Authorization: `Bearer ${token}`
       }
+    }).then((response: AxiosResponse<SeatArrangementDto>) => {
+      arrangement.setId = response.data.id;
     }).catch((error) => {
       console.log(error);
     });

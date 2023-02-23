@@ -26,6 +26,8 @@ export class CourseService extends BaseService<Course, CourseDto> {
       headers: {
         Authorization: `Bearer ${token}`
       }
+    }).then((response: AxiosResponse<CourseDto>) => {
+      course.setId = response.data.id;
     }).catch((error) => {
       console.log(error);
     });

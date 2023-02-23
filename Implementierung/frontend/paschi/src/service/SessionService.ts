@@ -26,6 +26,8 @@ export class SessionService extends BaseService<Session, SessionDto> {
       headers: {
         Authorization: `Bearer ${token}`
       }
+    }).then((response: AxiosResponse<SessionDto>) => {
+      session.setId = response.data.id;
     }).catch((error) => {
       console.log(error);
     });

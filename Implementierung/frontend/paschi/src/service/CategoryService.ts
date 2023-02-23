@@ -26,6 +26,8 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
       headers: {
         Authorization: `Bearer ${token}`
       }
+    }).then((response: AxiosResponse<CategoryDto>) => {
+      category.setId = response.data.id;
     }).catch((error) => {
       console.log(error);
     });

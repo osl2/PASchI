@@ -19,19 +19,21 @@ export class RoomService extends BaseService<Room, RoomDto> {
     return this.roomService;
   }
 
-  add(room: Room) {
+  async add(room: Room) {
     const token = useUserStore().getUser()?.token;
     const roomDto = this.getMapper().modelToDto(room);
     axios.post(ROOM_BASE_URL, roomDto, {
       headers: {
         Authorization: `Bearer ${token}`
       }
+    }).then((response: AxiosResponse<RoomDto>) => {
+      room.setId = response.data.id;
     }).catch((error) => {
       console.log(error);
     });
   }
 
-  update(room: Room) {
+  async update(room: Room) {
     const token = useUserStore().getUser()?.token;
     const roomDto = this.getMapper().modelToDto(room);
     axios.put(ROOM_BASE_URL, roomDto, {
@@ -81,9 +83,9 @@ export class RoomService extends BaseService<Room, RoomDto> {
     return rooms;
   }
 
-  delete(id: string) {
+  async delete(id: string) {
     const token = useUserStore().getUser()?.token;
-    axios.delete(ROOM_BASE_URL, {
+    await axios.delete(ROOM_BASE_URL, {
       params: {
         id
       },
