@@ -17,8 +17,8 @@ export class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
 
   private static mapper: CourseMapper = new CourseMapper();
   private userController = UserController.getUserController();
-  private participantService = ParticipantService.getService();
   private sessionService = SessionService.getService();
+  private participantService = ParticipantService.getService();
   private arrangementService = SeatArrangementService.getService();
 
   private constructor() {

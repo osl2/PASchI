@@ -65,8 +65,8 @@ export class UserService extends BaseService<User, UserDto> {
         Authorization: `Bearer ${token}`
       }
     }).then((response: AxiosResponse<UserDto[]>) => {
-      response.data.forEach((userDto: UserDto) => {
-        users.push(this.getMapper().dtoToModel(userDto));
+      response.data.forEach(async (userDto: UserDto) => {
+        users.push(await this.getMapper().dtoToModel(userDto));
       });
     }).catch((error) => {
       console.log(error);

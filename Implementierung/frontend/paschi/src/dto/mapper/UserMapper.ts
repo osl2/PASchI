@@ -37,7 +37,7 @@ export class UserMapper implements IModelDtoMapper<User, UserDto> {
     );
   }
 
-  dtoToModel(userDto: UserDto): User {
+  async dtoToModel(userDto: UserDto): Promise<User> {
     return new User(
       userDto.id,
       userDto.firstName,

@@ -16,8 +16,8 @@ export class SessionMapper implements IModelDtoMapper<Session, SessionDto> {
   private static mapper: SessionMapper = new SessionMapper();
   private userController = UserController.getUserController();
   private interactionMapper = InteractionMapper.getMapper();
-  private courseSerivce = CourseService.getService();
   private arrangementService = SeatArrangementService.getService();
+  //private courseSerivce = CourseService.getService();
 
   private constructor() {
   }
@@ -51,7 +51,7 @@ export class SessionMapper implements IModelDtoMapper<Session, SessionDto> {
   async dtoToModel(sessionDto: SessionDto): Promise<Session> {
     let course = useCourseStore().getCourse(sessionDto.courseId);
     if (course == undefined) {
-      course = await this.courseSerivce.getById(sessionDto.courseId);
+      //course = await this.courseSerivce.getById(sessionDto.courseId);
     }
     let arrangement;
     if (sessionDto.seatArrangementId !== undefined) {
