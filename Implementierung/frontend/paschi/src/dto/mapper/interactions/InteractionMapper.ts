@@ -79,8 +79,13 @@ export class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
       interaction.updatedAt = interactionDto.updatedAt;
       interaction.createdAt = interactionDto.createdAt;
       useInteractionStore().addInteraction(interaction);
+    } else if (interaction.updatedAt === interactionDto.updatedAt) {
+      return interaction;
     }
 
+    interaction.fromParticipant = fromParticipant!;
+    interaction.toParticipant = toParticipant!;
+    interaction.category = category!;
     return interaction;
   }
 }
