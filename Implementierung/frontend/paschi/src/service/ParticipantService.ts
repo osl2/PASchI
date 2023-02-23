@@ -72,10 +72,10 @@ export class ParticipantService extends BaseService<Participant, ParticipantDto>
       headers: {
         Authorization: `Bearer ${token}`
       }
-    }).then(async (response: AxiosResponse<ParticipantDto[]>) => {
-      for(const participantDto of response.data) {
+    }).then((response: AxiosResponse<ParticipantDto[]>) => {
+      response.data.forEach(async (participantDto: ParticipantDto) => {
         participants.push(await this.getMapper().dtoToModel(participantDto));
-      }
+      });
     }).catch((error) => {
       console.log(error);
     });
