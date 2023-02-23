@@ -9,9 +9,19 @@
         >
       </v-row>
     </v-card-title>
-    <v-card-item v-for="course in courses">
-      {{ course.name }}
-      <v-btn @click="navigateTo(course)"></v-btn>
+    <v-card-item @click="navigateToCourse(course)" v-for="course in courses">
+      <v-row>
+        {{ course.name }}
+        <v-spacer />
+        <v-btn
+          class="ml-2"
+          variant="tonal"
+          color="primary"
+          @click="navigateToStatistic(course)"
+        >
+          <v-icon> fas fa-chart-line </v-icon>
+        </v-btn>
+      </v-row>
     </v-card-item>
   </v-card>
 </template>
@@ -19,15 +29,33 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import router from "@/plugins/router";
+import { Course } from "@/model/userdata/courses/Course";
 
 export default defineComponent({
   name: "RecentCoursesCard",
   setup() {
+    // TODO
+    const courses: Course[] = [];
     function navigateToCourses() {
       router.push({ name: "ViewCoursesPage" });
     }
+    function navigateToCourse(course: Course) {
+      router.push({
+        name: "CourseDetailsPage",
+        params: { courseId: course.getId },
+      });
+    }
+    function navigateToStatistic(course: Course) {
+      router.push({
+        name: "CourseStatisticPage",
+        params: { courseId: course.getId },
+      });
+    }
     return {
+      courses,
       navigateToCourses,
+      navigateToStatistic,
+      navigateToCourse,
     };
   },
 });
