@@ -11,7 +11,7 @@
         @click="router.back()"
         >Verwerfen</v-btn
       >
-      <v-btn class="ma-2" variant="flat" rounded="pill" color="green" @click=""
+      <v-btn class="ma-2" variant="flat" rounded="pill" color="green" @click="updateAccount()"
         >Speichern</v-btn
       >
     </template>
@@ -20,34 +20,159 @@
     <SideMenu />
     <v-container>
       <v-form class="mt-5" style="max-width: 1000px">
-        <v-text-field variant="outlined" label="Vorname" />
-        <v-text-field variant="outlined" label="Nachname" />
-        <v-text-field type="password" variant="outlined" label="Passwort" />
-        <v-text-field
-          type="password"
-          variant="outlined"
-          label="Passwort bestätigen"
-        />
+          <v-text-field
+            v-model="firstName"
+            class="mt-2"
+            variant="outlined"
+            label="Vorname"
+            :rules="[requiredRule, nameMaxLengthRule]"
+          />
+          <v-text-field
+            v-model="lastName"
+            variant="outlined"
+            label="Nachname"
+            :rules="[requiredRule, nameMaxLengthRule]"
+          />
+          <v-text-field
+            v-model="password"
+            prepend-inner-icon="mdi mdi-lock-outline"
+            type="Password"
+            variant="outlined"
+            label="Passwort"
+            :rules="[
+                requiredRule,
+                passwordMinLengthRule,
+                passwordMaxLengthRule,
+              ]"
+          />
+          <v-text-field
+            v-model="passwordRepeat"
+            prepend-inner-icon="mdi mdi-lock-outline"
+            type="Password"
+            variant="outlined"
+            label="Passwort bestätigen"
+            :rules="[requiredRule, passwordsEqualRule]"
+          />
       </v-form>
     </v-container>
+    <v-snackbar
+      v-model="errorSnackbar"
+      :timeout="errorSnackbarTimeout"
+    >
+      {{ errorSnackbarText }}
+
+      <template v-slot:actions>
+        <v-btn
+          color="blue"
+          icon="mdi mdi-close"
+          @click="errorSnackbar = false"
+        >
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-main>
 </template>
 
 <script lang="ts">
-import { useUserStore } from "@/store/UserStore";
 import AppBar from "@/components/navigation/NavigationBar.vue";
 import router from "@/plugins/router";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
+import { UserController } from "@/controller/UserController";
+import { ref } from "vue";
 
 export default {
   name: "EditAccountPage",
   components: { SideMenu, NavigationBar, AppBar },
   setup() {
-    const userStore = useUserStore();
-
+    const userController = UserController.getUserController();
+    const firstName = ref("");
+    const lastName = ref("");
+    const password = ref("");
+    const passwordRepeat = ref("");
+    const errorSnackbar = ref(false);
+    const errorSnackbarText = 'Alle Felder müssen ausgefüllt sein.';
+    const errorSnackbarTimeout = 2000;
+    function requiredRule(value: string) {
+      if (value === "") {
+        return "Dieses Feld muss ausgefüllt sein.";
+      }
+      return true;
+    }
+    function passwordMinLengthRule() {
+      if (password.value.length < 8) {
+        return "Das Passwort muss mindestens 8 Zeichen lang sein.";
+      }
+      return true;
+    }
+    function passwordMaxLengthRule() {
+      if (password.value.length > 32) {
+        return "Das Passwort muss höchstens 32 Zeichen lang sein.";
+      }
+      return true;
+    }
+    function passwordsEqualRule() {
+      if (password.value !== passwordRepeat.value) {
+        return "Passwörter müssen gleich sein.";
+      }
+      return true;
+    }
+    function nameMaxLengthRule(value: string) {
+      if (value.length > 20) {
+        return "Namen müssen kürzer als 20 Zeichen sein";
+      }
+      return true;
+    }
+    function error(ruleReturns: (boolean | string)[]): boolean {
+      for (let i = 0; i < ruleReturns.length; i++) {
+        if (typeof ruleReturns[i] === "string" || !ruleReturns[i]) {
+          return true;
+        }
+      }
+      return false;
+    }
+    function updateAccount() {
+      if (
+        !error([
+          requiredRule(firstName.value),
+          requiredRule(lastName.value),
+          requiredRule(password.value),
+          requiredRule(passwordRepeat.value),
+          nameMaxLengthRule(firstName.value),
+          nameMaxLengthRule(lastName.value),
+          passwordMinLengthRule(),
+          passwordMaxLengthRule(),
+          passwordsEqualRule(),
+        ])
+      ) {
+        userController.update(firstName.value, lastName.value, userController.getUser().email, password.value);
+        router.push("Dashboard")
+      }
+      else if (
+        error([
+          requiredRule(firstName.value),
+          requiredRule(lastName.value),
+          requiredRule(password.value),
+          requiredRule(passwordRepeat.value)
+        ])
+      ) {
+        errorSnackbar.value = true
+      }
+    }
     return {
-      userStore,
+      firstName,
+      lastName,
+      password,
+      passwordRepeat,
+      errorSnackbar,
+      errorSnackbarText,
+      errorSnackbarTimeout,
+      updateAccount,
+      requiredRule,
+      passwordMinLengthRule,
+      passwordMaxLengthRule,
+      passwordsEqualRule,
+      nameMaxLengthRule,
       router,
     };
   },
