@@ -42,7 +42,7 @@
         <v-col v-show="showEmail">
           {{ user.email }}
         </v-col>
-        <v-col>
+        <v-col v-show="showId">
           {{ user.getId }}
         </v-col>
         <v-col cols="2">
@@ -59,8 +59,6 @@
 import { computed, defineComponent, ref, Ref } from "vue";
 import { AdminController } from "@/controller/AdminController";
 import { User } from "@/model/User";
-import { Role } from "@/model/Role";
-import { UserController } from "@/controller/UserController";
 
 export default defineComponent({
   name: "UserListCard",
@@ -77,6 +75,9 @@ export default defineComponent({
         displayParameter.value === "alle"
       ) {
         return ["E-Mail", "ID"];
+      } else if (displayParameter.value === "Benutzername + E-Mail") {
+        searchParameter.value = "E-Mail";
+        return ["E-Mail"];
       }
       searchParameter.value = "ID";
       return ["ID"];
@@ -86,14 +87,23 @@ export default defineComponent({
     const toggleCollapseMessage = ref("ausklappen");
     const displayParameters: string[] = [
       "Benutzername + ID",
+      "Benutzername + E-Mail",
       "E-Mail + ID",
       "alle",
     ];
     const displayParameter = ref("alle");
+    const showId = computed(() => {
+      return (
+        displayParameter.value === "Benutzername + ID" ||
+        displayParameter.value === "alle" ||
+        displayParameter.value === "E-Mail + ID"
+      );
+    });
     const showName = computed(() => {
       return (
         displayParameter.value === "Benutzername + ID" ||
-        displayParameter.value === "alle"
+        displayParameter.value === "alle" ||
+        displayParameter.value === "Benutzername + E-Mail"
       );
     });
     const showEmail = computed(() => {
@@ -129,6 +139,7 @@ export default defineComponent({
       searchParameters,
       showEmail,
       showName,
+      showId,
       displayParameters,
       displayParameter,
       collapsed,
