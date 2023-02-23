@@ -17,7 +17,7 @@ export abstract class RoomObject extends DataObject {
     this._dimensions = dimensions;
   }
 
-  abstract copy(): RoomObject;
+  //abstract copy(): RoomObject;
 
   abstract isTable(): boolean;
 
