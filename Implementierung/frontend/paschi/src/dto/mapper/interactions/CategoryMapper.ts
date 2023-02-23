@@ -3,6 +3,9 @@ import {Category} from "@/model/userdata/interactions/Category";
 import {CategoryDto} from "@/dto/userdata/interactions/CategoryDto";
 import {RatedCategoryMapper} from "@/dto/mapper/interactions/RatedCategoryMapper";
 import {RatedCategory} from "@/model/userdata/interactions/RatedCategory";
+import {RatedCategoryDto} from "@/dto/userdata/interactions/RatedCategoryDto";
+import {useCategoryStore} from "@/store/CategoryStore";
+import {UserController} from "@/controller/UserController";
 
 export class CategoryMapper implements IModelDtoMapper<Category, CategoryDto> {
 
@@ -31,6 +34,25 @@ export class CategoryMapper implements IModelDtoMapper<Category, CategoryDto> {
   }
 
   async dtoToModel(categoryDto: CategoryDto): Promise<Category> {
-    return undefined;
+    if (categoryDto instanceof RatedCategoryDto) {
+      return this.ratedCategoryMapper.dtoToModel(categoryDto);
+    }
+
+    const userController = UserController.getUserController();
+
+    let category = useCategoryStore().getCategory(categoryDto.id);
+    if (category == undefined) {
+      category = new Category(
+        categoryDto.id,
+        0,
+        userController.getUser(),
+        categoryDto.name
+      );
+      category.createdAt = categoryDto.createdAt;
+      category.updatedAt = categoryDto.updatedAt;
+      useCategoryStore().addCategory(category);
+    }
+
+    return category;
   }
 }
