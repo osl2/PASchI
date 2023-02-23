@@ -130,20 +130,37 @@ export default defineComponent({
     const courseName: Ref<string> = ref("");
     const courseSubject: Ref<string> = ref("");
 
+    /**
+     * Methode zum Weiterleiten zur Kursbearbeitungsseite
+     *
+     * @param course Der zu bearbeitende Kurs
+     */
     function editCourseClick(course: Course) {
       router.push({
         name: "EditCoursePage",
         params: { courseId: course.getId },
       });
     }
+
+    /**
+     * Methode zum Öffnen eines Dialogs für die Kurserstellung
+     */
     function newCourseClick() {
       courseName.value = "";
       courseSubject.value = "";
       enterCourseNameDialog.value = true;
     }
+
+    /**
+     * Methode zum Abbruch des Erstellens eines neuen Kurses
+     */
     function abortNewCourseClick() {
       enterCourseNameDialog.value = false;
     }
+
+    /**
+     * Methode zur Erstellung eines neuen Kurses mit dem vorher bestimmten Namen
+     */
     function confirmNewCourseClick() {
       router.push({
         name: "CourseDetailsPage",
@@ -155,10 +172,12 @@ export default defineComponent({
         },
       });
     }
-    function deleteCourseClick(course: Course) {
-      courseController.deleteCourse(course.getId);
-    }
 
+    /**
+     * Methode zum Anzeigen eines Kurses
+     *
+     * @param course Der anzuzeigende Kurs
+     */
     function showCourse(course: Course) {
       router.push({
         name: "CourseDetailsPage",
@@ -170,7 +189,6 @@ export default defineComponent({
       confirmNewCourseClick,
       editCourseClick,
       newCourseClick,
-      deleteCourseClick,
       showCourse,
       courses,
       enterCourseNameDialog,
