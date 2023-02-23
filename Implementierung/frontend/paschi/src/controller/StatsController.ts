@@ -144,7 +144,7 @@ export class StatsController {
     let sessionStats = this.getInteractionStats(sessionId, categories, students, numCategories);
     if (sessionStats != undefined) {
       categories = sessionStats[0];
-      numCategories = sessionStats[1];
+      //numCategories = sessionStats[1];
       students = sessionStats[2];
     }
 
@@ -155,14 +155,18 @@ export class StatsController {
     students.forEach(() => {++participants});
     let participantionRate = (participants / numStudentsInCourse) * 100;
 
-    // Relative Häufigkeit der Kategorien berechnen.
+  /*  // Relative Häufigkeit der Kategorien berechnen.
     categories.forEach((value: number, category: string) => {
       categories.set(category, (value / numCategories) * 100);
-    });
+    });*/
 
     const statsArray = this.getTopStudents(students);
     statsArray.push(categories);
     statsArray.push(participantionRate);
+
+    console.log(statsArray
+    );
+    return statsArray;
   }
 
 
@@ -177,12 +181,12 @@ export class StatsController {
     session.interactions.forEach((interaction: Interaction) => {
       // Anzahl und absolute Häufigkeit der Kategorien zählen.
       let category = interaction.category;
-      let value = categories.get(category.getId);
+      let value = categories.get(category.name);
 
       if (value != undefined) {
-        categories.set(category.getId, value + 1);
+        categories.set(category.name, value + 1);
       } else {
-        categories.set(category.getId, 1);
+        categories.set(category.name, 1);
       }
       ++numCategories;
 
@@ -235,8 +239,8 @@ export class StatsController {
     let topDisturbance: any[] = [];
 
     // Schüler nach Anzahl der Interaktionen absteigend sortieren.
-    studentStats.sort((a, b) => {
-      return (a[1] >= b[1]) ? 1 : -1;
+    studentStats = studentStats.sort((a, b) => {
+      return (a[1] <= b[1]) ? 1 : -1;
     });
     studentStats.forEach((value: [string, number, number, number]) => {
       topInteractions.push([value[0], value[1]]);
@@ -267,8 +271,8 @@ export class StatsController {
     });
 
     // Schüler nach Anzahl der Störungen absteigend sortieren.
-    studentStats.sort((a, b) => {
-      return (a[3] >= b[3]) ? 1 : -1;
+    studentStats = studentStats.sort((a, b) => {
+      return (a[3] <= b[3]) ? 1 : -1;
     });
     studentStats.forEach((value: [string, number, number, number]) => {
       topDisturbance.push([value[0], value[3]]);

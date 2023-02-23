@@ -1,7 +1,8 @@
 <template>
   <navigation-bar extended>
     <v-app-bar-title>
-      Sitzungsstatistiken der Sitzung am {{sessionDate}} des Kurses {{sessionCourse + " (" + sessionCourseSubject + ")"}}
+      Sitzungsstatistiken der Sitzung am {{ sessionDate }} des Kurses
+      {{ sessionCourse + " (" + sessionCourseSubject + ")" }}
     </v-app-bar-title>
     <template v-slot:extension>
       <v-btn
@@ -10,11 +11,12 @@
         rounded
         prepend-icon="mdi mdi-download"
         @click="downloadClicked"
-      > Statistiken herunterladen</v-btn>
+      > Statistiken herunterladen
+      </v-btn>
     </template>
   </navigation-bar>
   <v-main>
-    <SideMenu />
+    <SideMenu/>
     <div id="content">
       <v-container fluid>
         <v-row justify="space-around" align-content="stretch">
@@ -23,14 +25,14 @@
               <v-card-title>
                 <v-row class="ma-2">
                   Aufschlüsselung der Interaktionen nach Kategorien
-                  <v-spacer />
+                  <v-spacer/>
                 </v-row>
               </v-card-title>
-              <v-card-item v-if="stats !== undefined && stats[5].values().length !== 0">
-                <canvas id = "categoryChart"/>
+              <v-card-item v-if="stats !== undefined && keys.length!== 0">
+                <canvas id="categoryChart"/>
               </v-card-item>
               <v-card-item v-else>
-               Keine Daten verfügbar.
+                Keine Daten verfügbar.
               </v-card-item>
             </v-card>
           </v-col>
@@ -38,12 +40,12 @@
             <v-card color="primary-lighten-1">
               <v-card-title>
                 <v-row class="ma-2">
-                  Durchschnittliche Beteiligungsqoute [%]
-                  <v-spacer />
+                  Beteiligungsqoute
+                  <v-spacer/>
                 </v-row>
               </v-card-title>
               <v-card-item v-if="statsController.getSessionStats(sessionId) !== undefined">
-                {{statsController.getSessionStats(sessionId)[6]}}
+                {{ statsController.getSessionStats(sessionId)[6] }} %
               </v-card-item>
               <v-card-item v-else>
                 Keine Daten verfügbar.
@@ -58,14 +60,14 @@
               <v-card-title>
                 <v-row class="ma-2">
                   Top 5 der Schüler nach Anzahl Interaktionen
-                  <v-spacer />
+                  <v-spacer/>
                 </v-row>
               </v-card-title>
               <v-card-item v-if="stats[0].length !== 0">
                 <v-list>
                   <v-list-item v-for="studentId in top5InteractionArray">
                     <v-list-item-title>
-                      {{studentController.getStudent(studentId).firstName + " " + studentController.getStudent(studentId).firstName}}
+                      {{ studentController.getStudent(studentId[0]).firstName + " " + studentController.getStudent(studentId[0]).lastName }}: {{studentId[1]}} Interaktionen
                     </v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -80,14 +82,14 @@
               <v-card-title>
                 <v-row class="ma-2">
                   Top 5 Schüler nach Anzahl Störungen
-                  <v-spacer />
+                  <v-spacer/>
                 </v-row>
               </v-card-title>
-              <v-card-item  v-if="stats[4].length !== 0">
+              <v-card-item v-if="stats[4].length !== 0">
                 <v-list>
                   <v-list-item v-for="studentId in top5DisturberArray">
                     <v-list-item-title>
-                      {{studentController.getStudent(studentId).firstName + " " + studentController.getStudent(studentId).firstName}}
+                      {{ studentController.getStudent(studentId[0]).firstName + " " + studentController.getStudent(studentId[0]).lastName }} : {{studentId[1]}} Störungen
                     </v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -111,7 +113,7 @@ import SideMenu from "@/components/navigation/SideMenu.vue";
 import Chart from 'chart.js/auto';
 import {StatsController} from "@/controller/StatsController";
 import {StudentController} from "@/controller/StudentController";
-import { SessionController } from "@/controller/SessionController";
+import {SessionController} from "@/controller/SessionController";
 
 
 export default defineComponent({
@@ -126,27 +128,44 @@ export default defineComponent({
     setup(props) {
       const statsController = StatsController.getStatsController();
       const studentController = StudentController.getStudentConroller();
-      const sessionController = SessionController.getSessionController()
+      const sessionController = SessionController.getSessionController();
       const session = sessionController.getSession(props.sessionId);
 
-      const top5InteractionArray: never[] = [];
-      const top5DisturberArray: never[] = [];
+      let top5InteractionArray: never[] = [];
+      let top5DisturberArray: never[] = [];
+
+      let stats = statsController.getSessionStats(props.sessionId);
+
+      let categoryMap = getMap();
+      let keys = Array.from(categoryMap!.keys());
+      let values = Array.from(categoryMap!.values());
+
+      function getMap() {
+        if (stats !== undefined) {
+          top5InteractionArray = stats[0];
+          top5DisturberArray = stats[4];
+          console.log(top5InteractionArray);
+          console.log(top5DisturberArray);
+          return stats[5] as Map<string, number>
+        }
+      }
 
       const sessionName = session?.name;
       const sessionDate = session?.date;
       const sessionCourse = session?.course.name;
       const sessionCourseSubject = session?.course.subject;
 
-      const downloadElementCategoryChart = document.createElement( 'a' );
+      const downloadElementCategoryChart = document.createElement('a');
 
       function downloadClicked() {
         downloadElementCategoryChart.click();
 
       }
-      const stats  = statsController.getSessionStats(props.sessionId);
+
+
       onMounted(() => {
           const categoryChartId = document.getElementById('categoryChart') as HTMLCanvasElement;
-         // const top5InteractionChartId = document.getElementById('top5InteractionChart') as HTMLCanvasElement;
+          // const top5InteractionChartId = document.getElementById('top5InteractionChart') as HTMLCanvasElement;
           //const top5DisturberChartId = document.getElementById('top5DisturberChart') as HTMLCanvasElement;
 
 
@@ -155,22 +174,16 @@ export default defineComponent({
             return;
           }
 
-          //let keysCategoryChart = stats[5].keys();
-         // let valuesCategoryChart = stats[5].values();
-
-          //let top5InteractionArray = stats[0];
-          //let top5DisturberArray = stats[4];
-
 
           const categoryChartData = {
             labels:
-              ['Störungsdummy', 'Antwortdummy', 'Fragendummy'],
-            //keysCategoryChart,
+            // ['Störungsdummy', 'Antwortdummy', 'Fragendummy'],
+            keys,
             datasets: [{
               label: 'Anzahl',
               data:
-                [5,3,2],
-              //valuesCategoryChart,
+              //[5,3,2],
+              values,
             }]
           };
 
@@ -188,14 +201,14 @@ export default defineComponent({
                   }
                 }
               },
-              animation : {
+              animation: {
                 onComplete: buildCategoryChart
               }
             }
           });
 
 
-          function buildCategoryChart(){
+          function buildCategoryChart() {
             downloadElementCategoryChart.href = categoryChart.toBase64Image();
             downloadElementCategoryChart.download = 'Kategorienaufschlüsselung.png';
           }
@@ -204,12 +217,21 @@ export default defineComponent({
 
         }
       )
-      return{
-        stats, statsController, studentController, downloadClicked, top5InteractionArray, top5DisturberArray, sessionCourseSubject, sessionCourse, sessionDate, sessionName
+      return {
+        stats,
+        statsController,
+        studentController,
+        downloadClicked,
+        top5InteractionArray,
+        top5DisturberArray,
+        sessionCourseSubject,
+        sessionCourse,
+        sessionDate,
+        sessionName,
+        keys,
       }
     },
   }
-
 )
 
 
