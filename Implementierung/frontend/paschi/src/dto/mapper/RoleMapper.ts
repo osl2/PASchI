@@ -11,7 +11,7 @@ export class RoleMapper implements IModelDtoMapper<Role, RoleDto> {
     return RoleDto.ADMIN;
   }
 
-  dtoToModel(roleDto: RoleDto): Role {
+  async dtoToModel(roleDto: RoleDto): Promise<Role> {
     if (roleDto.valueOf() == RoleDto.USER.valueOf()) {
       return Role.USER;
     }
