@@ -5,6 +5,7 @@ import {ChairMapper} from "@/dto/mapper/rooms/ChairMapper";
 import {TableMapper} from "@/dto/mapper/rooms/TableMapper";
 import {Table} from "@/model/userdata/rooms/Table";
 import {Chair} from "@/model/userdata/rooms/Chair";
+import {TableDto} from "@/dto/userdata/rooms/TableDto";
 
 export class RoomObjectMapper implements IModelDtoMapper<RoomObject, RoomObjectDto> {
 
@@ -28,6 +29,10 @@ export class RoomObjectMapper implements IModelDtoMapper<RoomObject, RoomObjectD
   }
 
   async dtoToModel(roomObjectDto: RoomObjectDto): Promise<RoomObject> {
-    return undefined;
+    if (roomObjectDto instanceof TableDto) {
+      return await this.tableMapper.dtoToModel(roomObjectDto);
+    } else {
+      return await this.chairMapper.dtoToModel(roomObjectDto);
+    }
   }
 }
