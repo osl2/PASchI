@@ -16,6 +16,7 @@ import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -147,8 +148,16 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
      * @return {@link UserDto}
      */
     public UserDto getToken(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        UserDto userDto = this.mapper.modelToDto(user);
+        JwtAuthenticationToken jAT = (JwtAuthenticationToken) authentication;
+
+        String userID = jAT.getTokenAttributes().get("userId").toString();
+
+        Optional<User> repositoryUserOptional = userRepository.findUserById(userID);
+
+        User repositoryUser = repositoryUserOptional.orElseThrow(() -> new EntityNotFoundException(
+                User.class, userID));
+
+        UserDto userDto = this.mapper.modelToDto(repositoryUser);
         userDto.setToken(tokenService.generateToken(authentication));
 
         return userDto;
