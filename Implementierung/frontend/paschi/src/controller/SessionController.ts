@@ -9,13 +9,15 @@ import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 import {useCategoryStore} from "@/store/CategoryStore";
 import {useStudentStore} from "@/store/StudentStore";
 import {Teacher} from "@/model/userdata/interactions/Teacher";
+import {SessionService} from "@/service/SessionService";
+import {CourseService} from "@/service/CourseService";
+import {ParticipantService} from "@/service/ParticipantService";
 
-// TODO: Backend Service einbinden
-// TODO: Standard Sitzordnung
 export class SessionController {
 
   private static controller: SessionController = new SessionController();
   private userController = UserController.getUserController();
+  private sessionService = SessionService.getService();
 
   private constructor() {
   }
@@ -24,7 +26,9 @@ export class SessionController {
     return this.controller;
   }
 
-  createSession(courseId: string, seatArrangementId: string | undefined, name: string): string | undefined {
+  async createSession(courseId: string, seatArrangementId: string | undefined, name: string):
+    Promise<string | undefined> {
+
     let course = useCourseStore().getCourse(courseId);
     let arrangement = undefined;
     if (seatArrangementId != undefined) {
@@ -48,33 +52,42 @@ export class SessionController {
       course,
       arrangement
     );
-    useSessionStore().addSession(session);
+
+    await this.sessionService.add(session);
     course.addSession(session);
+    CourseService.getService().update(course).then();
 
-    return session.getId;
+    return useSessionStore().addSession(session);
   }
 
-  updateSession(id: string, name: string) {
-    let session = useSessionStore().getSession(id);
-    if (session !== undefined) {
-      session.name = name;
-    }
-  }
+  // updateSession(id: string, name: string) {
+  //   let session = useSessionStore().getSession(id);
+  //   if (session !== undefined) {
+  //     session.name = name;
+  //   }
+  // }
 
-  deleteSession(id: string) {
+  async deleteSession(id: string) {
     let session = useSessionStore().getSession(id);
     if (session !== undefined) {
       session.course.removeSession(id);
+      CourseService.getService().update(session.course).then();
+
       session.interactions.forEach((interaction: Interaction) => {
         interaction.fromParticipant.removeInteraction(interaction.getId);
         interaction.toParticipant.removeInteraction(interaction.getId);
+        ParticipantService.getService().update(interaction.toParticipant);
+        ParticipantService.getService().update(interaction.fromParticipant);
         useInteractionStore().deleteInteraction(interaction.getId);
       });
+
+      await this.sessionService.update(session).then();
       useSessionStore().deleteSession(id);
     }
   }
 
   getAllSessions(): Session[] {
+    this.sessionService.getAll().then();
     return useSessionStore().getAllSessions();
   }
 
@@ -130,6 +143,10 @@ export class SessionController {
     session.addInteraction(interaction);
     fromParticipant.addInteraction(interaction);
     toParticipant.addInteraction(interaction);
+
+    this.sessionService.update(session).then();
+    ParticipantService.getService().update(toParticipant).then();
+    ParticipantService.getService().update(fromParticipant).then();
     return interaction.getId;
   }
 
@@ -145,9 +162,12 @@ export class SessionController {
     let session = useSessionStore().getSession(sessionId);
     if (session !== undefined) {
       const interaction = session.undoInteraction();
+      this.sessionService.update(session).then();
       if (interaction !== undefined) {
         interaction.fromParticipant.removeInteraction(interaction.getId);
         interaction.toParticipant.removeInteraction(interaction.getId);
+        ParticipantService.getService().update(interaction.toParticipant).then();
+        ParticipantService.getService().update(interaction.fromParticipant).then();
         useInteractionStore().deleteInteraction(interaction.getId);
       }
     }
@@ -159,12 +179,15 @@ export class SessionController {
       return undefined;
     }
     let interaction = session.redoInteraction();
+    this.sessionService.update(session).then();
     if (interaction == undefined) {
       return undefined;
     }
     useInteractionStore().addInteraction(interaction);
     interaction.fromParticipant.addInteraction(interaction);
     interaction.toParticipant.addInteraction(interaction);
+    ParticipantService.getService().update(interaction.toParticipant).then();
+    ParticipantService.getService().update(interaction.fromParticipant).then();
     return interaction.getId;
   }
 
@@ -184,13 +207,13 @@ export class SessionController {
     return session.hasUndo();
   }
 
-  setSeatArrangementOfSession(sessionId: string, arrangementId: string) {
-    let session = useSessionStore().getSession(sessionId);
-    let arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
-    if (session !== undefined && arrangement !== undefined) {
-      session.seatArrangement = arrangement;
-    }
-  }
+  // setSeatArrangementOfSession(sessionId: string, arrangementId: string) {
+  //   let session = useSessionStore().getSession(sessionId);
+  //   let arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
+  //   if (session !== undefined && arrangement !== undefined) {
+  //     session.seatArrangement = arrangement;
+  //   }
+  // }
 
   getSeatArrangementOfSession(sessionId: string) {
     let session = useSessionStore().getSession(sessionId);
