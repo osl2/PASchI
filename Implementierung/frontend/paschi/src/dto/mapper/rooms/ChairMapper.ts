@@ -2,6 +2,8 @@ import {IModelDtoMapper} from "@/dto/mapper/IModelDtoMapper";
 import {ChairDto} from "@/dto/userdata/rooms/ChairDto";
 import {Chair} from "@/model/userdata/rooms/Chair";
 import {PositionMapper} from "@/dto/mapper/rooms/PositionMapper";
+import {UserController} from "@/controller/UserController";
+import {useRoomObjectStore} from "@/store/RoomObjectStore";
 
 export class ChairMapper implements IModelDtoMapper<Chair, ChairDto> {
 
@@ -26,6 +28,24 @@ export class ChairMapper implements IModelDtoMapper<Chair, ChairDto> {
   }
 
   async dtoToModel(chairDto: ChairDto): Promise<Chair> {
-    return undefined;
+    const userController = UserController.getUserController();
+
+    let chair = useRoomObjectStore().getChair(chairDto.id);
+    if (chair == undefined) {
+      chair = new Chair(
+        chairDto.id,
+        0,
+        userController.getUser(),
+        await this.positionMapper.dtoToModel(chairDto.position)
+      );
+      chair.updatedAt = chairDto.updatedAt;
+      chair.createdAt = chairDto.createdAt;
+      useRoomObjectStore().addChair(chair);
+    } else if (chair.updatedAt === chairDto.updatedAt) {
+      return chair;
+    }
+
+    chair.position = await this.positionMapper.dtoToModel(chairDto.position);
+    return chair;
   }
 }
