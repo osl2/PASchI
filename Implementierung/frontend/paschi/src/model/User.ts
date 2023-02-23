@@ -23,6 +23,10 @@ export class User extends DataObject {
     this._token = token;
   }
 
+  isAdmin(): boolean {
+    return this._role == 'ADMIN';
+  }
+
   get firstName(): string {
     return this._firstName;
   }
