@@ -22,46 +22,48 @@
       </v-card>
       <v-card class="pa-2 rounded-lg" variant="flat" max-width="450px">
         <v-card-item>
-          <v-text-field
-            v-model="firstName"
-            class="mt-2"
-            variant="outlined"
-            label="Vorname"
-            :rules="[requiredRule, nameMaxLengthRule]"
-          />
-          <v-text-field
-            v-model="lastName"
-            variant="outlined"
-            label="Nachname"
-            :rules="[requiredRule, nameMaxLengthRule]"
-          />
-          <v-text-field
-            v-model="mail"
-            prepend-inner-icon="mdi mdi-email-outline"
-            variant="outlined"
-            label="Mailadresse"
-            :rules="[requiredRule, emailRule]"
-          />
-          <v-text-field
-            v-model="password"
-            prepend-inner-icon="mdi mdi-lock-outline"
-            type="password"
-            variant="outlined"
-            label="Passwort"
-            :rules="[
-              requiredRule,
-              passwordMinLengthRule,
-              passwordMaxLengthRule,
-            ]"
-          />
-          <v-text-field
-            v-model="passwordRepeat"
-            prepend-inner-icon="mdi mdi-lock-outline"
-            type="password"
-            variant="outlined"
-            label="Passwort bestätigen"
-            :rules="[requiredRule, passwordsEqualRule]"
-          />
+          <form>
+            <v-text-field
+              v-model="firstName"
+              class="mt-2"
+              variant="outlined"
+              label="Vorname"
+              :rules="[requiredRule, nameMaxLengthRule]"
+            />
+            <v-text-field
+              v-model="lastName"
+              variant="outlined"
+              label="Nachname"
+              :rules="[requiredRule, nameMaxLengthRule]"
+            />
+            <v-text-field
+              v-model="mail"
+              prepend-inner-icon="mdi mdi-email-outline"
+              variant="outlined"
+              label="Mailadresse"
+              :rules="[requiredRule, emailRule]"
+            />
+            <v-text-field
+              v-model="password"
+              prepend-inner-icon="mdi mdi-lock-outline"
+              type="Password"
+              variant="outlined"
+              label="Passwort"
+              :rules="[
+                requiredRule,
+                passwordMinLengthRule,
+                passwordMaxLengthRule,
+              ]"
+            />
+            <v-text-field
+              v-model="passwordRepeat"
+              prepend-inner-icon="mdi mdi-lock-outline"
+              type="Password"
+              variant="outlined"
+              label="Passwort bestätigen"
+              :rules="[requiredRule, passwordsEqualRule]"
+            />
+          </form>
         </v-card-item>
         <v-card-item>
           <v-btn
