@@ -10,12 +10,14 @@ import { RoomObject } from "@/model/userdata/rooms/RoomObject";
 import { useSeatArrangementStore } from "@/store/SeatArrangementStore";
 import { usePositionStore } from "@/store/PositionStore";
 import {SeatArrangementController} from "@/controller/SeatArrangementController";
+import {RoomService} from "@/service/RoomService";
+import {SeatArrangementService} from "@/service/SeatArrangementService";
 
-// TODO: Backend Service einbinden
 export class RoomController {
   private static controller: RoomController = new RoomController();
   private userController = UserController.getUserController();
   private arrangementController = SeatArrangementController.getSeatArrangementController();
+  private roomService = RoomService.getService();
 
   private constructor() {}
 
@@ -23,26 +25,26 @@ export class RoomController {
     return this.controller;
   }
 
-  createRoom(name: string): string {
+  async createRoom(name: string): Promise<string> {
     let room = new Room(
       undefined,
       useRoomStore().getNextId(),
       this.userController.getUser(),
       name
     );
-    useRoomStore().addRoom(room);
 
-    return room.getId;
+    await this.roomService.add(room);
+    return useRoomStore().addRoom(room);
   }
 
-  updateRoom(id: string, name: string) {
-    let room = useRoomStore().getRoom(id);
-    if (room !== undefined) {
-      room.name = name;
-    }
-  }
+  // updateRoom(id: string, name: string) {
+  //   let room = useRoomStore().getRoom(id);
+  //   if (room !== undefined) {
+  //     room.name = name;
+  //   }
+  // }
 
-  deleteRoom(id: string) {
+  async deleteRoom(id: string) {
     let room = useRoomStore().getRoom(id);
     if (room !== undefined) {
       useSeatArrangementStore()
@@ -54,6 +56,7 @@ export class RoomController {
         });
     }
     useRoomStore().deleteRoom(id);
+    await this.roomService.delete(id);
   }
 
   getRoom(id: string): Room | undefined {
@@ -65,6 +68,7 @@ export class RoomController {
   }
 
   getAllRooms(): Room[] {
+    this.roomService.getAll().then();
     return useRoomStore().getAllRooms();
   }
 
@@ -91,8 +95,9 @@ export class RoomController {
       position
     );
     room.addRoomObject(chair);
+    this.roomService.update(room).then();
 
-    return chair.getId;
+    return useRoomObjectStore().addChair(chair);
   }
 
   addTable(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number, length: number,
@@ -121,8 +126,9 @@ export class RoomController {
       width
     );
     room.addRoomObject(table);
+    this.roomService.update(room).then();
 
-    return table.getId;
+    return useRoomObjectStore().addTable(table);
   }
 
   getRoomObjects(roomId: string): RoomObject[] | undefined {
@@ -146,7 +152,7 @@ export class RoomController {
     });
   }
 
-  removeRoomObject(roomId: string, objectId: string) {
+  async removeRoomObject(roomId: string, objectId: string) {
     let room = useRoomStore().getRoom(roomId);
     if (room !== undefined) {
       let object = room.getRoomObject(objectId);
@@ -156,8 +162,10 @@ export class RoomController {
         useSeatArrangementStore().getAllSeatArrangements().forEach((arrangement: SeatArrangement) => {
           if (arrangement.room.getId === roomId) {
             arrangement.removeSeat(object!);
+            SeatArrangementService.getService().update(arrangement);
           }
         });
+        await this.roomService.update(room);
       }
     }
   }

@@ -9,11 +9,13 @@ export const useRoomObjectStore = defineStore('roomObjects', {
     nextId: 0
   }),
   actions: {
-    addChair(chair: Chair) {
+    addChair(chair: Chair): string {
       this.chairs.push(chair);
+      return chair.getId;
     },
-    addTable(table: Table) {
+    addTable(table: Table): string {
       this.tables.push(table);
+      return table.getId;
     },
     getChair(id: string): Chair | undefined {
       for (const chair of this.chairs) {

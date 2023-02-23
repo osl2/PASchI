@@ -7,8 +7,9 @@ export const useRoomStore = defineStore('rooms', {
     nextId: 0
   }),
   actions: {
-    addRoom(room: Room) {
+    addRoom(room: Room): string {
       this.rooms.push(room);
+      return room.getId;
     },
     deleteRoom(id: string) {
       this.rooms.forEach((element, index) => {
