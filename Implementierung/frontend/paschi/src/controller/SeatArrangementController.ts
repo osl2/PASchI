@@ -7,6 +7,10 @@ import {useCourseStore} from "@/store/CourseStore";
 import {useSessionStore} from "@/store/SessionStore";
 import {useStudentStore} from "@/store/StudentStore";
 import {Participant} from "@/model/userdata/interactions/Participant";
+import {RoomController} from "@/controller/RoomController";
+import {CourseController} from "@/controller/CourseController";
+import {RoomObjectUtilities} from "@/components/room/RoomObjectUtilities";
+import {Chair} from "@/model/userdata/rooms/Chair";
 
 // TODO: Backend Service einbinden
 // TODO: Standard Sitzordnung
@@ -40,6 +44,49 @@ export class SeatArrangementController {
     course.addSeatArrangement(arrangement);
 
     return arrangement.getId;
+  }
+
+  createAutomaticSeatArrangement(name: string, courseId: string): string | undefined {
+    const roomController = RoomController.getRoomController();
+    const roomObjectUtilities = RoomObjectUtilities.getRoomObjectUtilities();
+    let roomId = roomController.createRoom(name);
+    const room = roomController.getRoom(roomId);
+    const course = CourseController.getCourseController().getCourse(courseId);
+    if(room == undefined || course == undefined) {
+      return undefined;
+    }
+
+    const students = CourseController.getCourseController().getStudentsOfCourse(courseId);
+
+    if(!students) {
+      return undefined;
+    }
+
+    const center = {x: roomObjectUtilities.roomWidth / 2, y: roomObjectUtilities.roomHeight / 2};
+    const radius = roomObjectUtilities.roomHeight / 3;
+
+    const interval = 2 * Math.PI / students.length;
+
+    for (let i = 0; i < students.length; i++) {
+      const x = center.x + radius * Math.cos(interval * i);
+      const y = center.y + radius * Math.sin(interval * i);
+      roomController.addChair(roomId, x, y,0);
+    }
+
+    let arrangement = new SeatArrangement(undefined, this.seatArrangementStore.getNextId(),
+      this.userController.getUser(), name, course, room);
+    this.seatArrangementStore.addSeatArrangement(arrangement);
+    course.addSeatArrangement(arrangement);
+
+    const seatArrangementId = arrangement.getId;
+
+    const chairs = roomController.getRoomObjects(roomId)?.filter((roomObject) =>  roomObject instanceof Chair);
+
+    for (let i = 0; i < students.length; i++) {
+      arrangement.setSeat(chairs![i], students[i]);
+    }
+
+    return seatArrangementId;
   }
 
   deleteSeatArrangement(id: string) {
