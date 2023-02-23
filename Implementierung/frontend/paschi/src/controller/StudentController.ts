@@ -34,12 +34,12 @@ export class StudentController {
     return useStudentStore().addStudent(student);
   }
 
-  updateStudent(id: string, firstName: string, lastName: string) {
+  async updateStudent(id: string, firstName: string, lastName: string) {
     let student = useStudentStore().getStudent(id);
     if (student !== undefined) {
       student.firstName = firstName;
       student.lastName = lastName;
-      this.studentService.update(student).then();
+      await this.studentService.update(student);
     }
   }
 
@@ -58,8 +58,8 @@ export class StudentController {
     return useStudentStore().getStudent(id);
   }
 
-  getAllStudents(): Student[] {
-    this.studentService.getAll().then();
+  async getAllStudents(): Promise<Student[]> {
+    await this.studentService.getAll().then();
     return useStudentStore().getAllStudents();
   }
 
