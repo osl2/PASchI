@@ -89,7 +89,6 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
 
     @Override
     public SessionDto getById(String id, Authentication authentication) {
-        super.checkAuthorization(authentication, id);
         Optional<Session> sessionOptional = sessionRepository.findSessionById(id);
 
         return sessionOptional.map(this.mapper::modelToDto).orElseThrow(() -> new EntityNotFoundException(
@@ -106,7 +105,6 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
 
     @Override
     public String delete(String id, Authentication authentication) {
-        super.checkAuthorization(authentication, id);
         Optional<Session> sessionOptional = sessionRepository.findById(id);
         if (sessionOptional.isEmpty()) {
             throw new EntityNotFoundException(Session.class, id);

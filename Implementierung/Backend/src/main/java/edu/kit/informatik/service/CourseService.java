@@ -72,7 +72,6 @@ public class CourseService extends BaseService<Course, CourseDto, CourseDto> {
 
     @Override
     public CourseDto getById(String id, Authentication authentication) {
-        super.checkAuthorization(authentication, id);
         Optional<Course> courseOptional = this.courseRepository.findCourseById(id);
 
         return courseOptional.map(this.mapper::modelToDto).orElseThrow(() ->
@@ -89,7 +88,6 @@ public class CourseService extends BaseService<Course, CourseDto, CourseDto> {
 
     @Override
     public String delete(String id, Authentication authentication) {
-        super.checkAuthorization(authentication, id);
         Optional<Course> courseOptional = this.courseRepository.findCourseById(id);
         courseOptional.orElseThrow(() -> new EntityNotFoundException(Course.class, id));
 

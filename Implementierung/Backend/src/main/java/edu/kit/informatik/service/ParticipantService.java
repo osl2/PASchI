@@ -88,7 +88,6 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
 
     @Override
     public String delete(String id, Authentication authentication) {
-
         Optional<Participant> participantOptional = this.participantRepository.findParticipantById(id);
         Participant participant = participantOptional.orElseThrow(() ->
                                                                     new EntityNotFoundException(Participant.class, id));
