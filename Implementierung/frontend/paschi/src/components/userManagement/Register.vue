@@ -88,7 +88,7 @@
           Schon registriert? &middot; Zum Login
         </v-card-title>
       </v-card>
-    </v-container>#
+    </v-container>
     <v-snackbar
       v-model="errorSnackbar"
       :timeout="errorSnackbarTimeout"
