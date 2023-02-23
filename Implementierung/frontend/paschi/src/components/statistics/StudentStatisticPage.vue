@@ -42,7 +42,7 @@
                 <v-spacer />
               </v-row>
             </v-card-title>
-            <v-card-item v-if="stats !== undefined && stats[0].values().length() != 0">
+            <v-card-item v-if="stats !== undefined && values.length !== 0">
               <canvas id = "categoryChart"/>
             </v-card-item>
             <v-card-item v-else>
@@ -82,7 +82,17 @@ export default defineComponent({
     const studentController = StudentController.getStudentConroller();
     const firstName = studentController.getStudent(props.studentId)?.firstName;
     const lastName = studentController.getStudent(props.studentId)?.lastName;
-    let stats;
+    let error = 0;
+    let stats = statsController.getStudentStats(props.studentId);
+
+    let map = getMap();
+    let keys = Array.from(map!.keys());
+    let values = Array.from(map!.values());
+    function getMap() {
+      if (stats !== undefined) {
+        return stats[0] as Map<string, number>
+      }
+    }
 
     const downloadElement = document.createElement('a');
 
@@ -102,19 +112,18 @@ export default defineComponent({
           return;
         }
 
-        //let keys = stats[0].keys();
-        //let values = stats[0].values();
+
 
 
         const data = {
           labels:
-            ['Störungsdummy', 'Antwortdummy', 'Fragendummy'],
-          //keys,
+            //['Störungsdummy', 'Antwortdummy', 'Fragendummy'],
+          keys,
           datasets: [{
             label: 'Anzahl',
             data:
-              [5,47,19],
-            //values,
+              //[5,47,19],
+            values,
           }]
         };
 
@@ -150,7 +159,7 @@ export default defineComponent({
         }
       )
       return{
-        statsController, firstName, lastName, downloadClicked, stats,
+        statsController, firstName, lastName, downloadClicked, stats, error, values, keys
       }
     },
 

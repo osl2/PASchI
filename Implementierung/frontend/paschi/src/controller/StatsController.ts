@@ -43,9 +43,9 @@ export class StatsController {
       let category = interaction.category;
       let value = categories.get(category.getId);
       if (value != undefined) {
-        categories.set(category.getId, value + 1);
+        categories.set(category.name, value + 1);
       } else {
-        categories.set(category.getId, 1);
+        categories.set(category.name, 1);
       }
       ++numCategories;
 
