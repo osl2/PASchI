@@ -78,6 +78,12 @@ export default defineComponent({
   setup() {
     const isMobile: Ref<boolean> = inject("isMobile") as Ref<boolean>;
     const mobileMenu = ref(false);
+
+    /**
+     * Methode, die bestimmt, ob die aktuelle Rute eine Unterroute der angegebenen Seite ist.
+     *
+     * @param route
+     */
     function subRouteOf(route: string): boolean {
       return useRoute().matched.some(({ name }) => name === route);
     }
