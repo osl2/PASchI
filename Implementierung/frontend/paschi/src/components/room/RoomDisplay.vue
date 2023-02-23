@@ -18,6 +18,7 @@
       @mouseup="mouseUp"
       @mouseleave="mouseUp"
     >
+      <slot name="main" />
       <div
         v-for="chair in chairs"
         :key="chair.getId"
@@ -33,7 +34,7 @@
         @touchmove="touchMove($event, chair)"
         @touchend="touchEnd"
       >
-        <slot name="chair" :chair="chair">
+        <slot name="chair" :chair="chair" :origin="getRoomObjectDisplayOrigin(chair)">
           <v-card
             class="ma-0 v-row align-center justify-center"
             color="secondary-lighten-2"
@@ -67,7 +68,7 @@
         @touchmove="touchMove($event, table)"
         @touchend="touchEnd"
       >
-        <slot name="table" v-bind:table="table">
+        <slot name="table" :table="table" :origin="getRoomObjectDisplayOrigin(table)">
           <v-card
             class="ma-0 v-row align-center justify-center"
             color="secondary-lighten-1"
@@ -184,7 +185,7 @@ export default defineComponent({
         top: displayCoordinates.y + "px",
         left: displayCoordinates.x + "px",
         transform: `rotate(${roomObject.position.orientation}rad) translate(-50%, -50%)`,
-        transformOrigin: "0 0"
+        transformOrigin: "0 0",
       };
     }
 
@@ -194,6 +195,15 @@ export default defineComponent({
 
     function getRoomObjectWidth(roomObject: RoomObject) {
       return roomObject.dimensions.width * roomScale;
+    }
+
+    function getRoomObjectDisplayOrigin(roomObject: RoomObject): Coordinate {
+      const roomCoordinates = roomObjectUtilities.getRoomObjectOrigin(roomObject);
+      const displayCoordinates = roomToDisplayCoordinates(roomCoordinates.x, roomCoordinates.y);
+      return {
+        x: displayCoordinates.x + roomDisplayLeftMargin,
+        y: displayCoordinates.y + roomDisplayTopMargin
+      }
     }
 
     function mouseDown(event: MouseEvent, roomObject: RoomObject) {
@@ -320,6 +330,7 @@ export default defineComponent({
       roomDisplayStyle,
       selectedRoomObject,
       roomId,
+      getRoomObjectDisplayOrigin,
     };
   },
 });
@@ -328,10 +339,10 @@ export default defineComponent({
 <style scoped>
 .error {
   border: 2px solid red;
-  z-index: 2;
+  z-index: 3;
 }
 
 .not-error {
-  z-index: 1;
+  z-index: 2;
 }
 </style>

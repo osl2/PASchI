@@ -1,9 +1,32 @@
 <template>
-  <canvas style="z-index: 10; width: 100vw; height: 100vh; top: 0; left: 0; position: fixed; pointer-events: none" :width="overlayWidth" :height="overlayHeight" ref="canvas"> </canvas>
+  <canvas
+    style="
+      z-index: 0;
+      width: 100vw;
+      height: 100vh;
+      top: 0;
+      left: 0;
+      position: fixed;
+      pointer-events: none;
+    "
+    :width="overlayWidth"
+    :height="overlayHeight"
+    ref="canvas"
+  >
+  </canvas>
 </template>
 
 <script lang="ts">
-import {defineComponent, onBeforeUpdate, onMounted, onUpdated, PropType, Ref, ref, watch} from "vue";
+import {
+  defineComponent,
+  onBeforeUpdate,
+  onMounted,
+  onUpdated,
+  PropType,
+  Ref,
+  ref,
+  watch,
+} from "vue";
 interface Line {
   x1: number;
   y1: number;
@@ -15,19 +38,17 @@ export default defineComponent({
   name: "LineOverlay",
   props: {
     lines: {
-      type: Array as PropType<
-        Line[]
-      >,
+      type: Array as PropType<Line[]>,
       required: true,
     },
   },
-  setup: function (props) {
+  setup: function (props, context) {
     const canvas: Ref<HTMLCanvasElement | null> = ref(null);
 
     const overlayWidth = window.innerWidth;
     const overlayHeight = window.innerHeight;
 
-    function drawBezierCurve(context: CanvasRenderingContext2D, line: Line) {
+    function drawBezierCurve(ctx: CanvasRenderingContext2D, line: Line) {
       const vector = {
         x: line.x2 - line.x1,
         y: line.y2 - line.y1,
@@ -45,25 +66,41 @@ export default defineComponent({
         y: line.y2 - vector.y / 4 + normal.y / 4,
       };
 
-      context.beginPath();
-      context.moveTo(line.x1, line.y1);
-      context.bezierCurveTo(c1.x, c1.y, c2.x, c2.y, line.x2, line.y2);
-      context.strokeStyle = "red";
-      context.lineWidth = 5;
-      context.stroke();
+      ctx.beginPath();
+      ctx.moveTo(line.x1, line.y1);
+      ctx./*bezierCurveTo*/ lineTo(
+        /*c1.x, c1.y, c2.x, c2.y,*/ line.x2,
+        line.y2
+      );
+      ctx.strokeStyle = "red";
+      ctx.lineWidth = 5;
+      ctx.stroke();
     }
 
-    let context: CanvasRenderingContext2D | null | undefined = null;
+    let ctx: CanvasRenderingContext2D | null | undefined = null;
 
     onMounted(() => {
-      context = canvas.value?.getContext("2d")
+      ctx = canvas.value?.getContext("2d");
+    });
+
+    const renderLines = () => {
+      if (ctx && props.lines && props.lines.length > 0) {
+        ctx.clearRect(0, 0, overlayWidth, overlayHeight);
+        for (let line of props.lines) {
+          drawBezierCurve(ctx, line);
+        }
+      }
+    }
+
+    context.expose({
+      renderLines,
     });
 
     onBeforeUpdate(() => {
-      if (context && props.lines && props.lines.length > 0) {
-        context.clearRect(0, 0, canvas.value?.width ?? 0,canvas.value?.height ?? 0);
+      if (ctx && props.lines && props.lines.length > 0) {
+        ctx.clearRect(0, 0, overlayWidth, overlayHeight);
         for (let line of props.lines) {
-          drawBezierCurve(context, line);
+          drawBezierCurve(ctx, line);
         }
       }
     });

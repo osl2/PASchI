@@ -1,37 +1,42 @@
 <template>
   <navigation-bar />
-  <RoomDisplay
-    style="z-index: 5"
-    no-drag
-    :room-id="roomId"
-  >
+  <RoomDisplay no-drag :room-id="roomId">
+    <template v-slot:main>
+      <LineOverlay ref="overlay" :lines="interactionLines" />
+    </template>
     <template v-slot:chair="chair">
       <SeatLabel
+        style="z-index: 2"
         :chair="chair.chair"
+        @click="click"
         :participant="getParticipant(chair.chair)"
         :ref="
-          (el) =>
-            (seatLabels.set(getParticipant(chair.chair)?.getId ?? undefined, el))
+          () => {
+            setSeatLabelOrigin(
+              getParticipant(chair.chair)?.getId ?? undefined,
+              chair.origin
+            );
+          }
         "
       />
     </template>
   </RoomDisplay>
-  <LineOverlay lines="interactionLines"/>
 </template>
 
 <script lang="ts">
-import {defineComponent, onBeforeMount, ref} from "vue";
+import { defineComponent, onBeforeMount, onMounted, ref } from "vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
-import RoomDisplay from "@/components/room/RoomDisplay.vue"
+import RoomDisplay from "@/components/room/RoomDisplay.vue";
 import LineOverlay from "@/components/room/LineOverlay.vue";
-import {SessionController} from "@/controller/SessionController";
-import {SeatArrangementController} from "@/controller/SeatArrangementController";
-import {Chair} from "@/model/userdata/rooms/Chair";
+import { SessionController } from "@/controller/SessionController";
+import { SeatArrangementController } from "@/controller/SeatArrangementController";
+import { Chair } from "@/model/userdata/rooms/Chair";
 import SeatLabel from "@/components/room/SeatLabel.vue";
+import { Coordinate } from "@/components/room/Coordinate";
 export default defineComponent({
   name: "ShowInteractionMapPage",
-  components: {SeatLabel, LineOverlay, SideMenu, RoomDisplay, NavigationBar },
+  components: { SeatLabel, LineOverlay, SideMenu, RoomDisplay, NavigationBar },
   props: {
     sessionId: {
       type: String,
@@ -40,38 +45,61 @@ export default defineComponent({
   },
   setup(props) {
     const sessionController = SessionController.getSessionController();
-    const seatArrangementController = SeatArrangementController.getSeatArrangementController();
+    const seatArrangementController =
+      SeatArrangementController.getSeatArrangementController();
     const session = sessionController.getSession(props.sessionId);
-    const interactions = sessionController.getInteractionsOfSession(props.sessionId);
-    const seatArrangement = sessionController.getSeatArrangementOfSession(props.sessionId)
+    const interactions = sessionController.getInteractionsOfSession(
+      props.sessionId
+    );
+    const seatArrangement = sessionController.getSeatArrangementOfSession(
+      props.sessionId
+    );
     const roomId = seatArrangement?.room.getId;
-    const seatLabels = ref<Map<String, HTMLElement>>(new Map());
+    let originSeatLabels: Map<String, Coordinate> = new Map();
 
-    const interactionLines = ref<{x1: number, y1: number, x2: number, y2: number}[]>([]);
+    const overlay = ref();
+
+    const interactionLines = ref<
+      { x1: number; y1: number; x2: number; y2: number }[]
+    >([]);
 
     function getParticipant(chair: Chair) {
       return seatArrangement?.getParticipantForSeat(chair);
     }
 
-    onBeforeMount(() => {
+    function setSeatLabelOrigin(seatLabelId: String, coordinate: Coordinate) {
+      originSeatLabels.set(seatLabelId, coordinate);
+    }
+
+    onMounted(() => {
       if (!interactions) {
-        return
+        return;
       }
-      for(let interaction of interactions) {
+
+      for (let interaction of interactions) {
         interactionLines.value.push({
-          x1: seatLabels.value.get(interaction.fromParticipant.getId)?.getBoundingClientRect().x!,
-          y1: seatLabels.value.get(interaction.fromParticipant.getId)?.getBoundingClientRect().y!,
-          x2: seatLabels.value.get(interaction.toParticipant.getId)?.getBoundingClientRect().x!,
-          y2: seatLabels.value.get(interaction.toParticipant.getId)?.getBoundingClientRect().y!
-        })
+          x1: originSeatLabels.get(interaction.fromParticipant.getId)?.x!,
+          y1: originSeatLabels.get(interaction.fromParticipant.getId)?.y!,
+          x2: originSeatLabels.get(interaction.toParticipant.getId)?.x!,
+          y2: originSeatLabels.get(interaction.toParticipant.getId)?.y!,
+        });
       }
-    })
+    });
+
+    function click() {
+      console.log(overlay.value);
+      overlay.value.renderLines();
+      console.log("click");
+    }
 
     return {
+      click,
       roomId,
+      overlay,
       getParticipant,
-      seatLabels
-    }
+      interactionLines,
+      setSeatLabelOrigin,
+    };
   },
 });
 </script>
