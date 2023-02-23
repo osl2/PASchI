@@ -9,7 +9,7 @@ export class SeatArrangement extends DataObject {
 
   private readonly _user: User
   private _name: string;
-  private readonly _seatMap: Map<RoomObject, Participant>;
+  private _seatMap: Map<RoomObject, Participant>;
   private readonly _course: Course;
   private readonly _room: Room;
 
@@ -81,6 +81,10 @@ export class SeatArrangement extends DataObject {
   set name(value: string) {
     this._name = value;
     this.update();
+  }
+
+  set seatMap(value: Map<RoomObject, Participant>) {
+    this._seatMap = value;
   }
 
   copy(): SeatArrangement {

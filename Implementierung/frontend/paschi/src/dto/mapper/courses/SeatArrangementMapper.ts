@@ -4,11 +4,17 @@ import {SeatArrangementDto} from "@/dto/userdata/courses/SeatArrangementDto";
 import {UserController} from "@/controller/UserController";
 import {Participant} from "@/model/userdata/interactions/Participant";
 import {RoomObject} from "@/model/userdata/rooms/RoomObject";
+import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
+import {useCourseStore} from "@/store/CourseStore";
+import {RoomService} from "@/service/RoomService";
+import {CourseService} from "@/service/CourseService";
+import {useRoomStore} from "@/store/RoomStore";
+import {useStudentStore} from "@/store/StudentStore";
+import {useRoomObjectStore} from "@/store/RoomObjectStore";
 
 export class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, SeatArrangementDto> {
 
   private static mapper: SeatArrangementMapper = new SeatArrangementMapper();
-  private userController = UserController.getUserController();
 
   private constructor() {
   }
@@ -40,6 +46,44 @@ export class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, S
 
 
   async dtoToModel(arrangementDto: SeatArrangementDto): Promise<SeatArrangement> {
-    return undefined;
+    const userController = UserController.getUserController();
+    const courseService = CourseService.getService();
+    const roomService = RoomService.getService();
+
+    let course = useCourseStore().getCourse(arrangementDto.courseId);
+    if (course == undefined) {
+      course = await courseService.getById(arrangementDto.courseId);
+    }
+    let room = useRoomStore().getRoom(arrangementDto.roomId);
+    if (room == undefined) {
+      room = await roomService.getById(arrangementDto.roomId);
+    }
+
+    let arrangement = useSeatArrangementStore().getSeatArrangement(arrangementDto.id);
+    if (arrangement == undefined) {
+      arrangement = new SeatArrangement(
+        arrangementDto.id,
+        0,
+        userController.getUser(),
+        arrangementDto.name,
+        course!,
+        room!
+      );
+      arrangement.createdAt = arrangementDto.createdAt;
+      arrangement.updatedAt = arrangementDto.updatedAt;
+      useSeatArrangementStore().addSeatArrangement(arrangement);
+    } else if (arrangement.updatedAt === arrangementDto.updatedAt) {
+      return arrangement;
+    }
+
+    const seatMap: Map<RoomObject, Participant> = new Map<RoomObject, Participant>();
+    arrangementDto.seatMap.forEach((studentId: string, objectId: string) => {
+      const student = useStudentStore().getStudent(studentId)!;
+      const roomObject = useRoomObjectStore().getChair(objectId)!;
+      seatMap.set(roomObject, student);
+    });
+
+    arrangement.seatMap = seatMap;
+    return arrangement;
   }
 }
