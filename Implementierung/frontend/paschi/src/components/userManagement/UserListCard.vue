@@ -71,16 +71,27 @@ export default defineComponent({
     const searchInput = ref("");
     const searchParameters = computed(() => {
       if (
-        displayParameter.value === "E-Mail + ID" ||
+        displayParameter.value === "E-Mail + ID"
+      ) {
+        if (!displayParameter.value.includes(searchParameter.value)) {
+          searchParameter.value = "ID";
+        }
+        return ["E-Mail", "ID"];
+      } else if (
         displayParameter.value === "alle"
       ) {
-        return ["E-Mail", "ID"];
-      } else if (displayParameter.value === "Benutzername + E-Mail") {
-        searchParameter.value = "E-Mail";
-        return ["E-Mail"];
+        return ["E-Mail", "ID" , "Benutzername"];
       }
-      searchParameter.value = "ID";
-      return ["ID"];
+      else if (displayParameter.value === "Benutzername + E-Mail") {
+        if (!displayParameter.value.includes(searchParameter.value)) {
+          searchParameter.value = "E-Mail";
+        }
+        return ["E-Mail", "Benutzername"];
+      }
+      if (!displayParameter.value.includes(searchParameter.value)) {
+        searchParameter.value = "ID";
+      }
+      return ["ID", "Benutzername"];
     });
     const searchParameter = ref("ID");
     const collapsed = ref(true);
@@ -108,16 +119,19 @@ export default defineComponent({
     });
     const showEmail = computed(() => {
       return (
+        displayParameter.value === "Benutzername + E-Mail" ||
         displayParameter.value === "E-Mail + ID" ||
         displayParameter.value === "alle"
       );
     });
-    function includesSearch(user: User): boolean {
+    function includesSearch(request: User): boolean {
       return (
         (searchParameter.value === "ID" &&
-          user.getId.includes(searchInput.value)) ||
+          request.getId.includes(searchInput.value)) ||
         (searchParameter.value === "E-Mail" &&
-          user.email.includes(searchInput.value))
+          request.email.toUpperCase().includes(searchInput.value.toUpperCase())) ||
+        (searchParameter.value === "Benutzername" &&
+          request.email.toUpperCase().includes(searchInput.value.toUpperCase()))
       );
     }
     function deleteUser(user: User) {
