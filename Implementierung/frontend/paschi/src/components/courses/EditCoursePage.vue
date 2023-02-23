@@ -167,18 +167,33 @@ export default defineComponent({
     }
 
     //normale Methoden
+    /**
+     * Methode, die den Dialog zum Löschen des Kurses aktiviert.
+     */
     function activateDeleteCardClick() {
       deleteCourseDialog.value = true;
     }
+
+    /**
+     * Methode, die den Kurs endgültig löscht.
+     */
     function deleteCourseClick() {
       courseController.deleteCourse(props.courseId);
       router.push({
         name:"ViewCoursesPage"
       })
     }
+
+    /**
+     * Methode, die das Löschen eines Schülers abbricht.
+     */
     function cancelDeleteClick() {
       deleteCourseDialog.value = false;
     }
+
+    /**
+     * Methode, die die Änderungen in den Textfeldern speichern.
+     */
     function saveChangesClick() {
       courseController.updateCourse(
         props.courseId,
@@ -191,13 +206,23 @@ export default defineComponent({
       });
     }
 
+    /**
+     * Methode, die eine Liste von Räumen öffnet, zu der eine Sitzordnung angelegt werden kann
+     */
     function addSeatArrangementClick() {
       roomSelectionDialog.value = true;
     }
 
+    /**
+     * Methode, die eine Liste von Sitzordnungen öffnet, die bearbeitet werden können.
+     */
     function editSeatArrangementClick() {
       seatArrangementDialog.value = true;
     }
+
+    /**
+     * Methode zum Erstellen einer Sitzordnung mit zuvor ausgewähltem Raum und Namen.
+     */
     function confirmAddSeatArrangement() {
       let seatArrangementId: string | undefined =
         seatArrangementController.createSeatArrangement(
@@ -212,6 +237,10 @@ export default defineComponent({
         });
       }
     }
+
+    /**
+     * Methode zum Abbruch des Erstellens einer Sitzordnung.
+     */
     function cancelAddSeatArrangement() {
       newSeatArrangementRoom.value = undefined
     }
@@ -221,6 +250,11 @@ export default defineComponent({
       newSeatArrangementNameDialog.value = true
     }
 
+    /**
+     * Methode zum Aufruf der Bearbeitungsseite einer Sitzordnung
+     *
+     * @param seatArrangement Die Sitzordnung
+     */
     function editSeatArrangement(seatArrangement: SeatArrangement) {
       router.push({
         name: "SeatArrangementPage",
