@@ -71,7 +71,7 @@
 import AppBar from "@/components/navigation/NavigationBar.vue";
 import router from "@/plugins/router";
 import { UserController } from "@/controller/UserController";
-import { ref } from "vue";
+import {onMounted, ref} from "vue";
 export default {
   name: "Login",
   components: { AppBar },
@@ -82,10 +82,24 @@ export default {
 
     const password = ref("");
 
+    onMounted(() => {
+      userController.loginWithToken().then((res) => {
+        if (res) {
+          if (userController.getUser().isAdmin()) {
+            router.push("/admin");
+          } else
+          router.push("/dashboard");
+        }
+      });
+    });
+
     function login() {
       userController.login(email.value, password.value).then((res) => {
         if (res) {
-          router.push("/dashboard");
+          if (userController.getUser().isAdmin()) {
+            router.push("/admin");
+          } else
+            router.push("/dashboard");
         }
       });
     }
