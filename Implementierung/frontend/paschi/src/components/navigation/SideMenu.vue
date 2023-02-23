@@ -65,6 +65,11 @@ export default defineComponent({
   setup() {
     const isMobile: Ref<boolean> = inject('isMobile') as Ref<boolean>
 
+    /**
+     * Methode, die bestimmt, ob die aktuelle Rute eine Unterroute der angegebenen Seite ist.
+     *
+     * @param route Die Route mit der verglichen werden soll
+     */
     function subRouteOf(route: string): boolean {
       return useRoute().matched.some(({ name }) => name === route);
     }
