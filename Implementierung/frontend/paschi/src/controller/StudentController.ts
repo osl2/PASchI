@@ -8,7 +8,6 @@ import {useSessionStore} from "@/store/SessionStore";
 import {CourseController} from "@/controller/CourseController";
 import {ParticipantService} from "@/service/ParticipantService";
 
-// TODO: Backend Service einbinden
 export class StudentController {
 
   private static controller: StudentController = new StudentController();

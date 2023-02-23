@@ -27,10 +27,6 @@ export class UserController {
     return user.getId;
   }
 
-  async checkToken(): Promise<string | undefined> {
-
-  }
-
   async register(firstName: string, lastName: string, email: string, password: string, repeatPassword: string) {
     if (password !== repeatPassword) {
       return;
@@ -48,13 +44,13 @@ export class UserController {
     await this.userService.add(user);
   }
 
-  update(firstName: string, lastName: string, email: string, password: string) {
+  async update(firstName: string, lastName: string, email: string) {
     let user = this.getUser();
     if (user !== undefined) {
       user.firstName = firstName;
       user.lastName = lastName;
       user.email = email;
-      this.userService.update(user);
+      await this.userService.update(user);
     }
   }
 
