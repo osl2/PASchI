@@ -2,12 +2,14 @@
   <NavigationBar>
     <template #default>
       <v-app-bar-title>
-        Willkommen zurück, {{ userStore.getFirstName }}
-        {{ userStore.getSurName }}
+        Willkommen zurück, {{ firstName }}
+        {{ lastName }}
       </v-app-bar-title>
     </template>
     <template #append>
-      <v-btn variant="tonal" color="white" rounded="pill"> Abmelden </v-btn>
+      <v-btn variant="tonal" @click="logOut" color="white" rounded="pill">
+        Abmelden
+      </v-btn>
     </template>
   </NavigationBar>
 
@@ -26,15 +28,16 @@
   </v-main>
 </template>
 
-<script>
-import AppBar from "@/components/navigation/NavigationBar.vue";
-import { useUserStore } from "@/store/UserStore";
+<script lang="ts">
 import RecentCoursesCard from "@/components/dashboard/RecentCoursesCard.vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import RecentSessionsCard from "@/components/dashboard/RecentSessionsCard.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
+import { UserController } from "@/controller/UserController";
+import router from "@/plugins/router";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent( {
   name: "Dashboard",
   components: {
     SideMenu,
@@ -43,13 +46,20 @@ export default {
     RecentCoursesCard,
   },
   setup() {
-    const userStore = useUserStore();
+    const userController = UserController.getUserController();
+    const firstName = userController.getUser()?.firstName;
+    const lastName = userController.getUser()?.lastName;
 
+    function logOut() {
+      router.push("login");
+    }
     return {
-      userStore,
+      firstName,
+      lastName,
+      logOut,
     };
   },
-};
+});
 </script>
 
 <style scoped></style>
