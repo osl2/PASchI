@@ -41,7 +41,7 @@ export class StatsController {
     student.interactions.forEach((interaction: Interaction) => {
       // Anzahl und absolute Häufigkeit der Kategorien zählen.
       let category = interaction.category;
-      let value = categories.get(category.getId);
+      let value = categories.get(category.name);
       if (value != undefined) {
         categories.set(category.name, value + 1);
       } else {
@@ -57,10 +57,7 @@ export class StatsController {
       }
     });
 
-    // Relative Häufigkeit der Kategorien berechnen.
-    categories.forEach((value: number, category: string) => {
-      categories.set(category, (value / numCategories) * 100);
-    });
+    console.log(categories.values());
     avgQuality = qualitySum / numInteractions;
 
     const statsArray = [];

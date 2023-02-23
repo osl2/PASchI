@@ -88,6 +88,7 @@ export default defineComponent({
     let map = getMap();
     let keys = Array.from(map!.keys());
     let values = Array.from(map!.values());
+
     function getMap() {
       if (stats !== undefined) {
         return stats[0] as Map<string, number>
