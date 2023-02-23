@@ -10,7 +10,7 @@ export class Session extends DataObject {
   private _name: string;
   private _date: string;
   private readonly _course: Course;
-  private readonly _interactions: Interaction[];
+  private _interactions: Interaction[];
   private _undoInteractions: Interaction[];
   private _seatArrangement: SeatArrangement | undefined;
 
@@ -119,5 +119,9 @@ export class Session extends DataObject {
   set seatArrangement(value: SeatArrangement | undefined) {
     this._seatArrangement = value;
     this.update();
+  }
+
+  set interactions(value: Interaction[]) {
+    this._interactions = value;
   }
 }
