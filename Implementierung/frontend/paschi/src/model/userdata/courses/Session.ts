@@ -123,5 +123,6 @@ export class Session extends DataObject {
 
   set interactions(value: Interaction[]) {
     this._interactions = value;
+    this.update();
   }
 }

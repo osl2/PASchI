@@ -76,6 +76,8 @@ export class SessionMapper implements IModelDtoMapper<Session, SessionDto> {
       session.createdAt = sessionDto.createdAt;
       session.updatedAt = sessionDto.updatedAt;
       useSessionStore().addSession(session);
+    } else if (session.updatedAt === sessionDto.updatedAt) {
+      return session;
     } else {
       session.name = sessionDto.name;
       session.date = sessionDto.date;
