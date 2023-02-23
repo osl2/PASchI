@@ -50,6 +50,9 @@ export default defineComponent( {
     const firstName = userController.getUser()?.firstName;
     const lastName = userController.getUser()?.lastName;
 
+    /**
+     * Methode zum Ausloggen.
+     */
     function logOut() {
       router.push("login");
     }
