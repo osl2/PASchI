@@ -19,6 +19,9 @@
       <v-icon v-if="!redoPossible" color="#999999" class="ma-2">
         mdi mdi-redo
       </v-icon>
+      <v-icon class="ma-2" @click="activateInteractionList">
+        mdi mdi-view-list
+      </v-icon>
       <v-btn color="green" variant="flat" rounded @click="finishSessionClick()">
         Sitzung beenden
       </v-btn>
@@ -136,6 +139,68 @@
       </v-container>
     </v-card>
   </v-dialog>
+  <v-dialog v-model="interactionListDialog">
+    <v-card cols="11">
+      <v-card-title>
+        <v-row>
+          <v-col cols="11" no-gutters
+          ><div class="v-col-11">Interaktionen</div></v-col
+          >
+          <v-col cols="1" no-gutters align-self="start">
+            <v-row justify="end">
+              <v-icon class="ma-2" @click="interactionListDialog = false">mdi mdi-close</v-icon>
+            </v-row>
+          </v-col>
+        </v-row>
+      </v-card-title>
+      <v-list class="ma-2 v-col-12">
+        <v-row class="ma-2">
+          <v-col><div>Von</div></v-col>
+          <v-col><div>Nach</div></v-col>
+          <v-col><div>Katetegorie</div></v-col>
+          <v-col><div>Qualität</div></v-col>
+          <v-col><div>Zeit</div></v-col>
+        </v-row>
+        <v-divider />
+        <v-row
+          class="ma-2"
+          key="interaction.getId"
+          v-for="interaction in interactions.reverse()"
+        >
+          <v-col
+          ><div>
+            {{ interaction.fromParticipant.firstName }}
+            {{ interaction.fromParticipant.lastName }}
+          </div></v-col
+          >
+          <v-col
+          ><div>
+            {{ interaction.toParticipant.firstName }}
+            {{ interaction.toParticipant.lastName }}
+          </div></v-col
+          >
+          <v-col
+          ><div>{{ interaction.category.name }}</div></v-col
+          >
+          <v-col>
+            <template v-if="interaction.category.hasQuality()">
+              <v-icon
+                icon="mdi mdi-star"
+                v-for="i in interaction.category.getQuality() + 1"
+              ></v-icon>
+              <v-icon
+                icon="mdi mdi-star-outline"
+                v-for="i in 5 - (interaction.category.getQuality() + 1)"
+              ></v-icon>
+            </template>
+          </v-col>
+          <v-col
+          ><div>{{ interaction.timeStamp }}</div></v-col
+          >
+        </v-row>
+      </v-list>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts">
@@ -153,6 +218,7 @@ import router from "@/plugins/router";
 import {CategoryController} from "@/controller/CategoryController";
 import {Category} from "@/model/userdata/interactions/Category";
 import {Quality} from "@/model/userdata/interactions/Quality";
+import {Interaction} from "@/model/userdata/interactions/Interaction";
 
 export default defineComponent({
   name: "SessionPageDesktop",
@@ -179,6 +245,7 @@ export default defineComponent({
 
     const dragStart: Ref<Coordinate | undefined> = ref(undefined);
 
+    const interactionListDialog = ref(false);
     const categoryDialog = ref(false);
     const categoryQuality = ref(0);
     const undoPossible = computed(() => getUndoPossible());
@@ -195,6 +262,15 @@ export default defineComponent({
     ) as Ref<Category[]>;
     const starDialog = ref(false);
     const sessionName = sessionController.getSession(props.sessionId)?.name;
+    const interactions = computed<Interaction[]>(() => {
+      let interactions = sessionController.getInteractionsOfSession(
+        props.sessionId
+      );
+      if (typeof interactions === "undefined") {
+        return [];
+      }
+      return interactions;
+    });
 
     function getParticipant(chair: Chair) {
       return seatArrangement?.getParticipantForSeat(chair);
@@ -356,6 +432,9 @@ export default defineComponent({
       categoryDialog.value = false;
       starDialog.value = false;
     }
+    function activateInteractionList() {
+      interactionListDialog.value = true;
+    }
 
     const interactionLines = ref();
 
@@ -372,6 +451,9 @@ export default defineComponent({
       cancelAddCategory,
       confirmAddCategory,
       resetInterActionParams,
+      activateInteractionList,
+      interactions,
+      interactionListDialog,
       categoryDialog,
       categoryQuality,
       undoPossible,
