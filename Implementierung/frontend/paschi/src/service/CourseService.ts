@@ -71,8 +71,8 @@ export class CourseService extends BaseService<Course, CourseDto> {
         Authorization: `Bearer ${token}`
       }
     }).then((response: AxiosResponse<CourseDto[]>) => {
-      response.data.forEach((courseDto: CourseDto) => {
-        courses.push(this.getMapper().dtoToModel(courseDto));
+      response.data.forEach(async (courseDto: CourseDto) => {
+        courses.push(await this.getMapper().dtoToModel(courseDto));
       });
     }).catch((error) => {
       console.log(error);
