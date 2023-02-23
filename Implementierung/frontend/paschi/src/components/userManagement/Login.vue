@@ -25,20 +25,23 @@
           Bitte melden Sie sich an.
         </v-card-title>
         <v-card-item>
-          <v-text-field
-            prepend-inner-icon="mdi mdi-email-outline"
-            class="mt-2"
-            variant="outlined"
-            label="Mailadresse"
-            v-model="email"
-          />
-          <v-text-field
-            prepend-inner-icon="mdi mdi-lock-outline"
-            type="password"
-            variant="outlined"
-            label="Passwort"
-            v-model="password"
-          />
+          <v-form>
+            <v-text-field
+              prepend-inner-icon="mdi mdi-email-outline"
+              class="mt-2"
+              variant="outlined"
+              label="Mailadresse"
+              v-model="email"
+            />
+            <v-text-field
+              prepend-inner-icon="mdi mdi-lock-outline"
+              type="password"
+              :error="passwordError"
+              variant="outlined"
+              label="Passwort"
+              v-model="password"
+            />
+          </v-form>
         </v-card-item>
         <v-card-item>
           <v-btn
@@ -71,30 +74,35 @@
 import AppBar from "@/components/navigation/NavigationBar.vue";
 import router from "@/plugins/router";
 import { UserController } from "@/controller/UserController";
-import { ref } from "vue";
-export default {
+import { defineComponent, ref } from "vue";
+export default defineComponent({
   name: "Login",
   components: { AppBar },
   setup() {
     const userController = UserController.getUserController();
 
     const email = ref("");
-
     const password = ref("");
+    const passwordError = ref(false);
 
     function login() {
-      userController.login(email.value, password.value);
-      router.push('Dashboard');
+      if (userController.login(email.value, password.value)) {
+        router.push("Dashboard");
+      } else {
+        passwordError.value = true;
+        password.value = "";
+      }
     }
 
     return {
       router,
       login,
       email,
+      passwordError,
       password,
     };
   },
-};
+});
 </script>
 
 <style></style>
