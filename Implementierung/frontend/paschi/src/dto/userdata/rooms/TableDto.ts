@@ -5,6 +5,7 @@ export class TableDto extends RoomObjectDto {
 
   length: number;
   width: number;
+  private readonly type = 'table';
 
   constructor(id: string, userId: string, createdAt: string, updatedAt: string, position: PositionDto, length: number,
               width: number) {
