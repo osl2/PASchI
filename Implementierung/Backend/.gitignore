@@ -2,12 +2,13 @@ Implementierung/Backend/HELP.md
 .DS_Store
 target/
 .mvn/wrapper/maven-wrapper.jar
-.mvn/wrapper/maven-wrapper.properties
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### Application.properties sollte nur lokal sein###
+### Application.properties sollte nur lokal sein + Keys ###
 application.properties
+privateSecurityKey.pem
+publicSecurityKey.pem
 
 ### STS ###
 .apt_generated
@@ -36,9 +37,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-Implementierung/frontend/paschi/node_modules/
-
-Implementierung/frontend/paschi/dist/
-
-Implementierung/frontend/paschi/coverage/
