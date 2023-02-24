@@ -5,6 +5,9 @@ import {UserController} from "@/controller/UserController";
 import {CourseController} from "@/controller/CourseController";
 import {ParticipantService} from "@/service/ParticipantService";
 
+/**
+ * Steuert den Kontrollfluss für die Schülerverwaltung
+ */
 export class StudentController {
 
   private static controller: StudentController = new StudentController();

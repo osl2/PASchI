@@ -5,7 +5,7 @@ import {UserService} from "@/service/UserService";
 import {CategoryController} from "@/controller/CategoryController";
 
 /**
- * Steuert den verlauf für die Benutzerverwaltung.
+ * Steuert den Kontrollfluss für die Benutzerverwaltung.
  */
 export class UserController {
 
