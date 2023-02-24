@@ -11,25 +11,25 @@ public enum Quality {
     /**
      * Ein Stern
      */
-    ONE_STAR("onestar"),
+    ONE_STAR(),
     /**
      * Zwei Sterne
      */
-    TWO_STAR("twostar"),
+    TWO_STAR(),
     /**
      * Drei Sterne
      */
-    THREE("threestar"),
+    THREE(),
     /**
      * Vier Sterne
      */
-    FOUR("fourstar"),
+    FOUR(),
     /**
      * Fünf Sterne
      */
-    FIVE_STAR("fivestar");
+    FIVE_STAR();
 
-    Quality(String name) {
+    Quality() {
     }
 
     @Override
