@@ -57,6 +57,10 @@ public class Participant extends DataObject {
         this.interactions = new ArrayList<>();
     }
 
+    /**
+     * Rückgabe, ob Participant ein vom Typ {@link ParticipantType}-Student
+     * @return {@code true}, wenn Participant vom Typ {@link ParticipantType}-Student
+     */
     public boolean isStudent() {
         return this.participantType.equals(ParticipantType.Student);
     }
@@ -99,21 +103,5 @@ public class Participant extends DataObject {
      */
     public void setCourses(List<Course> courses) {
         this.courses = courses;
-    }
-
-    public void addCourse(Course course) {
-        this.courses.add(course);
-    }
-
-    public void removeCourse(Course course) {
-        this.courses.remove(course);
-    }
-
-    public void addInteraction(Interaction interaction) {
-        this.interactions.add(interaction);
-    }
-
-    public void removeInteraction(Interaction interaction) {
-        this.interactions.remove(interaction);
     }
 }
