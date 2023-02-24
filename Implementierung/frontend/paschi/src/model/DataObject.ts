@@ -73,8 +73,6 @@ export abstract class DataObject {
 
   /**
    * Gibt den createdAt Timestamp zurück.
-   *
-   * @return Der createdAt Timestamp.
    */
   get createdAt(): string {
     return this._createdAt;
@@ -82,8 +80,6 @@ export abstract class DataObject {
 
   /**
    * Gibt den updatedAtTimestamp zurück.
-   *
-   * @return Der updatedAt Timestamp.
    */
   get updatedAt(): string {
     return this._updatedAt;
