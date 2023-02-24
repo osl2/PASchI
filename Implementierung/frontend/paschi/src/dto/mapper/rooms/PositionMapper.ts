@@ -35,16 +35,16 @@ export class PositionMapper implements IModelDtoMapper<Position, PositionDto> {
         positionDto.id,
         0,
         this.userController.getUser(),
-        positionDto.xCoordinate,
-        positionDto.yCoordinate,
+        positionDto.xcoordinate,
+        positionDto.ycoordinate,
         positionDto.orientation
       );
       usePositionStore().addPosition(position);
     } else if (positionDto.updatedAt <= position.updatedAt && positionDto.createdAt >= position.createdAt) {
       return position;
     } else {
-      position.xCoordinate = positionDto.xCoordinate;
-      position.yCoordinate = positionDto.yCoordinate;
+      position.xCoordinate = positionDto.xcoordinate;
+      position.yCoordinate = positionDto.ycoordinate;
       position.orientation = positionDto.orientation;
     }
     if (positionDto.createdAt < position.createdAt) {
