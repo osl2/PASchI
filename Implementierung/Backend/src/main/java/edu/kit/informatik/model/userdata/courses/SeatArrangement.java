@@ -71,10 +71,6 @@ public class SeatArrangement extends DataObject {
         this.seatMap = seatMap;
     }
 
-    public Participant getParticipantForSeat(Chair seat) {
-        return seatMap.get(seat);
-    }
-
     /**
      * Setzen der Sitzplatz-Map
      * @param seatMap {@link Map} mit Key {@link Chair} und Value {@link Participant}
