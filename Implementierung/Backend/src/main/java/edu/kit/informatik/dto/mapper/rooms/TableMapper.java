@@ -64,7 +64,7 @@ public class TableMapper implements IModelDtoMapper<Table, TableDto> {
 
     @Override
     public Table dtoToModel(TableDto tableDto) {
-        User user = userRepository.findUserByEmail(tableDto.getUserId()).orElse(null);
+        User user = userRepository.findUserById(tableDto.getUserId()).orElse(null);
         Position position = positionMapper.dtoToModel(tableDto.getPosition());
 
         Timestamp updatedAt;

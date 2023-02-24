@@ -3,8 +3,10 @@ package edu.kit.informatik.model.userdata.rooms;
 import edu.kit.informatik.model.DataObject;
 import edu.kit.informatik.model.User;
 import jakarta.persistence.Entity;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.sql.Timestamp;
 
@@ -15,6 +17,8 @@ import java.sql.Timestamp;
  * @author ugqbo
  * @version 1.0
  */
+@EqualsAndHashCode(callSuper = false)
+@Setter
 @Getter
 @NoArgsConstructor
 @Entity

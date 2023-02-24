@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
+
+
 /**
  * Entität eines Tisches
  *
@@ -15,7 +17,7 @@ import java.sql.Timestamp;
  * @author ugqbo
  * @version 1.0
  */
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Getter
 @Entity

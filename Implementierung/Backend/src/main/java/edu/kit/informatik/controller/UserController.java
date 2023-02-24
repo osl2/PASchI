@@ -4,6 +4,7 @@ import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.exceptions.EntityNotFoundException;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.service.UserService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -66,6 +67,7 @@ public class UserController extends BaseController<User, UserDto, UserDto> {
 
     @Override
     @DeleteMapping
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public String delete(@RequestParam String id, Authentication authentication) {
         return super.delete(id, authentication);
     }

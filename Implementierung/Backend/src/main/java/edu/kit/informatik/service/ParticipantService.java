@@ -72,7 +72,6 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
 
     @Override
     public ParticipantDto getById(String id, Authentication authentication) {
-        super.checkAuthorization(authentication, id);
         Optional<Participant> participantOptional = this.participantRepository.findParticipantById(id);
 
         return participantOptional.map(this.mapper::modelToDto).orElseThrow(() ->
@@ -89,9 +88,10 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
 
     @Override
     public String delete(String id, Authentication authentication) {
-        super.checkAuthorization(authentication, id);
         Optional<Participant> participantOptional = this.participantRepository.findParticipantById(id);
-        participantOptional.orElseThrow(() -> new EntityNotFoundException(Participant.class, id));
+        Participant participant = participantOptional.orElseThrow(() ->
+                                                                    new EntityNotFoundException(Participant.class, id));
+        super.checkAuthorization(authentication, participant.getUser().getId());
         this.participantRepository.deleteById(id);
 
         return id;

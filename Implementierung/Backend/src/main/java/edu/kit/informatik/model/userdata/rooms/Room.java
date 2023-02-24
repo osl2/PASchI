@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -26,9 +28,11 @@ public class Room extends DataObject {
     private String name;
 
     @OneToMany
+    @Cascade(CascadeType.ALL)
     private List<Table> tables;
 
     @OneToMany
+    @Cascade(CascadeType.ALL)
     private  List<Chair> chairs;
 
     /**

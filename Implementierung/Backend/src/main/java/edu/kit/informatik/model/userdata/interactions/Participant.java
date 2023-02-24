@@ -101,10 +101,6 @@ public class Participant extends DataObject {
         this.courses = courses;
     }
 
-    public void setParticipantType(ParticipantType participantType) {
-        this.participantType = participantType;
-    }
-
     public void addCourse(Course course) {
         this.courses.add(course);
     }

@@ -4,6 +4,9 @@ import edu.kit.informatik.model.DataObject;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.courses.Session;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -39,7 +42,7 @@ public class Interaction extends DataObject {
     private Category category;
 
     /**
-     *
+     * @param id Id
      * @param user {@link User}
      * @param timeStamp Zeitstempel
      * @param session {@link Session Sitzung}
@@ -49,9 +52,9 @@ public class Interaction extends DataObject {
      * @param createdAt {@link Timestamp} der Erstellung
      * @param updatedAt {@link Timestamp} der letzten Änderung
      */
-    public Interaction(User user, String timeStamp, Session session, Participant from, Participant to,
+    public Interaction(String id, User user, String timeStamp, Session session, Participant from, Participant to,
                        Category category, Timestamp createdAt, Timestamp updatedAt) {
-        super(user, createdAt, updatedAt);
+        super(id, user, createdAt, updatedAt);
         this.timeStamp = timeStamp;
         this.session = session;
         this.from = from;
