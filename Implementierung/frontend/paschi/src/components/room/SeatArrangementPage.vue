@@ -28,6 +28,9 @@
             </v-list>
             <v-divider />
             <v-list rounded>
+              <v-list-item @click="setSeat(chair.chair, teacher)" rounded v-if="getParticipant(chair.chair) !== teacher" color="secondary">
+                Lehrer
+              </v-list-item>
               <v-list-subheader> Schüler auswählen </v-list-subheader>
               <v-list-item
                 v-for="participant in unseatedParticipants"
@@ -50,14 +53,16 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, Ref, ref } from "vue";
+import {computed, defineComponent, onMounted, Ref, ref} from "vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import RoomDisplay from "@/components/room/RoomDisplay.vue";
 import SeatLabel from "@/components/room/SeatLabel.vue";
-import { SeatArrangementController } from "@/controller/SeatArrangementController";
-import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
-import { Chair } from "@/model/userdata/rooms/Chair";
+import {SeatArrangementController} from "@/controller/SeatArrangementController";
+import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
+import {Chair} from "@/model/userdata/rooms/Chair";
 import {Participant} from "@/model/userdata/interactions/Participant";
+import {Teacher} from "@/model/userdata/interactions/Teacher";
+
 export default defineComponent({
   name: "SeatArrangementPage",
   components: { SeatLabel, RoomDisplay, NavigationBar },
@@ -70,6 +75,8 @@ export default defineComponent({
   setup(props) {
     const seatArrangementController =
       SeatArrangementController.getSeatArrangementController();
+
+    const teacher = Teacher.getTeacher();
 
     const seatArrangement = ref<SeatArrangement | undefined>(
       seatArrangementController.getSeatArrangement(props.seatArrangementId)
@@ -85,14 +92,19 @@ export default defineComponent({
 
     function setSeat(chair: Chair, participant: Participant) {
       seatArrangementController.addMapping(props.seatArrangementId, chair.getId, participant.getId);
+      console.log(seatArrangement.value?.getParticipantForSeat(chair));
     }
 
     const unseatedParticipants = computed(() => {
       return seatArrangement.value?.getStudentsNotAssigned();
     });
 
+    onMounted(() => {
+      console.log(teacher);
+    });
 
-    return { unseatedParticipants, setSeat, emptySeat, seatArrangement, getParticipant };
+
+    return { teacher, unseatedParticipants, setSeat, emptySeat, seatArrangement, getParticipant };
   },
 });
 </script>

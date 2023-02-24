@@ -1,9 +1,9 @@
 <template>
-  <navigation-bar extended>
+  <navigation-bar>
     <v-app-bar-title>
       Kursstatistiken des Kurses {{ courseName + " (" + courseSubject + ")" }}
     </v-app-bar-title>
-    <template v-slot:extension>
+    <template v-slot:append>
       <v-btn
         variant="flat"
         color="green"

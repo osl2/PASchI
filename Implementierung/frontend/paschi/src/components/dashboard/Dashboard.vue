@@ -52,7 +52,8 @@ export default defineComponent( {
      * Methode zum Ausloggen.
      */
     function logOut() {
-      router.push("login");
+      userController.logout();
+      router.push("/login");
     }
     return {
       firstName,

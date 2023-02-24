@@ -1,11 +1,11 @@
 <template>
-  <NavigationBar extended>
+  <NavigationBar>
     <template v-slot:default>
       <v-app-bar-title> Benutzerdaten bearbeiten </v-app-bar-title>
     </template>
-    <template v-slot:extension>
+    <template v-slot:append>
       <v-btn
-        class="ml-15 ma-2"
+        class="ma-2"
         variant="tonal"
         rounded="pill"
         @click="router.back()"

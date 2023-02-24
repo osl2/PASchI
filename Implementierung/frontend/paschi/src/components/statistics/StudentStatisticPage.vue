@@ -1,9 +1,9 @@
 <template>
-  <navigation-bar extended>
+  <navigation-bar>
     <v-app-bar-title>
       Schülerstatistiken von {{ firstName + " " + lastName }}
     </v-app-bar-title>
-    <template v-slot:extension>
+    <template v-slot:append>
       <v-btn
         variant="flat"
         color="green"

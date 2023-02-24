@@ -18,14 +18,28 @@ import SeatArrangementPage from "@/components/room/SeatArrangementPage.vue";
 import ViewRoomsPage from "@/components/room/ViewRoomsPage.vue";
 import SessionPage from "@/components/session/SessionPage.vue";
 import SessionPageDesktop from "@/components/session/SessionPageDesktop.vue";
-import InteractionMap from "@/components/room/InteractionMap.vue";
 import { UserController } from "@/controller/UserController";
 
 const routes = [
   { path: "/", redirect: "/login" },
   { path: "/login", name: "Login", component: Login },
   { path: "/register", name: "Register", component: Register },
-  { path: "/admin", name: "AdminPage", component: AdminPage },
+  {
+    path: "/admin",
+    name: "AdminPage",
+    component: AdminPage,
+    beforeEnter: (
+      to: any,
+      from: any,
+      next: (arg0?: string | undefined) => void
+    ) => {
+      if (UserController.getUserController().getUser().role === "ADMIN") {
+        next();
+      } else {
+        next("/login");
+      }
+    },
+  },
   { path: "/dashboard", name: "Dashboard", component: Dashboard },
   {
     path: "/edit-student/:studentId",
@@ -114,12 +128,6 @@ const routes = [
     props: true,
   },
   {
-    path: "/interaction-map/:sessionId",
-    name: "InteractionMapPage",
-    component: InteractionMap,
-    props: true,
-  },
-  {
     path: "/:catchAll(.*)",
     name: "NotFound",
     component: Dashboard,
@@ -143,7 +151,7 @@ router.beforeEach(async (to, from, next) => {
       .loginWithToken()
       .then((res) => {
         if (res) {
-          router.replace({ name: "Login" });
+          next();
         } else {
           router.replace({ name: "Login" });
         }

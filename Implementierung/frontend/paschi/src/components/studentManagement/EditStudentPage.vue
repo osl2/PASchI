@@ -1,8 +1,8 @@
 <template>
-  <navigation-bar extended>
-    <template v-slot:extension>
-      <v-btn @click="saveChangesClick">speichern</v-btn>
-      <v-btn @click="activateCardClick">Schüler löschen</v-btn>
+  <navigation-bar>
+    <template v-slot:append>
+      <v-btn class="ma-2" rounded variant="tonal" @click="saveChangesClick">speichern</v-btn>
+      <v-btn class="ma-2" rounded variant="tonal" @click="activateCardClick">Schüler löschen</v-btn>
     </template>
   </navigation-bar>
   <v-main>

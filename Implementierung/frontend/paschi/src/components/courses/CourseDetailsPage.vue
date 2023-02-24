@@ -1,9 +1,9 @@
 <template>
-  <navigation-bar extended>
+  <navigation-bar>
     <v-app-bar-title> Kursdetails</v-app-bar-title>
-    <template v-slot:extension>
-      <v-btn @click="showCourseStatisticsClick">Kursstatistiken ansehen</v-btn>
-      <v-btn @click="editCourseDetailsClick">Kurs bearbeiten</v-btn>
+    <template v-slot:append>
+      <v-btn class="ma-2" rounded variant="tonal" @click="showCourseStatisticsClick">Kursstatistiken ansehen</v-btn>
+      <v-btn class="ma-2" rounded variant="tonal" @click="editCourseDetailsClick">Kurs bearbeiten</v-btn>
     </template>
   </navigation-bar>
   <side-menu></side-menu>
