@@ -1,10 +1,12 @@
 // Plugins
 import vue from "@vitejs/plugin-vue";
 import vuetify from "vite-plugin-vuetify";
+import { BackgroundSyncPlugin } from "workbox-background-sync";
 
 // Utilities
 import { defineConfig } from "vite";
 import { fileURLToPath, URL } from "node:url";
+import { VitePWA } from "vite-plugin-pwa";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -14,6 +16,77 @@ export default defineConfig({
     vuetify({
       autoImport: true,
       styles: { configFile: "src/styles/settings.scss" },
+    }),
+    VitePWA({
+      registerType: "autoUpdate",
+      devOptions: {
+        enabled: true,
+      },
+      manifest: {
+        icons: [
+          {
+            src: "src/assets/logo.svg",
+            sizes: "512x512",
+            type: "image/svg+xml",
+            purpose: "any maskable",
+          },
+        ],
+      },
+      workbox: {
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => url.pathname.startsWith("/api/"),
+            handler: "NetworkFirst" as const,
+            method: "GET",
+            options: {
+              cacheName: "api",
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+          {
+            urlPattern: ({ url }) => url.pathname.startsWith("/api/"),
+            handler: "NetworkFirst" as const,
+            method: "POST",
+            options: {
+
+              backgroundSync: {
+                name: "apiPOST",
+                options: {
+                  maxRetentionTime: 30 * 24 * 60 * 60,
+                },
+              },
+            },
+          },
+          {
+            urlPattern: ({ url }) => url.pathname.startsWith("/api/"),
+            handler: "NetworkFirst" as const,
+            method: "PUT",
+            options: {
+              backgroundSync: {
+                name: "apiPUT",
+                options: {
+                  maxRetentionTime: 30 * 24 * 60 * 60,
+                },
+              },
+            },
+          },
+          {
+            urlPattern: ({ url }) => url.pathname.startsWith("/api/"),
+            handler: "NetworkFirst" as const,
+            method: "DELETE",
+            options: {
+              backgroundSync: {
+                name: "apiDELETE",
+                options: {
+                  maxRetentionTime: 30 * 24 * 60 * 60,
+                },
+              },
+            },
+          },
+        ],
+      },
     }),
   ],
   define: { "process.env": {} },
