@@ -94,10 +94,17 @@ export default defineComponent({
     }
 
     //normale Methoden
+
+    /**
+     * Aktiviert den Dialog zum Löschen eines Schülers.
+     */
     function activateCardClick() {
       deleteStudentDialog.value = true;
     }
 
+    /**
+     * Aktualisiert den Schüler mit den zuvor bestimmten Werten.
+     */
     function saveChangesClick() {
       studentController.updateStudent(
         props.studentId,
@@ -107,10 +114,17 @@ export default defineComponent({
       router.push({ name: "ViewStudentsPage" });
     }
 
+    /**
+     * Löscht den Schüler.
+     */
     function deleteStudentClick() {
       studentController.deleteStudent(props.studentId);
       router.push({ name: "ViewStudentsPage" });
     }
+
+    /**
+     * Bricht das Löschen eines Schülers ab.
+     */
     function cancelDeleteClick() {
       deleteStudentDialog.value = false;
     }
