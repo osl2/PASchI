@@ -127,22 +127,44 @@ export default defineComponent({
         displayParameter.value === "alle"
       );
     });
-    function includesSearch(request: User): boolean {
+
+    /**
+     * Gibt zurück, ob der Account in der Suche inkludiert ist.
+     *
+     * @param user Der Account.
+     */
+    function includesSearch(user: User): boolean {
       return (
         (searchParameter.value === "ID" &&
-          request.getId.includes(searchInput.value)) ||
+          user.getId.includes(searchInput.value)) ||
         (searchParameter.value === "E-Mail" &&
-          request.email.toUpperCase().includes(searchInput.value.toUpperCase())) ||
+          user.email.toUpperCase().includes(searchInput.value.toUpperCase())) ||
         (searchParameter.value === "Benutzername" &&
-          (request.firstName + " " + request.lastName).toUpperCase().includes(searchInput.value.toUpperCase()))
+          (user.firstName + " " + user.lastName).toUpperCase().includes(searchInput.value.toUpperCase()))
       );
     }
+
+    /**
+     * Authentifiziert den Benutzer.
+     *
+     * @param user Der Benutzer.
+     */
     function authUser(user: User) {
       adminController.authUser(user.getId);
     }
+
+    /**
+     * Löscht einen Benutzer.
+     *
+     * @param user Der Nutzer, der gelöscht wird.
+     */
     function deleteUser(user: User) {
       adminController.deleteUser(user.getId);
     }
+
+    /**
+     * Wechselt Zustand der Liste (eingeklappt/ aufgeklappt).
+     */
     function toggleCollapse() {
       collapsed.value = !collapsed.value;
       if (collapsed.value) {
