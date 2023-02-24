@@ -78,9 +78,11 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
             repositorySession.setInteractions(updateInteractions(repositorySession, newSession));
             //System.out.println(repositorySession.getInteractions().size());
 
-        } else if (!newSession.getSeatArrangement().equals(repositorySession.getSeatArrangement())) {
+        }
+        if (!newSession.getSeatArrangement().equals(repositorySession.getSeatArrangement())) {
             repositorySession.setSeatArrangement(repositorySession.getSeatArrangement());
-        } else if (!newSession.getName().equals(repositorySession.getName())) {
+        }
+        if (!newSession.getName().equals(repositorySession.getName())) {
             repositorySession.setName(repositorySession.getName());
         }
 

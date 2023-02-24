@@ -59,11 +59,14 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
 
         if (!newParticipant.getFirstName().equals(repositoryParticipant.getFirstName())) {
             repositoryParticipant.setFirstName(newParticipant.getFirstName());
-        } else if (!newParticipant.getLastName().equals(repositoryParticipant.getLastName())) {
+        }
+        if (!newParticipant.getLastName().equals(repositoryParticipant.getLastName())) {
             repositoryParticipant.setLastName(newParticipant.getLastName());
-        } else if (!newParticipant.getCourses().equals(repositoryParticipant.getCourses())) {
+        }
+        if (!newParticipant.getCourses().equals(repositoryParticipant.getCourses())) {
             repositoryParticipant.setCourses(newParticipant.getCourses());
-        } else if (!newParticipant.getInteractions().equals(repositoryParticipant.getInteractions())) {
+        }
+        if (!newParticipant.getInteractions().equals(repositoryParticipant.getInteractions())) {
             repositoryParticipant.setInteractions(newParticipant.getInteractions());
         }
 

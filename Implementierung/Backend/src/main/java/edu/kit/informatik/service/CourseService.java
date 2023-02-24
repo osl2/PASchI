@@ -57,13 +57,17 @@ public class CourseService extends BaseService<Course, CourseDto, CourseDto> {
 
         if (!newCourse.getName().equals(repositoryCourse.getName())) {
             repositoryCourse.setName(newCourse.getName());
-        } else if (!newCourse.getSubject().equals(repositoryCourse.getSubject())) {
+        }
+        if (!newCourse.getSubject().equals(repositoryCourse.getSubject())) {
             repositoryCourse.setSubject(newCourse.getSubject());
-        } else if (!newCourse.getParticipants().equals(repositoryCourse.getParticipants())) {
+        }
+        if (!newCourse.getParticipants().equals(repositoryCourse.getParticipants())) {
             repositoryCourse.setParticipants(newCourse.getParticipants());
-        } else if (!newCourse.getSessions().equals(repositoryCourse.getSessions())) {
+        }
+        if (!newCourse.getSessions().equals(repositoryCourse.getSessions())) {
             repositoryCourse.setSessions(newCourse.getSessions());
-        } else if (!newCourse.getSeatArrangements().equals(repositoryCourse.getSeatArrangements())) {
+        }
+        if (!newCourse.getSeatArrangements().equals(repositoryCourse.getSeatArrangements())) {
             repositoryCourse.setSeatArrangements(newCourse.getSeatArrangements());
         }
 
