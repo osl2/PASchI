@@ -1,7 +1,6 @@
 <template>
   <canvas
     style="
-      z-index: 0;
       width: 100vw;
       height: 100vh;
       top: 0;
@@ -9,6 +8,9 @@
       position: fixed;
       pointer-events: none;
     "
+    :style="{
+      zIndex: zIndex,
+    }"
     :width="overlayWidth"
     :height="overlayHeight"
     ref="canvas"
@@ -53,6 +55,11 @@ export default defineComponent({
       type: Array as PropType<Line[]>,
       required: true,
     },
+    zIndex: {
+      type: Number,
+      required: false,
+      default: 0,
+    }
   },
   setup: function (props, context) {
     const canvas: Ref<HTMLCanvasElement | null> = ref(null);
@@ -96,6 +103,7 @@ export default defineComponent({
       }
       ctx.strokeStyle = "#0b738b";
       ctx.lineWidth = 5;
+      console.log("drawing line")
       ctx.stroke();
     }
 
