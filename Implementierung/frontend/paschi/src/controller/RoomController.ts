@@ -72,7 +72,7 @@ export class RoomController {
     return useRoomStore().getAllRooms();
   }
 
-  addChair(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number): string | undefined {
+  async addChair(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number): Promise<string | undefined> {
     let room = useRoomStore().getRoom(roomId);
     if (room == undefined) {
       return undefined;
@@ -95,7 +95,7 @@ export class RoomController {
       position
     );
     room.addRoomObject(chair);
-    this.roomService.update(room).then();
+    await this.roomService.update(room).then();
 
     return useRoomObjectStore().addChair(chair);
   }

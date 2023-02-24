@@ -509,8 +509,8 @@ export default defineComponent({
       );
     }
 
-    function addChair() {
-      roomController.addChair(roomId, roomWidth / 2, roomHeight / 2, 0);
+    async function addChair() {
+      await roomController.addChair(roomId, roomWidth / 2, roomHeight / 2, 0);
     }
 
     function selectRoomObject(
