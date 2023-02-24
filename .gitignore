@@ -36,3 +36,15 @@ build/
 
 ### VS Code ###
 .vscode/
+
+Implementierung/frontend/paschi/dev-dist/registerSW.js
+
+Implementierung/frontend/paschi/dev-dist/sw.js
+
+Implementierung/frontend/paschi/dev-dist/workbox-148cb7e5.js
+
+Implementierung/frontend/paschi/dev-dist/workbox-3625d7b0.js
+
+Implementierung/frontend/paschi/dev-dist/workbox-ddc008e9.js
+
+Implementierung/frontend/paschi/yarn.lock
