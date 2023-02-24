@@ -82,10 +82,18 @@ public class Session extends DataObject {
         this.interactions = interactions;
     }
 
+    /**
+     * Hinzufügen einer {@link Interaction Interaktion}
+     * @param interaction {@link Interaction Interaktion}
+     */
     public void addInteraction(Interaction interaction) {
         this.interactions.add(interaction);
     }
 
+    /**
+     * Entfernen einer {@link Interaction Interaktion}
+     * @param interaction {@link Interaction Interaktion}
+     */
     public void removeInteraction(Interaction interaction) {
         this.interactions.remove(interaction);
     }
