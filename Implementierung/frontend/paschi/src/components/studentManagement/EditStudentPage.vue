@@ -1,23 +1,33 @@
 <template>
   <navigation-bar>
     <template v-slot:append>
-      <v-btn class="ma-2" rounded variant="tonal" @click="saveChangesClick">speichern</v-btn>
-      <v-btn class="ma-2" rounded variant="tonal" @click="activateCardClick">Schüler löschen</v-btn>
+      <v-btn class="ma-2" rounded variant="tonal" @click="saveChangesClick"
+        >speichern</v-btn
+      >
+      <v-btn class="ma-2" rounded variant="tonal" @click="activateCardClick"
+        >Schüler löschen</v-btn
+      >
     </template>
   </navigation-bar>
-  <v-main>
+  <v-main class="justify-center">
     <side-menu />
     <v-container>
-      <v-text-field
-        v-model="firstName"
-        label="Vorame"
-        type="input"
-      ></v-text-field>
-      <v-text-field
-        v-model="lastName"
-        label="Nachname"
-        type="input"
-      ></v-text-field>
+      <v-form class="mt-5" style="max-width: 1000px">
+        <v-text-field
+          v-model="firstName"
+          class="mt-2"
+          variant="outlined"
+          label="Vorame"
+          type="input"
+        ></v-text-field>
+        <v-text-field
+          class="mt-2"
+          variant="outlined"
+          v-model="lastName"
+          label="Nachname"
+          type="input"
+        ></v-text-field>
+      </v-form>
     </v-container>
     <v-dialog max-width="700" v-model="deleteStudentDialog">
       <v-card variant="flat" class="pa-2 rounded-lg">
@@ -30,7 +40,7 @@
             width="150"
             variant="tonal"
             @click="cancelDeleteClick"
-          >Abbrechen</v-btn
+            >Abbrechen</v-btn
           >
           <v-btn
             height="50"
@@ -38,7 +48,7 @@
             variant="tonal"
             @click="deleteStudentClick"
             color="primary"
-          >Bestätigen</v-btn
+            >Bestätigen</v-btn
           >
         </v-card-actions>
       </v-card>

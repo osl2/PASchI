@@ -6,19 +6,25 @@
     </template>
   </navigation-bar>
 
-  <v-main>
+  <v-main class="v-row justify-center">
     <SideMenu />
+    <v-form class="mt-5 v-col" style="max-width: 1000px">
+
     <v-text-field
       v-model="courseName"
+      class="mt-2"
+      variant="outlined"
       label="Kursname"
       type="input"
     ></v-text-field>
     <v-text-field
+      class="mt-2"
+      variant="outlined"
       v-model="courseSubject"
       label="Fach"
       type="input"
     ></v-text-field>
-    <v-btn v-if="!isMobile" @click="editSeatArrangementClick()">Sitzordnungen bearbeiten</v-btn>
+    <v-btn class="mr-2" variant="tonal" color="secondary" v-if="!isMobile" @click="editSeatArrangementClick()">Sitzordnungen bearbeiten</v-btn>
     <v-dialog max-width="700" v-model="seatArrangementDialog">
       <v-card>
         <v-list>
@@ -31,7 +37,7 @@
         </v-list>
       </v-card>
     </v-dialog>
-    <v-btn v-if="!isMobile" @click="addSeatArrangementClick">Sitzordung hinzufügen</v-btn>
+    <v-btn class="mr-2" variant="tonal" color="primary" v-if="!isMobile" @click="addSeatArrangementClick">Sitzordung hinzufügen</v-btn>
     <v-dialog max-width="700" v-model="roomSelectionDialog">
       <v-card>
         <v-list>
@@ -41,6 +47,7 @@
         </v-list>
       </v-card>
     </v-dialog>
+    </v-form>
     <v-dialog max-width="700" v-model="deleteCourseDialog">
       <v-card variant="flat" class="pa-2 rounded-lg">
         <v-card-title class="text-h5 text-center text-indigo-darken-4">

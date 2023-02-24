@@ -4,69 +4,62 @@
       <v-app-bar-title> Benutzerdaten bearbeiten </v-app-bar-title>
     </template>
     <template v-slot:append>
-      <v-btn
-        class="ma-2"
-        variant="tonal"
-        rounded="pill"
-        @click="router.back()"
+      <v-btn class="ma-2" variant="tonal" rounded="pill" @click="router.back()"
         >Verwerfen</v-btn
       >
-      <v-btn class="ma-2" variant="flat" rounded="pill" color="green" @click="updateAccount()"
+      <v-btn
+        class="ma-2"
+        variant="flat"
+        rounded="pill"
+        color="green"
+        @click="updateAccount()"
         >Speichern</v-btn
       >
     </template>
   </NavigationBar>
-  <v-main>
+  <v-main class="v-row justify-center">
     <SideMenu />
-    <v-container>
-      <v-form class="mt-5" style="max-width: 1000px">
-          <v-text-field
-            v-model="firstName"
-            class="mt-2"
-            variant="outlined"
-            label="Vorname"
-            :rules="[requiredRule, nameMaxLengthRule]"
-          />
-          <v-text-field
-            v-model="lastName"
-            variant="outlined"
-            label="Nachname"
-            :rules="[requiredRule, nameMaxLengthRule]"
-          />
-          <v-text-field
-            v-model="password"
-            prepend-inner-icon="mdi mdi-lock-outline"
-            type="Password"
-            variant="outlined"
-            label="Passwort"
-            :rules="[
-                requiredRule,
-                passwordMinLengthRule,
-                passwordMaxLengthRule,
-              ]"
-          />
-          <v-text-field
-            v-model="passwordRepeat"
-            prepend-inner-icon="mdi mdi-lock-outline"
-            type="Password"
-            variant="outlined"
-            label="Passwort bestätigen"
-            :rules="[requiredRule, passwordsEqualRule]"
-          />
-      </v-form>
-    </v-container>
-    <v-snackbar
-      v-model="errorSnackbar"
-      :timeout="errorSnackbarTimeout"
-    >
+    <v-form class="mt-5 v-col" style="max-width: 1000px">
+      <v-text-field
+        v-model="firstName"
+        class="mt-2"
+        variant="outlined"
+        label="Vorname"
+        :rules="[requiredRule, nameMaxLengthRule]"
+      />
+      <v-text-field
+        v-model="lastName"
+        variant="outlined"
+        label="Nachname"
+        :rules="[requiredRule, nameMaxLengthRule]"
+      />
+      <v-text-field
+        v-model="password"
+        prepend-inner-icon="mdi mdi-lock-outline"
+        type="Password"
+        variant="outlined"
+        label="Passwort"
+        :rules="[requiredRule, passwordMinLengthRule, passwordMaxLengthRule]"
+      />
+      <v-text-field
+        v-model="passwordRepeat"
+        prepend-inner-icon="mdi mdi-lock-outline"
+        type="Password"
+        variant="outlined"
+        label="Passwort bestätigen"
+        :rules="[requiredRule, passwordsEqualRule]"
+      />
+      <v-row justify="end" class="ma-0">
+        <v-btn variant="tonal" color="primary" @click="changePassword"
+          >Passwort ändern</v-btn
+        >
+      </v-row>
+    </v-form>
+    <v-snackbar v-model="errorSnackbar" :timeout="errorSnackbarTimeout">
       {{ errorSnackbarText }}
 
       <template v-slot:actions>
-        <v-btn
-          color="blue"
-          icon="mdi mdi-close"
-          @click="errorSnackbar = false"
-        >
+        <v-btn color="blue" icon="mdi mdi-close" @click="errorSnackbar = false">
         </v-btn>
       </template>
     </v-snackbar>
@@ -91,7 +84,7 @@ export default {
     const password = ref();
     const passwordRepeat = ref("");
     const errorSnackbar = ref(false);
-    const errorSnackbarText = 'Alle Felder müssen ausgefüllt sein.';
+    const errorSnackbarText = "Alle Felder müssen ausgefüllt sein.";
     const errorSnackbarTimeout = 2000;
 
     /**
@@ -178,17 +171,16 @@ export default {
         ])
       ) {
         userController.update(firstName.value, lastName.value);
-        router.push("Dashboard")
-      }
-      else if (
+        router.push("Dashboard");
+      } else if (
         error([
           requiredRule(firstName.value),
           requiredRule(lastName.value),
           requiredRule(password.value),
-          requiredRule(passwordRepeat.value)
+          requiredRule(passwordRepeat.value),
         ])
       ) {
-        errorSnackbar.value = true
+        errorSnackbar.value = true;
       }
     }
     return {

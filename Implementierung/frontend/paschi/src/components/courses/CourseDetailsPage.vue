@@ -154,7 +154,11 @@
       </v-card>
     </v-dialog>
     <v-dialog max-width="700" v-model="seatArrangementSelectionDialog">
-      <v-card>
+      <v-card min-height="50">
+        <v-card-item style="height: 100px" class="v-row justify-end">
+          <v-btn class="ma-2" prepend-icon="mdi mdi-plus" variant="tonal" @click="newStandardSeatArrangement">Neue Standardsitzordnung</v-btn>
+          <v-btn class="ma-2" prepend-icon="mdi mdi-pencil" variant="tonal" color="primary" @click="editCourseDetailsClick">Sitzordnungen bearbeiten</v-btn>
+        </v-card-item>
         <v-list>
           <v-list-item
             v-for="seatArrangement in seatArrangements"
@@ -203,6 +207,7 @@ import { computed, defineComponent, inject, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
 import { SessionController } from "@/controller/SessionController";
 import { useRouter } from "vue-router";
+import {SeatArrangementController} from "@/controller/SeatArrangementController";
 export default defineComponent({
   name: "CourseDetailsPage",
   components: {SideMenu, NavigationBar},
@@ -464,6 +469,19 @@ export default defineComponent({
       });
     }
 
+    async function newStandardSeatArrangement() {
+      const seatArrangementId = await SeatArrangementController.getSeatArrangementController().createAutomaticSeatArrangement("Standardsitzordnung", props.courseId);
+      const sessionId = await sessionController.createSession(props.courseId, seatArrangementId, "");
+      console.log(sessionId);
+      await router.push({
+        name: "SessionPageDesktop",
+        params: {
+          sessionId: sessionId
+        },
+      });
+
+    }
+
     return {
       showCourseStatisticsClick,
       editCourseDetailsClick,
@@ -492,6 +510,7 @@ export default defineComponent({
       seatArrangements,
       studentListCollapsed,
       sessionListCollapsed,
+      newStandardSeatArrangement,
     };
   },
 });
