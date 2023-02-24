@@ -1,7 +1,7 @@
 <template>
   <navigation-bar extended>
     <v-app-bar-title>
-      Schülerstatistiken von {{firstName + " " + lastName}}
+      Schülerstatistiken von {{ firstName + " " + lastName }}
     </v-app-bar-title>
     <template v-slot:extension>
       <v-btn
@@ -10,65 +10,66 @@
         rounded
         prepend-icon="mdi mdi-download"
         @click="downloadClicked"
-      > Statistiken herunterladen</v-btn>
+      >
+        Statistiken herunterladen</v-btn
+      >
     </template>
   </navigation-bar>
   <v-main>
     <SideMenu />
     <div id="content">
-    <v-container fluid>
-      <v-row justify="space-around" align-content="stretch">
-        <v-col>
-          <v-card color="primary-lighten-1">
-            <v-card-title>
-              <v-row class="ma-2">
-                Durchschnittliche Qualität der Beiträge
-                <v-spacer />
-              </v-row>
-            </v-card-title>
-            <v-card-item v-if="statsController.getStudentStats(studentId) !== undefined && !(isNaN(statsController.getStudentStats(studentId)[1]))">
-              {{statsController.getStudentStats(studentId)[1]}} / 5
-            </v-card-item>
-            <v-card-item v-else>
-              Keine Daten verfügbar.
-            </v-card-item>
-          </v-card>
-        </v-col>
-        <v-col>
-          <v-card color="primary-lighten-1">
-            <v-card-title>
-              <v-row class="ma-2">
-                Aufschlüsselung der Interaktionen nach Kategorien
-                <v-spacer />
-              </v-row>
-            </v-card-title>
-            <v-card-item v-if="stats !== undefined && values.length !== 0">
-              <canvas id = "categoryChart"/>
-            </v-card-item>
-            <v-card-item v-else>
-              Keine Daten verfügbar.
-            </v-card-item>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
+      <v-container fluid>
+        <v-row justify="space-around" align-content="stretch">
+          <v-col>
+            <v-card color="primary-lighten-1">
+              <v-card-title>
+                <v-row class="ma-2">
+                  Durchschnittliche Qualität der Beiträge
+                  <v-spacer />
+                </v-row>
+              </v-card-title>
+              <v-card-item
+                v-if="
+                  statsController.getStudentStats(studentId) !== undefined &&
+                  !isNaN(statsController.getStudentStats(studentId)[1])
+                "
+              >
+                {{ statsController.getStudentStats(studentId)[1] }} / 5
+              </v-card-item>
+              <v-card-item v-else> Keine Daten verfügbar. </v-card-item>
+            </v-card>
+          </v-col>
+          <v-col>
+            <v-card color="primary-lighten-1">
+              <v-card-title>
+                <v-row class="ma-2">
+                  Aufschlüsselung der Interaktionen nach Kategorien
+                  <v-spacer />
+                </v-row>
+              </v-card-title>
+              <v-card-item v-if="stats !== undefined && values.length !== 0">
+                <canvas id="categoryChart" />
+              </v-card-item>
+              <v-card-item v-else> Keine Daten verfügbar. </v-card-item>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
     </div>
-
   </v-main>
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted} from "vue";
+import { defineComponent, onMounted } from "vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
-import Chart from 'chart.js/auto';
-import {StatsController} from "@/controller/StatsController";
-import {StudentController} from "@/controller/StudentController";
-
+import Chart from "chart.js/auto";
+import { StatsController } from "@/controller/StatsController";
+import { StudentController } from "@/controller/StudentController";
 
 export default defineComponent({
   name: "StudentStatisticPage",
-  components: {SideMenu, NavigationBar},
+  components: { SideMenu, NavigationBar },
 
   props: {
     studentId: {
@@ -91,85 +92,83 @@ export default defineComponent({
 
     function getMap() {
       if (stats !== undefined) {
-        return stats[0] as Map<string, number>
+        return stats[0] as Map<string, number>;
       }
     }
 
-    const downloadElement = document.createElement('a');
+    const downloadElement = document.createElement("a");
 
     function downloadClicked() {
       downloadElement.click();
     }
 
     onMounted(() => {
-        if (document.getElementById('categoryChart') == null) {
-          return;
-        }
-        const categoryChartId = document.getElementById('categoryChart') as HTMLCanvasElement;
-        stats  = statsController.getStudentStats(props.studentId);
+      if (document.getElementById("categoryChart") == null) {
+        return;
+      }
+      const categoryChartId = document.getElementById(
+        "categoryChart"
+      ) as HTMLCanvasElement;
+      stats = statsController.getStudentStats(props.studentId);
 
-        if (stats == undefined) {
-          console.log('stats could not be loaded');
-          return;
-        }
+      if (stats == undefined) {
+        console.log("stats could not be loaded");
+        return;
+      }
 
-
-
-
-        const data = {
-          labels:
-            //['Störungsdummy', 'Antwortdummy', 'Fragendummy'],
+      const data = {
+        labels:
+          //['Störungsdummy', 'Antwortdummy', 'Fragendummy'],
           keys,
-          datasets: [{
-            label: 'Anzahl',
+        datasets: [
+          {
+            label: "Anzahl",
             data:
               //[5,47,19],
-            values,
-          }]
-        };
+              values,
+          },
+        ],
+      };
 
-
-        const categoryChart = new Chart(categoryChartId, {
-          type: 'pie',
-          data: data,
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                display: true,
-                labels: {
-                  color: 'rgb(0,0,0)'
-                }
-              }
+      const categoryChart = new Chart(categoryChartId, {
+        type: "pie",
+        data: data,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              labels: {
+                color: "rgb(0,0,0)",
+              },
             },
-            animation : {
-              onComplete : done
-            }
-          }
-        });
+          },
+          animation: {
+            onComplete: done,
+          },
+        },
+      });
 
-
-        function done(){
-          downloadElement.href = categoryChart.toBase64Image();
-            downloadElement.download = 'Schülerstatistik.png';
-          }
-
-          categoryChart.update();
-
-        }
-      )
-      return{
-        statsController, firstName, lastName, downloadClicked, stats, error, values, keys
+      function done() {
+        downloadElement.href = categoryChart.toBase64Image();
+        downloadElement.download = "Schülerstatistik.png";
       }
-    },
 
-  }
-
-)
-
-
-
+      categoryChart.update();
+    });
+    return {
+      statsController,
+      firstName,
+      lastName,
+      downloadClicked,
+      stats,
+      error,
+      values,
+      keys,
+    };
+  },
+});
 </script>
 
 <style scoped></style>
