@@ -58,6 +58,14 @@ public class Room extends DataObject {
     }
 
     /**
+     * Setzten der {@link Chair Stühle}
+     * @param chairs {@link List} von {@link Chair Stühle}
+     */
+    public void setChairs(List<Chair> chairs) {
+        this.chairs = chairs;
+    }
+
+    /**
      * Setzen des Namens
      * @param name Name
      */
@@ -65,13 +73,6 @@ public class Room extends DataObject {
         this.name = name;
     }
 
-    /**
-     * Setzten der {@link Chair Stühle}
-     * @param chairs {@link List} von {@link Chair Stühle}
-     */
-    public void setChairs(List<Chair> chairs) {
-        this.chairs = chairs;
-    }
 
     /**
      * Hinzufügen eines {@link Table Tisches}
