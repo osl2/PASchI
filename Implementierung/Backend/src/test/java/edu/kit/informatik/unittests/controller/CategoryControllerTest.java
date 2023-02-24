@@ -110,9 +110,6 @@ public class CategoryControllerTest extends AbstractTest {
         }
 
         this.categories = repositoryCategory;
-
-
-        //addCategories();
     }
 
     @Test
@@ -120,7 +117,6 @@ public class CategoryControllerTest extends AbstractTest {
         for (RatedCategoryDto categoryDto: categories) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
                             .content(super.mapToJson(categoryDto))
-                    //.accept(MediaType.APPLICATION_JSON_VALUE)
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -144,7 +140,6 @@ public class CategoryControllerTest extends AbstractTest {
 
         for (RatedCategoryDto categoryDto: categories) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + categoryDto.getId())
-                    //.accept(MediaType.APPLICATION_JSON_VALUE)
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -165,7 +160,6 @@ public class CategoryControllerTest extends AbstractTest {
         addCategoryToDatabase();
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL)
-                //.accept(MediaType.APPLICATION_JSON_VALUE)
         ).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
@@ -192,7 +186,6 @@ public class CategoryControllerTest extends AbstractTest {
 
         for (CategoryDto categoryDto: categories) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL).content(categoryDto.getId()).param("id", categoryDto.getId())
-                    //.accept(MediaType.APPLICATION_JSON_VALUE)
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();

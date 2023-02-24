@@ -39,7 +39,6 @@ public abstract class RoomObject extends DataObject {
      */
     public RoomObject(User user, Position position, Timestamp createdAt, Timestamp updatedAt) {
         super(user, createdAt, updatedAt);
-        //this.user = user;
         this.position = position;
     }
 

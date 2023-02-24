@@ -8,7 +8,7 @@ import edu.kit.informatik.repositories.UserRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -98,7 +98,6 @@ public class UserControllerTest extends AbstractTest {
         for (int i = 0; i< users.size(); i++) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
                             .content(super.mapToJson(users.get(i)))
-                    //.accept(MediaType.APPLICATION_JSON_VALUE)
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -139,7 +138,6 @@ public class UserControllerTest extends AbstractTest {
 
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(BASE_URL).contentType(MediaType.APPLICATION_JSON)
                             .content(super.mapToJson(userDto))
-                    //.accept(MediaType.APPLICATION_JSON_VALUE)
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -166,7 +164,6 @@ public class UserControllerTest extends AbstractTest {
 
         for (UserDto user: users) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + user.getId())
-                    //.accept(MediaType.APPLICATION_JSON_VALUE)
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -187,7 +184,6 @@ public class UserControllerTest extends AbstractTest {
         addUserToDatabase();
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/admin")
-                //.accept(MediaType.APPLICATION_JSON_VALUE)
         ).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
@@ -214,7 +210,6 @@ public class UserControllerTest extends AbstractTest {
 
         for (UserDto user: users) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL).content(user.getId()).param("id", user.getId())
-                    //.accept(MediaType.APPLICATION_JSON_VALUE)
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();

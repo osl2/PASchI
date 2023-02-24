@@ -62,22 +62,10 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
 
         Session repositorySession = repositorySessionOptional.orElseThrow(() -> new EntityNotFoundException(
                                                                                     Session.class, sessionDto.getId()));
-        //System.out.println(sessionDto.getInteractions().get(0).getId());
-        //System.out.println(sessionDto.getInteractions().get(1).getId());
         Session newSession = this.mapper.dtoToModel(sessionDto);
-        //System.out.println(newSession.getInteractions().get(0).getId());
-        //System.out.println(newSession.getInteractions().get(1).getId());
 
         if (!newSession.getInteractions().equals(repositorySession.getInteractions())) {
-            //System.out.println(repositorySession.getInteractions().size());
-           // System.out.println(newSession.getInteractions().size());
-
-
-            //interactions.replaceAll(interactionRepository::save);
-            //System.out.println(interactions.get(0).getId());
             repositorySession.setInteractions(updateInteractions(repositorySession, newSession));
-            //System.out.println(repositorySession.getInteractions().size());
-
         }
         if (!newSession.getSeatArrangement().equals(repositorySession.getSeatArrangement())) {
             repositorySession.setSeatArrangement(repositorySession.getSeatArrangement());
@@ -123,8 +111,6 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
         for (Interaction newInteraction: newSession.getInteractions()) {
             boolean found = false;
             for (Interaction repositoryInteraction: repositorySession.getInteractions()) {
-                //System.out.println("ID1 : " + newInteraction.getId());
-                //System.out.println("ID2 : " + repositoryInteraction.getId());
                 if (newInteraction.getId() != null && newInteraction.getId().equals(repositoryInteraction.getId())) {
                     returnInteractions.add(repositoryInteraction);
                     found = true;

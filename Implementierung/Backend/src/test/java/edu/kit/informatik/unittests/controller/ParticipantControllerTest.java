@@ -107,12 +107,9 @@ public class ParticipantControllerTest extends AbstractTest {
     public void addParticipants() throws Exception {
 
         for (int i = 0; i< participants.size(); i++) {
-            //System.out.println(participants.get(i).getParticipantType());
-            //System.out.println(super.mapToJson(participants.get(i)));
 
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
                             .content(super.mapToJson(participants.get(i)))
-                    //.accept(MediaType.APPLICATION_JSON_VALUE)
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -137,7 +134,6 @@ public class ParticipantControllerTest extends AbstractTest {
 
         for (ParticipantDto participant: participants) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + participant.getId())
-                    //.accept(MediaType.APPLICATION_JSON_VALUE)
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -158,7 +154,6 @@ public class ParticipantControllerTest extends AbstractTest {
         addParticipantToDatabase();
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL)
-                //.accept(MediaType.APPLICATION_JSON_VALUE)
         ).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
@@ -185,7 +180,6 @@ public class ParticipantControllerTest extends AbstractTest {
 
         for (ParticipantDto participantDto: participants) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL).content(participantDto.getId()).param("id", participantDto.getId())
-                    //.accept(MediaType.APPLICATION_JSON_VALUE)
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();

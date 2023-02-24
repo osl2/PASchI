@@ -72,7 +72,6 @@ public class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
 
     @Override
     public Interaction dtoToModel(InteractionDto interactionDto) {
-        //System.out.println(interactionDto.getId() + " interactionDTO");
         User user = userRepository.findUserById(interactionDto.getUserId()).orElse(null);
         Session session = sessionRepository.findSessionById(interactionDto.getSessionId()).orElse(null);
         Participant fromParticipant = participantRepository.

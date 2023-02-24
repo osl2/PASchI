@@ -60,7 +60,6 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
         super.checkAuthorization(authentication, roomDto.getUserId());
         Room room = this.mapper.dtoToModel(roomDto);
 
-        //Room newRoom = this.roomRepository.save(room);
         Room newRoom = this.roomRepository.save(saveRoomObjects(room));
 
         return this.mapper.modelToDto(newRoom);
@@ -132,10 +131,8 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
         List<Table> returnTables = new ArrayList<>();
 
         for (Table newTable: newRoom.getTables()) {
-            //System.out.println(newTable.toString());
             boolean found = false;
             for (Table repositoryTable: repositoryRoom.getTables())  {
-                //System.out.println(repositoryTable.toString());
                 // Tische werden als gleich befunden, wenn der Erstell-Timestamp gleich ist
                 if (repositoryTable.getCreatedAt().equals(newTable.getCreatedAt())) {
                     repositoryTable.setWidth(newTable.getWidth());
@@ -154,8 +151,6 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
             }
             if (!found) {
                 returnTables.add(newTable);
-                //newTable.setPosition(positionRepository.save(newTable.getPosition()));
-                //tableRepository.save(newTable);
             }
         }
 
@@ -186,8 +181,6 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
             }
             if (!found) {
                 returnChairs.add(newChair);
-                //newChair.setPosition(positionRepository.save(newChair.getPosition()));
-                //chairRepository.save(newChair);
             }
         }
 

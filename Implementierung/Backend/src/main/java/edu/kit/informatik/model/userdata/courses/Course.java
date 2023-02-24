@@ -53,7 +53,6 @@ public class Course extends DataObject {
      */
     public Course(User user, String name, String subject, Timestamp createdAt, Timestamp updatedAt) {
         super(user, createdAt, updatedAt);
-        //this.user = user;
         this.name = name;
         this.subject = subject;
         this.participants = new ArrayList<>();

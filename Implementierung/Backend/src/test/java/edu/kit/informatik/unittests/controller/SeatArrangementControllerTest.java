@@ -134,7 +134,6 @@ public class SeatArrangementControllerTest extends AbstractTest {
         for (SeatArrangementDto seatArrangementDto: seatArrangements) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
                             .content(super.mapToJson(seatArrangementDto))
-                    //.accept(MediaType.APPLICATION_JSON_VALUE)
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -160,7 +159,6 @@ public class SeatArrangementControllerTest extends AbstractTest {
 
         for (SeatArrangementDto seatArrangementDto: seatArrangements) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + seatArrangementDto.getId())
-                    //.accept(MediaType.APPLICATION_JSON_VALUE)
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -181,7 +179,6 @@ public class SeatArrangementControllerTest extends AbstractTest {
         addSeatArrangementToDatabase();
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL)
-                //.accept(MediaType.APPLICATION_JSON_VALUE)
         ).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
@@ -208,7 +205,6 @@ public class SeatArrangementControllerTest extends AbstractTest {
 
         for (SeatArrangementDto seatArrangementDto: seatArrangements) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL).content(seatArrangementDto.getId()).param("id", seatArrangementDto.getId())
-                    //.accept(MediaType.APPLICATION_JSON_VALUE)
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();

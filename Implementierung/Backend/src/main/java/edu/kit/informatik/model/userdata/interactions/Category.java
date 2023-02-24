@@ -33,7 +33,6 @@ public class Category extends DataObject {
      */
     public Category(User user, String name, Timestamp createdAt, Timestamp updatedAt) {
         super(user, createdAt, updatedAt);
-        //this.user = user;
         this.name = name;
     }
 

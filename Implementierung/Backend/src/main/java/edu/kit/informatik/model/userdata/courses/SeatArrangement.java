@@ -42,8 +42,6 @@ public class SeatArrangement extends DataObject {
     private Course course;
 
     @OneToMany(cascade = CascadeType.ALL)
-    //@CollectionTable(name = "chair_participant_mapping")
-    //@MapKey
     @JoinTable(name = "chair_participant_mapping",
             joinColumns = @JoinColumn(name = "seatarrangementId"),
             inverseJoinColumns  = @JoinColumn(name = "participantId"))
@@ -64,7 +62,6 @@ public class SeatArrangement extends DataObject {
     public SeatArrangement(User user, String name, Room room, Course course, Map<Chair,
                             Participant> seatMap, Timestamp createdAt, Timestamp updatedAt) {
         super(user, createdAt, updatedAt);
-        //this.user = user;
         this.name = name;
         this.room = room;
         this.course = course;

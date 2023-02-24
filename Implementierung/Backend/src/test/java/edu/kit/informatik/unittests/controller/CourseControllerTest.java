@@ -123,7 +123,6 @@ public class CourseControllerTest extends AbstractTest {
         for (CourseDto courseDto: courses) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
                             .content(super.mapToJson(courseDto))
-                    //.accept(MediaType.APPLICATION_JSON_VALUE)
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -147,7 +146,6 @@ public class CourseControllerTest extends AbstractTest {
 
         for (CourseDto courseDto: courses) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + courseDto.getId())
-                    //.accept(MediaType.APPLICATION_JSON_VALUE)
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -168,7 +166,6 @@ public class CourseControllerTest extends AbstractTest {
         addCourseToDatabase();
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL)
-                //.accept(MediaType.APPLICATION_JSON_VALUE)
         ).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
@@ -195,7 +192,6 @@ public class CourseControllerTest extends AbstractTest {
 
         for (CourseDto courseDto: courses) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL).content(courseDto.getId()).param("id", courseDto.getId())
-                    //.accept(MediaType.APPLICATION_JSON_VALUE)
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();

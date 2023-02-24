@@ -129,7 +129,6 @@ public class SessionControllerTest extends AbstractTest {
 
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
                             .content(super.mapToJson(sessions.get(i)))
-                    //.accept(MediaType.APPLICATION_JSON_VALUE)
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -156,7 +155,6 @@ public class SessionControllerTest extends AbstractTest {
 
         for (SessionDto session: sessions) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + session.getId())
-                    //.accept(MediaType.APPLICATION_JSON_VALUE)
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -177,7 +175,6 @@ public class SessionControllerTest extends AbstractTest {
         addSessionToDatabase();
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL)
-                //.accept(MediaType.APPLICATION_JSON_VALUE)
         ).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
@@ -204,7 +201,6 @@ public class SessionControllerTest extends AbstractTest {
 
         for (SessionDto sessionDto: sessions) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL).content(sessionDto.getId()).param("id", sessionDto.getId())
-                    //.accept(MediaType.APPLICATION_JSON_VALUE)
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -249,7 +245,7 @@ public class SessionControllerTest extends AbstractTest {
         for (int i = 0; i < 20; i++) {
 
             String fromId = participants.get(faker.number().numberBetween(0, participants.size())).getId();
-            String toId = null;
+            String toId;
 
             do {
                 toId = participants.get(faker.number().numberBetween(0, participants.size())).getId();
