@@ -152,6 +152,7 @@ export class CourseController {
   //   }
   // }
 
+  // TODO
   deleteSession(courseId: string, sessionId: string) {
     this.sessionController.deleteSession(sessionId);
   }
