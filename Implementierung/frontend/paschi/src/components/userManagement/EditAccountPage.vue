@@ -93,36 +93,64 @@ export default {
     const errorSnackbar = ref(false);
     const errorSnackbarText = 'Alle Felder müssen ausgefüllt sein.';
     const errorSnackbarTimeout = 2000;
+
+    /**
+     * Gibt Fehlermeldung zurück, falls der übergebene Wert leer ist, sonst true.
+     *
+     * @param value Der Wert, der überprüft wird.
+     */
     function requiredRule(value: string) {
       if (value === "") {
         return "Dieses Feld muss ausgefüllt sein.";
       }
       return true;
     }
+
+    /**
+     * Gibt Fehlermeldung zurück, falls das Passwort kürzer als 8 ist, sonst true.
+     */
     function passwordMinLengthRule() {
       if (password.value.length < 8) {
         return "Das Passwort muss mindestens 8 Zeichen lang sein.";
       }
       return true;
     }
+
+    /**
+     * Gibt Fehlermeldung zurück, falls das Passwort länger als 32 ist, sonst true.
+     */
     function passwordMaxLengthRule() {
       if (password.value.length > 32) {
         return "Das Passwort muss höchstens 32 Zeichen lang sein.";
       }
       return true;
     }
+
+    /**
+     * Gibt Fehlermeldung zurück, falls die Passwörter nicht übereinstimmen, sonst true.
+     */
     function passwordsEqualRule() {
       if (password.value !== passwordRepeat.value) {
         return "Passwörter müssen gleich sein.";
       }
       return true;
     }
+
+    /**
+     * Gibt Fehlermeldung zurück, falls der übergebene Wert länger als 20 ist, sonst true.
+     */
     function nameMaxLengthRule(value: string) {
       if (value.length > 20) {
         return "Namen müssen kürzer als 20 Zeichen sein";
       }
       return true;
     }
+
+    /**
+     * Gibt zurück, ob eine der Regeln eine Fehlermeldung zurückgibt.
+     *
+     * @param ruleReturns Array mit Regeln.
+     */
     function error(ruleReturns: (boolean | string)[]): boolean {
       for (let i = 0; i < ruleReturns.length; i++) {
         if (typeof ruleReturns[i] === "string" || !ruleReturns[i]) {
@@ -131,6 +159,10 @@ export default {
       }
       return false;
     }
+
+    /**
+     * Falls kein Fehler auftritt, wird der Account mit den zuvor bestimmten Werten aktualisiert. Wenn eines der Felder leer ist, wird ein Fehlerhinweis aktiviert.
+     */
     function updateAccount() {
       if (
         !error([
