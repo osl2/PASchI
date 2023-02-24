@@ -37,10 +37,10 @@ public class TokenService {
      * Beinhaltet {@link GrantedAuthority} (Claim: "scope") und die Id des {@link User} (Claim: "userId")
      *
      * @param authentication benötigte {@link Authentication}
+     * @param user {@link User}
      * @return {@link JwtAuthenticationToken} als String
      */
-    public String generateToken(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+    public String generateToken(Authentication authentication, User user) {
 
         Instant now = Instant.now();
         String scope = authentication.getAuthorities().stream()
