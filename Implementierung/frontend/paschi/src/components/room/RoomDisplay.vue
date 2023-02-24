@@ -32,7 +32,7 @@
         @mouseenter="mouseEnter($event, chair)"
         @touchstart="touchStart($event, chair)"
         @touchmove="touchMove($event, chair)"
-        @touchend="touchEnd"
+        @touchend="touchEnd($event)"
       >
         <slot name="chair" :chair="chair" :origin="getRoomObjectDisplayOrigin(chair)">
           <v-card
@@ -66,7 +66,7 @@
         @mouseenter="mouseEnter($event, table)"
         @touchstart="touchStart($event, table)"
         @touchmove="touchMove($event, table)"
-        @touchend="touchEnd"
+        @touchend="touchEnd($event)"
       >
         <slot name="table" :table="table" :origin="getRoomObjectDisplayOrigin(table)">
           <v-card
@@ -298,8 +298,8 @@ export default defineComponent({
 
     function touchEnd(event: TouchEvent) {
       const displayCoordinate: Coordinate = {
-        x: event.touches[0].clientX,
-        y: event.touches[0].clientY,
+        x: event.changedTouches[0].clientX,
+        y: event.changedTouches[0].clientY,
       };
       const roomCoordinate: Coordinate = displayToRoomCoordinates(
         displayCoordinate.x,

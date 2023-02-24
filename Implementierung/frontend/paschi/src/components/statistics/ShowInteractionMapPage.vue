@@ -19,15 +19,18 @@
               >
                 <v-list rounded>
                   <v-list-item
-                    v-for="category in getInteractionBreakdown(lineMiddle.id)
-                      .breakDown.keys()"
+                    v-for="category in getInteractionBreakdown(
+                      lineMiddle.id
+                    ).breakDown.keys()"
                     rounded
                   >
-                    <v-list-item-title>
-                      {{ category }}:
-                    </v-list-item-title>
+                    <v-list-item-title> {{ category }}: </v-list-item-title>
                     <template v-slot:append>
-                      {{ getInteractionBreakdown(lineMiddle.id).breakDown.get(category)}}
+                      {{
+                        getInteractionBreakdown(lineMiddle.id).breakDown.get(
+                          category
+                        )
+                      }}
                     </template>
                   </v-list-item>
                 </v-list>
@@ -66,6 +69,7 @@ import { SessionController } from "@/controller/SessionController";
 import { Chair } from "@/model/userdata/rooms/Chair";
 import SeatLabel from "@/components/room/SeatLabel.vue";
 import { Coordinate } from "@/components/room/Coordinate";
+
 export default defineComponent({
   name: "ShowInteractionMapPage",
   components: { SeatLabel, LineOverlay, SideMenu, RoomDisplay, NavigationBar },
@@ -136,6 +140,7 @@ export default defineComponent({
       }
       return interactionCount;
     }
+
     function getParticipant(chair: Chair) {
       return seatArrangement?.getParticipantForSeat(chair);
     }
