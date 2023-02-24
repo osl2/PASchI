@@ -9,7 +9,7 @@
         color="green"
         rounded
         prepend-icon="mdi mdi-download"
-        @click="downloadClicked"
+        @click="saveStatisticClick"
       >
         Statistiken herunterladen</v-btn
       >
@@ -98,7 +98,7 @@ export default defineComponent({
 
     const downloadElement = document.createElement("a");
 
-    function downloadClicked() {
+    function saveStatisticClick() {
       downloadElement.click();
     }
 
@@ -161,7 +161,7 @@ export default defineComponent({
       statsController,
       firstName,
       lastName,
-      downloadClicked,
+      saveStatisticClick,
       stats,
       error,
       values,

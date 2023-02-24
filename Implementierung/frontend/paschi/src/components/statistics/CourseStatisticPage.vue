@@ -9,7 +9,7 @@
         color="green"
         rounded
         prepend-icon="mdi mdi-download"
-        @click="downloadClicked"
+        @click="saveStatisticClick"
       >
         Statistiken herunterladen</v-btn
       >
@@ -170,7 +170,7 @@ export default defineComponent({
       }
     }
 
-    function downloadClicked() {
+    function saveStatisticClick() {
       downloadElementInvolvementChart.click();
       downloadElementCategoryChart.click();
     }
@@ -278,7 +278,7 @@ export default defineComponent({
       studentController,
       courseName,
       courseSubject,
-      downloadClicked,
+      saveStatisticClick,
       top5InteractionArray,
       top5DisturberArray,
       categoryKeys,
