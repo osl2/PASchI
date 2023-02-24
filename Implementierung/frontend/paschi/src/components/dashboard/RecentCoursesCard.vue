@@ -16,7 +16,7 @@
         <v-btn
           class="ml-2"
           variant="tonal"
-          color="primary"
+          color="white"
           @click="navigateToStatistic(course)"
         >
           <v-icon> fas fa-chart-line </v-icon>

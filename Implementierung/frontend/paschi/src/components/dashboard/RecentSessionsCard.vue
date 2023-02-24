@@ -9,14 +9,14 @@
         <v-spacer />
         <v-btn
           variant="tonal"
-          color="primary"
+          color="white"
           @click="navigateToInteractionMap(session)"
           >InteraktionsKarte</v-btn
         >
         <v-btn
           class="ml-2"
           variant="tonal"
-          color="primary"
+          color="white"
           @click="navigateToSessionStatistic(session)"
         >
           <v-icon> fas fa-chart-line </v-icon>
