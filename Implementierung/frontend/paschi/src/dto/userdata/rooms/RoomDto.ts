@@ -7,7 +7,7 @@ export class RoomDto {
   createdAt: string;
   updatedAt: string;
   name: string;
-  roomObjectDtos: RoomObjectDto[];
+  roomObjects: RoomObjectDto[];
 
   constructor(id: string, userId: string, createdAt: string, updatedAt: string, name: string,
               roomObjects: RoomObjectDto[]) {
@@ -16,6 +16,6 @@ export class RoomDto {
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.name = name;
-    this.roomObjectDtos = roomObjects;
+    this.roomObjects = roomObjects;
   }
 }
