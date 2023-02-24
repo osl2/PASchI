@@ -100,28 +100,4 @@ public class Course extends DataObject {
     public void setSeatArrangements(List<SeatArrangement> seatArrangements) {
         this.seatArrangements = seatArrangements;
     }
-
-    public void addParticipant(Participant participant) {
-        this.participants.add(participant);
-    }
-
-    public void removeParticipant(Participant participant) {
-        this.participants.remove(participant);
-    }
-
-    public void addSession(Session session) {
-        this.sessions.add(session);
-    }
-
-    public void removeSession(Session session) {
-        this.sessions.remove(session);
-    }
-
-    public void addSeatArrangement(SeatArrangement seatArrangement) {
-        this.seatArrangements.add(seatArrangement);
-    }
-
-    public void removeSeatArrangement(SeatArrangement seatArrangement) {
-        this.seatArrangements.remove(seatArrangement);
-    }
 }
