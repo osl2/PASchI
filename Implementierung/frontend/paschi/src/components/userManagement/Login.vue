@@ -85,6 +85,9 @@ export default defineComponent({
     const password = ref("");
     const passwordError = ref(false);
 
+    /**
+     * Loggt den Benutzer ein, die eingegebenen Accountdaten korrekt sind.
+     */
     function login() {
       if (userController.login(email.value, password.value)) {
         router.push("Dashboard");
