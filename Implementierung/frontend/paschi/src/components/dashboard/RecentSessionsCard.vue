@@ -9,14 +9,14 @@
         <v-spacer />
         <v-btn
           variant="tonal"
-          color="primary"
+          color="white"
           @click="navigateToInteractionMap(session)"
-        >InteraktionsKarte</v-btn
+          >InteraktionsKarte</v-btn
         >
         <v-btn
           class="ml-2"
           variant="tonal"
-          color="primary"
+          color="white"
           @click="navigateToSessionStatistic(session)"
         >
           <v-icon> fas fa-chart-line </v-icon>
@@ -36,9 +36,7 @@ export default defineComponent({
   name: "RecentSessionsCard",
   setup() {
     const sessionController = SessionController.getSessionController();
-    // TODO
-    //const sessions = sessionController.
-    const sessions: Session[] = [];
+    const sessions = sessionController.getRecentSessions();
 
     /**
      * Methode, die zur Sitzungsstatistik leitet
@@ -67,7 +65,7 @@ export default defineComponent({
     return {
       sessions,
       navigateToSessionStatistic,
-      navigateToInteractionMap
+      navigateToInteractionMap,
     };
   },
 });
