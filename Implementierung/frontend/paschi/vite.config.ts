@@ -26,7 +26,7 @@ export default defineConfig({
         icons: [
           {
             src: "src/assets/logo.svg",
-            sizes: "512x512",
+            sizes: "360x360",
             type: "image/svg+xml",
             purpose: "any maskable",
           },

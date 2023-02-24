@@ -539,7 +539,7 @@ export default defineComponent({
 
     async function saveClick() {
       await roomController.updateRoom(props.roomId);
-      await router.back();
+      await router.push("/rooms");
     }
 
     return {
