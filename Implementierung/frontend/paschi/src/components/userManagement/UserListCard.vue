@@ -124,14 +124,14 @@ export default defineComponent({
         displayParameter.value === "alle"
       );
     });
-    function includesSearch(request: User): boolean {
+    function includesSearch(user: User): boolean {
       return (
         (searchParameter.value === "ID" &&
-          request.getId.includes(searchInput.value)) ||
+          user.getId.includes(searchInput.value)) ||
         (searchParameter.value === "E-Mail" &&
-          request.email.toUpperCase().includes(searchInput.value.toUpperCase())) ||
+          user.email.toUpperCase().includes(searchInput.value.toUpperCase())) ||
         (searchParameter.value === "Benutzername" &&
-          request.email.toUpperCase().includes(searchInput.value.toUpperCase()))
+          (user.firstName + " " + user.lastName).toUpperCase().includes(searchInput.value.toUpperCase()))
       );
     }
     function deleteUser(user: User) {

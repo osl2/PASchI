@@ -134,7 +134,7 @@ export default defineComponent({
         (searchParameter.value === "E-Mail" &&
           request.email.toUpperCase().includes(searchInput.value.toUpperCase())) ||
         (searchParameter.value === "Benutzername" &&
-          request.email.toUpperCase().includes(searchInput.value.toUpperCase()))
+          (request.firstName + " " + request.lastName).toUpperCase().includes(searchInput.value.toUpperCase()))
       );
     }
     function authUser(user: User) {
