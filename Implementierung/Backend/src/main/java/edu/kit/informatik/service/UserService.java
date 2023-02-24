@@ -137,7 +137,7 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
 
         User user = (User) authentication.getPrincipal();
         UserDto userDto = this.mapper.modelToDto(user);
-        userDto.setToken(tokenService.generateToken(authentication));
+        userDto.setToken(tokenService.generateToken(authentication, user));
 
         return userDto;
     }
@@ -150,15 +150,15 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
     public UserDto getToken(Authentication authentication) {
         JwtAuthenticationToken jAT = (JwtAuthenticationToken) authentication;
 
-        String userID = jAT.getTokenAttributes().get("userId").toString();
+        String userId = jAT.getTokenAttributes().get("userId").toString();
 
-        Optional<User> repositoryUserOptional = userRepository.findUserById(userID);
+        Optional<User> repositoryUserOptional = userRepository.findUserById(userId);
 
         User repositoryUser = repositoryUserOptional.orElseThrow(() -> new EntityNotFoundException(
-                User.class, userID));
+                User.class, userId));
 
         UserDto userDto = this.mapper.modelToDto(repositoryUser);
-        userDto.setToken(tokenService.generateToken(authentication));
+        userDto.setToken(tokenService.generateToken(authentication, repositoryUser));
 
         return userDto;
     }
