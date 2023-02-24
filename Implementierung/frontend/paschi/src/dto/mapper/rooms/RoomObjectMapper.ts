@@ -4,8 +4,8 @@ import {RoomObjectDto} from "@/dto/userdata/rooms/RoomObjectDto";
 import {ChairMapper} from "@/dto/mapper/rooms/ChairMapper";
 import {TableMapper} from "@/dto/mapper/rooms/TableMapper";
 import {Table} from "@/model/userdata/rooms/Table";
-import {Chair} from "@/model/userdata/rooms/Chair";
 import {TableDto} from "@/dto/userdata/rooms/TableDto";
+import {ChairDto} from "@/dto/userdata/rooms/ChairDto";
 
 export class RoomObjectMapper implements IModelDtoMapper<RoomObject, RoomObjectDto> {
 
@@ -21,10 +21,10 @@ export class RoomObjectMapper implements IModelDtoMapper<RoomObject, RoomObjectD
   }
 
   modelToDto(roomObject: RoomObject): RoomObjectDto {
-    if (roomObject.isTable()) {
-      return this.tableMapper.modelToDto(<Table> roomObject);
+    if (roomObject instanceof Table) {
+      return this.tableMapper.modelToDto(roomObject);
     } else {
-      return this.chairMapper.modelToDto(<Chair> roomObject);
+      return this.chairMapper.modelToDto(roomObject);
     }
   }
 
@@ -32,7 +32,7 @@ export class RoomObjectMapper implements IModelDtoMapper<RoomObject, RoomObjectD
     if (roomObjectDto instanceof TableDto) {
       return await this.tableMapper.dtoToModel(roomObjectDto);
     } else {
-      return await this.chairMapper.dtoToModel(roomObjectDto);
+      return await this.chairMapper.dtoToModel(<ChairDto> roomObjectDto);
     }
   }
 }

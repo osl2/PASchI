@@ -56,7 +56,7 @@ export class RoomMapper implements IModelDtoMapper<Room, RoomDto> {
     }
 
     const roomObjects: RoomObject[] = [];
-    for (const object of roomDto.roomObjectDtos) {
+    for (const object of roomDto.roomObjects) {
       roomObjects.push(await this.roomObjectMapper.dtoToModel(object));
     }
 
