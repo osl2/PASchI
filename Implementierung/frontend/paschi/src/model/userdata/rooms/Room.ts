@@ -1,64 +1,74 @@
 import {User} from "@/model/User";
 import {RoomObject} from "@/model/userdata/rooms/RoomObject";
+import {DataObject} from "@/model/DataObject";
 
-export class Room {
+export class Room extends DataObject {
 
-  private id: string | undefined;
-  private localId: number;
-  user: User;
-  name: string;
-  roomObjects: RoomObject[];
+  private readonly _user: User;
+  private _name: string;
+  private _roomObjects: RoomObject[];
 
   constructor(id: string | undefined, localId: number, user: User, name: string) {
-    this.id = id;
-    this.localId = localId;
-    this.user = user;
-    this.name = name;
-    this.roomObjects = [];
+    super(id, localId);
+    this._user = user;
+    this._name = name;
+    this._roomObjects = [];
   }
 
   addRoomObject(object: RoomObject) {
     if (this.getRoomObject(object.getId) == undefined) {
-      this.roomObjects.push(object);
+      this._roomObjects.push(object);
     }
+    this.update();
   }
 
   removeRoomObject(objectId: string) {
     this.roomObjects.forEach((element: RoomObject, index: number) => {
       if (element.getId == objectId) {
-        this.roomObjects.splice(index, 1);
+        this._roomObjects.splice(index, 1);
       }
     });
+    this.update();
   }
 
   getRoomObject(objectId: string): RoomObject | undefined {
-    for (let i = 0; i < this.roomObjects.length; i++) {
-      if (this.roomObjects.at(i)?.getId === objectId) {
-        return this.roomObjects.at(i);
+    for (let i = 0; i < this._roomObjects.length; i++) {
+      if (this._roomObjects.at(i)?.getId === objectId) {
+        return this._roomObjects.at(i);
       }
     }
 
     return undefined;
   }
 
-  get getId(): string {
-    if (this.id == undefined) {
-      return this.localId.toString();
-    }
-    return this.id;
+  get user(): User {
+    return this._user;
   }
 
-  set setId(id: string) {
-    this.id = id;
+  get name(): string {
+    return this._name;
   }
 
-  copy(): Room {
-    const room = new Room(undefined, 0, this.user, this.name);
-    this.roomObjects.forEach((object: RoomObject) => {
-      if (object.isTable()) {
-        room.addRoomObject(object.copy());
-      }
-    });
-    return room;
+  get roomObjects(): RoomObject[] {
+    return this._roomObjects;
   }
+
+  set name(value: string) {
+    this._name = value;
+    this.update();
+  }
+
+  set roomObjects(value: RoomObject[]) {
+    this._roomObjects = value;
+  }
+
+  // copy(): Room {
+  //   const room = new Room(undefined, 0, this.user, this.name);
+  //   this.roomObjects.forEach((object: RoomObject) => {
+  //     if (object.isTable()) {
+  //       room.addRoomObject(object.copy());
+  //     }
+  //   });
+  //   return room;
+  // }
 }

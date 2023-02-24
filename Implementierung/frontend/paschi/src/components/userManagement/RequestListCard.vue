@@ -32,8 +32,9 @@
       </v-row>
     </v-card-item>
     <v-card-item
-      v-for="request in requests"
+      v-for="request in requests.sort((a, b) => a.email.localeCompare(b.email))"
       v-show="!collapsed && includesSearch(request)"
+      :key="request.getId"
     >
       <v-row align="center">
         <v-col v-show="showName">
@@ -46,10 +47,18 @@
           {{ request.getId }}
         </v-col>
         <v-col cols="3">
-          <v-btn color="#00ff00" @click="authUser(request)">
+          <v-btn
+            :loading="loading.includes(request.getId)"
+            color="#00ff00"
+            @click="authUser(request)"
+          >
             <v-icon icon="fas fa-check"></v-icon>
           </v-btn>
-          <v-btn color="#ff0000" @click="deleteUser(request)">
+          <v-btn
+            :loading="loading.includes(request.getId)"
+            color="#ff0000"
+            @click="deleteUser(request)"
+          >
             <v-icon icon="fas fa-xmark"></v-icon>
           </v-btn>
         </v-col>
@@ -59,18 +68,24 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, Ref } from "vue";
+import {computed, defineComponent, ref} from "vue";
 import { AdminController } from "@/controller/AdminController";
 import { User } from "@/model/User";
 
 export default defineComponent({
   name: "RequestListCard",
-  setup() {
+  props: {
+    requests: {
+      type: Array as () => User[],
+      required: true,
+    },
+  },
+  emits: ["updateRequests"],
+  setup(props, { emit }) {
     const adminController: AdminController =
       AdminController.getAdminController();
-    const requests: Ref<User[]> = ref<User[]>(
-      adminController.getUsersNotAuthenticated()
-    ) as Ref<User[]>;
+    const loading = ref<String[]>([]);
+
     const searchInput = ref("");
     const searchParameters = computed(() => {
       if (
@@ -149,8 +164,12 @@ export default defineComponent({
      *
      * @param user Der Benutzer.
      */
-    function authUser(user: User) {
-      adminController.authUser(user.getId);
+    async function authUser(user: User) {
+      loading.value.push(user.getId);
+      await adminController.authUser(user.getId).then(() => {
+        loading.value = loading.value.filter((id) => id !== user.getId);
+        emit("updateRequests");
+      })
     }
 
     /**
@@ -158,8 +177,12 @@ export default defineComponent({
      *
      * @param user Der Nutzer, der gelöscht wird.
      */
-    function deleteUser(user: User) {
-      adminController.deleteUser(user.getId);
+    async function deleteUser(user: User) {
+      loading.value.push(user.getId);
+      await adminController.deleteUser(user.getId).then(() => {
+        loading.value = loading.value.filter((id) => id !== user.getId);
+        emit("updateRequests");
+      });
     }
 
     /**
@@ -188,7 +211,7 @@ export default defineComponent({
       collapsed,
       toggleCollapseMessage,
       searchInput,
-      requests,
+      loading,
     };
   },
 });

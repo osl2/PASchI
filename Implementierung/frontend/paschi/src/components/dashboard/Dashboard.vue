@@ -2,8 +2,6 @@
   <NavigationBar>
     <template #default>
       <v-app-bar-title>
-        Willkommen zurück, {{ firstName }}
-        {{ lastName }}
       </v-app-bar-title>
     </template>
     <template #append>

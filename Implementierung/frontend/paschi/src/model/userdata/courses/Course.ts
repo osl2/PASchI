@@ -2,47 +2,47 @@ import {Participant} from "@/model/userdata/interactions/Participant";
 import {Session} from "@/model/userdata/courses/Session";
 import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {User} from "@/model/User";
+import {DataObject} from "@/model/DataObject";
 
-export class Course {
+export class Course extends DataObject {
 
-  private id: string | undefined;
-  private localId: number;
-  user: User
-  name: string;
-  subject: string;
-  participants: Participant[];
-  sessions: Session[];
-  seatArrangements: SeatArrangement[];
+  private readonly _user: User
+  private _name: string;
+  private _subject: string;
+  private _participants: Participant[];
+  private _sessions: Session[];
+  private _seatArrangements: SeatArrangement[];
 
   constructor(id: string | undefined, localId: number, user: User, name: string, subject: string) {
-    this.id = id;
-    this.localId = localId;
-    this.user = user;
-    this.name = name;
-    this.subject = subject;
-    this.participants = [];
-    this.sessions = [];
-    this.seatArrangements = [];
+    super(id, localId);
+    this._user = user;
+    this._name = name;
+    this._subject = subject;
+    this._participants = [];
+    this._sessions = [];
+    this._seatArrangements = [];
   }
 
   addParticipant(participant: Participant) {
     if (this.getParticipant(participant.getId) == undefined) {
-      this.participants.push(participant);
+      this._participants.push(participant);
     }
+    this.update();
   }
 
   removeParticipant(participantId: string) {
-    this.participants.forEach((element: Participant, index: number) => {
+    this._participants.forEach((element: Participant, index: number) => {
       if (element.getId === participantId) {
-        this.participants.splice(index, 1)
+        this._participants.splice(index, 1)
       }
     });
+    this.update();
   }
 
   getParticipant(participantId: string): Participant | undefined {
-    for (let i = 0; i < this.participants.length; i++) {
-      if (this.participants.at(i)?.getId === participantId) {
-        return this.participants.at(i);
+    for (let i = 0; i < this._participants.length; i++) {
+      if (this._participants.at(i)?.getId === participantId) {
+        return this._participants.at(i);
       }
     }
 
@@ -51,22 +51,24 @@ export class Course {
 
   addSession(session: Session) {
     if (this.getSession(session.getId) == undefined) {
-      this.sessions.push(session);
+      this._sessions.push(session);
     }
+    this.update();
   }
 
   removeSession(sessionId: string) {
-    this.sessions.forEach((element: Session, index: number) => {
+    this._sessions.forEach((element: Session, index: number) => {
       if (element.getId === sessionId) {
-        this.sessions.splice(index, 1);
+        this._sessions.splice(index, 1);
       }
     });
+    this.update();
   }
 
   getSession(sessionId: string): Session | undefined {
-    for (let i = 0; i < this.sessions.length; i++) {
-      if (this.sessions.at(i)?.getId === sessionId) {
-        return this.sessions.at(i);
+    for (let i = 0; i < this._sessions.length; i++) {
+      if (this._sessions.at(i)?.getId === sessionId) {
+        return this._sessions.at(i);
       }
     }
 
@@ -75,36 +77,76 @@ export class Course {
 
   addSeatArrangement(seatArrangement: SeatArrangement) {
     if (this.getSeatArrangement(seatArrangement.getId) == undefined) {
-      this.seatArrangements.push(seatArrangement);
+      this._seatArrangements.push(seatArrangement);
     }
+    this.update();
   }
 
   removeSeatArrangement(arrangementId: string) {
     this.seatArrangements.forEach((element: SeatArrangement, index: number) => {
       if (element.getId === arrangementId) {
-        this.seatArrangements.splice(index, 1);
+        this._seatArrangements.splice(index, 1);
       }
     });
+    this.update();
+  }
+
+  get user(): User {
+    return this._user;
+  }
+
+  get name(): string {
+    return this._name;
   }
 
   getSeatArrangement(arrangementId: string): SeatArrangement | undefined {
-    for (let i = 0; i < this.seatArrangements.length; i++) {
-      if (this.seatArrangements.at(i)?.getId === arrangementId) {
-        return this.seatArrangements.at(i);
+    for (let i = 0; i < this._seatArrangements.length; i++) {
+      if (this._seatArrangements.at(i)?.getId === arrangementId) {
+        return this._seatArrangements.at(i);
       }
     }
 
     return undefined;
   }
 
-  get getId(): string {
-    if (this.id == undefined) {
-      return this.localId.toString();
-    }
-    return this.id;
+  get subject(): string {
+    return this._subject;
   }
 
-  set setId(id: string) {
-    this.id = id;
+  get participants(): Participant[] {
+    return this._participants;
+  }
+
+  get sessions(): Session[] {
+    return this._sessions;
+  }
+
+  get seatArrangements(): SeatArrangement[] {
+    return this._seatArrangements;
+  }
+
+  set name(value: string) {
+    this._name = value;
+    this.update();
+  }
+
+  set subject(value: string) {
+    this._subject = value;
+    this.update();
+  }
+
+  set participants(value: Participant[]) {
+    this._participants = value;
+    this.update();
+  }
+
+  set sessions(value: Session[]) {
+    this._sessions = value;
+    this.update();
+  }
+
+  set seatArrangements(value: SeatArrangement[]) {
+    this._seatArrangements = value;
+    this.update();
   }
 }

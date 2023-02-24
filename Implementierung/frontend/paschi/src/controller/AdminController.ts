@@ -1,52 +1,60 @@
-import {useUserStore} from "@/store/UserStore";
-import {User} from "@/model/User";
+import { User } from "@/model/User";
+import { UserService } from "@/service/UserService";
 
 export class AdminController {
-
   private static controller: AdminController = new AdminController();
+  private userService = UserService.getService();
   static readonly defaultPassword: string = "default";
 
-  private constructor() {
-  }
+  private constructor() {}
 
   static getAdminController(): AdminController {
     return this.controller;
   }
 
-  getUsers(): User[] {
-    // nur lokal
-    let users: User[] | undefined = [];
-    let user = useUserStore().getUser();
-    if (user !== undefined && user.auth) {
-      users.push(user);
-    }
+  async getUsers(): Promise<User[]> {
+    let users: User[] = [];
+    await this.userService.getAll().then((response: User[]) => {
+      response.forEach((user: User) => {
+        if (user.auth) {
+          users.push(user);
+        }
+      });
+    });
+
     return users;
   }
 
-  getUsersNotAuthenticated(): User[] {
-    // nur lokal
-    let users: User[] | undefined = [];
-    let user = useUserStore().getUser();
-    if (user !== undefined && !user.auth) {
-      users.push(user);
-    }
+  async getUsersNotAuthenticated(): Promise<User[]> {
+    let users: User[] = [];
+    await this.userService.getAll().then((response: User[]) => {
+      response.forEach((user: User) => {
+        if (!user.auth) {
+          users.push(user);
+        }
+      });
+    });
+
     return users;
   }
 
-  authUser(userId: string) {
-    let users: User[] = this.getUsersNotAuthenticated();
-    users.forEach((user: User) => {
-      if (user.getId === userId) {
-        user.auth = true;
-      }
+  async authUser(userId: string) {
+    await this.getUsersNotAuthenticated().then((response: User[]) => {
+      response.forEach(async (user: User) => {
+        if (user.getId === userId) {
+          user.auth = true;
+          await this.userService.adminUpdate(user);
+          return;
+        }
+      });
     });
   }
 
-  deleteUser(userId: string) {
-
+  async deleteUser(userId: string) {
+    await this.userService.delete(userId);
   }
 
-  resetPassword(userId: string) {
-
-  }
+  // resetPassword(userId: string) {
+  //
+  // }
 }

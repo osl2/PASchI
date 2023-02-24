@@ -161,11 +161,11 @@ export default defineComponent({
     /**
      * Methode zur Erstellung eines neuen Kurses mit dem vorher bestimmten Namen
      */
-    function confirmNewCourseClick() {
-      router.push({
+    async function confirmNewCourseClick() {
+      await router.push({
         name: "CourseDetailsPage",
         params: {
-          courseId: courseController.createCourse(
+          courseId: await courseController.createCourse(
             courseName.value,
             courseSubject.value
           ),

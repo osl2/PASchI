@@ -1,6 +1,6 @@
 <template>
   <navigation-bar extended>
-    <v-app-bar-title> Kursdetails </v-app-bar-title>
+    <v-app-bar-title> Kursdetails</v-app-bar-title>
     <template v-slot:extension>
       <v-btn @click="showCourseStatisticsClick">Kursstatistiken ansehen</v-btn>
       <v-btn @click="editCourseDetailsClick">Kurs bearbeiten</v-btn>
@@ -76,7 +76,7 @@
       <v-card max-width="800" min-width="570" rounded class="ma-1 v-col-5">
         <v-row class="v-col-12">
           <h2 class="ma-2">Schülerliste</h2>
-          <v-spacer />
+          <v-spacer/>
           <v-btn
             class="ml-15 ma-2"
             variant="flat"
@@ -85,7 +85,8 @@
             prepend-icon="mdi mdi-plus"
             min-width="228"
             @click="activateStudentCard"
-            >Schüler hinzufügen</v-btn
+          >Schüler hinzufügen
+          </v-btn
           >
           <v-icon
             v-if="studentListCollapsed"
@@ -108,13 +109,15 @@
           <v-card class="v-col-12" max-height="1000">
             <v-list max-height="500">
               <v-row class="ma-2" v-for="student in studentsInCourse"
-                >{{ student.firstName }} {{ student.lastName }}
-                <v-spacer />
+              >{{ student.firstName }} {{ student.lastName }}
+                <v-spacer/>
                 <v-btn
                   variant="tonal"
                   color="primary"
                   @click="editStudentClick(student)"
-                  ><v-icon>fas fa-pencil</v-icon></v-btn
+                >
+                  <v-icon>fas fa-pencil</v-icon>
+                </v-btn
                 >
                 <v-btn
                   class="ml-2"
@@ -122,7 +125,7 @@
                   color="primary"
                   @click="studentStatisticClick(student)"
                 >
-                  <v-icon> fas fa-chart-line </v-icon>
+                  <v-icon> fas fa-chart-line</v-icon>
                 </v-btn>
                 <v-btn
                   class="ml-2"
@@ -173,7 +176,8 @@
             width="150"
             variant="tonal"
             @click="cancelDeleteSessionClick"
-          >Abbrechen</v-btn
+          >Abbrechen
+          </v-btn
           >
           <v-btn
             height="50"
@@ -201,7 +205,7 @@ import { SessionController } from "@/controller/SessionController";
 import { useRouter } from "vue-router";
 export default defineComponent({
   name: "CourseDetailsPage",
-  components: { SideMenu, NavigationBar },
+  components: {SideMenu, NavigationBar},
   props: {
     courseId: {
       type: String,
@@ -253,6 +257,7 @@ export default defineComponent({
       }
       return [];
     }
+
     function getStudentsOfCourse(): Student[] {
       let students: undefined | Student[] =
         courseController.getStudentsOfCourse(props.courseId);
@@ -261,6 +266,7 @@ export default defineComponent({
       }
       return [];
     }
+
     function getStudentsNotInCourse(): Student[] {
       let students: undefined | Student[] =
         courseController.getStudentsNotInCourse(props.courseId);
@@ -269,6 +275,7 @@ export default defineComponent({
       }
       return [];
     }
+
     function getSeatArrangements(): SeatArrangement[] {
       let seatArrangements: undefined | SeatArrangement[] =
         courseController.getSeatArrangements(props.courseId);
@@ -336,7 +343,7 @@ export default defineComponent({
     function showCourseStatisticsClick() {
       router.push({
         name: "CourseStatisticPage",
-        params: { courseId: props.courseId },
+        params: {courseId: props.courseId},
       });
     }
 
@@ -346,7 +353,7 @@ export default defineComponent({
     function editCourseDetailsClick() {
       router.push({
         name: "EditCoursePage",
-        params: { courseId: props.courseId },
+        params: {courseId: props.courseId},
       });
     }
 
@@ -358,7 +365,7 @@ export default defineComponent({
     function editStudentClick(student: Student) {
       router.push({
         name: "EditStudentPage",
-        params: { studentId: student.getId },
+        params: {studentId: student.getId},
       });
     }
 
@@ -370,7 +377,7 @@ export default defineComponent({
     function sessionStatisticClick(session: Session) {
       router.push({
         name: "SessionStatisticPage",
-        params: { sessionId: session.getId },
+        params: {sessionId: session.getId},
       });
     }
 
@@ -382,7 +389,7 @@ export default defineComponent({
     function interactionMapClick(session: Session) {
       router.push({
         name: "ShowInteractionMapPage",
-        params: { sessionId: session.getId },
+        params: {sessionId: session.getId},
       });
     }
 
@@ -410,12 +417,12 @@ export default defineComponent({
      * Bei mobiler Version wird eine Sizung gestartet,
      * bei Desktop eine Liste mit Sitzornungen geöffnet
      */
-    function addSessionClick() {
-      if (isMobile.value) {
-        router.push({
+    async function addSessionClick() {
+      if (window.innerWidth < 1500) {
+        await router.push({
           name: "SessionPage",
           params: {
-            sessionId: sessionController.createSession(
+            sessionId: await sessionController.createSession(
               props.courseId,
               undefined,
               ""
@@ -432,11 +439,11 @@ export default defineComponent({
      *
      * @param seatArrangement Die Sitzordnung für die Sitzung
      */
-    function startSessionClick(seatArrangement: SeatArrangement) {
-      router.push({
+    async function startSessionClick(seatArrangement: SeatArrangement) {
+      await router.push({
         name: "SessionPageDesktop",
         params: {
-          sessionId: sessionController.createSession(
+          sessionId: await sessionController.createSession(
             props.courseId,
             seatArrangement.getId,
             ""
@@ -453,7 +460,7 @@ export default defineComponent({
     function studentStatisticClick(student: Student) {
       router.push({
         name: "StudentStatisticPage",
-        params: { studentId: student.getId },
+        params: {studentId: student.getId},
       });
     }
 

@@ -105,21 +105,21 @@ export default defineComponent({
     /**
      * Aktualisiert den Schüler mit den zuvor bestimmten Werten.
      */
-    function saveChangesClick() {
-      studentController.updateStudent(
+    async function saveChangesClick() {
+      await studentController.updateStudent(
         props.studentId,
         firstName.value,
         lastName.value
       );
-      router.push({ name: "ViewStudentsPage" });
+      await router.push({ name: "ViewStudentsPage" });
     }
 
     /**
      * Löscht den Schüler.
      */
-    function deleteStudentClick() {
-      studentController.deleteStudent(props.studentId);
-      router.push({ name: "ViewStudentsPage" });
+    async function deleteStudentClick() {
+      await studentController.deleteStudent(props.studentId);
+      await router.push({ name: "ViewStudentsPage" });
     }
 
     /**

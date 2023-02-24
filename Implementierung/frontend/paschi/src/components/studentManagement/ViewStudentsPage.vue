@@ -149,8 +149,8 @@ export default defineComponent({
     /**
      * Erstellt einen neuen Schüler mit den zuvor bestimmten Parametern.
      */
-    function confirmNewStudentClick() {
-      studentController.createStudent(
+    async function confirmNewStudentClick() {
+      await studentController.createStudent(
         studentFirstName.value,
         studentLastName.value
       );

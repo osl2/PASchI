@@ -5,14 +5,14 @@ import {RoleDto} from "@/dto/RoleDto";
 export class RoleMapper implements IModelDtoMapper<Role, RoleDto> {
 
   modelToDto(role: Role): RoleDto {
-    if (role == Role.USER) {
+    if (role.valueOf() == Role.USER.valueOf()) {
       return RoleDto.USER;
     }
     return RoleDto.ADMIN;
   }
 
-  dtoToModel(roleDto: RoleDto): Role {
-    if (roleDto == RoleDto.USER) {
+  async dtoToModel(roleDto: RoleDto): Promise<Role> {
+    if (roleDto.valueOf() == RoleDto.USER.valueOf()) {
       return Role.USER;
     }
     return Role.ADMIN;

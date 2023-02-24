@@ -108,11 +108,13 @@ export default defineComponent({
     function abortNewRoomClick() {
       enterRoomNameDialog.value = false;
     }
-    function confirmNewRoomClick() {
-      router.push({
-        name: "RoomEditor",
-        params: { roomId: roomController.createRoom(newRoomName.value) },
-      });
+    async function confirmNewRoomClick() {
+        await roomController.createRoom(newRoomName.value).then((res) => {
+          router.push({
+            name: "RoomEditor",
+            params: { roomId: res },
+          });
+        })
     }
     function newRoomClick() {
       newRoomName.value = "";

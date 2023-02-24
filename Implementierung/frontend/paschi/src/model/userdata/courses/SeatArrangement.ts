@@ -3,37 +3,37 @@ import {RoomObject} from "@/model/userdata/rooms/RoomObject";
 import {Participant} from "@/model/userdata/interactions/Participant";
 import {Course} from "@/model/userdata/courses/Course";
 import {Room} from "@/model/userdata/rooms/Room";
+import {DataObject} from "@/model/DataObject";
 
-export class SeatArrangement {
+export class SeatArrangement extends DataObject {
 
-  private id: string | undefined;
-  private localId: number;
-  user: User
-  name: string;
-  seatMap: Map<RoomObject, Participant>;
-  course: Course;
-  room: Room;
+  private readonly _user: User
+  private _name: string;
+  private _seatMap: Map<RoomObject, Participant>;
+  private readonly _course: Course;
+  private readonly _room: Room;
 
   constructor(id: string | undefined, localId: number, user: User, name: string, course: Course, room: Room) {
-    this.id = id;
-    this.localId = localId;
-    this.user = user;
-    this.name = name;
-    this.seatMap = new Map<RoomObject, Participant>();
-    this.course = course;
-    this.room = room;
+    super(id, localId);
+    this._user = user;
+    this._name = name;
+    this._seatMap = new Map<RoomObject, Participant>();
+    this._course = course;
+    this._room = room;
   }
 
   getParticipantForSeat(seat: RoomObject): Participant | undefined {
-    return this.seatMap.get(seat);
+    return this._seatMap.get(seat);
   }
 
   setSeat(seat: RoomObject, participant: Participant) {
-    this.seatMap.set(seat, participant);
+    this._seatMap.set(seat, participant);
+    this.update();
   }
 
   removeSeat(seat: RoomObject) {
-    this.seatMap.delete(seat);
+    this._seatMap.delete(seat);
+    this.update();
   }
 
   getAllStudents(): Participant[] {
@@ -58,29 +58,47 @@ export class SeatArrangement {
     return students;
   }
 
-  get getId(): string {
-    if (this.id == undefined) {
-      return this.localId.toString();
-    }
-    return this.id;
+  get user(): User {
+    return this._user;
   }
 
-  set setId(id: string) {
-    this.id = id;
+  get name(): string {
+    return this._name;
   }
 
-  copy(): SeatArrangement {
-    const map: Map<RoomObject, Participant> = new Map<RoomObject, Participant>();
-    this.seatMap.forEach((student: Participant, chair: RoomObject) => {
-      map.set(chair.copy(), student);
-    });
-
-    const arr = new SeatArrangement(undefined, 0, this.user, this.name, this.course, this.room.copy());
-
-    map.forEach((student: Participant, chair: RoomObject) => {
-      arr.setSeat(chair, student);
-      arr.room.addRoomObject(chair);
-    });
-    return arr;
+  get seatMap(): Map<RoomObject, Participant> {
+    return this._seatMap;
   }
+
+  get course(): Course {
+    return this._course;
+  }
+
+  get room(): Room {
+    return this._room;
+  }
+
+  set name(value: string) {
+    this._name = value;
+    this.update();
+  }
+
+  set seatMap(value: Map<RoomObject, Participant>) {
+    this._seatMap = value;
+  }
+
+  // copy(): SeatArrangement {
+  //   const map: Map<RoomObject, Participant> = new Map<RoomObject, Participant>();
+  //   this.seatMap.forEach((student: Participant, chair: RoomObject) => {
+  //     map.set(chair.copy(), student);
+  //   });
+  //
+  //   const arr = new SeatArrangement(undefined, 0, this.user, this.name, this.course, this.room.copy());
+  //
+  //   map.forEach((student: Participant, chair: RoomObject) => {
+  //     arr.setSeat(chair, student);
+  //     arr.room.addRoomObject(chair);
+  //   });
+  //   return arr;
+  // }
 }

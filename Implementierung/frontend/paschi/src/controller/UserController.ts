@@ -1,13 +1,12 @@
 import {User} from "@/model/User";
 import {useUserStore} from "@/store/UserStore";
 import {Role} from "@/model/Role";
-import {createPinia} from "pinia";
+import {UserService} from "@/service/UserService";
 
-// TODO: Services fürs Backend einbinden
 export class UserController {
 
   private static controller: UserController = new UserController();
-  private userStore = useUserStore(createPinia());
+  private userService = UserService.getService();
 
   private constructor() {
   }
@@ -16,47 +15,64 @@ export class UserController {
     return this.controller;
   }
 
-  login(email: string, password: string): boolean {
-    // nur lokal
-    let user = this.getUser();
-    return user.email === email && user.auth;
+  async login(email: string, password: string): Promise<string | undefined> {
+    let user: User | undefined;
+    user = await this.userService.login(email, password);
 
+    if (user == undefined) {
+      return undefined;
+    }
+
+    useUserStore().setUser(user);
+    return user.getId;
   }
 
-  register(firstName: string, lastName: string, email: string, password: string, repeatPassword: string) {
-    // TODO: auth vom admin setzen
-    this.userStore.setUser(
-      new User(
-        undefined,
-        this.userStore.getNextId(),
-        firstName,
-        lastName,
-        email,
-        false,
-        Role.USER,
-        undefined
-      ));
+  async loginWithToken(): Promise<string | undefined>  {
+    await this.userService.getToken();
+    return useUserStore().getUser()?.getId;
   }
 
-  update(firstName: string, lastName: string, email: string, password: string) {
+  async register(firstName: string, lastName: string, email: string, password: string, repeatPassword: string) {
+    if (password !== repeatPassword) {
+      return;
+    }
+    const user = new User(
+      undefined,
+      firstName,
+      lastName,
+      email,
+      password,
+      false,
+      Role.USER,
+      undefined
+    );
+    await this.userService.add(user);
+    user.deletePassword();
+  }
+
+  async update(firstName: string, lastName: string, email: string) {
     let user = this.getUser();
     if (user !== undefined) {
       user.firstName = firstName;
       user.lastName = lastName;
       user.email = email;
-      // TODO: Backend einbinden
+      await this.userService.update(user);
     }
   }
 
-  changePassword(oldPassword: string, newPassword: string, repeatPassword: string) {
-
-  }
-
   getUser(): User {
-    return this.userStore.getUser()!;
+    return useUserStore().getUser()!;
   }
 
-  delete() {
+  isLoggedIn(): boolean {
+    return useUserStore().isLoggedIn();
+  }
 
+  async delete() {
+    const user = useUserStore().getUser();
+    if (user !== undefined) {
+      useUserStore().deleteUser();
+      await this.userService.delete(user.getId);
+    }
   }
 }

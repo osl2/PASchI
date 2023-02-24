@@ -2,63 +2,70 @@ import {User} from "@/model/User";
 import {Interaction} from "@/model/userdata/interactions/Interaction";
 import {Course} from "@/model/userdata/courses/Course";
 import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
+import {DataObject} from "@/model/DataObject";
 
-export class Session {
+export class Session extends DataObject {
 
-  private id: string | undefined;
-  private localId: number;
-  user: User;
-  name: string;
-  date: string;
-  interactions: Interaction[];
-  undoInteractions: Interaction[];
-  course: Course;
-  seatArrangement: SeatArrangement | undefined;
+  private readonly _user: User;
+  private _name: string;
+  private _date: string;
+  private readonly _course: Course;
+  private _interactions: Interaction[];
+  private _undoInteractions: Interaction[];
+  private _seatArrangement: SeatArrangement | undefined;
 
   constructor(id: string | undefined, localId: number, user: User, name: string, date: string, course: Course,
               seatArrangement: SeatArrangement | undefined) {
-    this.id = id;
-    this.localId = localId;
-    this.user = user;
-    this.date = date;
-    this.name = name;
-    this.course = course;
-    this.seatArrangement = seatArrangement;
-    this.interactions = [];
-    this.undoInteractions = [];
+    super(id, localId);
+    this._user = user;
+    this._date = date;
+    this._name = name;
+    this._course = course;
+    this._seatArrangement = seatArrangement;
+    this._interactions = [];
+    this._undoInteractions = [];
   }
 
   addInteraction(interaction: Interaction) {
-    this.interactions.push(interaction);
-    this.undoInteractions = []
+    if (this.getInteraction(interaction.getId) == undefined) {
+      this._interactions.push(interaction);
+      this._undoInteractions = [];
+    }
+    this.update();
   }
 
   removeInteraction(interactionId: string) {
-    this.interactions.forEach((element: Interaction, index: number) => {
+    this._interactions.forEach((element: Interaction, index: number) => {
       if (element.getId === interactionId) {
-        this.interactions.splice(index, 1);
+        this._interactions.splice(index, 1);
       }
     });
+    this.update();
   }
 
-  undoInteraction() {
+  undoInteraction(): Interaction | undefined {
     let interaction = this.interactions.pop();
     if (interaction !== undefined) {
-      this.undoInteractions.push(interaction);
+      this._undoInteractions.push(interaction);
+      this.update();
+      return interaction;
     }
+
+    return undefined;
   }
 
   redoInteraction(): Interaction | undefined {
-    let interaction = this.undoInteractions.pop();
+    let interaction = this._undoInteractions.pop();
     if (interaction !== undefined) {
       this.interactions.push(interaction);
+      this.update();
       return interaction;
     }
     return undefined;
   }
 
   hasRedo(): boolean {
-    return this.undoInteractions.length != 0;
+    return this._undoInteractions.length != 0;
   }
 
   hasUndo(): boolean {
@@ -66,23 +73,56 @@ export class Session {
   }
 
   getInteraction(interactionId: string): Interaction | undefined {
-    for (let i = 0; i < this.interactions.length; i++) {
-      if (this.interactions.at(i)?.getId === interactionId) {
-        return this.interactions.at(i);
+    for (let i = 0; i < this._interactions.length; i++) {
+      if (this._interactions.at(i)?.getId === interactionId) {
+        return this._interactions.at(i);
       }
     }
 
     return undefined;
   }
 
-  get getId(): string {
-    if (this.id == undefined) {
-      return this.localId.toString();
-    }
-    return this.id;
+  get user(): User {
+    return this._user;
   }
 
-  set setId(id: string) {
-    this.id = id;
+  get name(): string {
+    return this._name;
+  }
+
+  get date(): string {
+    return this._date;
+  }
+
+  get interactions(): Interaction[] {
+    return this._interactions;
+  }
+
+  get course(): Course {
+    return this._course;
+  }
+
+  get seatArrangement(): SeatArrangement | undefined {
+    return this._seatArrangement;
+  }
+
+  set name(value: string) {
+    this._name = value;
+    this.update();
+  }
+
+  set date(value: string) {
+    this._date = value;
+    this.update();
+  }
+
+  set seatArrangement(value: SeatArrangement | undefined) {
+    this._seatArrangement = value;
+    this.update();
+  }
+
+  set interactions(value: Interaction[]) {
+    this._interactions = value;
+    this.update();
   }
 }

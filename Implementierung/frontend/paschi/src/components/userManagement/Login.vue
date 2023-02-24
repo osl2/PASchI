@@ -85,16 +85,29 @@ export default defineComponent({
     const password = ref("");
     const passwordError = ref(false);
 
+    onMounted(() => {
+      userController.loginWithToken().then((res) => {
+        if (res) {
+          if (userController.getUser().isAdmin()) {
+            router.push("/admin");
+          } else
+          router.push("/dashboard");
+        }
+      });
+    });
+
     /**
      * Loggt den Benutzer ein, die eingegebenen Accountdaten korrekt sind.
      */
     function login() {
-      if (userController.login(email.value, password.value)) {
-        router.push("Dashboard");
-      } else {
-        passwordError.value = true;
-        password.value = "";
-      }
+      userController.login(email.value, password.value).then((res) => {
+        if (res) {
+          if (userController.getUser().isAdmin()) {
+            router.push("/admin");
+          } else
+            router.push("/dashboard");
+        }
+      });
     }
 
     return {

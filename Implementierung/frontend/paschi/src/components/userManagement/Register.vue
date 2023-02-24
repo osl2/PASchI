@@ -72,7 +72,7 @@
             variant="flat"
             prepend-icon="fas fa-sign-in-alt"
             color="primary"
-            @click="register()"
+            @click="register"
             >Registrieren</v-btn
           >
         </v-card-item>
@@ -260,6 +260,12 @@ export default {
       passwordsEqualRule,
       nameMaxLengthRule,
       router,
+      firstName,
+      surName,
+      email,
+      password,
+      repeatPassword,
+      register
     };
   },
 };

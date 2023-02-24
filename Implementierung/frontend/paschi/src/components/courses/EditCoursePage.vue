@@ -177,9 +177,9 @@ export default defineComponent({
     /**
      * Methode, die den Kurs endgültig löscht.
      */
-    function deleteCourseClick() {
-      courseController.deleteCourse(props.courseId);
-      router.push({
+    async function deleteCourseClick() {
+      await courseController.deleteCourse(props.courseId);
+      await router.push({
         name:"ViewCoursesPage"
       })
     }
@@ -223,15 +223,15 @@ export default defineComponent({
     /**
      * Methode zum Erstellen einer Sitzordnung mit zuvor ausgewähltem Raum und Namen.
      */
-    function confirmAddSeatArrangement() {
-      let seatArrangementId: string | undefined =
-        seatArrangementController.createSeatArrangement(
+    async function confirmAddSeatArrangement() {
+      let seatArrangementId: string | undefined;
+       await seatArrangementController.createSeatArrangement(
           newSetArrangementName.value,
           newSeatArrangementRoom.value!.getId,
           props.courseId
-        );
-      if (typeof seatArrangementId == "string") {
-        router.push({
+        ).then((res) => seatArrangementId = res);
+      if (seatArrangementId) {
+        await router.push({
           name: "SeatArrangementPage",
           params: { seatArrangementId: seatArrangementId },
         });

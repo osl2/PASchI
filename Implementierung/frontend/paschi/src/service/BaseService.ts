@@ -1,28 +1,24 @@
+import {IModelDtoMapper} from "@/dto/mapper/IModelDtoMapper";
+
 export abstract class BaseService<Entity, Dto> {
 
-  private readonly base_url: string;
+  private readonly mapper: IModelDtoMapper<Entity, Dto>;
 
-  protected constructor(base_url: string) {
-    this.base_url = base_url;
+  protected constructor(mapper: IModelDtoMapper<Entity, Dto>) {
+    this.mapper = mapper;
   }
 
-  add(e: Entity) {
-
+  protected getMapper(): IModelDtoMapper<Entity, Dto> {
+    return this.mapper;
   }
 
-  update(e: Entity) {
+  abstract add(e: Entity): void;
 
-  }
+  abstract update(e: Entity): void;
 
-  getById(id: string)/*: Entity*/ {
+  abstract getById(id: string): Promise<Entity | undefined>;
 
-  }
+  abstract getAll(): Promise<Entity[]>;
 
-  getAll()/*: Entity[]*/ {
-
-  }
-
-  delete(id: string) {
-
-  }
+  abstract delete(id: string): void;
 }

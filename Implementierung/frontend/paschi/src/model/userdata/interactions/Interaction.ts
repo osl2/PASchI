@@ -1,36 +1,65 @@
 import {User} from "@/model/User";
 import {Participant} from "@/model/userdata/interactions/Participant";
 import {Category} from "@/model/userdata/interactions/Category";
+import {DataObject} from "@/model/DataObject";
+import {Session} from "@/model/userdata/courses/Session";
 
-export class Interaction {
+export class Interaction extends DataObject {
 
-  private id: string | undefined;
-  private localId: number;
-  user: User;
-  timeStamp: string;
-  fromParticipant: Participant;
-  toParticipant: Participant;
-  category: Category;
+  private readonly _user: User;
+  private readonly _timeStamp: string;
+  private readonly _session: Session;
+  private _fromParticipant: Participant;
+  private _toParticipant: Participant;
+  private _category: Category;
 
-  constructor(id: string | undefined, localId: number, user: User, timeStamp: string, fromParticipant: Participant,
-              toParticipant: Participant, category: Category) {
-    this.id = id;
-    this.localId = localId;
-    this.user = user;
-    this.timeStamp = timeStamp;
-    this.fromParticipant = fromParticipant;
-    this.toParticipant = toParticipant;
-    this.category = category;
+  constructor(id: string | undefined, localId: number, user: User, timeStamp: string, session: Session,
+              fromParticipant: Participant, toParticipant: Participant, category: Category) {
+    super(id, localId);
+    this._user = user;
+    this._timeStamp = timeStamp;
+    this._session = session;
+    this._fromParticipant = fromParticipant;
+    this._toParticipant = toParticipant;
+    this._category = category;
   }
 
-  get getId(): string {
-    if (this.id == undefined) {
-      return this.localId.toString();
-    }
-    return this.id;
+  get user(): User {
+    return this._user;
   }
 
-  set setId(id: string) {
-    this.id = id;
+  get timeStamp(): string {
+    return this._timeStamp;
+  }
+
+  get session(): Session {
+    return this._session;
+  }
+
+  get fromParticipant(): Participant {
+    return this._fromParticipant;
+  }
+
+  get toParticipant(): Participant {
+    return this._toParticipant;
+  }
+
+  get category(): Category {
+    return this._category;
+  }
+
+  set fromParticipant(value: Participant) {
+    this._fromParticipant = value;
+    this.update();
+  }
+
+  set toParticipant(value: Participant) {
+    this._toParticipant = value;
+    this.update();
+  }
+
+  set category(value: Category) {
+    this._category = value;
+    this.update();
   }
 }
