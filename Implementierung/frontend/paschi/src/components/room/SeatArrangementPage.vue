@@ -80,7 +80,7 @@ export default defineComponent({
     }
 
     function emptySeat(chair: Chair) {
-      seatArrangement.value?.removeSeat(chair);
+      seatArrangementController.deleteMapping(props.seatArrangementId, chair.getId);
     }
 
     function setSeat(chair: Chair, participant: Participant) {

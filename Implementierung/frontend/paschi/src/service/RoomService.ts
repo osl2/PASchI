@@ -22,7 +22,7 @@ export class RoomService extends BaseService<Room, RoomDto> {
   async add(room: Room) {
     const token = useUserStore().getUser()?.token;
     const roomDto = this.getMapper().modelToDto(room);
-    axios.post(ROOM_BASE_URL, roomDto, {
+    await axios.post(ROOM_BASE_URL, roomDto, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -36,7 +36,7 @@ export class RoomService extends BaseService<Room, RoomDto> {
   async update(room: Room) {
     const token = useUserStore().getUser()?.token;
     const roomDto = this.getMapper().modelToDto(room);
-    axios.put(ROOM_BASE_URL, roomDto, {
+    await axios.put(ROOM_BASE_URL, roomDto, {
       headers: {
         Authorization: `Bearer ${token}`
       }
