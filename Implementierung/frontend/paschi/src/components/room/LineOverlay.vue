@@ -1,7 +1,6 @@
 <template>
   <canvas
     style="
-      z-index: 0;
       width: 100vw;
       height: 100vh;
       top: 0;
@@ -9,18 +8,25 @@
       position: fixed;
       pointer-events: none;
     "
+    :style="{
+      zIndex: zIndex,
+    }"
     :width="overlayWidth"
     :height="overlayHeight"
     ref="canvas"
   >
   </canvas>
-  <div v-for="slot in slots" :id="slot.id" :style="{
-    position: 'absolute',
-    top: slot.y,
-    left: slot.x,
-    zIndex: 1,
-    transform: 'translate(-50%, -50%)'
-  }">
+  <div
+    v-for="slot in slots"
+    :id="slot.id"
+    :style="{
+        position: 'fixed',
+        top: slot.y + 'px',
+        left: slot.x + 'px',
+        zIndex: 1,
+        transform: 'translate(-50%, -50%)',
+      }"
+  >
     <slot name="lineMiddle" :id="slot.id" />
   </div>
 </template>
@@ -43,7 +49,6 @@ interface Line {
   y2: number;
   curve: Boolean;
   id: String;
-
 }
 
 export default defineComponent({
@@ -53,11 +58,16 @@ export default defineComponent({
       type: Array as PropType<Line[]>,
       required: true,
     },
+    zIndex: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
   },
   setup: function (props, context) {
     const canvas: Ref<HTMLCanvasElement | null> = ref(null);
 
-    const slots = ref<{id: String, x: number, y: number}[]>([])
+    const slots = ref<{ id: String; x: number; y: number }[]>([]);
 
     const overlayWidth = window.innerWidth;
     const overlayHeight = window.innerHeight;
@@ -80,22 +90,26 @@ export default defineComponent({
         y: line.y2 - vector.y / 4 + normal.y / 4,
       };
       const middle = {
-        x: line.curve? line.x1 + vector.x / 2 + (normal.x * 3) / 16 : line.x1 + vector.x / 2,
-        y: line.curve? line.y1 + vector.y / 2 + (normal.y * 3) / 16 : line.y1 + vector.y / 2,
+        x: line.curve
+          ? line.x1 + vector.x / 2 + (normal.x * 3) / 16
+          : line.x1 + vector.x / 2,
+        y: line.curve
+          ? line.y1 + vector.y / 2 + (normal.y * 3) / 16
+          : line.y1 + vector.y / 2,
       };
 
-      slots.value.push({id: line.id, x: middle.x, y: middle.y});
+      slots.value.push({ id: line.id, x: middle.x, y: middle.y });
 
       ctx.beginPath();
       ctx.moveTo(line.x1, line.y1);
       if (line.curve) {
         ctx.bezierCurveTo(c1.x, c1.y, c2.x, c2.y, line.x2, line.y2);
-      }
-      else {
+      } else {
         ctx.lineTo(line.x2, line.y2);
       }
-      ctx.strokeStyle = "#0b738b";
+      ctx.strokeStyle = "#ff8d00";
       ctx.lineWidth = 5;
+      console.log("drawing line");
       ctx.stroke();
     }
 
@@ -104,8 +118,6 @@ export default defineComponent({
     onMounted(() => {
       ctx = canvas.value?.getContext("2d");
     });
-
-
 
     const renderLines = () => {
       if (ctx && props.lines && props.lines.length > 0) {

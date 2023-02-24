@@ -4,8 +4,8 @@
     class="flex-column align-content-center justify-center"
   >
     <div class="d-flex align center justify-center">
-      <v-avatar class="justify-center" color="primary">
-        <v-icon> far fa-circle-user </v-icon>
+      <v-avatar class="font-weight-medium text-lg-button" color="primary">
+        {{ participant.firstName.charAt(0) + " " + participant.lastName.charAt(0) }}
         <slot />
       </v-avatar>
     </div>

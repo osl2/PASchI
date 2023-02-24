@@ -27,7 +27,7 @@
       </v-btn>
     </template>
   </NavigationBar>
-  <LineOverlay :lines="interactionLines" style="z-index: 10" />
+  <LineOverlay :lines="interactionLines" z-index="10" />
   <RoomDisplay
     style="z-index: 5"
     no-drag
@@ -340,6 +340,8 @@ export default defineComponent({
             y1: dragStart.value?.y,
             x2: dragPosition.value?.x,
             y2: dragPosition.value?.y,
+            curve: false,
+            id: "interactionLine",
           },
         ];
       }
