@@ -19,11 +19,11 @@ public enum Quality {
     /**
      * Bewertung mit drei Sternen.
      */
-    THREE(),
+    THREE_STAR(),
     /**
      * Bewertung mit vier Sternen.
      */
-    FOUR(),
+    FOUR_STAR(),
     /**
      * Bewertung mit fünf Sternen.
      */
