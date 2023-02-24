@@ -139,8 +139,8 @@ export default defineComponent({
     function abortNewStudentClick() {
       enterStudentNameDialog.value = false;
     }
-    function confirmNewStudentClick() {
-      studentController.createStudent(
+    async function confirmNewStudentClick() {
+      await studentController.createStudent(
         studentFirstName.value,
         studentLastName.value
       );

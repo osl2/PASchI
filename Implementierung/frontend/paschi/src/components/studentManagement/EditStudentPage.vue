@@ -107,9 +107,9 @@ export default defineComponent({
       await router.push({ name: "ViewStudentsPage" });
     }
 
-    function deleteStudentClick() {
-      studentController.deleteStudent(props.studentId);
-      router.push({ name: "ViewStudentsPage" });
+    async function deleteStudentClick() {
+      await studentController.deleteStudent(props.studentId);
+      await router.push({ name: "ViewStudentsPage" });
     }
     function cancelDeleteClick() {
       deleteStudentDialog.value = false;
