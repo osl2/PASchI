@@ -498,8 +498,8 @@ export default defineComponent({
       roomObjectErrorStyle.value = false;
     }
 
-    function addTable() {
-      roomController.addTable(
+    async function addTable() {
+      await roomController.addTable(
         roomId,
         roomWidth / 2,
         roomHeight / 2,
@@ -537,8 +537,9 @@ export default defineComponent({
       releaseFunction.value!(roomObject);
     }
 
-    function saveClick() {
-      router.back();
+    async function saveClick() {
+      await roomController.updateRoom(props.roomId);
+      await router.back();
     }
 
     return {
