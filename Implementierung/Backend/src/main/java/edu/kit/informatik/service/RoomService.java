@@ -184,8 +184,8 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
             }
             if (!found) {
                 returnChairs.add(newChair);
-                newChair.setPosition(positionRepository.save(newChair.getPosition()));
-                chairRepository.save(newChair);
+                //newChair.setPosition(positionRepository.save(newChair.getPosition()));
+                //chairRepository.save(newChair);
             }
         }
 
