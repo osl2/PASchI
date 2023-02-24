@@ -52,7 +52,7 @@ export class SessionController {
     }
 
     let currentDate = new Date();
-    let date = currentDate.getDate().toString() + '.' + currentDate.getMonth().toString() + '.' +
+    let date = currentDate.getDate().toString() + '.' + (currentDate.getMonth() + 1).toString() + '.' +
       currentDate.getFullYear().toString();
     let session = new Session(
       undefined,
