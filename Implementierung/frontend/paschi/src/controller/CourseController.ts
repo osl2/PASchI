@@ -37,7 +37,8 @@ export class CourseController {
     );
 
     await this.courseService.add(course);
-    return useCourseStore().addCourse(course);
+    const courseId = useCourseStore().addCourse(course);
+    return courseId;
   }
 
   async updateCourse(courseId: string, name: string, subject: string) {
