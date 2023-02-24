@@ -9,23 +9,23 @@ package edu.kit.informatik.model.userdata.interactions;
  */
 public enum Quality {
     /**
-     * Ein Stern
+     * Bewertung mit einem Stern.
      */
     ONE_STAR(),
     /**
-     * Zwei Sterne
+     * Bewertung mit zwei Sternen.
      */
     TWO_STAR(),
     /**
-     * Drei Sterne
+     * Bewertung mit drei Sternen.
      */
     THREE(),
     /**
-     * Vier Sterne
+     * Bewertung mit vier Sternen.
      */
     FOUR(),
     /**
-     * Fünf Sterne
+     * Bewertung mit fünf Sternen.
      */
     FIVE_STAR();
 
