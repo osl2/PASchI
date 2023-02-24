@@ -65,8 +65,8 @@ export class CourseController {
       course.seatArrangements.forEach((arrangement: SeatArrangement) => {
         this.arrangementController.deleteSeatArrangement(arrangement.getId);
       });
-      await this.courseService.delete(id);
       useCourseStore().deleteCourse(id);
+      await this.courseService.delete(id);
     }
   }
 
