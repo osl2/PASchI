@@ -37,7 +37,7 @@ export default defineConfig({
           {
             urlPattern: ({ url }) => url.pathname.startsWith("/api/"),
             handler: "NetworkFirst" as const,
-            method: "GET",
+            method: 'GET',
             options: {
               cacheName: "api",
               cacheableResponse: {
@@ -54,6 +54,20 @@ export default defineConfig({
               backgroundSync: {
                 name: "apiPOST",
                 options: {
+                  onSync: async ({ queue }) => {
+                    let entry;
+                    while ((entry = await queue.shiftRequest())) {
+                      try {
+                        await fetch(entry.request).then((response) => {
+                          return response;
+                        });
+                      } catch (error) {
+                        await queue.unshiftRequest(entry);
+                        return;
+                      }
+                    }
+                  },
+                  forceSyncFallback: true,
                   maxRetentionTime: 30 * 24 * 60 * 60,
                 },
               },
@@ -67,6 +81,19 @@ export default defineConfig({
               backgroundSync: {
                 name: "apiPUT",
                 options: {
+                  onSync: async ({ queue }) => {
+                    let entry;
+                    while ((entry = await queue.shiftRequest())) {
+                      try {
+                        await fetch(entry.request).then((response) => {
+                          return response;
+                        });
+                      } catch (error) {
+                        await queue.unshiftRequest(entry);
+                        return;
+                      }
+                    }
+                  },
                   maxRetentionTime: 30 * 24 * 60 * 60,
                 },
               },
@@ -80,6 +107,19 @@ export default defineConfig({
               backgroundSync: {
                 name: "apiDELETE",
                 options: {
+                  onSync: async ({ queue }) => {
+                    let entry;
+                    while ((entry = await queue.shiftRequest())) {
+                      try {
+                        await fetch(entry.request).then((response) => {
+                          return response;
+                        });
+                      } catch (error) {
+                        await queue.unshiftRequest(entry);
+                        return;
+                      }
+                    }
+                  },
                   maxRetentionTime: 30 * 24 * 60 * 60,
                 },
               },
