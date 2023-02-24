@@ -84,7 +84,7 @@ export class SessionMapper implements IModelDtoMapper<Session, SessionDto> {
     }
 
     const interactions: Interaction[] = [];
-    for (const interactionDto of sessionDto.interactionDtos) {
+    for (const interactionDto of sessionDto.interactions) {
       interactions.push(await this.interactionMapper.dtoToModel(interactionDto));
     }
 

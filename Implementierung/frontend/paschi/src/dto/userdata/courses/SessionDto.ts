@@ -10,7 +10,7 @@ export class SessionDto {
   date: string;
   courseId: string;
   seatArrangementId: string | undefined;
-  interactionDtos: InteractionDto[];
+  interactions: InteractionDto[];
 
   constructor(id: string, userId: string, createdAt: string, updatedAt: string, name: string, date: string,
               courseId: string, seatArrangementId: string | undefined, interactionsDtos: InteractionDto[]) {
@@ -22,6 +22,6 @@ export class SessionDto {
     this.date = date;
     this.courseId = courseId;
     this.seatArrangementId = seatArrangementId;
-    this.interactionDtos = interactionsDtos;
+    this.interactions = interactionsDtos;
   }
 }

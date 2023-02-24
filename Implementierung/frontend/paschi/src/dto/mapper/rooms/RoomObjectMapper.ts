@@ -30,10 +30,8 @@ export class RoomObjectMapper implements IModelDtoMapper<RoomObject, RoomObjectD
 
   async dtoToModel(roomObjectDto: RoomObjectDto): Promise<RoomObject> {
     if (roomObjectDto.type == 'table') {
-      console.log(roomObjectDto)
       return await this.tableMapper.dtoToModel(<TableDto> roomObjectDto);
     } else {
-      console.log(roomObjectDto)
       return await this.chairMapper.dtoToModel(<ChairDto> roomObjectDto);
     }
   }
