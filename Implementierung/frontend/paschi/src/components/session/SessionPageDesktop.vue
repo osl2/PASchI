@@ -272,12 +272,24 @@ export default defineComponent({
       return interactions;
     });
 
+    /**
+     * Gibt Schüler der auf einem Stuhl zurück
+     *
+     * @param chair Der Stuhl auf dem der Schüler sitzt
+     */
     function getParticipant(chair: Chair) {
       return seatArrangement?.getParticipantForSeat(chair);
     }
 
     const seatLabels = ref([]);
 
+    /**
+     * Setzt ersten Schüler einer Interaktion und fängt an eine Linie zu zeichnen, falls das Raumobjekt ein Stuhl mit Schüler ist.
+     *
+     * @param roomObject Das ausgewählte Raumobjekt
+     * @param roomCoordinates Die Raumkoordinaten des ausgewählten Raumobjekts
+     * @param displayCoordinates Die Bildschirmkoordinaten des ausgewählten Raumobjekts
+     */
     function selectStudent(
       roomObject: RoomObject,
       roomCoordinates: Coordinate,
@@ -289,6 +301,13 @@ export default defineComponent({
       }
     }
 
+    /**
+     * Setzt zweiten Schüler einer Interaktion, öffnet die Kategorieauswahl und beendet die Linie, falls das Raumobjekt ein Stuhl mit Schüler ist
+     *
+     * @param roomObject Das ausgewählte Raumobjekt
+     * @param roomCoordinates Die Raumkoordinaten des ausgewählten Raumobjekts
+     * @param displayCoordinates Die Bildschirmkoordinaten des ausgewählten Raumobjekts
+     */
     function selectTargetStudent(
       roomObject: RoomObject,
       roomCoordinates: Coordinate,
@@ -301,6 +320,13 @@ export default defineComponent({
       }
     }
 
+    /**
+     * Zeichnet eine Linie, falls das Raumobjekt ein Stuhl mit Schüler ist.
+     *
+     * @param roomObject Das ausgewählte Raumobjekt
+     * @param roomCoordinates Die Raumkoordinaten des ausgewählten Raumobjekts
+     * @param displayCoordinates Die Bildschirmkoordinaten des ausgewählten Raumobjekts
+     */
     function drag(
       roomObject: RoomObject,
       roomCoordinates: Coordinate,
@@ -319,6 +345,9 @@ export default defineComponent({
       }
     }
 
+    /**
+     * Gibt zurück, ob ein undo möglich ist.
+     */
     function getUndoPossible(): boolean {
       let undoPossible = sessionController.hasUndo(props.sessionId);
       if (typeof undoPossible === "boolean") {
@@ -326,6 +355,10 @@ export default defineComponent({
       }
       return false;
     }
+
+    /**
+     * Gibt zurück, ob ein redo möglich ist.
+     */
     function getRedoPossible(): boolean {
       let redoPossible = sessionController.hasRedo(props.sessionId);
       if (typeof redoPossible === "boolean") {
@@ -333,26 +366,49 @@ export default defineComponent({
       }
       return false;
     }
+
+    /**
+     * Führt ein undo aus.
+     */
     function undoClick() {
       sessionController.undoInteraction(props.sessionId);
     }
+
+    /**
+     * Führt ein redo aus.
+     */
     function redoClick() {
       sessionController.redoInteraction(props.sessionId);
     }
 
+    /**
+     * Beendet eine Sitzung, indem zum Dashboard geleitet wird
+     */
     function finishSessionClick() {
       router.push({
         name: "Dashboard",
       });
     }
+
+    /**
+     * Öffnet Dialog zum Erstellen einer neuen Kategorie.
+     */
     function addCategoryClick() {
       newCategoryName.value = "";
       newCategoryIsRated.value = false;
       newCategoryDialog.value = true;
     }
+
+    /**
+     * Der Kategoriedialog wird geschlossen.
+     */
     function cancelAddCategory() {
       newCategoryDialog.value = false;
     }
+
+    /**
+     * Es wird eine neue Kategorie mit den eingegebenen Parametern erstellt.
+     */
     function confirmAddCategory() {
       if (newCategoryIsRated.value) {
         categoryController.createRatedCategory(newCategoryName.value);
@@ -362,9 +418,20 @@ export default defineComponent({
       newCategoryDialog.value = false;
     }
 
+    /**
+     * Setzt die ausgewählte Kategorie für die Interaktion.
+     *
+     * @param category Die Kategorie für die Interaktion.
+     */
     function setCategory(category: Category | undefined) {
       selectedCategory.value = category;
     }
+
+    /**
+     * Setzt die Kategorie und öffnet den Qualitätsdialog, falls die Kategorie ausgewählt wurde, andernfalls wird die Kategorie erstellt.
+     *
+     * @param category DIe zu setzende Kategorie.
+     */
     function selectCategory(category: Category) {
       setCategory(category);
       categoryDialog.value = false;
@@ -374,13 +441,19 @@ export default defineComponent({
         createInteraction();
       }
     }
+
+    /**
+     * Setzt die zuvor gewählte Qualität und erstellt eine Interaktion
+     */
     function selectQuality() {
       createInteraction();
       starDialog.value = false;
     }
 
+    /**
+     * erstellt eine Kategorie mit den zuvor bestimmten Parametern.
+     */
     function createInteraction() {
-
       if (selectedCategory.value!.hasQuality()) {
         let quality: Quality;
         switch (categoryQuality.value) {
@@ -424,6 +497,9 @@ export default defineComponent({
       categoryQuality.value = 0;
     }
 
+    /**
+     * Setzt alle zuvor bestimmten Parameter wieder auf ihre Startwerte zurück.
+     */
     function resetInterActionParams() {
       selectedStudent = undefined;
       targetStudent = undefined;
@@ -432,6 +508,10 @@ export default defineComponent({
       categoryDialog.value = false;
       starDialog.value = false;
     }
+
+    /**
+     * Aktiviert die Anzeige der Interaktionsliste.
+     */
     function activateInteractionList() {
       interactionListDialog.value = true;
     }
@@ -464,7 +544,6 @@ export default defineComponent({
       selectQuality,
       categories,
       selectedCategory,
-      setCategory,
       starDialog,
       sessionName,
       newCategoryName,
