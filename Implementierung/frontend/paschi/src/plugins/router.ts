@@ -18,6 +18,7 @@ import SeatArrangementPage from "@/components/room/SeatArrangementPage.vue";
 import ViewRoomsPage from "@/components/room/ViewRoomsPage.vue";
 import SessionPage from "@/components/session/SessionPage.vue";
 import SessionPageDesktop from "@/components/session/SessionPageDesktop.vue";
+import { UserController } from "@/controller/UserController";
 
 const routes = [
   { path: "/", redirect: "/login" },
@@ -116,6 +117,25 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+router.beforeEach(async (to, from) => {
+  if (UserController.getUserController().getUser()) {
+    return;
+  } else {
+    await UserController.getUserController()
+      .loginWithToken()
+      .then((res) => {
+        if (res) {
+          return;
+        } else {
+          return { name: "Login" };
+        }
+      });
+  }
+  // make sure the user is authenticated
+  // TODO !isAuthenticated && to.name !== 'Login' && to.name !== 'Register'
+  // redirect the user to the login page
 });
 
 export default router;
