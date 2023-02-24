@@ -1,3 +1,13 @@
+/**
+ * Enum für die Benutzerrollen.
+ */
 export enum Role {
-  ADMIN = "ADMIN", USER = "USER"
+  /**
+   * Administator-Rolle
+   */
+  ADMIN = "ADMIN",
+  /**
+   * Benutzer-Rolle
+   */
+  USER = "USER"
 }
