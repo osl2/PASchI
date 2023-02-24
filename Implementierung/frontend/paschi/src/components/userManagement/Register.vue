@@ -201,6 +201,10 @@ export default {
       }
       return false;
     }
+
+    /**
+     * Falls kein Fehler in den Eingaben ist, wird der Nutzer registriert. Wenn eines der Felder leer ist, wird ein Fehlerhinweis aktiviert.
+     */
     function register() {
       if (
         !error([
