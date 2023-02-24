@@ -37,12 +37,12 @@ export class RoomController {
     return useRoomStore().addRoom(room);
   }
 
-  // updateRoom(id: string, name: string) {
-  //   let room = useRoomStore().getRoom(id);
-  //   if (room !== undefined) {
-  //     room.name = name;
-  //   }
-  // }
+  async updateRoom(id: string) {
+    let room = useRoomStore().getRoom(id);
+    if (room) {
+      await this.roomService.update(room);
+    }
+  }
 
   async deleteRoom(id: string) {
     let room = useRoomStore().getRoom(id);
