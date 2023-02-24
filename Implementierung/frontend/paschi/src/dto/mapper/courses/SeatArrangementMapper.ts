@@ -38,7 +38,7 @@ export class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, S
       arrangement.createdAt,
       arrangement.updatedAt,
       arrangement.name,
-      seatMap,
+      Object.fromEntries(seatMap),
       roomId,
       courseId
     );
@@ -76,14 +76,15 @@ export class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, S
       return arrangement;
     }
 
-    const seatMap: Map<RoomObject, Participant> = new Map<RoomObject, Participant>();
-    arrangementDto.seatMap.forEach((studentId: string, objectId: string) => {
-      const student = useStudentStore().getStudent(studentId)!;
-      const roomObject = useRoomObjectStore().getChair(objectId)!;
-      seatMap.set(roomObject, student);
-    });
-
-    arrangement.seatMap = seatMap;
+    // const map = Object.entries(arrangementDto.seatMap);
+    // const seatMap: Map<RoomObject, Participant> = new Map<RoomObject, Participant>();
+    // map.forEach(() => {
+    //   const student = useStudentStore().getStudent(studentId)!;
+    //   const roomObject = useRoomObjectStore().getChair(objectId)!;
+    //   seatMap.set(roomObject, student);
+    // });
+    //
+    // arrangement.seatMap = seatMap;
     return arrangement;
   }
 }

@@ -34,7 +34,7 @@
                 :key="participant.getId"
                 rounded
                 prepend-icon="fas fa-circle-user"
-                @click="seatArrangement.setSeat(chair.chair, participant)"
+                @click="setSeat(chair.chair, participant)"
               >
                 <v-list-item-title>
                   {{ participant.firstName }}
@@ -57,6 +57,7 @@ import SeatLabel from "@/components/room/SeatLabel.vue";
 import { SeatArrangementController } from "@/controller/SeatArrangementController";
 import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
 import { Chair } from "@/model/userdata/rooms/Chair";
+import {Participant} from "@/model/userdata/interactions/Participant";
 export default defineComponent({
   name: "SeatArrangementPage",
   components: { SeatLabel, RoomDisplay, NavigationBar },
@@ -82,12 +83,16 @@ export default defineComponent({
       seatArrangement.value?.removeSeat(chair);
     }
 
+    function setSeat(chair: Chair, participant: Participant) {
+      seatArrangementController.addMapping(props.seatArrangementId, chair.getId, participant.getId);
+    }
+
     const unseatedParticipants = computed(() => {
       return seatArrangement.value?.getStudentsNotAssigned();
     });
 
 
-    return { unseatedParticipants, emptySeat, seatArrangement, getParticipant };
+    return { unseatedParticipants, setSeat, emptySeat, seatArrangement, getParticipant };
   },
 });
 </script>
