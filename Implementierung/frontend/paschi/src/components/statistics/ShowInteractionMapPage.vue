@@ -4,8 +4,8 @@
     <template v-slot:main>
       <LineOverlay ref="overlay" :lines="interactionLines">
         <template v-slot:lineMiddle="lineMiddle">
-          <v-avatar>
-            {{ getInteractionBreakdown(lineMiddle.id) }}
+          <v-avatar color="interaction" density="compact" class="font-weight-medium">
+            {{ getInteractionBreakdown(lineMiddle.id).total }}
           </v-avatar>
         </template>
       </LineOverlay>
@@ -121,7 +121,7 @@ export default defineComponent({
       originSeatLabels.set(seatLabelId, coordinate);
     }
 
-    onBeforeMount(() => {
+    onMounted(() => {
       if (!interactions) {
         return;
       }
@@ -170,6 +170,7 @@ export default defineComponent({
       overlay,
       getParticipant,
       interactionLines,
+      interactions,
       setSeatLabelOrigin,
       getInteractionBreakdown: getInteractionCount,
     };
