@@ -76,15 +76,15 @@ export class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, S
       return arrangement;
     }
 
-    // const map = Object.entries(arrangementDto.seatMap);
-    // const seatMap: Map<RoomObject, Participant> = new Map<RoomObject, Participant>();
-    // map.forEach(() => {
-    //   const student = useStudentStore().getStudent(studentId)!;
-    //   const roomObject = useRoomObjectStore().getChair(objectId)!;
-    //   seatMap.set(roomObject, student);
-    // });
-    //
-    // arrangement.seatMap = seatMap;
+    const map = Object.entries(arrangementDto.seatMap);
+    const seatMap: Map<RoomObject, Participant> = new Map<RoomObject, Participant>();
+    map.forEach((value: [string, string]) => {
+      const student = useStudentStore().getStudent(value[1])!;
+      const roomObject = useRoomObjectStore().getChair(value[0])!;
+      seatMap.set(roomObject, student);
+    });
+
+    arrangement.seatMap = seatMap;
     return arrangement;
   }
 }
