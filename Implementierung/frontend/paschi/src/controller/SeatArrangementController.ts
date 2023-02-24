@@ -15,6 +15,9 @@ import {RoomObjectUtilities} from "@/components/room/RoomObjectUtilities";
 import {CourseController} from "@/controller/CourseController";
 import {Chair} from "@/model/userdata/rooms/Chair";
 
+/**
+ * Steuert den Kontrollfluss für die Sitzordnungsveraltung
+ */
 export class SeatArrangementController {
 
   private static controller: SeatArrangementController = new SeatArrangementController();
@@ -28,6 +31,13 @@ export class SeatArrangementController {
     return this.controller;
   }
 
+  /**
+   * Erstellt eine neue Sitzordnung.
+   *
+   * @param name Name
+   * @param roomId ID des Raums
+   * @param courseId ID des Kurses
+   */
   async createSeatArrangement(name: string, roomId: string, courseId: string): Promise<string | undefined> {
     let room = useRoomStore().getRoom(roomId);
     let course = useCourseStore().getCourse(courseId);
@@ -50,6 +60,12 @@ export class SeatArrangementController {
     return useSeatArrangementStore().addSeatArrangement(arrangement);
   }
 
+  /**
+   * Erstellt die Standardsitzordnung.
+   *
+   * @param name Name
+   * @param courseId ID des Kurses
+   */
   async createAutomaticSeatArrangement(name: string, courseId: string): Promise<string | undefined> {
     const roomController = RoomController.getRoomController();
     const roomObjectUtilities = RoomObjectUtilities.getRoomObjectUtilities();
@@ -93,6 +109,11 @@ export class SeatArrangementController {
     return seatArrangementId;
   }
 
+  /**
+   * Löscht eine Sitzordnung.
+   *
+   * @param id ID der Sitzordnung
+   */
   async deleteSeatArrangement(id: string) {
     let arrangement = useSeatArrangementStore().getSeatArrangement(id);
     if (arrangement !== undefined) {
@@ -109,14 +130,27 @@ export class SeatArrangementController {
     }
   }
 
+  /**
+   * Gibt eine Sitzordnung zurück.
+   *
+   * @param id ID der Sitzordnung
+   */
   getSeatArrangement(id: string): SeatArrangement | undefined {
     return useSeatArrangementStore().getSeatArrangement(id);
   }
 
+  /**
+   * Gibt alle Sitzordnungen zurück.
+   */
   getAllArrangements(): SeatArrangement[] {
     return useSeatArrangementStore().getAllSeatArrangements();
   }
 
+  /**
+   * Gibt alle Schüler einer Sitzordnung zurück.
+   *
+   * @param arrangementId ID der Sitzordnung
+   */
   getAllStudents(arrangementId: string): Participant[] | undefined {
     const arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
     if (arrangement == undefined) {
@@ -125,6 +159,11 @@ export class SeatArrangementController {
     return arrangement.getAllStudents();
   }
 
+  /**
+   * Gibt alle Schüler zurück, die noch nicht in Sitzordnung zugewiesen sind.
+   *
+   * @param arrangementId ID der Sitzordnung
+   */
   getStudentsNotAssigned(arrangementId: string): Participant[] | undefined {
     const arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
     if (arrangement == undefined) {
@@ -133,6 +172,13 @@ export class SeatArrangementController {
     return arrangement.getStudentsNotAssigned();
   }
 
+  /**
+   * Mappt einen Schüler auf einen Stuhl.
+   *
+   * @param arrangementId ID der Sitzordnung
+   * @param chairId ID des Stuhls
+   * @param studentId ID des Schülers
+   */
   addMapping(arrangementId: string, chairId: string, studentId: string) {
     let arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
     let student = useStudentStore().getStudent(studentId);
@@ -148,6 +194,12 @@ export class SeatArrangementController {
     this.arrangementService.update(arrangement).then();
   }
 
+  /**
+   * Löscht eine Zuordnung von Schüler auf Stuhl.
+   *
+   * @param arrangementId ID der Sitzordnung
+   * @param chairId ID des Stuhls
+   */
   deleteMapping(arrangementId: string, chairId: string) {
     let arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
     if (arrangement !== undefined) {
