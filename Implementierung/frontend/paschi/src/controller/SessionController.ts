@@ -12,6 +12,7 @@ import {Teacher} from "@/model/userdata/interactions/Teacher";
 import {SessionService} from "@/service/SessionService";
 import {CourseService} from "@/service/CourseService";
 import {ParticipantService} from "@/service/ParticipantService";
+import {all} from "axios";
 
 export class SessionController {
 
@@ -91,6 +92,20 @@ export class SessionController {
     }
 
     return session;
+  }
+
+  getRecentSessions(): Session[] {
+    const allSessions = useSessionStore().getAllSessions();
+    allSessions.sort((a: Session, b: Session) => {
+      return (a.createdAt <= b.createdAt) ? 1 : -1;
+    });
+    const sessions = [];
+    const max = allSessions.length < 5 ? allSessions.length : 5;
+    for (let i = 0; i < max; i++) {
+      sessions.push(allSessions[i]);
+    }
+
+    return sessions;
   }
 
   getCourseOfSession(sessionId: string): Course | undefined {
