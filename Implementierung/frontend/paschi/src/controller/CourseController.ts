@@ -37,8 +37,7 @@ export class CourseController {
     );
 
     await this.courseService.add(course);
-    const courseId = useCourseStore().addCourse(course);
-    return courseId;
+    return useCourseStore().addCourse(course);
   }
 
   async updateCourse(courseId: string, name: string, subject: string) {
@@ -75,6 +74,20 @@ export class CourseController {
   getAllCourses(): Course[] {
     this.courseService.getAll().then();
     return useCourseStore().getAllCourses();
+  }
+
+  getRecentCourses(): Course[] {
+    const allCourses = useCourseStore().getAllCourses();
+    allCourses.sort((a: Course, b: Course) => {
+      return (a.updatedAt <= b.updatedAt) ? 1 : -1;
+    });
+    const courses = [];
+    const max = allCourses.length < 5 ? allCourses.length : 5;
+    for (let i = 0; i < max; i++) {
+      courses.push(allCourses[i]);
+    }
+
+    return courses;
   }
 
   getStudentsOfCourse(courseId: string): Participant[] | undefined {
