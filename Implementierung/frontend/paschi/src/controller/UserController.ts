@@ -32,6 +32,11 @@ export class UserController {
     return useUserStore().getUser()?.getId;
   }
 
+  logout() {
+    useUserStore().deleteUser();
+    localStorage.clear();
+  }
+
   async register(firstName: string, lastName: string, email: string, password: string, repeatPassword: string) {
     if (password !== repeatPassword) {
       return;
@@ -50,12 +55,11 @@ export class UserController {
     user.deletePassword();
   }
 
-  async update(firstName: string, lastName: string, email: string) {
+  async update(firstName: string, lastName: string) {
     let user = this.getUser();
     if (user !== undefined) {
       user.firstName = firstName;
       user.lastName = lastName;
-      user.email = email;
       await this.userService.update(user);
     }
   }
