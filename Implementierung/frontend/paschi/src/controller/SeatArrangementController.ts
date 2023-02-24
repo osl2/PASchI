@@ -74,7 +74,7 @@ export class SeatArrangementController {
     for (let i = 0; i < students.length; i++) {
       const x = center.x + radius * Math.cos(interval * i);
       const y = center.y + radius * Math.sin(interval * i);
-      roomController.addChair(roomId, x, y,0);
+      roomController.addChair(roomId, x, y,0).then();
     }
 
     let arrangement = new SeatArrangement(undefined, useSeatArrangementStore().getNextId(),

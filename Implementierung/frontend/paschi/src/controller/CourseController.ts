@@ -5,10 +5,7 @@ import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {useCourseStore} from "@/store/CourseStore";
 import {UserController} from "@/controller/UserController";
 import {useStudentStore} from "@/store/StudentStore";
-import {useSessionStore} from "@/store/SessionStore";
-import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 import {RoomObject} from "@/model/userdata/rooms/RoomObject";
-import {Interaction} from "@/model/userdata/interactions/Interaction";
 import {SessionController} from "@/controller/SessionController";
 import {SeatArrangementController} from "@/controller/SeatArrangementController";
 import {CourseService} from "@/service/CourseService";
@@ -144,17 +141,8 @@ export class CourseController {
     return course.sessions;
   }
 
-  // addSessionToCourse(courseId: string, sessionId: string) {
-  //   let course = useCourseStore().getCourse(courseId);
-  //   let session = useSessionStore().getSession(sessionId);
-  //   if (course !== undefined && session !== undefined && session.course.getId === courseId) {
-  //     course.addSession(session);
-  //   }
-  // }
-
-  // TODO
-  deleteSession(courseId: string, sessionId: string) {
-    this.sessionController.deleteSession(sessionId);
+  async deleteSession(courseId: string, sessionId: string) {
+    await this.sessionController.deleteSession(sessionId);
   }
 
   getSeatArrangements(courseId: string): SeatArrangement[] | undefined {
@@ -165,41 +153,4 @@ export class CourseController {
 
     return course.seatArrangements;
   }
-
-  // addSeatArrangementToCourse(courseId: string, arrangementId: string) {
-  //   let course = useCourseStore().getCourse(courseId);
-  //   let arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
-  //   if (course !== undefined && arrangement !== undefined) {
-  //     course.addSeatArrangement(arrangement);
-  //     arrangement.course = course;
-  //   }
-  // }
-
-  // deleteSeatArrangement(courseId: string, arrangementId: string) {
-  //   let course = useCourseStore().getCourse(courseId);
-  //   let arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
-  //   if (course !== undefined && arrangement !== undefined) {
-  //     course.removeSeatArrangement(arrangementId);
-  //     useSeatArrangementStore().deleteSeatArrangement(arrangementId);
-  //   }
-  // }
-  //
-  // getInteractionsOfStudent(courseId: string, studentId: string): Interaction[] | undefined {
-  //   const student = useStudentStore().getStudent(studentId);
-  //   const course = useCourseStore().getCourse(courseId);
-  //   if (student == undefined || course == undefined) {
-  //     return undefined;
-  //   }
-  //
-  //   const interactions: Interaction[] = [];
-  //   course.sessions.forEach((session: Session) => {
-  //     session.interactions.forEach((interaction: Interaction) => {
-  //       if (interaction.fromParticipant.getId === studentId || interaction.toParticipant.getId === studentId) {
-  //         interactions.push(interaction);
-  //       }
-  //     });
-  //   });
-  //
-  //   return interactions;
-  // }
 }

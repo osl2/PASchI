@@ -6,7 +6,6 @@ import {Quality} from "@/model/userdata/interactions/Quality";
 import {CategoryService} from "@/service/CategoryService";
 
 const NAME_ERROR = "Name schon vergeben";
-const DEFAULT_ERROR = "Name von Standard Kategorie kann nicht geändert werden"
 const DEFAULT_CATEGORIES = ["Störung", "Antwort", "Frage"];
 
 export class CategoryController {
@@ -77,25 +76,6 @@ export class CategoryController {
       useCategoryStore().deleteCategory(category.name);
       await this.categoryService.delete(id);
     }
-  }
-
-  async updateCategory(id: string, name: string): Promise<string> {
-    if (useCategoryStore().hasName(name)) {
-      return NAME_ERROR;
-    }
-    let category = useCategoryStore().getCategory(id);
-    if (category !== undefined) {
-      if (DEFAULT_CATEGORIES.includes(category.name)) {
-        return DEFAULT_ERROR;
-      }
-      let categories = useCategoryStore().getByName(category.name);
-      await categories.forEach((category: Category) => {
-        category.name = name;
-        this.categoryService.update(category);
-      });
-    }
-
-    return name;
   }
 
   getCategory(id: string): Category | undefined {

@@ -60,13 +60,6 @@ export class SessionController {
     return useSessionStore().addSession(session);
   }
 
-  // updateSession(id: string, name: string) {
-  //   let session = useSessionStore().getSession(id);
-  //   if (session !== undefined) {
-  //     session.name = name;
-  //   }
-  // }
-
   async deleteSession(id: string) {
     let session = useSessionStore().getSession(id);
     if (session !== undefined) {
@@ -152,14 +145,6 @@ export class SessionController {
     return interaction.getId;
   }
 
-  // deleteInteraction(sessionId: string, interactionId: string) {
-  //   let session = useSessionStore().getSession(sessionId);
-  //   if (session !== undefined) {
-  //     session.removeInteraction(interactionId);
-  //     useInteractionStore().deleteInteraction(interactionId);
-  //   }
-  // }
-
   undoInteraction(sessionId: string) {
     let session = useSessionStore().getSession(sessionId);
     if (session !== undefined) {
@@ -208,14 +193,6 @@ export class SessionController {
     }
     return session.hasUndo();
   }
-
-  // setSeatArrangementOfSession(sessionId: string, arrangementId: string) {
-  //   let session = useSessionStore().getSession(sessionId);
-  //   let arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
-  //   if (session !== undefined && arrangement !== undefined) {
-  //     session.seatArrangement = arrangement;
-  //   }
-  // }
 
   getSeatArrangementOfSession(sessionId: string) {
     let session = useSessionStore().getSession(sessionId);
