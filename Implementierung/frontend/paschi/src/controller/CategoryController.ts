@@ -12,17 +12,9 @@ const DEFAULT_CATEGORIES = ["Störung", "Antwort", "Frage"];
 export class CategoryController {
 
   private static controller: CategoryController = new CategoryController();
-  private userController = UserController.getUserController();
   private categoryService = CategoryService.getService();
 
   private constructor() {
-    this.categoryService.getAll().then(() => {
-      if (useCategoryStore().getAllCategories().length == 0) {
-        this.createCategory(DEFAULT_CATEGORIES[0]).then();
-        this.createRatedCategory(DEFAULT_CATEGORIES[1]).then();
-        this.createRatedCategory(DEFAULT_CATEGORIES[2]).then();
-      }
-    });
   }
 
   static getCategoryController(): CategoryController {
@@ -33,7 +25,8 @@ export class CategoryController {
     if (useCategoryStore().hasName(name)) {
       return NAME_ERROR;
     }
-    let category = new Category(undefined, useCategoryStore().getNextId(), this.userController.getUser(), name);
+    let category = new Category(undefined, useCategoryStore().getNextId(),
+      UserController.getUserController().getUser(), name);
     await this.categoryService.add(category);
     return useCategoryStore().addCategory(category);
   }
@@ -42,17 +35,38 @@ export class CategoryController {
     if (useCategoryStore().hasName(name)) {
       return NAME_ERROR;
     }
-    let categoryId = "";
-    for (let i = 0; i < 5; i++) {
-      let category = new RatedCategory(undefined, useCategoryStore().getNextId(), this.userController.getUser(),
-        name, i);
-      useCategoryStore().addRatedCategory(category)
-      await this.categoryService.add(category);
-      if (i == 0) {
-        useCategoryStore().addCategory(category);
-        categoryId = category.getId;
-      }
-    }
+    let categoryId;
+    let category = new RatedCategory(undefined, useCategoryStore().getNextId(),
+      UserController.getUserController().getUser(),
+      name, Quality.ONE_STAR);
+    useCategoryStore().addRatedCategory(category)
+    await this.categoryService.add(category);
+    useCategoryStore().addCategory(category);
+    categoryId = category.getId;
+
+    category = new RatedCategory(undefined, useCategoryStore().getNextId(),
+      UserController.getUserController().getUser(),
+      name, Quality.TWO_STAR);
+    useCategoryStore().addRatedCategory(category)
+    await this.categoryService.add(category);
+
+    category = new RatedCategory(undefined, useCategoryStore().getNextId(),
+      UserController.getUserController().getUser(),
+      name, Quality.THREE_STAR);
+    useCategoryStore().addRatedCategory(category)
+    await this.categoryService.add(category);
+
+    category = new RatedCategory(undefined, useCategoryStore().getNextId(),
+      UserController.getUserController().getUser(),
+      name, Quality.FOUR_STAR);
+    useCategoryStore().addRatedCategory(category)
+    await this.categoryService.add(category);
+
+    category = new RatedCategory(undefined, useCategoryStore().getNextId(),
+      UserController.getUserController().getUser(),
+      name, Quality.FIVE_STAR);
+    useCategoryStore().addRatedCategory(category)
+    await this.categoryService.add(category);
 
     return categoryId;
   }
@@ -117,5 +131,16 @@ export class CategoryController {
 
   getRatedCategoriesByName(name: string): RatedCategory[] {
     return useCategoryStore().getRatedCategories(name);
+  }
+
+  async getAllCategories() {
+    await this.categoryService.getAll();
+    if (useCategoryStore().getAllCategories().length == 0) {
+      await this.createCategory(DEFAULT_CATEGORIES[0]);
+      await this.createRatedCategory(DEFAULT_CATEGORIES[1]);
+      await this.createRatedCategory(DEFAULT_CATEGORIES[2]);
+    }
+    console.log(useCategoryStore().getAllCategories());
+    console.log(useCategoryStore().getRatedCategories('Frage'));
   }
 }

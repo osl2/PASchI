@@ -32,19 +32,23 @@ export class RatedCategoryMapper implements IModelDtoMapper<RatedCategory, Rated
 
   async dtoToModel(ratedCategoryDto: RatedCategoryDto): Promise<RatedCategory> {
     const userController = UserController.getUserController();
+    const quality = await this.qualityMapper.dtoToModel(ratedCategoryDto.quality);
 
-    let category = <RatedCategory> useCategoryStore().getCategory(ratedCategoryDto.id);
+    let category = <RatedCategory> useCategoryStore().getCategory(ratedCategoryDto.name);
     if (category == undefined) {
       category = new RatedCategory(
         ratedCategoryDto.id,
         0,
         userController.getUser(),
         ratedCategoryDto.name,
-        await this.qualityMapper.dtoToModel(ratedCategoryDto.quality)
+        quality
       );
+      if (!useCategoryStore().hasName(ratedCategoryDto.name)) {
+        useCategoryStore().addCategory(category);
+      }
+      useCategoryStore().addRatedCategory(category)
       category.createdAt = ratedCategoryDto.createdAt;
       category.updatedAt = ratedCategoryDto.updatedAt;
-      useCategoryStore().addCategory(category);
     }
 
     return category;

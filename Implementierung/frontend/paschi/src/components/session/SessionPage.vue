@@ -531,7 +531,7 @@ export default defineComponent({
     /**
      * Methode, die eine Interaktion mit den zuvor bestimmten Parametern erstellt
      */
-    function createInteraction() {
+    async function createInteraction() {
       if (selectedCategory.value!.hasQuality()) {
         let quality: Quality;
         switch (categoryQuality.value) {
@@ -551,7 +551,7 @@ export default defineComponent({
             quality = Quality.FIVE_STAR;
             break;
         }
-        sessionController.createInteraction(
+        await sessionController.createInteraction(
           props.sessionId,
           firstParticipant.value!.getId,
           secondParticipant.value!.getId,
@@ -561,7 +561,7 @@ export default defineComponent({
           )!.getId
         );
       } else {
-        sessionController.createInteraction(
+        await sessionController.createInteraction(
           props.sessionId,
           firstParticipant.value!.getId,
           secondParticipant.value!.getId,

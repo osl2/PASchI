@@ -2,6 +2,7 @@ import {User} from "@/model/User";
 import {useUserStore} from "@/store/UserStore";
 import {Role} from "@/model/Role";
 import {UserService} from "@/service/UserService";
+import {CategoryController} from "@/controller/CategoryController";
 
 export class UserController {
 
@@ -24,11 +25,15 @@ export class UserController {
     }
 
     useUserStore().setUser(user);
+    await CategoryController.getCategoryController().getAllCategories();
     return user.getId;
   }
 
   async loginWithToken(): Promise<string | undefined>  {
     await this.userService.getToken();
+    if (useUserStore().isLoggedIn()) {
+      await CategoryController.getCategoryController().getAllCategories();
+    }
     return useUserStore().getUser()?.getId;
   }
 

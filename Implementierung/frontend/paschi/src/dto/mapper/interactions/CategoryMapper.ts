@@ -20,7 +20,7 @@ export class CategoryMapper implements IModelDtoMapper<Category, CategoryDto> {
   }
 
   modelToDto(category: Category): CategoryDto {
-    if (category.hasQuality()) {
+    if (category instanceof RatedCategory) {
       return this.ratedCategoryMapper.modelToDto(<RatedCategory> category);
     }
 
@@ -34,8 +34,8 @@ export class CategoryMapper implements IModelDtoMapper<Category, CategoryDto> {
   }
 
   async dtoToModel(categoryDto: CategoryDto): Promise<Category> {
-    if (categoryDto instanceof RatedCategoryDto) {
-      return this.ratedCategoryMapper.dtoToModel(categoryDto);
+    if ("quality" in categoryDto) {
+      return this.ratedCategoryMapper.dtoToModel(<RatedCategoryDto> categoryDto);
     }
 
     const userController = UserController.getUserController();

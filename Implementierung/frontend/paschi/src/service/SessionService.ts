@@ -36,6 +36,7 @@ export class SessionService extends BaseService<Session, SessionDto> {
   async update(session: Session) {
     const token = useUserStore().getUser()?.token;
     const sessionDto = this.getMapper().modelToDto(session);
+    console.log("sessionDto", sessionDto);
     await axios.put(SESSION_BASE_URL, sessionDto, {
       headers: {
         Authorization: `Bearer ${token}`

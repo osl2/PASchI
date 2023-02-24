@@ -118,10 +118,11 @@ export class SessionController {
     return session.interactions;
   }
 
-  createInteraction(sessionId: string, fromParticipantId: string, toParticipantId: string,
-                    categoryId: string): string | undefined {
+  async createInteraction(sessionId: string, fromParticipantId: string, toParticipantId: string,
+                    categoryId: string): Promise<string | undefined> {
     let session = useSessionStore().getSession(sessionId);
     let category = useCategoryStore().getCategory(categoryId);
+    console.log('category id ', category);
     let fromParticipant = useStudentStore().getStudent(fromParticipantId);
     let toParticipant = useStudentStore().getStudent(toParticipantId);
     if (session == undefined || category == undefined || fromParticipant == undefined || toParticipant == undefined) {
@@ -139,12 +140,13 @@ export class SessionController {
       toParticipant,
       category
     );
+    console.log('interaction', interaction);
     useInteractionStore().addInteraction(interaction);
     session.addInteraction(interaction);
+    await this.sessionService.update(session).then();
+
     fromParticipant.addInteraction(interaction);
     toParticipant.addInteraction(interaction);
-
-    this.sessionService.update(session).then();
     ParticipantService.getService().update(toParticipant).then();
     ParticipantService.getService().update(fromParticipant).then();
     return interaction.getId;

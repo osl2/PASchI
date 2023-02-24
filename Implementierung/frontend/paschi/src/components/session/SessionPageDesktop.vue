@@ -455,7 +455,7 @@ export default defineComponent({
     /**
      * erstellt eine Kategorie mit den zuvor bestimmten Parametern.
      */
-    function createInteraction() {
+    async function createInteraction() {
       if (selectedCategory.value!.hasQuality()) {
         let quality: Quality;
         switch (categoryQuality.value) {
@@ -475,7 +475,7 @@ export default defineComponent({
             quality = Quality.FIVE_STAR;
             break;
         }
-        sessionController.createInteraction(
+        await sessionController.createInteraction(
           props.sessionId,
           selectedStudent!.getId,
           targetStudent!.getId,
@@ -485,7 +485,7 @@ export default defineComponent({
           )!.getId
         );
       } else {
-        sessionController.createInteraction(
+        await sessionController.createInteraction(
           props.sessionId,
           selectedStudent!.getId,
           targetStudent!.getId,

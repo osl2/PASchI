@@ -88,14 +88,15 @@ export const useCategoryStore = defineStore('categories', {
       return categories;
     },
     hasName(name: string): boolean {
+      let hasName = false;
       this.categories.forEach((element) => {
         if (element.name === name) {
           // @ts-ignore
-          return true;
+          hasName = true;
         }
       });
 
-      return false;
+      return hasName;
     }
   }
 })

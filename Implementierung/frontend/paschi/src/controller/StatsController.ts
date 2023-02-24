@@ -3,6 +3,7 @@ import {SessionController} from "@/controller/SessionController";
 import {CourseController} from "@/controller/CourseController";
 import {Interaction} from "@/model/userdata/interactions/Interaction";
 import {Session} from "@/model/userdata/courses/Session";
+import {Quality} from "@/model/userdata/interactions/Quality";
 
 const CATEGORY_NAME = "störung";
 
@@ -52,7 +53,7 @@ export class StatsController {
       // Summe der Qualitäten aller Interaktionen.
       let quality = interaction.category.getQuality();
       if (quality != undefined) {
-        qualitySum += quality + 1;
+        qualitySum += this.getQualityAsNumber(quality) + 1;
         ++numInteractions;
       }
     });
@@ -200,7 +201,7 @@ export class StatsController {
         ++valueArray[0];
         if (quality != undefined) {
           valueArray[1]++;
-          valueArray[2] += quality + 1;
+          valueArray[2] += this.getQualityAsNumber(quality) + 1;
         }
         if (disturbance) {
           ++valueArray[3];
@@ -208,7 +209,7 @@ export class StatsController {
         students.set(from.getId, valueArray);
       } else {
         if (quality != undefined && disturbance) {
-          students.set(from.getId, [1, 1, quality + 1, 1]);
+          students.set(from.getId, [1, 1, this.getQualityAsNumber(quality) + 1, 1]);
         } else if (disturbance) {
           students.set(from.getId, [1, 0, 0, 1]);
         } else {
@@ -279,5 +280,20 @@ export class StatsController {
     });
 
     return [topInteractions, topQuality, bottomInteractions, bottomQuality, topDisturbance];
+  }
+
+  private getQualityAsNumber(quality: Quality): number {
+    switch (quality) {
+      case Quality.ONE_STAR:
+        return 1;
+      case Quality.TWO_STAR:
+        return 2;
+      case Quality.THREE_STAR:
+        return 3;
+      case Quality.FOUR_STAR:
+        return 4;
+      case Quality.FIVE_STAR:
+        return 5;
+    }
   }
 }

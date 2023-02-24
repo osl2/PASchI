@@ -26,6 +26,7 @@ export class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
     const toParticipantId = interaction.toParticipant.getId;
     const fromParticipantId = interaction.fromParticipant.getId;
     const categoryId = interaction.category.getId;
+    console.log(categoryId);
 
     return new InteractionDto(
       interaction.getId,
