@@ -57,6 +57,7 @@ export class SessionService extends BaseService<Session, SessionDto> {
     }).catch((error) => {
       console.log(error);
     });
+    console.log(session);
 
     if (session != undefined) {
       return session;
