@@ -74,7 +74,7 @@
 import AppBar from "@/components/navigation/NavigationBar.vue";
 import router from "@/plugins/router";
 import { UserController } from "@/controller/UserController";
-import { defineComponent, ref } from "vue";
+import {defineComponent, onMounted, ref} from "vue";
 export default defineComponent({
   name: "Login",
   components: { AppBar },

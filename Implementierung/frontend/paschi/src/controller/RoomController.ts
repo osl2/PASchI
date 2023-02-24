@@ -16,7 +16,6 @@ import {SeatArrangementService} from "@/service/SeatArrangementService";
 export class RoomController {
   private static controller: RoomController = new RoomController();
   private userController = UserController.getUserController();
-  private arrangementController = SeatArrangementController.getSeatArrangementController();
   private roomService = RoomService.getService();
 
   private constructor() {}
@@ -45,13 +44,14 @@ export class RoomController {
   }
 
   async deleteRoom(id: string) {
+    const arrangementController = SeatArrangementController.getSeatArrangementController();
     let room = useRoomStore().getRoom(id);
     if (room !== undefined) {
       useSeatArrangementStore()
         .getAllSeatArrangements()
         .forEach((arrangement: SeatArrangement) => {
           if (arrangement.room.getId === id) {
-            this.arrangementController.deleteSeatArrangement(arrangement.getId);
+            arrangementController.deleteSeatArrangement(arrangement.getId);
           }
         });
     }

@@ -177,7 +177,7 @@ export default {
           passwordsEqualRule(),
         ])
       ) {
-        userController.update(firstName.value, lastName.value, userController.getUser().email, password.value);
+        userController.update(firstName.value, lastName.value, userController.getUser().email);
         router.push("Dashboard")
       }
       else if (

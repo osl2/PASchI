@@ -10,6 +10,10 @@ import {Participant} from "@/model/userdata/interactions/Participant";
 import {SeatArrangementService} from "@/service/SeatArrangementService";
 import {CourseService} from "@/service/CourseService";
 import {SessionService} from "@/service/SessionService";
+import {RoomController} from "@/controller/RoomController";
+import {RoomObjectUtilities} from "@/components/room/RoomObjectUtilities";
+import {CourseController} from "@/controller/CourseController";
+import {Chair} from "@/model/userdata/rooms/Chair";
 
 export class SeatArrangementController {
 
@@ -46,10 +50,10 @@ export class SeatArrangementController {
     return useSeatArrangementStore().addSeatArrangement(arrangement);
   }
 
-  createAutomaticSeatArrangement(name: string, courseId: string): string | undefined {
+  async createAutomaticSeatArrangement(name: string, courseId: string): Promise<string | undefined> {
     const roomController = RoomController.getRoomController();
     const roomObjectUtilities = RoomObjectUtilities.getRoomObjectUtilities();
-    let roomId = roomController.createRoom(name);
+    let roomId = await roomController.createRoom(name);
     const room = roomController.getRoom(roomId);
     const course = CourseController.getCourseController().getCourse(courseId);
     if(room == undefined || course == undefined) {
@@ -73,9 +77,9 @@ export class SeatArrangementController {
       roomController.addChair(roomId, x, y,0);
     }
 
-    let arrangement = new SeatArrangement(undefined, this.seatArrangementStore.getNextId(),
+    let arrangement = new SeatArrangement(undefined, useSeatArrangementStore().getNextId(),
       this.userController.getUser(), name, course, room);
-    this.seatArrangementStore.addSeatArrangement(arrangement);
+    useSeatArrangementStore().addSeatArrangement(arrangement);
     course.addSeatArrangement(arrangement);
 
     const seatArrangementId = arrangement.getId;

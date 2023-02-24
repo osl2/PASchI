@@ -260,12 +260,6 @@ export default {
       passwordsEqualRule,
       nameMaxLengthRule,
       router,
-      firstName,
-      surName,
-      email,
-      password,
-      repeatPassword,
-      register
     };
   },
 };
