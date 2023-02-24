@@ -23,10 +23,19 @@ export class CourseController {
   private constructor() {
   }
 
+  /**
+   * Gibt eine Instanz des Kurscontrollers zurück.
+   */
   static getCourseController(): CourseController {
     return this.controller;
   }
 
+  /**
+   * Erstellt einen neuen Kurs.
+   *
+   * @param name Name des Kurses.
+   * @param subject Bezeichnung des Kursfachs.
+   */
   async createCourse(name: string, subject: string): Promise<string> {
     const course = new Course(
       undefined,
@@ -40,6 +49,13 @@ export class CourseController {
     return useCourseStore().addCourse(course);
   }
 
+  /**
+   * Aktualisiert die Kursdaten mit den eingegebenen Daten.
+   *
+   * @param courseId Id des zu aktualisierenden Kurses
+   * @param name Neuer Kursname.
+   * @param subject Neuer Kursfachname.
+   */
   async updateCourse(courseId: string, name: string, subject: string) {
     let course = useCourseStore().getCourse(courseId);
     if (course !== undefined) {
@@ -49,6 +65,11 @@ export class CourseController {
     }
   }
 
+  /**
+   * Löscht einen Kurs.
+   *
+   * @param id Die id des zu löschenden Kurses.
+   */
   async deleteCourse(id: string) {
     let course = useCourseStore().getCourse(id);
     if (course !== undefined) {
@@ -67,15 +88,26 @@ export class CourseController {
     }
   }
 
+  /**
+   * Gibt den zur id gehörenden Kurs zurück.
+   *
+   * @param id Id des Kurses.
+   */
   getCourse(id: string): Course | undefined {
     return useCourseStore().getCourse(id);
   }
 
+  /**
+   * Gibt alle Kurse des Benutzers zurück.
+   */
   getAllCourses(): Course[] {
     this.courseService.getAll().then();
     return useCourseStore().getAllCourses();
   }
 
+  /**
+   * Gibt die aktuellsten Kurse zurück.
+   */
   getRecentCourses(): Course[] {
     const allCourses = useCourseStore().getAllCourses();
     allCourses.sort((a: Course, b: Course) => {
@@ -90,6 +122,11 @@ export class CourseController {
     return courses;
   }
 
+  /**
+   * Gibt Schüler des Kurses zurück.
+   *
+   * @param courseId Id des Kurses.
+   */
   getStudentsOfCourse(courseId: string): Participant[] | undefined {
     let course = useCourseStore().getCourse(courseId);
     if (course == undefined) {
@@ -99,6 +136,11 @@ export class CourseController {
     return course.participants;
   }
 
+  /**
+   * Gibt alle Schüler eines Benutzers zurück, die nicht in dem Kurs sind.
+   *
+   * @param courseId Die Kurs Id.
+   */
   getStudentsNotInCourse(courseId: string): Participant[] | undefined {
     let course = useCourseStore().getCourse(courseId);
     if (course == undefined) {
@@ -116,6 +158,12 @@ export class CourseController {
     return students;
   }
 
+  /**
+   * Fügt einen Schüler zu einem Kurs hinzu.
+   *
+   * @param courseId Die Id des Kurses zurück.
+   * @param studentId Die Id des Schülers.
+   */
   addStudentToCourse(courseId: string, studentId: string) {
     let course = useCourseStore().getCourse(courseId);
     let student = useStudentStore().getStudent(studentId);
@@ -127,6 +175,12 @@ export class CourseController {
     }
   }
 
+  /**
+   * Entfernt Schüler aus dem Kurs.
+   *
+   * @param courseId Die Id des Kurses.
+   * @param studentId Die Id des Schülers.
+   */
   removeStudentFromCourse(courseId: string, studentId: string) {
     let course = useCourseStore().getCourse(courseId);
     let student = useStudentStore().getStudent(studentId);
@@ -146,6 +200,11 @@ export class CourseController {
     }
   }
 
+  /**
+   * Gibt Sessions eines Kurses zurück.
+   *
+   * @param courseId Die Id der Session.
+   */
   getSessions(courseId: string): Session[] | undefined {
     let course = useCourseStore().getCourse(courseId);
     if (course == undefined) {
@@ -155,10 +214,21 @@ export class CourseController {
     return course.sessions;
   }
 
+  /**
+   * Löscht eine Session.
+   *
+   * @param courseId Die Id des Kurses.
+   * @param sessionId Die Id der Session.
+   */
   async deleteSession(courseId: string, sessionId: string) {
     await this.sessionController.deleteSession(sessionId);
   }
 
+  /**
+   * Gibt die Sitzordnungen eines Kurses zurück.
+   *
+   * @param courseId Die Id des Kurses.
+   */
   getSeatArrangements(courseId: string): SeatArrangement[] | undefined {
     let course = useCourseStore().getCourse(courseId);
     if (course == undefined) {
