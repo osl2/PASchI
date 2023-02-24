@@ -14,15 +14,13 @@ public enum RoleDto {
     /**
      * Rolle für Administratoren
      */
-    ADMIN("admin"),
+    ADMIN(),
     /**
      * Rolle für Benutzer
      */
-    USER("user");
+    USER();
 
-
-
-    RoleDto(String string) {
+    RoleDto() {
     }
 
     @Override

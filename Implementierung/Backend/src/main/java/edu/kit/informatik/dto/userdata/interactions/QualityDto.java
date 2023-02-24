@@ -13,25 +13,25 @@ public enum QualityDto {
     /**
      * Ein Stern - Qualität
      */
-    ONE_STAR("one_star"),
+    ONE_STAR(),
     /**
      * Zwei Sterne - Qualität
      */
-    TWO_STAR("two_star"),
+    TWO_STAR(),
     /**
      * Drei Sterne - Qualität
      */
-    THREE("three_star"),
+    THREE_STAR(),
     /**
      * Vier Sterne - Qualität
      */
-    FOUR("four_star"),
+    FOUR_STAR(),
     /**
      * Fünf Sterne - Qualität
      */
-    FIVE_STAR("five_star");
+    FIVE_STAR();
 
-    QualityDto(String name) {
+    QualityDto() {
     }
 
     @Override
