@@ -124,6 +124,12 @@ export default defineComponent({
         displayParameter.value === "alle"
       );
     });
+
+    /**
+     * Gibt zurück, ob der Account in der Suche inkludiert ist.
+     *
+     * @param user Der Account.
+     */
     function includesSearch(user: User): boolean {
       return (
         (searchParameter.value === "ID" &&
@@ -134,9 +140,19 @@ export default defineComponent({
           (user.firstName + " " + user.lastName).toUpperCase().includes(searchInput.value.toUpperCase()))
       );
     }
+
+    /**
+     * Löscht einen Benutzer.
+     *
+     * @param user Der Nutzer, der gelöscht wird.
+     */
     function deleteUser(user: User) {
       adminController.deleteUser(user.getId);
     }
+
+    /**
+     * Wechselt Zustand der Liste (eingeklappt/ aufgeklappt).
+     */
     function toggleCollapse() {
       collapsed.value = !collapsed.value;
       if (collapsed.value) {
