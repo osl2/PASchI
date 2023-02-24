@@ -2,7 +2,13 @@
   <navigation-bar />
   <RoomDisplay no-drag :room-id="roomId">
     <template v-slot:main>
-      <LineOverlay ref="overlay" :lines="interactionLines" />
+      <LineOverlay ref="overlay" :lines="interactionLines">
+        <template v-slot:lineMiddle="lineMiddle">
+          <v-avatar>
+            {{ getInteractionBreakdown(lineMiddle.id) }}
+          </v-avatar>
+        </template>
+      </LineOverlay>
     </template>
     <template v-slot:chair="chair">
       <SeatLabel
@@ -24,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, onMounted, ref } from "vue";
+import { computed, defineComponent, onBeforeMount, onMounted, ref } from "vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import RoomDisplay from "@/components/room/RoomDisplay.vue";
@@ -60,9 +66,53 @@ export default defineComponent({
     const overlay = ref();
 
     const interactionLines = ref<
-      { x1: number; y1: number; x2: number; y2: number }[]
+      {
+        x1: number;
+        y1: number;
+        x2: number;
+        y2: number;
+        curve: Boolean;
+        id: String;
+        from: String;
+        to: String;
+      }[]
     >([]);
 
+    function getInteractionCount(id: String): {
+      total: number;
+      breakDown: { category: String; count: number }[];
+    } {
+      const relevantInteractions = interactions?.filter(
+        (interaction) =>
+          interaction.fromParticipant.getId +
+            "#" +
+            interaction.toParticipant.getId ===
+          id
+      );
+      const categories = relevantInteractions?.map(
+        (interaction) => interaction.category
+      );
+      categories?.filter(
+        (category, index, array) =>
+          category !== undefined && array.indexOf(category) === index
+      );
+      const interactionCount: {
+        total: number;
+        breakDown: { category: String; count: number }[];
+      } = { total: relevantInteractions?.length ?? 0, breakDown: [] };
+      if (!categories) {
+        return interactionCount;
+      }
+      for (let category of categories) {
+        interactionCount.breakDown.push({
+          category: category.name,
+          count: relevantInteractions?.filter(
+            (interaction) => interaction.category === category
+          ).length!,
+        });
+      }
+      return interactionCount;
+    }
     function getParticipant(chair: Chair) {
       return seatArrangement?.getParticipantForSeat(chair);
     }
@@ -71,19 +121,41 @@ export default defineComponent({
       originSeatLabels.set(seatLabelId, coordinate);
     }
 
-    onMounted(() => {
+    onBeforeMount(() => {
       if (!interactions) {
         return;
       }
 
       for (let interaction of interactions) {
+        if (
+          interactionLines.value.find(
+            (line) =>
+              line.id ===
+              interaction.fromParticipant.getId +
+                "#" +
+                interaction.toParticipant.getId
+          )
+        ) {
+          continue;
+        }
         interactionLines.value.push({
           x1: originSeatLabels.get(interaction.fromParticipant.getId)?.x!,
           y1: originSeatLabels.get(interaction.fromParticipant.getId)?.y!,
           x2: originSeatLabels.get(interaction.toParticipant.getId)?.x!,
           y2: originSeatLabels.get(interaction.toParticipant.getId)?.y!,
+          curve: true,
+          id:
+            interaction.fromParticipant.getId +
+            "#" +
+            interaction.toParticipant.getId,
+          from: interaction.fromParticipant.getId,
+          to: interaction.toParticipant.getId,
         });
       }
+    });
+
+    onMounted(() => {
+      overlay.value.renderLines();
     });
 
     function click() {
@@ -99,6 +171,7 @@ export default defineComponent({
       getParticipant,
       interactionLines,
       setSeatLabelOrigin,
+      getInteractionBreakdown: getInteractionCount,
     };
   },
 });

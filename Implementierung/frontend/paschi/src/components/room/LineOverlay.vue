@@ -14,6 +14,15 @@
     ref="canvas"
   >
   </canvas>
+  <div v-for="slot in slots" :id="slot.id" :style="{
+    position: 'absolute',
+    top: slot.y,
+    left: slot.x,
+    zIndex: 1,
+    transform: 'translate(-50%, -50%)'
+  }">
+    <slot name="lineMiddle" :id="slot.id" />
+  </div>
 </template>
 
 <script lang="ts">
@@ -32,6 +41,9 @@ interface Line {
   y1: number;
   x2: number;
   y2: number;
+  curve: Boolean;
+  id: String;
+
 }
 
 export default defineComponent({
@@ -44,6 +56,8 @@ export default defineComponent({
   },
   setup: function (props, context) {
     const canvas: Ref<HTMLCanvasElement | null> = ref(null);
+
+    const slots = ref<{id: String, x: number, y: number}[]>([])
 
     const overlayWidth = window.innerWidth;
     const overlayHeight = window.innerHeight;
@@ -65,14 +79,22 @@ export default defineComponent({
         x: line.x2 - vector.x / 4 + normal.x / 4,
         y: line.y2 - vector.y / 4 + normal.y / 4,
       };
+      const middle = {
+        x: line.curve? line.x1 + vector.x / 2 + (normal.x * 3) / 16 : line.x1 + vector.x / 2,
+        y: line.curve? line.y1 + vector.y / 2 + (normal.y * 3) / 16 : line.y1 + vector.y / 2,
+      };
+
+      slots.value.push({id: line.id, x: middle.x, y: middle.y});
 
       ctx.beginPath();
       ctx.moveTo(line.x1, line.y1);
-      ctx./*bezierCurveTo*/ lineTo(
-        /*c1.x, c1.y, c2.x, c2.y,*/ line.x2,
-        line.y2
-      );
-      ctx.strokeStyle = "red";
+      if (line.curve) {
+        ctx.bezierCurveTo(c1.x, c1.y, c2.x, c2.y, line.x2, line.y2);
+      }
+      else {
+        ctx.lineTo(line.x2, line.y2);
+      }
+      ctx.strokeStyle = "#0b738b";
       ctx.lineWidth = 5;
       ctx.stroke();
     }
@@ -83,14 +105,17 @@ export default defineComponent({
       ctx = canvas.value?.getContext("2d");
     });
 
+
+
     const renderLines = () => {
       if (ctx && props.lines && props.lines.length > 0) {
+        slots.value = [];
         ctx.clearRect(0, 0, overlayWidth, overlayHeight);
         for (let line of props.lines) {
           drawBezierCurve(ctx, line);
         }
       }
-    }
+    };
 
     context.expose({
       renderLines,
@@ -106,6 +131,7 @@ export default defineComponent({
     });
     return {
       canvas,
+      slots,
       overlayWidth,
       overlayHeight,
     };
