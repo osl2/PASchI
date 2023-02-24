@@ -4,15 +4,15 @@
       <v-btn class="ma-2" rounded variant="tonal" @click="saveChangesClick"
         >speichern</v-btn
       >
-      <v-btn class="ma-2" rounded variant="tonal" @click="activateCardClick"
+      <v-btn class="ma-2" rounded variant="flat" color="error" prepend-icon="fas fa-trash-can" @click="activateCardClick"
         >Schüler löschen</v-btn
       >
     </template>
   </navigation-bar>
-  <v-main class="justify-center">
+  <v-main>
     <side-menu />
-    <v-container>
-      <v-form class="mt-5" style="max-width: 1000px">
+    <v-container class="v-row justify-center">
+      <v-form class="mt-5 v-col" style="max-width: 1000px">
         <v-text-field
           v-model="firstName"
           class="mt-2"
@@ -47,7 +47,7 @@
             width="150"
             variant="tonal"
             @click="deleteStudentClick"
-            color="primary"
+            color="error"
             >Bestätigen</v-btn
           >
         </v-card-actions>
