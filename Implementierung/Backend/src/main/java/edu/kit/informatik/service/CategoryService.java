@@ -74,11 +74,6 @@ public class CategoryService extends BaseService<Category, RatedCategoryDto, Cat
 
         if (!newCategory.getName().equals(repositoryCategory.getName())) {
             repositoryCategory.setName(newCategory.getName());
-        } else {
-            if (repositoryCategory instanceof RatedCategory ratedRepositoryCategory
-                    && newCategory instanceof  RatedCategory ratedNewCategory) {
-                ratedRepositoryCategory.setQuality(ratedNewCategory.getQuality());
-            }
         }
 
         return categoryDto;
