@@ -4,8 +4,35 @@
     <template v-slot:main>
       <LineOverlay ref="overlay" :lines="interactionLines">
         <template v-slot:lineMiddle="lineMiddle">
-          <v-avatar color="interaction" density="compact" class="font-weight-medium">
+          <v-avatar
+            color="interaction"
+            density="compact"
+            class="font-weight-medium"
+          >
             {{ getInteractionBreakdown(lineMiddle.id).total }}
+            <v-menu activator="parent" transition="slide-y-transition">
+              <v-card
+                min-width="250"
+                class="pa-2"
+                variant="flat"
+                color="primary"
+              >
+                <v-list rounded>
+                  <v-list-item
+                    v-for="category in getInteractionBreakdown(lineMiddle.id)
+                      .breakDown.keys()"
+                    rounded
+                  >
+                    <v-list-item-title>
+                      {{ category }}:
+                    </v-list-item-title>
+                    <template v-slot:append>
+                      {{ getInteractionBreakdown(lineMiddle.id).breakDown.get(category)}}
+                    </template>
+                  </v-list-item>
+                </v-list>
+              </v-card>
+            </v-menu>
           </v-avatar>
         </template>
       </LineOverlay>
@@ -30,13 +57,12 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onBeforeMount, onMounted, ref } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import RoomDisplay from "@/components/room/RoomDisplay.vue";
 import LineOverlay from "@/components/room/LineOverlay.vue";
 import { SessionController } from "@/controller/SessionController";
-import { SeatArrangementController } from "@/controller/SeatArrangementController";
 import { Chair } from "@/model/userdata/rooms/Chair";
 import SeatLabel from "@/components/room/SeatLabel.vue";
 import { Coordinate } from "@/components/room/Coordinate";
@@ -51,9 +77,6 @@ export default defineComponent({
   },
   setup(props) {
     const sessionController = SessionController.getSessionController();
-    const seatArrangementController =
-      SeatArrangementController.getSeatArrangementController();
-    const session = sessionController.getSession(props.sessionId);
     const interactions = sessionController.getInteractionsOfSession(
       props.sessionId
     );
@@ -80,7 +103,7 @@ export default defineComponent({
 
     function getInteractionCount(id: String): {
       total: number;
-      breakDown: { category: String; count: number }[];
+      breakDown: Map<String, number>;
     } {
       const relevantInteractions = interactions?.filter(
         (interaction) =>
@@ -98,18 +121,18 @@ export default defineComponent({
       );
       const interactionCount: {
         total: number;
-        breakDown: { category: String; count: number }[];
-      } = { total: relevantInteractions?.length ?? 0, breakDown: [] };
+        breakDown: Map<String, number>;
+      } = { total: relevantInteractions?.length ?? 0, breakDown: new Map() };
       if (!categories) {
         return interactionCount;
       }
       for (let category of categories) {
-        interactionCount.breakDown.push({
-          category: category.name,
-          count: relevantInteractions?.filter(
+        interactionCount.breakDown.set(
+          category.name,
+          relevantInteractions?.filter(
             (interaction) => interaction.category === category
-          ).length!,
-        });
+          ).length!
+        );
       }
       return interactionCount;
     }
