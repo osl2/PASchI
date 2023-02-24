@@ -27,7 +27,7 @@
               </v-list-item>
             </v-list>
             <v-divider />
-            <v-list variant="tonal" :rounded="true" >
+            <v-list rounded>
               <v-list-subheader> Schüler auswählen </v-list-subheader>
               <v-list-item
                 v-for="participant in unseatedParticipants"
