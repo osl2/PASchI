@@ -13,6 +13,9 @@ export const useUserStore = defineStore('user', {
     setUser(user: User) {
       this.user = user;
     },
+    isLoggedIn(): boolean {
+      return this.user !== undefined;
+    },
     deleteUser() {
       this.user = undefined;
     }

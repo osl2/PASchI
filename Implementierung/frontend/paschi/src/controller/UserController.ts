@@ -64,6 +64,10 @@ export class UserController {
     return useUserStore().getUser()!;
   }
 
+  isLoggedIn(): boolean {
+    return useUserStore().isLoggedIn();
+  }
+
   async delete() {
     const user = useUserStore().getUser();
     if (user !== undefined) {
