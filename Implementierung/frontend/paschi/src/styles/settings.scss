@@ -1,0 +1,17 @@
+@forward 'vuetify/settings' with (
+$application-background: #eeeeee,
+$navigation-drawer-background: rgb(var(--v-theme-secondary)),
+$app-bar-background: rgb(var(--v-theme-primary)),
+);
+
+$min-window-width-desktop: 1500px;
+
+html {
+  overflow-y: auto;
+}
+
+.sideMenu-active {
+  border-top: 1px solid #24456b;
+  border-bottom: 1px solid #5c88c4;
+  background-color: #1e4b6c;
+}

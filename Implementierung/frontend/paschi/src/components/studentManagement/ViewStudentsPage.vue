@@ -1,0 +1,199 @@
+<template>
+  <navigation-bar>
+    <v-app-bar-title> Schüler ansehen </v-app-bar-title>
+    <template v-slot:append>
+      <v-btn
+        variant="flat"
+        color="green"
+        rounded
+        prepend-icon="mdi mdi-plus"
+        @click="newStudentClick"
+        >Schüler erstellen</v-btn
+      >
+    </template>
+  </navigation-bar>
+
+  <v-main class="ma-0 v-row justify-center align-content-xl-space-around">
+    <SideMenu />
+    <v-container fluid class="v-col-11" style="max-width: 700px">
+      <v-list rounded v-if="students.length > 0">
+        <v-list-item rounded v-for="student in students" :key="student.getId">
+          <v-list-item-title>
+            {{ student.firstName }} {{ student.lastName }}
+          </v-list-item-title>
+          <template v-slot:append>
+            <v-btn
+              variant="tonal"
+              color="primary"
+              @click="editStudentClick(student)"
+              ><v-icon>fas fa-pencil</v-icon></v-btn
+            >
+            <v-btn
+              class="ml-2"
+              variant="tonal"
+              color="primary"
+              @click="showStatisticsClick(student)"
+            >
+              <v-icon> fas fa-chart-line </v-icon>
+            </v-btn>
+          </template>
+        </v-list-item>
+      </v-list>
+      <v-card v-else class="pa-2" variant="text">
+        <v-card-title
+          class="text-h5 text-center text-indigo-darken-4 text-wrap"
+        >
+          Es wurden noch keine Schüler erstellt.
+        </v-card-title>
+        <v-card-item class="justify-center">
+          <v-btn
+            max-width="450"
+            height="50"
+            variant="tonal"
+            prepend-icon="fas fa-plus"
+            color="primary"
+            @click="newStudentClick"
+            >Schüler erstellen!
+          </v-btn>
+        </v-card-item>
+      </v-card>
+    </v-container>
+    <v-dialog max-width="700" v-model="enterStudentNameDialog">
+      <v-card variant="flat" class="pa-2 rounded-lg">
+        <v-card-title
+          class="text-h5 text-center text-indigo-darken-4 text-wrap"
+        >
+          Neuen Schüler erstellen
+        </v-card-title>
+        <v-form validate-on="submit" @submit.prevent>
+          <v-card-item>
+            <v-text-field
+              v-model="studentFirstName"
+              variant="outlined"
+              class="mt-2"
+              label="Vorname"
+              type="input"
+              autofocus
+            ></v-text-field>
+            <v-text-field
+              v-model="studentLastName"
+              variant="outlined"
+              class="mt-1"
+              label="Nachname"
+              type="input"
+            ></v-text-field>
+          </v-card-item>
+          <v-card-actions class="row justify-center">
+            <v-btn
+              height="50"
+              width="150"
+              @click="abortNewStudentClick"
+              variant="tonal"
+              >Abbrechen</v-btn
+            >
+            <v-btn
+              type="submit"
+              height="50"
+              width="150"
+              @click="confirmNewStudentClick"
+              variant="tonal"
+              color="primary"
+              >Bestätigen</v-btn
+            >
+          </v-card-actions>
+        </v-form>
+      </v-card>
+    </v-dialog>
+  </v-main>
+</template>
+
+<script lang="ts">
+import { StudentController } from "@/controller/StudentController";
+import NavigationBar from "@/components/navigation/NavigationBar.vue";
+import SideMenu from "@/components/navigation/SideMenu.vue";
+import { Student } from "@/model/userdata/interactions/Student";
+import { defineComponent, Ref, ref } from "vue";
+import { useRouter } from "vue-router";
+
+export default defineComponent({
+  name: "ViewStudentsPage",
+  components: { SideMenu, NavigationBar },
+
+  setup() {
+    const router = useRouter();
+
+    const studentController = StudentController.getStudentConroller();
+    const students: Ref<Student[]> = ref<Student[]>(
+      studentController.getAllStudents()
+    ) as Ref<Student[]>;
+    const enterStudentNameDialog: Ref<boolean> = ref(false);
+    const studentFirstName: Ref<string> = ref("");
+    const studentLastName: Ref<string> = ref("");
+
+    /**
+     * Öffnet Dialog zum Erstellen eines neuen Schülers.
+     */
+    function newStudentClick() {
+      studentFirstName.value = "";
+      studentLastName.value = "";
+      enterStudentNameDialog.value = true;
+    }
+
+    /**
+     * Bricht das Erstellen eines neuen Schülers ab.
+     */
+    function abortNewStudentClick() {
+      enterStudentNameDialog.value = false;
+    }
+
+    /**
+     * Erstellt einen neuen Schüler mit den zuvor bestimmten Parametern.
+     */
+    async function confirmNewStudentClick() {
+      await studentController.createStudent(
+        studentFirstName.value,
+        studentLastName.value
+      );
+      enterStudentNameDialog.value = false;
+    }
+
+    /**
+     * Leitet zur Schülerbearbeitungsseite weiter.
+     *
+     * @param student Der Schüler der bearbeitet wird.
+     */
+    function editStudentClick(student: Student) {
+      router.push({
+        name: "EditStudentPage",
+        params: { studentId: student.getId },
+      });
+    }
+
+    /**
+     * Leitet zur Schülerstatistikseite weiter.
+     *
+     * @param student Der Schüler der Statistik.
+     */
+    function showStatisticsClick(student: Student) {
+      router.push({
+        name: "StudentStatisticPage",
+        params: { studentId: student.getId },
+      });
+    }
+
+    return {
+      newStudentClick,
+      editStudentClick,
+      showStatisticsClick,
+      abortNewStudentClick,
+      confirmNewStudentClick,
+      students,
+      enterStudentNameDialog,
+      studentFirstName,
+      studentLastName,
+    };
+  },
+});
+</script>
+
+<style scoped></style>
