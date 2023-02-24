@@ -86,9 +86,9 @@ export default {
   components: { SideMenu, NavigationBar, AppBar },
   setup() {
     const userController = UserController.getUserController();
-    const firstName = ref("");
-    const lastName = ref("");
-    const password = ref("");
+    const firstName = ref(userController.getUser().firstName);
+    const lastName = ref(userController.getUser().lastName);
+    const password = ref();
     const passwordRepeat = ref("");
     const errorSnackbar = ref(false);
     const errorSnackbarText = 'Alle Felder müssen ausgefüllt sein.';
@@ -177,7 +177,7 @@ export default {
           passwordsEqualRule(),
         ])
       ) {
-        userController.update(firstName.value, lastName.value, userController.getUser().email);
+        userController.update(firstName.value, lastName.value);
         router.push("Dashboard")
       }
       else if (
