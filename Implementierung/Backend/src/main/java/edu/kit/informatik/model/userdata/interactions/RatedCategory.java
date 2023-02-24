@@ -6,7 +6,6 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.sql.Timestamp;
 
@@ -18,7 +17,6 @@ import java.sql.Timestamp;
  * @version 1.0
  */
 @Getter
-@Setter
 @NoArgsConstructor
 @Entity
 public class RatedCategory extends Category {
