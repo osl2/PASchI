@@ -11,7 +11,7 @@
           variant="tonal"
           color="primary"
           @click="navigateToInteractionMap(session)"
-        >InteraktionsKarte</v-btn
+          >InteraktionsKarte</v-btn
         >
         <v-btn
           class="ml-2"
@@ -36,9 +36,7 @@ export default defineComponent({
   name: "RecentSessionsCard",
   setup() {
     const sessionController = SessionController.getSessionController();
-    // TODO
-    //const sessions = sessionController.
-    const sessions: Session[] = [];
+    const sessions = sessionController.getRecentSessions();
 
     /**
      * Methode, die zur Sitzungsstatistik leitet
@@ -67,7 +65,7 @@ export default defineComponent({
     return {
       sessions,
       navigateToSessionStatistic,
-      navigateToInteractionMap
+      navigateToInteractionMap,
     };
   },
 });

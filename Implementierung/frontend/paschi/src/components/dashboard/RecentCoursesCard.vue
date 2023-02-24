@@ -10,7 +10,7 @@
       </v-row>
     </v-card-title>
     <v-card-item @click="navigateToCourse(course)" v-for="course in courses">
-      <v-row>
+      <v-row class="ma-2">
         {{ course.name }}
         <v-spacer />
         <v-btn
@@ -30,12 +30,13 @@
 import { defineComponent } from "vue";
 import router from "@/plugins/router";
 import { Course } from "@/model/userdata/courses/Course";
+import { CourseController } from "@/controller/CourseController";
 
 export default defineComponent({
   name: "RecentCoursesCard",
   setup() {
-    // TODO
-    const courses: Course[] = [];
+    const courseController = CourseController.getCourseController();
+    const courses: Course[] = courseController.getRecentCourses();
 
     /**
      * Methode, die zur Kursübersichtsseite Leitet
