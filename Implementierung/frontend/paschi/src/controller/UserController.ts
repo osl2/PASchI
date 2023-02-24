@@ -4,6 +4,9 @@ import {Role} from "@/model/Role";
 import {UserService} from "@/service/UserService";
 import {CategoryController} from "@/controller/CategoryController";
 
+/**
+ * Steuert den verlauf für die Benutzerverwaltung.
+ */
 export class UserController {
 
   private static controller: UserController = new UserController();
@@ -16,6 +19,12 @@ export class UserController {
     return this.controller;
   }
 
+  /**
+   * Einloggen mit E-Mail und Passwort.
+   *
+   * @param email E-Mail
+   * @param password Passwort
+   */
   async login(email: string, password: string): Promise<string | undefined> {
     let user: User | undefined;
     user = await this.userService.login(email, password);
@@ -29,6 +38,9 @@ export class UserController {
     return user.getId;
   }
 
+  /**
+   * Einloggen mit gültigem Token.
+   */
   async loginWithToken(): Promise<string | undefined>  {
     await this.userService.getToken();
     if (useUserStore().isLoggedIn()) {
@@ -42,6 +54,15 @@ export class UserController {
     localStorage.clear();
   }
 
+  /**
+   * Account-Registrierung
+   *
+   * @param firstName Vorname
+   * @param lastName Nachname
+   * @param email E-Mail
+   * @param password Passwort
+   * @param repeatPassword Passwort
+   */
   async register(firstName: string, lastName: string, email: string, password: string, repeatPassword: string) {
     if (password !== repeatPassword) {
       return;
@@ -60,6 +81,12 @@ export class UserController {
     user.deletePassword();
   }
 
+  /**
+   * Aktualisieren der Benutzerdaten.
+   *
+   * @param firstName Vorname
+   * @param lastName Nachname
+   */
   async update(firstName: string, lastName: string) {
     let user = this.getUser();
     if (user !== undefined) {
@@ -69,14 +96,23 @@ export class UserController {
     }
   }
 
+  /**
+   * Gibt den aktuellen Benutzer zurück.
+   */
   getUser(): User {
     return useUserStore().getUser()!;
   }
 
+  /**
+   * Gibt zurück, ob man aktuell angemeldet ist.
+   */
   isLoggedIn(): boolean {
     return useUserStore().isLoggedIn();
   }
 
+  /**
+   * Löscht den Benutzeraccount.
+   */
   async delete() {
     const user = useUserStore().getUser();
     if (user !== undefined) {

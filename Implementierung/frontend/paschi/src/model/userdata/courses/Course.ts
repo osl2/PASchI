@@ -123,9 +123,9 @@ export class Course extends DataObject {
   }
 
   /**
+   * Fügt eine Sitzordnung zum Kurs hinzu.
    *
-   *
-   * @param seatArrangement
+   * @param seatArrangement Sitzordnung
    */
   addSeatArrangement(seatArrangement: SeatArrangement) {
     if (this.getSeatArrangement(seatArrangement.getId) == undefined) {
@@ -134,6 +134,11 @@ export class Course extends DataObject {
     this.update();
   }
 
+  /**
+   * Entfernt eine SItzordnung aus dem Kurs.
+   *
+   * @param arrangementId ID der Sitzordnung
+   */
   removeSeatArrangement(arrangementId: string) {
     this.seatArrangements.forEach((element: SeatArrangement, index: number) => {
       if (element.getId === arrangementId) {
@@ -143,6 +148,9 @@ export class Course extends DataObject {
     this.update();
   }
 
+  /**
+   * Gibt den Benutzer zurück.
+   */
   get user(): User {
     return this._user;
   }
@@ -151,6 +159,12 @@ export class Course extends DataObject {
     return this._name;
   }
 
+  /**
+   * Gibt die Sitzungordnung mit der übergebenen ID zurück.
+   * Gibt undefined zurück, wenn die Sitzungordnung im Kurs nicht gefunden wurde.
+   *
+   * @param arrangementId ID der Sitzungordnung
+   */
   getSeatArrangement(arrangementId: string): SeatArrangement | undefined {
     for (let i = 0; i < this._seatArrangements.length; i++) {
       if (this._seatArrangements.at(i)?.getId === arrangementId) {
@@ -161,6 +175,9 @@ export class Course extends DataObject {
     return undefined;
   }
 
+  /**
+   * Gibt das Fach zurück.
+   */
   get subject(): string {
     return this._subject;
   }
