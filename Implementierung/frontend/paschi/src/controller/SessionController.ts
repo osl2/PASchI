@@ -12,8 +12,10 @@ import {Teacher} from "@/model/userdata/interactions/Teacher";
 import {SessionService} from "@/service/SessionService";
 import {CourseService} from "@/service/CourseService";
 import {ParticipantService} from "@/service/ParticipantService";
-import {all} from "axios";
 
+/**
+ * Steuert den Kontrollfluss für die Sitzungsverwaltung
+ */
 export class SessionController {
 
   private static controller: SessionController = new SessionController();
@@ -27,6 +29,13 @@ export class SessionController {
     return this.controller;
   }
 
+  /**
+   * Erstellt eine neue Sitzung.
+   *
+   * @param courseId ID des Kurses
+   * @param seatArrangementId ID der Sitzordnung
+   * @param name Name der Sitzung
+   */
   async createSession(courseId: string, seatArrangementId: string | undefined, name: string):
     Promise<string | undefined> {
 
@@ -43,7 +52,8 @@ export class SessionController {
     }
 
     let currentDate = new Date();
-    let date = currentDate.getDay() + '.' + currentDate.getMonth() + '.' + currentDate.getFullYear();
+    let date = currentDate.getDate().toString() + '.' + currentDate.getMonth().toString() + '.' +
+      currentDate.getFullYear().toString();
     let session = new Session(
       undefined,
       useSessionStore().getNextId(),
@@ -61,6 +71,11 @@ export class SessionController {
     return useSessionStore().addSession(session);
   }
 
+  /**
+   * Löscht eine Sitzung.
+   *
+   * @param id ID der Sitzung
+   */
   async deleteSession(id: string) {
     let session = useSessionStore().getSession(id);
     if (session !== undefined) {
@@ -80,11 +95,19 @@ export class SessionController {
     }
   }
 
+  /**
+   * Gibt alle Sitzungen zurück.
+   */
   getAllSessions(): Session[] {
     this.sessionService.getAll().then();
     return useSessionStore().getAllSessions();
   }
 
+  /**
+   * Gibt die Sitzung mit der übergebenen ID zurück.
+   *
+   * @param id ID der Sitzung
+   */
   getSession(id: string): Session | undefined {
     let session = useSessionStore().getSession(id);
     if (session == undefined) {
@@ -94,6 +117,9 @@ export class SessionController {
     return session;
   }
 
+  /**
+   * Gibt die letzten 5 Sitzungen zurück.
+   */
   getRecentSessions(): Session[] {
     const allSessions = useSessionStore().getAllSessions();
     allSessions.sort((a: Session, b: Session) => {
@@ -108,6 +134,11 @@ export class SessionController {
     return sessions;
   }
 
+  /**
+   * Gibt den Kurs der SItzung zurück.
+   *
+   * @param sessionId ID der Sitzung
+   */
   getCourseOfSession(sessionId: string): Course | undefined {
     let session = useSessionStore().getSession(sessionId);
     if (session == undefined) {
@@ -117,6 +148,11 @@ export class SessionController {
     return session.course;
   }
 
+  /**
+   * Gibt die Interactionen der Sitzung zurück.
+   *
+   * @param sessionId ID der Sitzung
+   */
   getInteractionsOfSession(sessionId: string): Interaction[] | undefined {
     let session = useSessionStore().getSession(sessionId);
     if (session == undefined) {
@@ -126,8 +162,16 @@ export class SessionController {
     return session.interactions;
   }
 
+  /**
+   * Erstellt eine neue Interaktion.
+   *
+   * @param sessionId ID der Sitzung
+   * @param fromParticipantId ID des Teilnehmers
+   * @param toParticipantId ID des Teilnehmers
+   * @param categoryId ID der Kategorie
+   */
   async createInteraction(sessionId: string, fromParticipantId: string, toParticipantId: string,
-                    categoryId: string): Promise<string | undefined> {
+                          categoryId: string): Promise<string | undefined> {
     let session = useSessionStore().getSession(sessionId);
     let category = useCategoryStore().getCategory(categoryId);
     console.log('category id ', category);
@@ -142,7 +186,7 @@ export class SessionController {
       undefined,
       useInteractionStore().getNextId(),
       this.userController.getUser(),
-      date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds(),
+      date.getHours().toString() + ':' + date.getMinutes().toString() + ':' + date.getSeconds().toString(),
       session,
       fromParticipant,
       toParticipant,
@@ -160,6 +204,11 @@ export class SessionController {
     return interaction.getId;
   }
 
+  /**
+   * Macht die letzte Interaktion rückgängig.
+   *
+   * @param sessionId ID der Sitzung.
+   */
   undoInteraction(sessionId: string) {
     let session = useSessionStore().getSession(sessionId);
     if (session !== undefined) {
@@ -175,6 +224,11 @@ export class SessionController {
     }
   }
 
+  /**
+   * Wiederherstellen einer rückgängig gemachten Interaktion.
+   *
+   * @param sessionId ID der Interaktion
+   */
   redoInteraction(sessionId: string): string | undefined {
     let session = useSessionStore().getSession(sessionId);
     if (session == undefined) {
@@ -193,6 +247,11 @@ export class SessionController {
     return interaction.getId;
   }
 
+  /**
+   * Gibt zurück, ob Interaktionen rückgängig gemacht wurden.
+   *
+   * @param sessionId ID der Sitzung
+   */
   hasRedo(sessionId: string): boolean | undefined {
     let session = useSessionStore().getSession(sessionId);
     if (session == undefined) {
@@ -201,6 +260,11 @@ export class SessionController {
     return session.hasRedo();
   }
 
+  /**
+   * Gibt zurück, ob undo möglich ist.
+   *
+   * @param sessionId ID der Sitzung
+   */
   hasUndo(sessionId: string): boolean | undefined {
     let session = useSessionStore().getSession(sessionId);
     if (session == undefined) {
@@ -209,6 +273,11 @@ export class SessionController {
     return session.hasUndo();
   }
 
+  /**
+   * Gibt die Sitzordnung der Session zurück.
+   *
+   * @param sessionId ID der Sitzung
+   */
   getSeatArrangementOfSession(sessionId: string) {
     let session = useSessionStore().getSession(sessionId);
     if (session == undefined) {
@@ -218,10 +287,19 @@ export class SessionController {
     return session.seatArrangement;
   }
 
+  /**
+   * Gibt den Lehrer zurück.
+   */
   getTeacher(): Teacher {
     return Teacher.getTeacher();
   }
 
+  /**
+   * Gibt die Interaktionen eines Schülers in der übergebenen Sitzung zurück.
+   *
+   * @param sessionId ID der Sitzung
+   * @param studentId ID des Schülers
+   */
   getInteractionsOfStudent(sessionId: string, studentId: string): Interaction[] | undefined {
     const student = useStudentStore().getStudent(studentId);
     const session = useSessionStore().getSession(sessionId);

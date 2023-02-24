@@ -21,8 +21,8 @@ export class StatsController {
     return this.controller;
   }
 
-  /*
-  Array [
+  /**
+   Array [
    1. Map(kategorieId, prozent)
    2. Durchschnittliche Qualität
    ]
@@ -68,8 +68,8 @@ export class StatsController {
     return statsArray;
   }
 
-  /*
-  Array [
+  /**
+   Array [
    1. Top 5 Schüler Array nach Anzahl Interaktionen
    2. Top 5 Schüler Array nach durchschnittlicher Qualität
    3. Bottom 5 Schüler Array nach Anzahl Interaktionen
@@ -77,7 +77,7 @@ export class StatsController {
    5. Top 5 Störer Array
    6. Map(kategorieId, prozent) über alle Sessions
    7. Map(datum, Beteiligunsquote)
-  ]
+   ]
    */
   getCourseStats(courseId: string): (Map<string, number> | any[])[] | undefined {
     const course = this.courseController.getCourse(courseId);
@@ -119,8 +119,8 @@ export class StatsController {
     return statsArray;
   }
 
-  /*
-  Array [
+  /**
+   Array [
    1. Top 5 Schüler Array nach Anzahl Interaktionen
    2. Top 5 Schüler Array nach durchschnittlicher Qualität
    3. Bottom 5 Schüler Array nach Anzahl Interaktionen
@@ -153,13 +153,15 @@ export class StatsController {
     let numStudentsInCourse = 0;
     session.course.participants.forEach(() => ++numStudentsInCourse);
     let participants = 0;
-    students.forEach(() => {++participants});
+    students.forEach(() => {
+      ++participants
+    });
     let participantionRate = (participants / numStudentsInCourse) * 100;
 
-  /*  // Relative Häufigkeit der Kategorien berechnen.
-    categories.forEach((value: number, category: string) => {
-      categories.set(category, (value / numCategories) * 100);
-    });*/
+    /*  // Relative Häufigkeit der Kategorien berechnen.
+      categories.forEach((value: number, category: string) => {
+        categories.set(category, (value / numCategories) * 100);
+      });*/
 
     const statsArray = this.getTopStudents(students);
     statsArray.push(categories);
