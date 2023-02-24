@@ -130,15 +130,25 @@ export default defineComponent({
     const studentFirstName: Ref<string> = ref("");
     const studentLastName: Ref<string> = ref("");
 
+    /**
+     * Öffnet Dialog zum Erstellen eines neuen Schülers.
+     */
     function newStudentClick() {
       studentFirstName.value = "";
       studentLastName.value = "";
       enterStudentNameDialog.value = true;
     }
 
+    /**
+     * Bricht das Erstellen eines neuen Schülers ab.
+     */
     function abortNewStudentClick() {
       enterStudentNameDialog.value = false;
     }
+
+    /**
+     * Erstellt einen neuen Schüler mit den zuvor bestimmten Parametern.
+     */
     function confirmNewStudentClick() {
       studentController.createStudent(
         studentFirstName.value,
@@ -146,6 +156,12 @@ export default defineComponent({
       );
       enterStudentNameDialog.value = false;
     }
+
+    /**
+     * Leitet zur Schülerbearbeitungsseite weiter.
+     *
+     * @param student Der Schüler der bearbeitet wird.
+     */
     function editStudentClick(student: Student) {
       router.push({
         name: "EditStudentPage",
@@ -153,6 +169,11 @@ export default defineComponent({
       });
     }
 
+    /**
+     * Leitet zur Schülerstatistikseite weiter.
+     *
+     * @param student Der Schüler der Statistik.
+     */
     function showStatisticsClick(student: Student) {
       router.push({
         name: "StudentStatisticPage",
