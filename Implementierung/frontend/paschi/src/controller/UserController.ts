@@ -3,6 +3,15 @@ import {useUserStore} from "@/store/UserStore";
 import {Role} from "@/model/Role";
 import {UserService} from "@/service/UserService";
 import {CategoryController} from "@/controller/CategoryController";
+import {useStudentStore} from "@/store/StudentStore";
+import {useCourseStore} from "@/store/CourseStore";
+import {useSessionStore} from "@/store/SessionStore";
+import {useCategoryStore} from "@/store/CategoryStore";
+import {useInteractionStore} from "@/store/InteractionStore";
+import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
+import {useRoomObjectStore} from "@/store/RoomObjectStore";
+import {useRoomStore} from "@/store/RoomStore";
+import {usePositionStore} from "@/store/PositionStore";
 
 /**
  * Steuert den Kontrollfluss für die Benutzerverwaltung.
@@ -49,8 +58,11 @@ export class UserController {
     return useUserStore().getUser()?.getId;
   }
 
+  /**
+   * Meldet den aktuellen Benutzer ab.
+   */
   logout() {
-    useUserStore().deleteUser();
+    this.clearStores();
     localStorage.clear();
   }
 
@@ -119,5 +131,18 @@ export class UserController {
       useUserStore().deleteUser();
       await this.userService.delete(user.getId);
     }
+  }
+
+  private clearStores() {
+    useUserStore().$reset();
+    useStudentStore().$reset();
+    useCourseStore().$reset();
+    useSessionStore().$reset();
+    useCategoryStore().$reset();
+    useInteractionStore().$reset();
+    useSeatArrangementStore().$reset();
+    useRoomObjectStore().$reset();
+    useRoomStore().$reset();
+    usePositionStore().$reset();
   }
 }
