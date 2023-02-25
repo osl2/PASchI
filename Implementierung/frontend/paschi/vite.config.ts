@@ -1,7 +1,6 @@
 // Plugins
 import vue from "@vitejs/plugin-vue";
 import vuetify from "vite-plugin-vuetify";
-import { BackgroundSyncPlugin } from "workbox-background-sync";
 
 // Utilities
 import { defineConfig } from "vite";
@@ -25,9 +24,9 @@ export default defineConfig({
       manifest: {
         icons: [
           {
-            src: "src/assets/logo.svg",
+            src: "/logo.png",
             sizes: "360x360",
-            type: "image/svg+xml",
+            type: "image/png",
             purpose: "any maskable",
           },
         ],
@@ -37,7 +36,7 @@ export default defineConfig({
           {
             urlPattern: ({ url }) => url.pathname.startsWith("/api/"),
             handler: "NetworkFirst" as const,
-            method: 'GET',
+            method: "GET",
             options: {
               cacheName: "api",
               cacheableResponse: {
@@ -50,7 +49,6 @@ export default defineConfig({
             handler: "NetworkFirst" as const,
             method: "POST",
             options: {
-
               backgroundSync: {
                 name: "apiPOST",
                 options: {
