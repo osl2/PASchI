@@ -173,16 +173,19 @@ export class SeatArrangementController {
   }
 
   /**
-   * Mappt einen Schüler auf einen Stuhl.
+   * Mappt einen Teilnehmer auf einen Stuhl.
    *
    * @param arrangementId ID der Sitzordnung
    * @param chairId ID des Stuhls
-   * @param studentId ID des Schülers
+   * @param participantId ID des Teilnehmers
    */
-  addMapping(arrangementId: string, chairId: string, studentId: string) {
+  addMapping(arrangementId: string, chairId: string, participantId: string) {
     let arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
-    let student = useStudentStore().getStudent(studentId);
-    if (arrangement == undefined || student == undefined) {
+    let participant = useStudentStore().getStudent(participantId);
+    if (participant == undefined && participantId === CourseController.getCourseController().getTeacher().getId) {
+      participant = CourseController.getCourseController().getTeacher();
+    }
+    if (arrangement == undefined || participant == undefined) {
       return undefined;
     }
     let chair = arrangement.room.getRoomObject(chairId);
@@ -190,7 +193,7 @@ export class SeatArrangementController {
       return undefined;
     }
 
-    arrangement.setSeat(chair, student);
+    arrangement.setSeat(chair, participant);
     this.arrangementService.update(arrangement).then();
   }
 
