@@ -12,6 +12,8 @@ import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 import {useRoomObjectStore} from "@/store/RoomObjectStore";
 import {useRoomStore} from "@/store/RoomStore";
 import {usePositionStore} from "@/store/PositionStore";
+import {ParticipantService} from "@/service/ParticipantService";
+import {Teacher} from "@/model/userdata/interactions/Teacher";
 
 /**
  * Steuert den Kontrollfluss für die Benutzerverwaltung.
@@ -44,6 +46,7 @@ export class UserController {
 
     useUserStore().setUser(user);
     await CategoryController.getCategoryController().getAllCategories();
+    await this.setTeacher();
     return user.getId;
   }
 
@@ -54,6 +57,7 @@ export class UserController {
     await this.userService.getToken();
     if (useUserStore().isLoggedIn()) {
       await CategoryController.getCategoryController().getAllCategories();
+      await this.setTeacher();
     }
     return useUserStore().getUser()?.getId;
   }
@@ -144,5 +148,26 @@ export class UserController {
     useRoomObjectStore().$reset();
     useRoomStore().$reset();
     usePositionStore().$reset();
+  }
+
+  private async setTeacher() {
+    await ParticipantService.getService().getAll().then((res) => {
+      console.log(res);
+    });
+    let teacher = useStudentStore().getTeacher();
+    if (teacher == undefined) {
+      const user = this.getUser();
+      teacher = new Teacher(
+        undefined,
+        useStudentStore().getNextId(),
+        user,
+        user.firstName,
+        user.lastName
+      );
+      await ParticipantService.getService().add(teacher);
+      useStudentStore().setTeacher(teacher);
+      console.log('neuer Lehrer')
+    }
+    console.log(useStudentStore().getTeacher());
   }
 }

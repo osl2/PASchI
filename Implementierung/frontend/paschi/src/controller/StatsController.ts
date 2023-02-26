@@ -58,7 +58,6 @@ export class StatsController {
       }
     });
 
-    console.log(categories.values());
     avgQuality = qualitySum / numInteractions;
 
     const statsArray = [];
@@ -167,8 +166,6 @@ export class StatsController {
     statsArray.push(categories);
     statsArray.push(participantionRate);
 
-    console.log(statsArray
-    );
     return statsArray;
   }
 

@@ -10,6 +10,7 @@ import {useInteractionStore} from "@/store/InteractionStore";
 import {useStudentStore} from "@/store/StudentStore";
 import {Student} from "@/model/userdata/interactions/Student";
 import {CourseService} from "@/service/CourseService";
+import {Teacher} from "@/model/userdata/interactions/Teacher";
 
 export class ParticipantMapper implements IModelDtoMapper<Participant, ParticipantDto> {
 
@@ -50,49 +51,79 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
   async dtoToModel(participantDto: ParticipantDto): Promise<Participant> {
     const userController = UserController.getUserController();
 
-    let participant = useStudentStore().getStudent(participantDto.id);
-    if (participant == undefined) {
-      participant = new Student(
-        participantDto.id,
-        0,
-        userController.getUser(),
-        participantDto.firstName,
-        participantDto.lastName
-      );
-      participant.createdAt = participantDto.createdAt;
-      participant.updatedAt = participantDto.updatedAt;
-      useStudentStore().addStudent(participant);
-    } else if (participant.updatedAt === participantDto.updatedAt) {
-      return participant;
+    if (participantDto.participantType == ParticipantTypeDto.TEACHER) {
+      console.log('hallo');
+      let teacher = useStudentStore().getTeacher();
+      if (teacher == undefined) {
+        teacher = new Teacher(
+          participantDto.id,
+          useStudentStore().getNextId(),
+          userController.getUser(),
+          userController.getUser().firstName,
+          userController.getUser().lastName
+        );
+        teacher.createdAt = participantDto.createdAt;
+        teacher.updatedAt = participantDto.updatedAt;
+        useStudentStore().setTeacher(teacher);
+      } else if (teacher.updatedAt === participantDto.updatedAt) {
+        return teacher;
+      }
+
+      const interactions: Interaction[] = [];
+      for (const id of participantDto.interactionIds) {
+        let interaction = useInteractionStore().getInteraction(id);
+        if (interaction !== undefined) {
+          interactions.push(interaction);
+        }
+      }
+      teacher.interactions = interactions;
+
+      return teacher;
     } else {
-      participant.firstName = participantDto.firstName;
-      participant.lastName = participantDto.lastName;
-    }
-
-    const courses: Course[] = [];
-    const interactions: Interaction[] = [];
-    const courseSerivce = CourseService.getService();
-
-    for (const id of participantDto.courseIds) {
-      let course = useCourseStore().getCourse(id);
-      if (course == undefined) {
-        course = await courseSerivce.getById(id);
+      let participant = useStudentStore().getStudent(participantDto.id);
+      if (participant == undefined) {
+        participant = new Student(
+          participantDto.id,
+          0,
+          userController.getUser(),
+          participantDto.firstName,
+          participantDto.lastName
+        );
+        participant.createdAt = participantDto.createdAt;
+        participant.updatedAt = participantDto.updatedAt;
+        useStudentStore().addStudent(participant);
+      } else if (participant.updatedAt === participantDto.updatedAt) {
+        return participant;
+      } else {
+        participant.firstName = participantDto.firstName;
+        participant.lastName = participantDto.lastName;
       }
-      if (course !== undefined) {
-        courses.push(course);
+
+      const courses: Course[] = [];
+      const interactions: Interaction[] = [];
+      const courseSerivce = CourseService.getService();
+
+      for (const id of participantDto.courseIds) {
+        let course = useCourseStore().getCourse(id);
+        if (course == undefined) {
+          course = await courseSerivce.getById(id);
+        }
+        if (course !== undefined) {
+          courses.push(course);
+        }
       }
-    }
 
-    for (const id of participantDto.interactionIds) {
-      let interaction = useInteractionStore().getInteraction(id);
-      if (interaction !== undefined) {
-        interactions.push(interaction);
+      for (const id of participantDto.interactionIds) {
+        let interaction = useInteractionStore().getInteraction(id);
+        if (interaction !== undefined) {
+          interactions.push(interaction);
+        }
       }
+
+      participant.courses = courses;
+      participant.interactions = interactions;
+
+      return participant;
     }
-
-    participant.courses = courses;
-    participant.interactions = interactions;
-
-    return participant;
   }
 }

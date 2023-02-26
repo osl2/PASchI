@@ -61,7 +61,7 @@ import {SeatArrangementController} from "@/controller/SeatArrangementController"
 import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {Chair} from "@/model/userdata/rooms/Chair";
 import {Participant} from "@/model/userdata/interactions/Participant";
-import {Teacher} from "@/model/userdata/interactions/Teacher";
+import {CourseController} from "@/controller/CourseController";
 
 export default defineComponent({
   name: "SeatArrangementPage",
@@ -76,7 +76,7 @@ export default defineComponent({
     const seatArrangementController =
       SeatArrangementController.getSeatArrangementController();
 
-    const teacher = Teacher.getTeacher();
+    const teacher = CourseController.getCourseController().getTeacher();
 
     const seatArrangement = ref<SeatArrangement | undefined>(
       seatArrangementController.getSeatArrangement(props.seatArrangementId)

@@ -1,3 +1,3 @@
 export enum ParticipantTypeDto {
-  STUDENT, TEACHER
+  STUDENT = "Student", TEACHER = "Teacher"
 }

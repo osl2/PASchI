@@ -11,6 +11,7 @@ import {SeatArrangementController} from "@/controller/SeatArrangementController"
 import {CourseService} from "@/service/CourseService";
 import {ParticipantService} from "@/service/ParticipantService";
 import {SeatArrangementService} from "@/service/SeatArrangementService";
+import {Teacher} from "@/model/userdata/interactions/Teacher";
 
 export class CourseController {
 
@@ -236,5 +237,12 @@ export class CourseController {
     }
 
     return course.seatArrangements;
+  }
+
+  /**
+   * Gibt den Lehrer zurück.
+   */
+  getTeacher(): Teacher {
+    return useStudentStore().getTeacher()!;
   }
 }

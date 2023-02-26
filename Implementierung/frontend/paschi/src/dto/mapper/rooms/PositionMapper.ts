@@ -7,7 +7,6 @@ import {usePositionStore} from "@/store/PositionStore";
 export class PositionMapper implements IModelDtoMapper<Position, PositionDto> {
 
   private static mapper: PositionMapper = new PositionMapper();
-  private userController = UserController.getUserController();
 
   private constructor() {
   }
@@ -34,7 +33,7 @@ export class PositionMapper implements IModelDtoMapper<Position, PositionDto> {
       position = new Position(
         positionDto.id,
         0,
-        this.userController.getUser(),
+        UserController.getUserController().getUser(),
         positionDto.xcoordinate,
         positionDto.ycoordinate,
         positionDto.orientation

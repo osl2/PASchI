@@ -120,7 +120,5 @@ export class CategoryController {
       await this.createRatedCategory(DEFAULT_CATEGORIES[1]);
       await this.createRatedCategory(DEFAULT_CATEGORIES[2]);
     }
-    console.log(useCategoryStore().getAllCategories());
-    console.log(useCategoryStore().getRatedCategories('Frage'));
   }
 }

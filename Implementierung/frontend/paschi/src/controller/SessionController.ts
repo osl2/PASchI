@@ -8,10 +8,10 @@ import {useCourseStore} from "@/store/CourseStore";
 import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 import {useCategoryStore} from "@/store/CategoryStore";
 import {useStudentStore} from "@/store/StudentStore";
-import {Teacher} from "@/model/userdata/interactions/Teacher";
 import {SessionService} from "@/service/SessionService";
 import {CourseService} from "@/service/CourseService";
 import {ParticipantService} from "@/service/ParticipantService";
+import {Participant} from "@/model/userdata/interactions/Participant";
 
 /**
  * Steuert den Kontrollfluss für die Sitzungsverwaltung
@@ -174,9 +174,17 @@ export class SessionController {
                           categoryId: string): Promise<string | undefined> {
     let session = useSessionStore().getSession(sessionId);
     let category = useCategoryStore().getCategory(categoryId);
-    console.log('category id ', category);
-    let fromParticipant = useStudentStore().getStudent(fromParticipantId);
-    let toParticipant = useStudentStore().getStudent(toParticipantId);
+    let fromParticipant: Participant | undefined = useStudentStore().getStudent(fromParticipantId);
+    let toParticipant: Participant | undefined = useStudentStore().getStudent(toParticipantId);
+
+    const teacher = useStudentStore().getTeacher();
+    if (toParticipant == undefined && toParticipantId === teacher?.getId) {
+      toParticipant = useStudentStore().getTeacher();
+    }
+    if (fromParticipant == undefined && toParticipantId === teacher?.getId) {
+      fromParticipant = useStudentStore().getTeacher();
+    }
+
     if (session == undefined || category == undefined || fromParticipant == undefined || toParticipant == undefined) {
       return undefined;
     }
@@ -192,7 +200,6 @@ export class SessionController {
       toParticipant,
       category
     );
-    console.log('interaction', interaction);
     useInteractionStore().addInteraction(interaction);
     session.addInteraction(interaction);
     await this.sessionService.update(session).then();
@@ -285,13 +292,6 @@ export class SessionController {
     }
 
     return session.seatArrangement;
-  }
-
-  /**
-   * Gibt den Lehrer zurück.
-   */
-  getTeacher(): Teacher {
-    return Teacher.getTeacher();
   }
 
   /**
