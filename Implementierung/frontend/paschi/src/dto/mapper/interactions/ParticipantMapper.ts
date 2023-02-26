@@ -52,7 +52,6 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
     const userController = UserController.getUserController();
 
     if (participantDto.participantType == ParticipantTypeDto.TEACHER) {
-      console.log('hallo');
       let teacher = useStudentStore().getTeacher();
       if (teacher == undefined) {
         teacher = new Teacher(

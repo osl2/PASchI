@@ -151,9 +151,7 @@ export class UserController {
   }
 
   private async setTeacher() {
-    await ParticipantService.getService().getAll().then((res) => {
-      console.log(res);
-    });
+    await ParticipantService.getService().getAll();
     let teacher = useStudentStore().getTeacher();
     if (teacher == undefined) {
       const user = this.getUser();
@@ -166,8 +164,6 @@ export class UserController {
       );
       await ParticipantService.getService().add(teacher);
       useStudentStore().setTeacher(teacher);
-      console.log('neuer Lehrer')
     }
-    console.log(useStudentStore().getTeacher());
   }
 }
