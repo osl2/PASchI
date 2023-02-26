@@ -48,7 +48,7 @@
                 variant="flat"
                 rounded
                 height="56"
-                @click=""
+                @click="selectParticipant(teacher)"
               >
                 <div style="font-size: large">Lehrkraft</div></v-btn
               >
@@ -306,9 +306,7 @@ import { computed, defineComponent, Ref, ref } from "vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import { SessionController } from "@/controller/SessionController";
-import { RoomObject } from "@/model/userdata/rooms/RoomObject";
 import { Participant } from "@/model/userdata/interactions/Participant";
-import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
 import { Category } from "@/model/userdata/interactions/Category";
 import { useRouter } from "vue-router";
 import { CategoryController } from "@/controller/CategoryController";
@@ -316,6 +314,7 @@ import { Course } from "@/model/userdata/courses/Course";
 import SeatLabel from "@/components/room/SeatLabel.vue";
 import { Quality } from "@/model/userdata/interactions/Quality";
 import { Interaction } from "@/model/userdata/interactions/Interaction";
+import { CourseController } from "@/controller/CourseController";
 export default defineComponent({
   name: "SessionPage",
   components: { SeatLabel, SideMenu, NavigationBar },
@@ -328,12 +327,10 @@ export default defineComponent({
   setup(props) {
     const router = useRouter();
 
+    const courseController =  CourseController.getCourseController()
     const sessionController = SessionController.getSessionController();
     const categoryController = CategoryController.getCategoryController();
 
-    const seatArrangement = sessionController.getSeatArrangementOfSession(
-      props.sessionId
-    );
     const categories: Ref<Category[]> = ref(
       categoryController.getCategories()
     ) as Ref<Category[]>;
@@ -341,8 +338,7 @@ export default defineComponent({
     const sessionName = sessionController.getSession(props.sessionId)?.name;
     const courseParticipantsSortedByName: Participant[] =
       getCourseParticipantsSortedByName();
-    // TODO Kommentar entfernen sobald login möglich
-    // const teacher = sessionController.getTeacher();
+    const teacher = courseController.getTeacher();
     const firstParticipant: Ref<Participant | undefined> = ref<
       Participant | undefined
     >(undefined) as Ref<Participant | undefined>;
@@ -626,7 +622,7 @@ export default defineComponent({
 
     return {
       starDialog,
-      //teacher, TODO Kommentar entfernen
+      teacher,
       sessionName,
       searchInput,
       categories,
