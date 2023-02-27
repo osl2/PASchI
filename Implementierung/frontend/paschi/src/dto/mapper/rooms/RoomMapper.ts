@@ -31,7 +31,8 @@ export class RoomMapper implements IModelDtoMapper<Room, RoomDto> {
       room.createdAt,
       room.updatedAt,
       room.name,
-      roomObjectIds
+      roomObjectIds,
+      room.visible
     );
   }
 
@@ -61,6 +62,7 @@ export class RoomMapper implements IModelDtoMapper<Room, RoomDto> {
     }
 
     room.roomObjects = roomObjects;
+    room.visible = roomDto.visible;
     return room;
   }
 }

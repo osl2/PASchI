@@ -12,7 +12,6 @@ import {CourseService} from "@/service/CourseService";
 import {SessionService} from "@/service/SessionService";
 import {RoomController} from "@/controller/RoomController";
 import {RoomObjectUtilities} from "@/components/room/RoomObjectUtilities";
-import {CourseController} from "@/controller/CourseController";
 import {Chair} from "@/model/userdata/rooms/Chair";
 
 /**
@@ -69,44 +68,42 @@ export class SeatArrangementController {
   async createAutomaticSeatArrangement(name: string, courseId: string): Promise<string | undefined> {
     const roomController = RoomController.getRoomController();
     const roomObjectUtilities = RoomObjectUtilities.getRoomObjectUtilities();
-    let roomId = await roomController.createRoom(name);
+
+    let roomId = await roomController.createInvisibleRoom(name);
     const room = roomController.getRoom(roomId);
-    const course = CourseController.getCourseController().getCourse(courseId);
-    if(room == undefined || course == undefined) {
+    const course = useCourseStore().getCourse(courseId);
+    if (room == undefined || course == undefined) {
       return undefined;
     }
 
-    const students = CourseController.getCourseController().getStudentsOfCourse(courseId);
-
-    if(!students) {
-      return undefined;
-    }
+    const students = course.participants;
 
     const center = {x: roomObjectUtilities.roomWidth / 2, y: roomObjectUtilities.roomHeight / 2};
     const radius = roomObjectUtilities.roomHeight / 3;
-
     const interval = 2 * Math.PI / students.length;
 
     for (let i = 0; i < students.length; i++) {
       const x = center.x + radius * Math.cos(interval * i);
       const y = center.y + radius * Math.sin(interval * i);
-      roomController.addChair(roomId, x, y,0).then();
+      await roomController.addChair(roomId, x, y, 0);
     }
 
-    let arrangement = new SeatArrangement(undefined, useSeatArrangementStore().getNextId(),
-      this.userController.getUser(), name, course, room);
-    useSeatArrangementStore().addSeatArrangement(arrangement);
-    course.addSeatArrangement(arrangement);
+    let arrangement = new SeatArrangement(
+      undefined,
+      useSeatArrangementStore().getNextId(),
+      this.userController.getUser(),
+      name,
+      course,
+      room
+    );
 
-    const seatArrangementId = arrangement.getId;
-
-    const chairs = roomController.getRoomObjects(roomId)?.filter((roomObject) =>  roomObject instanceof Chair);
-
+    const chairs = roomController.getRoomObjects(roomId)?.filter((roomObject) => roomObject instanceof Chair);
     for (let i = 0; i < students.length; i++) {
       arrangement.setSeat(chairs![i], students[i]);
     }
 
-    return seatArrangementId;
+    await this.arrangementService.add(arrangement);
+    return useSeatArrangementStore().addSeatArrangement(arrangement);
   }
 
   /**

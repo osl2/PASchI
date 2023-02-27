@@ -7,6 +7,7 @@ export class Room extends DataObject {
   private readonly _user: User;
   private _name: string;
   private _roomObjects: RoomObject[];
+  private _visible: boolean = true;
 
   constructor(id: string | undefined, localId: number, user: User, name: string) {
     super(id, localId);
@@ -53,6 +54,10 @@ export class Room extends DataObject {
     return this._roomObjects;
   }
 
+  get visible(): boolean {
+    return this._visible;
+  }
+
   set name(value: string) {
     this._name = value;
     this.update();
@@ -62,7 +67,11 @@ export class Room extends DataObject {
     this._roomObjects = value;
   }
 
-  // copy(): Room {
+  set visible(value: boolean) {
+    this._visible = value;
+  }
+
+// copy(): Room {
   //   const room = new Room(undefined, 0, this.user, this.name);
   //   this.roomObjects.forEach((object: RoomObject) => {
   //     if (object.isTable()) {
