@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import {Student} from "@/model/userdata/interactions/Student";
 import {Teacher} from "@/model/userdata/interactions/Teacher";
+import {Participant} from "@/model/userdata/interactions/Participant";
 
 export const useStudentStore = defineStore('students', {
   state: () => ({
@@ -33,6 +34,13 @@ export const useStudentStore = defineStore('students', {
         return student
       }
       return undefined;
+    },
+    getParticipant(id: string): Participant | undefined {
+      if (this.teacher !== undefined && this.teacher.getId === id) {
+        return <Participant> this.teacher;
+      }
+
+      return this.getStudent(id);
     },
     getAllStudents(): Student[] {
       // @ts-ignore

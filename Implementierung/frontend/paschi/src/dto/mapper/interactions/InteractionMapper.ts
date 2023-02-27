@@ -9,7 +9,6 @@ import {useSessionStore} from "@/store/SessionStore";
 import {useStudentStore} from "@/store/StudentStore";
 import {useCategoryStore} from "@/store/CategoryStore";
 import {CategoryService} from "@/service/CategoryService";
-import {Participant} from "@/model/userdata/interactions/Participant";
 
 export class InteractionMapper implements IModelDtoMapper<Interaction, InteractionDto> {
 
@@ -48,8 +47,8 @@ export class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
     const categoryService = CategoryService.getService();
 
     let session = useSessionStore().getSession(interactionDto.sessionId);
-    let toParticipant: Participant | undefined = useStudentStore().getStudent(interactionDto.toParticipantId);
-    let fromParticipant: Participant | undefined = useStudentStore().getStudent(interactionDto.fromParticipantId);
+    let toParticipant = useStudentStore().getParticipant(interactionDto.toParticipantId);
+    let fromParticipant = useStudentStore().getParticipant(interactionDto.fromParticipantId);
     let category = useCategoryStore().getCategory(interactionDto.categoryId);
 
     if (session === undefined) {

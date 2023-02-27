@@ -181,10 +181,7 @@ export class SeatArrangementController {
    */
   addMapping(arrangementId: string, chairId: string, participantId: string) {
     let arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
-    let participant: Participant | undefined = useStudentStore().getStudent(participantId);
-    if (participant == undefined && participantId === CourseController.getCourseController().getTeacher().getId) {
-      participant = CourseController.getCourseController().getTeacher();
-    }
+    let participant = useStudentStore().getParticipant(participantId);
     if (arrangement == undefined || participant == undefined) {
       return undefined;
     }
