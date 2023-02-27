@@ -24,6 +24,7 @@ install:
   stage: build
 
   script:
+    - cd Implemetierung/frontend/paschi
     - yarn install --frozen-lockfile
     # check Cypress binary path and cached versions
     - npx cypress cache path
@@ -38,5 +39,6 @@ api-tests:
   stage: test
   parallel: 5
   script:
+    - cd Implemetierung/frontend/paschi
     - yarn start:ci & npx wait-on http://localhost:3000
     - npx cypress run --record --browser chrome --group "Login" --spec "cypress/e2e/*"
