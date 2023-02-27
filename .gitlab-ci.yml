@@ -5,7 +5,7 @@ stages:
 
 # Set environment variables for folders in "cache" job settings for npm modules and Cypress binary
 variables:
-  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+  npm_config_cache: "$CI_PROJECT_DIR/Implementierung/frontend/paschi/.npm"
   CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/cache/Cypress"
 
 # Cache using branch name
@@ -14,9 +14,9 @@ cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
     - .cache/Implementierung/frontend/paschi/*
-    - cache/Implementierung/frontend/paschi/Cypress
-    - node_modules
-    - build
+    - cacheImplementierung/frontend/paschi/Cypress
+    - Implementierung/frontend/paschi/node_modules
+    - Implementierung/frontend/paschi/build
 
 # Install NPM dependencies and Cypress
 install:
