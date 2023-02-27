@@ -11,7 +11,6 @@ import {useStudentStore} from "@/store/StudentStore";
 import {SessionService} from "@/service/SessionService";
 import {CourseService} from "@/service/CourseService";
 import {ParticipantService} from "@/service/ParticipantService";
-import {Participant} from "@/model/userdata/interactions/Participant";
 
 /**
  * Steuert den Kontrollfluss für die Sitzungsverwaltung
@@ -174,16 +173,8 @@ export class SessionController {
                           categoryId: string): Promise<string | undefined> {
     let session = useSessionStore().getSession(sessionId);
     let category = useCategoryStore().getCategory(categoryId);
-    let fromParticipant: Participant | undefined = useStudentStore().getStudent(fromParticipantId);
-    let toParticipant: Participant | undefined = useStudentStore().getStudent(toParticipantId);
-
-    const teacher = useStudentStore().getTeacher();
-    if (toParticipant == undefined && toParticipantId === teacher?.getId) {
-      toParticipant = useStudentStore().getTeacher();
-    }
-    if (fromParticipant == undefined && toParticipantId === teacher?.getId) {
-      fromParticipant = useStudentStore().getTeacher();
-    }
+    let fromParticipant = useStudentStore().getParticipant(fromParticipantId);
+    let toParticipant = useStudentStore().getParticipant(toParticipantId);
 
     if (session == undefined || category == undefined || fromParticipant == undefined || toParticipant == undefined) {
       return undefined;
@@ -298,18 +289,18 @@ export class SessionController {
    * Gibt die Interaktionen eines Schülers in der übergebenen Sitzung zurück.
    *
    * @param sessionId ID der Sitzung
-   * @param studentId ID des Schülers
+   * @param participantId ID des Schülers
    */
-  getInteractionsOfStudent(sessionId: string, studentId: string): Interaction[] | undefined {
-    const student = useStudentStore().getStudent(studentId);
+  getInteractionsOfParticipant(sessionId: string, participantId: string): Interaction[] | undefined {
+    const participant = useStudentStore().getParticipant(participantId);
     const session = useSessionStore().getSession(sessionId);
-    if (student == undefined || session == undefined) {
+    if (participant == undefined || session == undefined) {
       return undefined;
     }
 
     const interactions: Interaction[] = [];
     session.interactions.forEach((interaction: Interaction) => {
-      if (interaction.fromParticipant.getId === studentId || interaction.toParticipant.getId === studentId) {
+      if (interaction.fromParticipant.getId === participantId || interaction.toParticipant.getId === participantId) {
         interactions.push(interaction);
       }
     });

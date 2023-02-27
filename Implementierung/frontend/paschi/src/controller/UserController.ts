@@ -109,6 +109,12 @@ export class UserController {
       user.firstName = firstName;
       user.lastName = lastName;
       await this.userService.update(user);
+      const teacher = useStudentStore().getTeacher();
+      if (teacher) {
+        teacher.firstName = firstName;
+        teacher.lastName = lastName;
+        await ParticipantService.getService().update(teacher);
+      }
     }
   }
 
