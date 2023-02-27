@@ -24,9 +24,10 @@
         <v-card-title class="text-center text-grey-darken-3">
           Bitte melden Sie sich an.
         </v-card-title>
-        <v-card-item>
-          <v-form>
+        <v-form @submit.prevent>
+          <v-card-item>
             <v-text-field
+              name="email"
               prepend-inner-icon="mdi mdi-email-outline"
               class="mt-2"
               variant="outlined"
@@ -34,6 +35,7 @@
               v-model="email"
             />
             <v-text-field
+              name="password"
               prepend-inner-icon="mdi mdi-lock-outline"
               type="password"
               :error="passwordError"
@@ -41,19 +43,20 @@
               label="Passwort"
               v-model="password"
             />
-          </v-form>
-        </v-card-item>
-        <v-card-item>
-          <v-btn
-            block
-            height="50"
-            variant="flat"
-            prepend-icon="fas fa-sign-in-alt"
-            color="primary"
-            @click="login"
-            >Anmelden
-          </v-btn>
-        </v-card-item>
+          </v-card-item>
+          <v-card-item>
+            <v-btn
+              type="submit"
+              block
+              height="50"
+              variant="flat"
+              prepend-icon="fas fa-sign-in-alt"
+              color="primary"
+              @click="login"
+              >Anmelden
+            </v-btn>
+          </v-card-item>
+        </v-form>
       </v-card>
       <v-card
         class="mt-8 pa-2 rounded-lg bg-grey-lighten-2"
@@ -74,7 +77,7 @@
 import AppBar from "@/components/navigation/NavigationBar.vue";
 import router from "@/plugins/router";
 import { UserController } from "@/controller/UserController";
-import {defineComponent, onMounted, ref} from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 export default defineComponent({
   name: "Login",
   components: { AppBar },
@@ -90,8 +93,7 @@ export default defineComponent({
         if (res) {
           if (userController.getUser().isAdmin()) {
             router.push("/admin");
-          } else
-          router.push("/dashboard");
+          } else router.push("/dashboard");
         }
       });
     });
@@ -104,8 +106,7 @@ export default defineComponent({
         if (res) {
           if (userController.getUser().isAdmin()) {
             router.push("/admin");
-          } else
-            router.push("/dashboard");
+          } else router.push("/dashboard");
         }
       });
     }
