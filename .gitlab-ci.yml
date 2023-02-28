@@ -25,7 +25,7 @@ install:
 
   script:
     - ls
-    - cd ./Implemetierung/frontend/paschi
+    - cd ./Implementierung/frontend/paschi
     - yarn install --frozen-lockfile
     # check Cypress binary path and cached versions
     - npx cypress cache path
