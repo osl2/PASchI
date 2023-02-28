@@ -118,6 +118,7 @@ export class SeatArrangementController {
     let arrangement = useSeatArrangementStore().getSeatArrangement(id);
     if (arrangement !== undefined) {
       arrangement.course.removeSeatArrangement(id);
+      CourseService.getService().update(arrangement.course).then();
       useSessionStore().getAllSessions().forEach((session: Session) => {
         if (session.seatArrangement !== undefined && session.seatArrangement.getId === id) {
           // TODO: copy
@@ -125,6 +126,7 @@ export class SeatArrangementController {
           SessionService.getService().update(session);
         }
       });
+      // TODO: Raum löschen falls Standardsitzordnung
       useSeatArrangementStore().deleteSeatArrangement(id);
       await this.arrangementService.delete(id);
     }

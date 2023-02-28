@@ -138,8 +138,8 @@ export class UserController {
   async delete() {
     const user = useUserStore().getUser();
     if (user !== undefined) {
-      useUserStore().deleteUser();
       await this.userService.delete(user.getId);
+      this.clearStores();
     }
   }
 
