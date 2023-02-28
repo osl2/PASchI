@@ -24,9 +24,7 @@ install:
   stage: build
 
   script:
-    - ls
     - cd ./Implementierung/frontend/paschi
-    - nvm use node
     - yarn install --frozen-lockfile
     # check Cypress binary path and cached versions
     - npx cypress cache path
