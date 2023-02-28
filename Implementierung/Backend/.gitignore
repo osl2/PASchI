@@ -9,6 +9,7 @@ target/
 application.properties
 privateSecurityKey.pem
 publicSecurityKey.pem
+*.pem
 
 ### STS ###
 .apt_generated

@@ -1,12 +1,11 @@
-import { BaseService } from "@/service/BaseService";
+import {BASE_URL, BaseService} from "@/service/BaseService";
 import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
 import { SeatArrangementDto } from "@/dto/userdata/courses/SeatArrangementDto";
 import { SeatArrangementMapper } from "@/dto/mapper/courses/SeatArrangementMapper";
 import axios, { AxiosResponse } from "axios";
 import { useUserStore } from "@/store/UserStore";
 
-const SEAT_ARRANGEMENT_BASE_URL: string =
-  "https://193.196.36.88/api/seatarrangement";
+const SEAT_ARRANGEMENT_BASE_URL: string = BASE_URL + "/api/seatarrangement";
 
 export class SeatArrangementService extends BaseService<
   SeatArrangement,
