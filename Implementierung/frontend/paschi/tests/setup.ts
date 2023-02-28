@@ -13,11 +13,6 @@ const adminController = AdminController.getAdminController();
 let userId: string;
 
 export async function beforeEachTest() {
-  // TODO
-  if (userController.isLoggedIn()) {
-    return;
-  }
-
   await userController.register(
     user.firstName,
     user.lastName,

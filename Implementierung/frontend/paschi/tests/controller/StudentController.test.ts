@@ -1,8 +1,10 @@
 import {StudentController} from "@/controller/StudentController";
 import {afterEachTest, beforeEachTest} from "../setup";
+import {Student} from "@/model/userdata/interactions/Student";
 
 const studentController = StudentController.getStudentConroller();
 const studentData = {firstName: "Gregor", lastName: "Snelting"};
+let student: Student | undefined;
 let studentId: string;
 
 beforeAll(async () => {
@@ -15,10 +17,9 @@ afterAll(async () => {
 
 test("Create student", async () => {
   studentId = await studentController.createStudent(studentData.firstName, studentData.lastName);
+  student = studentController.getStudent(studentId);
+
   expect(studentId).toBeDefined();
-
-  const student = studentController.getStudent(studentId);
-
   expect(student?.firstName).toBe(studentData.firstName);
   expect(student?.lastName).toBe(studentData.lastName);
 });
@@ -28,7 +29,6 @@ test("Update student", async () => {
   const _lastName = "Tichy";
   await studentController.updateStudent("24", _firstName, _lastName);
   await studentController.updateStudent(studentId, _firstName, _lastName);
-  const student = studentController.getStudent(studentId);
 
   expect(student?.firstName).toBe(_firstName);
   expect(student?.lastName).toBe(_lastName);
@@ -42,7 +42,7 @@ test("Get all students", () => {
 
 test("Delete student", async () => {
   await studentController.deleteStudent(studentId);
-  const student = studentController.getStudent(studentId);
+  student = studentController.getStudent(studentId);
 
   expect(student).toBeUndefined();
 

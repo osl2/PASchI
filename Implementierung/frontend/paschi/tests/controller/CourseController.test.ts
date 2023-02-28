@@ -1,12 +1,9 @@
-import {createPinia, setActivePinia} from "pinia";
 import {CourseController} from "@/controller/CourseController";
 import {afterEachTest, beforeEachTest} from "../setup";
 import {StudentController} from "@/controller/StudentController";
 import {Course} from "@/model/userdata/courses/Course";
 import {SessionController} from "@/controller/SessionController";
 import {SeatArrangementController} from "@/controller/SeatArrangementController";
-
-setActivePinia(createPinia());
 
 const courseController = CourseController.getCourseController();
 const courseData = {name: "PSE", subject: "Informatik"};
@@ -144,7 +141,7 @@ test("Get all courses", () => {
 
 test("Delete course", async () => {
   await courseController.deleteCourse(courseId);
-  const course = courseController.getCourse(courseId);
+  course = courseController.getCourse(courseId);
 
   expect(course).toBeUndefined();
 
