@@ -46,8 +46,8 @@ export class StudentController {
    * @param lastName Nachname
    */
   async updateStudent(id: string, firstName: string, lastName: string) {
-    let student = useStudentStore().getStudent(id);
-    if (student !== undefined) {
+    const student = useStudentStore().getStudent(id);
+    if (student) {
       student.firstName = firstName;
       student.lastName = lastName;
       await this.studentService.update(student).then();
@@ -60,8 +60,8 @@ export class StudentController {
    * @param id ID des Schülers
    */
   async deleteStudent(id: string) {
-    let student = useStudentStore().getStudent(id);
-    if (student !== undefined) {
+    const student = useStudentStore().getStudent(id);
+    if (student) {
       student.courses.forEach((course: Course) => {
         CourseController.getCourseController().removeStudentFromCourse(course.getId, id);
       });

@@ -1,14 +1,14 @@
-import { Room } from "@/model/userdata/rooms/Room";
-import { Position } from "@/model/userdata/rooms/Position";
-import { useRoomStore } from "@/store/RoomStore";
-import { UserController } from "@/controller/UserController";
-import { Chair } from "@/model/userdata/rooms/Chair";
-import { useRoomObjectStore } from "@/store/RoomObjectStore";
-import { Table } from "@/model/userdata/rooms/Table";
-import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
-import { RoomObject } from "@/model/userdata/rooms/RoomObject";
-import { useSeatArrangementStore } from "@/store/SeatArrangementStore";
-import { usePositionStore } from "@/store/PositionStore";
+import {Room} from "@/model/userdata/rooms/Room";
+import {Position} from "@/model/userdata/rooms/Position";
+import {useRoomStore} from "@/store/RoomStore";
+import {UserController} from "@/controller/UserController";
+import {Chair} from "@/model/userdata/rooms/Chair";
+import {useRoomObjectStore} from "@/store/RoomObjectStore";
+import {Table} from "@/model/userdata/rooms/Table";
+import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
+import {RoomObject} from "@/model/userdata/rooms/RoomObject";
+import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
+import {usePositionStore} from "@/store/PositionStore";
 import {SeatArrangementController} from "@/controller/SeatArrangementController";
 import {RoomService} from "@/service/RoomService";
 import {SeatArrangementService} from "@/service/SeatArrangementService";
@@ -17,14 +17,15 @@ export class RoomController {
   private static controller: RoomController = new RoomController();
   private roomService = RoomService.getService();
 
-  private constructor() {}
+  private constructor() {
+  }
 
   static getRoomController(): RoomController {
     return this.controller;
   }
 
   async createRoom(name: string): Promise<string> {
-    let room = new Room(
+    const room = new Room(
       undefined,
       useRoomStore().getNextId(),
       UserController.getUserController().getUser(),
@@ -36,7 +37,7 @@ export class RoomController {
   }
 
   async updateRoom(id: string) {
-    let room = useRoomStore().getRoom(id);
+    const room = useRoomStore().getRoom(id);
     if (room) {
       await this.roomService.update(room);
     }
@@ -44,8 +45,8 @@ export class RoomController {
 
   async deleteRoom(id: string) {
     const arrangementController = SeatArrangementController.getSeatArrangementController();
-    let room = useRoomStore().getRoom(id);
-    if (room !== undefined) {
+    const room = useRoomStore().getRoom(id);
+    if (room) {
       useSeatArrangementStore()
         .getAllSeatArrangements()
         .forEach((arrangement: SeatArrangement) => {
@@ -59,11 +60,7 @@ export class RoomController {
   }
 
   getRoom(id: string): Room | undefined {
-    let room = useRoomStore().getRoom(id);
-    if (room == undefined) {
-      return undefined;
-    }
-    return room;
+    return useRoomStore().getRoom(id);
   }
 
   getAllRooms(): Room[] {
@@ -71,8 +68,10 @@ export class RoomController {
     return useRoomStore().getAllRooms();
   }
 
-  async addChair(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number): Promise<string | undefined> {
-    let room = useRoomStore().getRoom(roomId);
+  async addChair(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number):
+    Promise<string | undefined> {
+
+    const room = useRoomStore().getRoom(roomId);
     if (room == undefined) {
       return undefined;
     }
@@ -88,7 +87,7 @@ export class RoomController {
     );
     usePositionStore().addPosition(position);
 
-    let chair = new Chair(
+    const chair = new Chair(
       undefined,
       useRoomObjectStore().getNextId(),
       user,
@@ -102,7 +101,7 @@ export class RoomController {
 
   addTable(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number, length: number,
            width: number): string | undefined {
-    let room = useRoomStore().getRoom(roomId);
+    const room = useRoomStore().getRoom(roomId);
     if (room == undefined) {
       return undefined;
     }
@@ -118,7 +117,7 @@ export class RoomController {
     );
     usePositionStore().addPosition(position);
 
-    let table = new Table(
+    const table = new Table(
       undefined,
       useRoomObjectStore().getNextId(),
       user,
@@ -133,31 +132,18 @@ export class RoomController {
   }
 
   getRoomObjects(roomId: string): RoomObject[] | undefined {
-    let room = useRoomStore().getRoom(roomId);
-    if (room == undefined) {
-      return undefined;
-    }
-
-    return room.roomObjects;
+    return useRoomStore().getRoom(roomId)?.roomObjects;
   }
 
   getRoomObject(roomId: string, objectId: string): RoomObject | undefined {
-    let room = useRoomStore().getRoom(roomId);
-    if (room == undefined) {
-      return undefined;
-    }
-    room.roomObjects.forEach((object: RoomObject) => {
-      if (object.getId === objectId) {
-        return object;
-      }
-    });
+    return useRoomStore().getRoom(roomId)?.roomObjects.find(object => object.getId == objectId);
   }
 
   async removeRoomObject(roomId: string, objectId: string) {
-    let room = useRoomStore().getRoom(roomId);
-    if (room !== undefined) {
-      let object = room.getRoomObject(objectId);
-      if (object !== undefined) {
+    const room = useRoomStore().getRoom(roomId);
+    if (room) {
+      const object = room.getRoomObject(objectId);
+      if (object) {
         room.removeRoomObject(objectId);
         usePositionStore().deletePosition(object.position.getId);
         useSeatArrangementStore().getAllSeatArrangements().forEach((arrangement: SeatArrangement) => {

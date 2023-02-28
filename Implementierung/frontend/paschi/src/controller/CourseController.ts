@@ -55,8 +55,8 @@ export class CourseController {
    * @param subject Neuer Kursfachname.
    */
   async updateCourse(courseId: string, name: string, subject: string) {
-    let course = useCourseStore().getCourse(courseId);
-    if (course !== undefined) {
+    const course = useCourseStore().getCourse(courseId);
+    if (course) {
       course.name = name;
       course.subject = subject;
       await this.courseService.update(course).then();
@@ -69,8 +69,8 @@ export class CourseController {
    * @param id Die id des zu löschenden Kurses.
    */
   async deleteCourse(id: string) {
-    let course = useCourseStore().getCourse(id);
-    if (course !== undefined) {
+    const course = useCourseStore().getCourse(id);
+    if (course) {
       course.participants.forEach((student: Participant) => {
         student.removeCourse(id);
         ParticipantService.getService().update(student);
@@ -107,10 +107,10 @@ export class CourseController {
    * Gibt die aktuellsten Kurse zurück.
    */
   getRecentCourses(): Course[] {
-    const allCourses = useCourseStore().getAllCourses();
-    allCourses.sort((a: Course, b: Course) => {
+    const allCourses = useCourseStore().getAllCourses().sort((a: Course, b: Course) => {
       return (a.updatedAt <= b.updatedAt) ? 1 : -1;
     });
+
     const courses = [];
     const max = allCourses.length < 5 ? allCourses.length : 5;
     for (let i = 0; i < max; i++) {
@@ -126,12 +126,7 @@ export class CourseController {
    * @param courseId Id des Kurses.
    */
   getStudentsOfCourse(courseId: string): Participant[] | undefined {
-    let course = useCourseStore().getCourse(courseId);
-    if (course == undefined) {
-      return undefined;
-    }
-
-    return course.participants;
+    return useCourseStore().getCourse(courseId)?.participants;
   }
 
   /**
@@ -140,20 +135,12 @@ export class CourseController {
    * @param courseId Die Kurs Id.
    */
   getStudentsNotInCourse(courseId: string): Participant[] | undefined {
-    let course = useCourseStore().getCourse(courseId);
+    const course = useCourseStore().getCourse(courseId);
     if (course == undefined) {
       return undefined;
     }
 
-    let allStudents = useStudentStore().getAllStudents();
-    let students: Participant[] = [];
-    allStudents.forEach((student: Participant) => {
-      if (course!.getParticipant(student.getId) == undefined) {
-        students.push(student);
-      }
-    });
-
-    return students;
+    return useStudentStore().getAllStudents().filter(student => course.getParticipant(student.getId) == undefined);
   }
 
   /**
@@ -163,9 +150,9 @@ export class CourseController {
    * @param studentId Die Id des Schülers.
    */
   addStudentToCourse(courseId: string, studentId: string) {
-    let course = useCourseStore().getCourse(courseId);
-    let student = useStudentStore().getStudent(studentId);
-    if (course !== undefined && student !== undefined) {
+    const course = useCourseStore().getCourse(courseId);
+    const student = useStudentStore().getStudent(studentId);
+    if (course && student) {
       course.addParticipant(student);
       student.addCourse(course);
       ParticipantService.getService().update(student).then();
@@ -180,9 +167,9 @@ export class CourseController {
    * @param studentId Die Id des Schülers.
    */
   removeStudentFromCourse(courseId: string, studentId: string) {
-    let course = useCourseStore().getCourse(courseId);
-    let student = useStudentStore().getStudent(studentId);
-    if (course !== undefined && student !== undefined) {
+    const course = useCourseStore().getCourse(courseId);
+    const student = useStudentStore().getStudent(studentId);
+    if (course && student) {
       course.removeParticipant(studentId);
       student.removeCourse(courseId);
       ParticipantService.getService().update(student).then();
@@ -204,12 +191,7 @@ export class CourseController {
    * @param courseId Die Id der Session.
    */
   getSessions(courseId: string): Session[] | undefined {
-    let course = useCourseStore().getCourse(courseId);
-    if (course == undefined) {
-      return undefined;
-    }
-
-    return course.sessions;
+    return useCourseStore().getCourse(courseId)?.sessions;
   }
 
   /**
@@ -228,12 +210,7 @@ export class CourseController {
    * @param courseId Die Id des Kurses.
    */
   getSeatArrangements(courseId: string): SeatArrangement[] | undefined {
-    let course = useCourseStore().getCourse(courseId);
-    if (course == undefined) {
-      return undefined;
-    }
-
-    return course.seatArrangements;
+    return useCourseStore().getCourse(courseId)?.seatArrangements;
   }
 
   /**
