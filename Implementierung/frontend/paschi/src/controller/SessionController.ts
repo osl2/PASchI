@@ -18,7 +18,6 @@ import {ParticipantService} from "@/service/ParticipantService";
 export class SessionController {
 
   private static controller: SessionController = new SessionController();
-  private userController = UserController.getUserController();
   private sessionService = SessionService.getService();
 
   private constructor() {
@@ -56,7 +55,7 @@ export class SessionController {
     let session = new Session(
       undefined,
       useSessionStore().getNextId(),
-      this.userController.getUser(),
+      UserController.getUserController().getUser(),
       name,
       date,
       course,
@@ -184,7 +183,7 @@ export class SessionController {
     let interaction = new Interaction(
       undefined,
       useInteractionStore().getNextId(),
-      this.userController.getUser(),
+      UserController.getUserController().getUser(),
       date.getHours().toString() + ':' + date.getMinutes().toString() + ':' + date.getSeconds().toString(),
       session,
       fromParticipant,

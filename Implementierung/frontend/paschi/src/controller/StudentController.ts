@@ -11,7 +11,6 @@ import {ParticipantService} from "@/service/ParticipantService";
 export class StudentController {
 
   private static controller: StudentController = new StudentController();
-  private userController = UserController.getUserController();
   private studentService = ParticipantService.getService();
 
   private constructor() {
@@ -31,7 +30,7 @@ export class StudentController {
     const student = new Student(
       undefined,
       useStudentStore().getNextId(),
-      this.userController.getUser(),
+      UserController.getUserController().getUser(),
       firstName,
       lastName
     );

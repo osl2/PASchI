@@ -10,9 +10,6 @@ const CATEGORY_NAME = "störung";
 export class StatsController {
 
   private static controller: StatsController = new StatsController();
-  private studentController = StudentController.getStudentConroller();
-  private sessionController = SessionController.getSessionController();
-  private courseController = CourseController.getCourseController();
 
   private constructor() {
   }
@@ -28,7 +25,7 @@ export class StatsController {
    ]
    */
   getStudentStats(studentId: string): any[] | undefined {
-    const student = this.studentController.getStudent(studentId);
+    const student = StudentController.getStudentConroller().getStudent(studentId);
     if (student == undefined) {
       return undefined;
     }
@@ -79,7 +76,7 @@ export class StatsController {
    ]
    */
   getCourseStats(courseId: string): (Map<string, number> | any[])[] | undefined {
-    const course = this.courseController.getCourse(courseId);
+    const course = CourseController.getCourseController().getCourse(courseId);
     if (course == undefined) {
       return undefined;
     }
@@ -130,7 +127,7 @@ export class StatsController {
    ]
    */
   getSessionStats(sessionId: string): any[] | undefined {
-    const session = this.sessionController.getSession(sessionId);
+    const session = SessionController.getSessionController().getSession(sessionId);
     if (session == undefined) {
       return undefined;
     }
@@ -173,7 +170,7 @@ export class StatsController {
   private getInteractionStats(sessionId: string, categories: Map<string, number>,
                               students: Map<string, [number, number, number, number]>,
                               numCategories: number): any[] | undefined {
-    let session = this.sessionController.getSession(sessionId);
+    let session = SessionController.getSessionController().getSession(sessionId);
     if (session == undefined) {
       return undefined;
     }

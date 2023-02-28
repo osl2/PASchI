@@ -15,7 +15,6 @@ import {SeatArrangementService} from "@/service/SeatArrangementService";
 
 export class RoomController {
   private static controller: RoomController = new RoomController();
-  private userController = UserController.getUserController();
   private roomService = RoomService.getService();
 
   private constructor() {}
@@ -28,7 +27,7 @@ export class RoomController {
     let room = new Room(
       undefined,
       useRoomStore().getNextId(),
-      this.userController.getUser(),
+      UserController.getUserController().getUser(),
       name
     );
 
@@ -55,8 +54,8 @@ export class RoomController {
           }
         });
     }
-    useRoomStore().deleteRoom(id);
     await this.roomService.delete(id);
+    useRoomStore().deleteRoom(id);
   }
 
   getRoom(id: string): Room | undefined {
@@ -78,10 +77,11 @@ export class RoomController {
       return undefined;
     }
 
+    const user = UserController.getUserController().getUser();
     const position = new Position(
       undefined,
       usePositionStore().nextId,
-      this.userController.getUser(),
+      user,
       xCoordinate,
       yCoordinate,
       orientation
@@ -91,7 +91,7 @@ export class RoomController {
     let chair = new Chair(
       undefined,
       useRoomObjectStore().getNextId(),
-      this.userController.getUser(),
+      user,
       position
     );
     room.addRoomObject(chair);
@@ -107,10 +107,11 @@ export class RoomController {
       return undefined;
     }
 
+    const user = UserController.getUserController().getUser();
     const position = new Position(
       undefined,
       usePositionStore().nextId,
-      this.userController.getUser(),
+      user,
       xCoordinate,
       yCoordinate,
       orientation
@@ -120,7 +121,7 @@ export class RoomController {
     let table = new Table(
       undefined,
       useRoomObjectStore().getNextId(),
-      this.userController.getUser(),
+      user,
       position,
       length,
       width

@@ -16,9 +16,6 @@ import {Teacher} from "@/model/userdata/interactions/Teacher";
 export class CourseController {
 
   private static controller: CourseController = new CourseController();
-  private userController = UserController.getUserController();
-  private sessionController = SessionController.getSessionController();
-  private arrangementController = SeatArrangementController.getSeatArrangementController();
   private courseService = CourseService.getService();
 
   private constructor() {
@@ -41,7 +38,7 @@ export class CourseController {
     const course = new Course(
       undefined,
       useCourseStore().getNextId(),
-      this.userController.getUser(),
+      UserController.getUserController().getUser(),
       name,
       subject
     );
@@ -79,10 +76,10 @@ export class CourseController {
         ParticipantService.getService().update(student);
       });
       course.sessions.forEach((session: Session) => {
-        this.sessionController.deleteSession(session.getId);
+        SessionController.getSessionController().deleteSession(session.getId);
       });
       course.seatArrangements.forEach((arrangement: SeatArrangement) => {
-        this.arrangementController.deleteSeatArrangement(arrangement.getId);
+        SeatArrangementController.getSeatArrangementController().deleteSeatArrangement(arrangement.getId);
       });
       await this.courseService.delete(id);
       useCourseStore().deleteCourse(id);
@@ -222,7 +219,7 @@ export class CourseController {
    * @param sessionId Die Id der Session.
    */
   async deleteSession(courseId: string, sessionId: string) {
-    await this.sessionController.deleteSession(sessionId);
+    await SessionController.getSessionController().deleteSession(sessionId);
   }
 
   /**

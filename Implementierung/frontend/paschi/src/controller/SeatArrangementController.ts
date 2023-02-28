@@ -21,7 +21,6 @@ import {Chair} from "@/model/userdata/rooms/Chair";
 export class SeatArrangementController {
 
   private static controller: SeatArrangementController = new SeatArrangementController();
-  private userController = UserController.getUserController();
   private arrangementService = SeatArrangementService.getService();
 
   private constructor() {
@@ -48,7 +47,7 @@ export class SeatArrangementController {
     let arrangement = new SeatArrangement(
       undefined,
       useSeatArrangementStore().getNextId(),
-      this.userController.getUser(),
+      UserController.getUserController().getUser(),
       name,
       course,
       room
@@ -93,8 +92,14 @@ export class SeatArrangementController {
       roomController.addChair(roomId, x, y,0).then();
     }
 
-    let arrangement = new SeatArrangement(undefined, useSeatArrangementStore().getNextId(),
-      this.userController.getUser(), name, course, room);
+    let arrangement = new SeatArrangement(
+      undefined,
+      useSeatArrangementStore().getNextId(),
+      UserController.getUserController().getUser(),
+      name,
+      course,
+      room
+    );
     useSeatArrangementStore().addSeatArrangement(arrangement);
     course.addSeatArrangement(arrangement);
 

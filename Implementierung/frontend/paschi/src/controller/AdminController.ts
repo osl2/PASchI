@@ -7,7 +7,6 @@ import { UserService } from "@/service/UserService";
 export class AdminController {
   private static controller: AdminController = new AdminController();
   private userService = UserService.getService();
-  static readonly defaultPassword: string = "default";
 
   private constructor() {}
 
