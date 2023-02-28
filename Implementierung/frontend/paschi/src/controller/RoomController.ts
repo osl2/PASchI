@@ -99,8 +99,8 @@ export class RoomController {
     return useRoomObjectStore().addChair(chair);
   }
 
-  addTable(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number, length: number,
-           width: number): string | undefined {
+  async addTable(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number, length: number,
+           width: number): Promise<string | undefined> {
     const room = useRoomStore().getRoom(roomId);
     if (room == undefined) {
       return undefined;
@@ -126,7 +126,7 @@ export class RoomController {
       width
     );
     room.addRoomObject(table);
-    this.roomService.update(room).then();
+    await this.roomService.update(room);
 
     return useRoomObjectStore().addTable(table);
   }
@@ -152,6 +152,7 @@ export class RoomController {
             SeatArrangementService.getService().update(arrangement);
           }
         });
+        useRoomObjectStore().deleteRoomObject(objectId);
         await this.roomService.update(room);
       }
     }

@@ -25,13 +25,17 @@ export const useRoomObjectStore = defineStore('roomObjects', {
       }
       return undefined;
     },
-    getTable(id: string): Table | undefined {
-      for (const table of this.tables) {
-        if (table.getId === id) {
-          return <Table> table;
+    deleteRoomObject(id: string) {
+      this.chairs.forEach((element, index) => {
+        if (element.getId === id) {
+          this.chairs.splice(index, 1);
         }
-      }
-      return undefined;
+      });
+      this.tables.forEach((element, index) => {
+        if (element.getId === id) {
+          this.tables.splice(index, 1);
+        }
+      });
     },
     getNextId(): number {
       return this.nextId++;
