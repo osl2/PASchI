@@ -50,8 +50,6 @@ export class RoomMapper implements IModelDtoMapper<Room, RoomDto> {
       room.createdAt = roomDto.createdAt;
       room.updatedAt = roomDto.updatedAt;
       useRoomStore().addRoom(room);
-    } else if (room.updatedAt === roomDto.updatedAt) {
-      return room;
     } else {
       room.name = roomDto.name;
     }

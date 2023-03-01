@@ -69,7 +69,7 @@ export class SeatArrangementController {
     const roomController = RoomController.getRoomController();
     const roomObjectUtilities = RoomObjectUtilities.getRoomObjectUtilities();
 
-    let roomId = await roomController.createInvisibleRoom(name);
+    const roomId = await roomController.createInvisibleRoom(name);
     const room = roomController.getRoom(roomId);
     const course = useCourseStore().getCourse(courseId);
     if (room == undefined || course == undefined) {
@@ -87,6 +87,8 @@ export class SeatArrangementController {
       const y = center.y + radius * Math.sin(interval * i);
       await roomController.addChair(roomId, x, y, 0);
     }
+    // TODO: Entfernen wenn Backend richtige IDs übergibt
+    await roomController.updateRoom(roomId);
 
     let arrangement = new SeatArrangement(
       undefined,
