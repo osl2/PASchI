@@ -14,7 +14,7 @@ cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
     - .cache/Implementierung/frontend/paschi/*
-    - cacheImplementierung/frontend/paschi/Cypress
+    - Implementierung/frontend/paschi/Cypress
     - Implementierung/frontend/paschi/node_modules
     - Implementierung/frontend/paschi/build
 
