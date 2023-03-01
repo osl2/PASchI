@@ -14,6 +14,7 @@
         {{ course.name }}
         <v-spacer />
         <v-btn
+          v-on:click.stop
           class="ml-2"
           variant="tonal"
           color="white"
