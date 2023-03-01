@@ -28,8 +28,8 @@ install:
     - yarn install --frozen-lockfile
     - yarn add wait-on
     # check Cypress binary path and cached versions
-    - npx cypress cache path
-    - npx cypress cache list
+    - yarn run cypress cache path
+    - yarn run cypress cache list
 
 api-tests:
   image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
