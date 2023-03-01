@@ -18,32 +18,16 @@ export class AdminController {
    * Gibt alle Benutzer zurück.
    */
   async getUsers(): Promise<User[]> {
-    let users: User[] = [];
-    await this.userService.getAll().then((response: User[]) => {
-      response.forEach((user: User) => {
-        if (user.auth) {
-          users.push(user);
-        }
-      });
-    });
-
-    return users;
+    const users = await this.userService.getAll();
+    return users.filter(user => user.auth);
   }
 
   /**
    * Gibt alle Benutzer zurück, die noch nicht freigeschaltet wurden.
    */
   async getUsersNotAuthenticated(): Promise<User[]> {
-    let users: User[] = [];
-    await this.userService.getAll().then((response: User[]) => {
-      response.forEach((user: User) => {
-        if (!user.auth) {
-          users.push(user);
-        }
-      });
-    });
-
-    return users;
+    const users = await this.userService.getAll();
+    return users.filter(user => !user.auth);
   }
 
   /**
@@ -52,15 +36,14 @@ export class AdminController {
    * @param userId ID des Benutzers
    */
   async authUser(userId: string) {
-    await this.getUsersNotAuthenticated().then((response: User[]) => {
-      response.forEach(async (user: User) => {
-        if (user.getId === userId) {
-          user.auth = true;
-          await this.userService.adminUpdate(user);
-          return;
-        }
-      });
-    });
+    const users = await this.getUsersNotAuthenticated();
+    for (const user of users) {
+      if (user.getId === userId) {
+        user.auth = true;
+        await this.userService.adminUpdate(user);
+        return;
+      }
+    }
   }
 
   /**
