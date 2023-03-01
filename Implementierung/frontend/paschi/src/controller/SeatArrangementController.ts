@@ -126,8 +126,11 @@ export class SeatArrangementController {
           SessionService.getService().update(session);
         }
       });
-      useSeatArrangementStore().deleteSeatArrangement(id);
       await this.arrangementService.delete(id);
+      useSeatArrangementStore().deleteSeatArrangement(id);
+      if (!arrangement.room.visible) {
+        RoomController.getRoomController().deleteRoom(arrangement.room.getId).then();
+      }
     }
   }
 
