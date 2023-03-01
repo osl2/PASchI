@@ -49,9 +49,9 @@ export abstract class Participant extends DataObject {
   }
 
   addInteraction(interaction: Interaction) {
-    // if (this.getInteraction(interaction.getId) == undefined) {
+    if (this.getInteraction(interaction.getId) == undefined) {
       this._interactions.push(interaction);
-    // }
+    }
     this.update();
   }
 
