@@ -13,6 +13,7 @@ import {SessionService} from "@/service/SessionService";
 import {RoomController} from "@/controller/RoomController";
 import {RoomObjectUtilities} from "@/components/room/RoomObjectUtilities";
 import {Chair} from "@/model/userdata/rooms/Chair";
+import {CourseController} from "@/controller/CourseController";
 
 /**
  * Steuert den Kontrollfluss für die Sitzordnungsveraltung
@@ -77,6 +78,7 @@ export class SeatArrangementController {
     }
 
     const students = course.participants;
+    students.push(CourseController.getCourseController().getTeacher());
 
     const center = {x: roomObjectUtilities.roomWidth / 2, y: roomObjectUtilities.roomHeight / 2};
     const radius = roomObjectUtilities.roomHeight / 3;
