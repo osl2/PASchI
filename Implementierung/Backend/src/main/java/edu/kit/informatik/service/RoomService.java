@@ -114,7 +114,8 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
     }
 
     private Room saveRoomObjects(Room room) {
-        Room newRoom = new Room(room.getUser(), room.getName(), room.getCreatedAt(), room.getUpdatedAt());
+        Room newRoom = new Room(room.getUser(), room.getName(), room.isVisible(), room.getCreatedAt(),
+                                room.getUpdatedAt());
         for (int i = 0; i < room.getChairs().size(); i++) {
             room.getChairs().get(i).setPosition(positionRepository.save(room.getChairs().get(i).getPosition()));
             newRoom.addChair(chairRepository.save(room.getChairs().get(i)));
