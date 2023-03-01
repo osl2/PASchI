@@ -85,7 +85,7 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
             repositoryRoom.setChairs(updateChair(repositoryRoom, newRoom));
         }
 
-        return roomDto;
+        return mapper.modelToDto(repositoryRoom);
     }
 
     @Override
