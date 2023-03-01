@@ -3,7 +3,7 @@
     <v-card-title>
       <v-row class="ma-2"> Letzte Sitzungen </v-row>
     </v-card-title>
-    <v-card-item v-for="session in sessions">
+    <v-list-item v-for="session in sessions">
       <v-row class="ma-2">
         {{ session.name }} {{ session.date }}
         <v-spacer />
@@ -22,7 +22,7 @@
           <v-icon> fas fa-chart-line </v-icon>
         </v-btn>
       </v-row>
-    </v-card-item>
+    </v-list-item>
   </v-card>
 </template>
 

@@ -9,12 +9,11 @@
         >
       </v-row>
     </v-card-title>
-    <v-card-item @click="navigateToCourse(course)" v-for="course in courses">
+    <v-list-item @click="navigateToCourse(course)" v-for="course in courses">
       <v-row class="ma-2">
         {{ course.name }}
         <v-spacer />
         <v-btn
-          v-on:click.stop
           class="ml-2"
           variant="tonal"
           color="white"
@@ -23,7 +22,7 @@
           <v-icon> fas fa-chart-line </v-icon>
         </v-btn>
       </v-row>
-    </v-card-item>
+    </v-list-item>
   </v-card>
 </template>
 
