@@ -29,7 +29,6 @@ install:
     # check Cypress binary path and cached versions
     - npx cypress cache path
     - npx cypress cache list
-    - yarn build:ci
 
 api-tests:
   image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
