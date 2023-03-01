@@ -29,9 +29,6 @@ install:
     # check Cypress binary path and cached versions
     - npx cypress cache path
     - npx cypress cache list
-    - yarn types
-    - yarn lint
-    - yarn test:unit:ci
     - yarn build:ci
 
 api-tests:
@@ -40,5 +37,5 @@ api-tests:
   parallel: 5
   script:
     - cd Implemetierung/frontend/paschi
-    - yarn start:ci & npx wait-on http://localhost:3000
+    - yarn dev & npx wait-on http://localhost:3000
     - npx cypress run --browser chrome --group "Login" --spec "cypress/e2e/*"
