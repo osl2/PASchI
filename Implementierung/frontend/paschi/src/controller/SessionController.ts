@@ -71,6 +71,20 @@ export class SessionController {
   }
 
   /**
+   * Aktualisiert den Namen der Sitzung.
+   *
+   * @param id ID der Sitzung
+   * @param name Neuer Name
+   */
+  async updateSession(id: string, name: string) {
+    const session = useSessionStore().getSession(id);
+    if (session) {
+      session.name = name;
+      await this.sessionService.update(session);
+    }
+  }
+
+  /**
    * Löscht eine Sitzung.
    *
    * @param id ID der Sitzung
@@ -89,7 +103,7 @@ export class SessionController {
         useInteractionStore().deleteInteraction(interaction.getId);
       });
 
-      await this.sessionService.update(session);
+      await this.sessionService.delete(id);
       useSessionStore().deleteSession(id);
     }
   }
