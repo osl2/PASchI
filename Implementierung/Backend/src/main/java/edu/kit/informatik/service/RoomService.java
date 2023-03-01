@@ -85,7 +85,8 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
             repositoryRoom.setChairs(updateChair(repositoryRoom, newRoom));
         }
 
-        return mapper.modelToDto(repositoryRoom);
+        return mapper.modelToDto(repositoryRoomOptional.orElseThrow(() ->
+                new EntityNotFoundException(Room.class, roomDto.getId())));
     }
 
     @Override
