@@ -70,7 +70,7 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
             repositoryParticipant.setInteractions(newParticipant.getInteractions());
         }
 
-        return participantDto;
+        return mapper.modelToDto(repositoryParticipant);
     }
 
     @Override

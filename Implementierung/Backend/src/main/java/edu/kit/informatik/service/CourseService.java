@@ -71,7 +71,7 @@ public class CourseService extends BaseService<Course, CourseDto, CourseDto> {
             repositoryCourse.setSeatArrangements(newCourse.getSeatArrangements());
         }
 
-        return courseDto;
+        return mapper.modelToDto(repositoryCourse);
     }
 
     @Override
