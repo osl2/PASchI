@@ -1,6 +1,5 @@
 import {UserController} from "@/controller/UserController";
 import {AdminController} from "@/controller/AdminController";
-import {User} from "@/model/User";
 import {createPinia, setActivePinia} from "pinia";
 
 setActivePinia(createPinia());
@@ -10,7 +9,6 @@ const user = {firstName: "Unit", lastName: "Test", email: "unit@test.jest", pass
 
 const userController = UserController.getUserController();
 const adminController = AdminController.getAdminController();
-let userId: string;
 
 export async function beforeEachTest() {
   await userController.register(
@@ -22,18 +20,16 @@ export async function beforeEachTest() {
   );
 
   await userController.login(admin.email, admin.password);
-  adminController.getUsersNotAuthenticated().then((users: User[]) => {
-    users.forEach((user: User) => adminController.authUser(user.getId));
-  });
+  const users = await adminController.getUsersNotAuthenticated();
+  for (const user of users) {
+    await adminController.authUser(user.getId);
+  }
 
-  await userController.login(admin.email, admin.password).then((id: string | undefined) => {
-    if (id != undefined) {
-      userId = id;
-    }
-  });
+  setActivePinia(createPinia());
+
+  await userController.login(user.email, user.password);
 }
 
 export async function afterEachTest() {
-  // TODO: Benutzen, sobald man im Backend löschen kann @ugqbo
-  //await userController.delete();
+  await userController.delete();
 }
