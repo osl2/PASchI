@@ -13,7 +13,6 @@ import {SessionService} from "@/service/SessionService";
 import {RoomController} from "@/controller/RoomController";
 import {RoomObjectUtilities} from "@/components/room/RoomObjectUtilities";
 import {Chair} from "@/model/userdata/rooms/Chair";
-import {CourseController} from "@/controller/CourseController";
 
 /**
  * Steuert den Kontrollfluss für die Sitzordnungsveraltung
@@ -78,13 +77,12 @@ export class SeatArrangementController {
     }
 
     const students = course.participants;
-    students.push(CourseController.getCourseController().getTeacher());
 
     const center = {x: roomObjectUtilities.roomWidth / 2, y: roomObjectUtilities.roomHeight / 2};
     const radius = roomObjectUtilities.roomHeight / 3;
-    const interval = 2 * Math.PI / students.length;
+    const interval = 2 * Math.PI / students.length + 1;
 
-    for (let i = 0; i < students.length; i++) {
+    for (let i = 0; i < students.length + 1; i++) {
       const x = center.x + radius * Math.cos(interval * i);
       const y = center.y + radius * Math.sin(interval * i);
       await roomController.addChair(roomId, x, y, 0);
@@ -105,6 +103,8 @@ export class SeatArrangementController {
     for (let i = 0; i < students.length; i++) {
       arrangement.setSeat(chairs![i], students[i]);
     }
+    // TODO: Macht statistik kaputt
+    //arrangement.setSeat(chairs![students.length], CourseController.getCourseController().getTeacher());
 
     await this.arrangementService.add(arrangement);
     return useSeatArrangementStore().addSeatArrangement(arrangement);
