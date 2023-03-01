@@ -33,8 +33,7 @@ install:
 api-tests:
   image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
   stage: test
-  parallel: 5
   script:
-    - cd Implemetierung/frontend/paschi
+    - ls
     - yarn dev & npx wait-on http://localhost:3000
     - npx cypress run --browser chrome --group "Login" --spec "cypress/e2e/*"
