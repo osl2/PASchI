@@ -218,7 +218,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const isMobile: Ref<boolean> = inject("isMobile") as Ref<boolean>;
+    const isMobile: Ref<boolean> = inject('isMobile') as Ref<boolean>
 
     const router = useRouter();
 
@@ -423,7 +423,7 @@ export default defineComponent({
      * bei Desktop eine Liste mit Sitzornungen geöffnet
      */
     async function addSessionClick() {
-      if (window.innerWidth < 1500) {
+      if (isMobile.value) {
         await router.push({
           name: "SessionPage",
           params: {
