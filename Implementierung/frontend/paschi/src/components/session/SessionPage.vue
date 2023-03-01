@@ -200,7 +200,7 @@
           <v-row
             class="ma-2"
             :key="interaction.getId"
-            v-for="interaction in interactions.reverse()"
+            v-for="interaction in studentInteractionsBuffer.reverse()"
           >
             <v-col
               ><div>
@@ -364,6 +364,15 @@ export default defineComponent({
     const interactions = computed<Interaction[]>(() => {
       let interactions = sessionController.getInteractionsOfSession(
         props.sessionId
+      );
+      if (typeof interactions === "undefined") {
+        return [];
+      }
+      return interactions;
+    });
+    const studentInteractionsBuffer = computed<Interaction[]>(() => {
+      let interactions = sessionController.getInteractionsOfParticipant(
+        props.sessionId, interactionListStudentBuffer.value!.getId
       );
       if (typeof interactions === "undefined") {
         return [];
@@ -654,6 +663,7 @@ export default defineComponent({
       newCategoryIsRated,
       interactionListDialog,
       studentInteractionListDialog,
+      studentInteractionsBuffer,
       interactionListStudentBuffer,
       interactions,
       activateInteractionList,
@@ -669,7 +679,7 @@ export default defineComponent({
       confirmAddCategory,
       cancelAddCategory,
       activateStudentInteractionList,
-      getStars
+      getStars,
     };
   },
 });
