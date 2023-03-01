@@ -167,8 +167,10 @@ test("Get all courses", () => {
 test("Delete course", async () => {
   await courseController.deleteCourse(courseId);
   course = courseController.getCourse(courseId);
+  const courses = courseController.getAllCourses();
 
   expect(course).toBeUndefined();
+  // expect(courses.length).toBe(0);
 
   await courseController.deleteCourse(courseId);
 });

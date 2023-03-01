@@ -99,8 +99,10 @@ test("Get all rooms", () => {
 test("Delete room", async () => {
   await roomController.deleteRoom(roomId);
   room = roomController.getRoom(roomId);
+  const rooms = roomController.getAllRooms();
 
   expect(room).toBeUndefined();
+  // expect(rooms.length).toBe(0);
 
   await roomController.deleteRoom(roomId);
 });
