@@ -186,11 +186,11 @@
             <template v-if="interaction.category.hasQuality()">
               <v-icon
                 icon="mdi mdi-star"
-                v-for="i in interaction.category.getQuality() + 1"
+                v-for="i in getStars(interaction.category.getQuality())"
               ></v-icon>
               <v-icon
                 icon="mdi mdi-star-outline"
-                v-for="i in 5 - (interaction.category.getQuality() + 1)"
+                v-for="i in 5 - (getStars(interaction.category.getQuality()))"
               ></v-icon>
             </template>
           </v-col>
@@ -518,6 +518,23 @@ export default defineComponent({
       interactionListDialog.value = true;
     }
 
+    function getStars(quality: Quality) {
+      switch (quality) {
+        case Quality.ONE_STAR:
+          return 1;
+        case Quality.TWO_STAR:
+          return 2;
+        case Quality.THREE_STAR:
+          return 3;
+        case Quality.FOUR_STAR:
+          return 4;
+        case Quality.FIVE_STAR:
+          return 5;
+        default:
+          return 0
+      }
+    }
+
     const interactionLines = ref();
 
     return {
@@ -544,6 +561,7 @@ export default defineComponent({
       redoClick,
       selectCategory,
       selectQuality,
+      getStars,
       categories,
       selectedCategory,
       starDialog,
