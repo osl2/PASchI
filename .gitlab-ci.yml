@@ -35,5 +35,6 @@ api-tests:
   stage: test
   script:
     - ls
+    - cd ./Implementierung/frontend/paschi
     - yarn dev & npx wait-on http://localhost:3000
     - npx cypress run --browser chrome --group "Login" --spec "cypress/e2e/*"
