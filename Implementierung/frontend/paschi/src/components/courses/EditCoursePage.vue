@@ -79,7 +79,7 @@
     <v-dialog max-width="700" v-model="deleteCourseDialog">
       <v-card variant="flat" class="pa-2 rounded-lg">
         <v-card-title class="text-h5 text-center text-indigo-darken-4">
-          Kurs unwiederruflich löschen?
+          Kurs unwiderruflich löschen?
         </v-card-title>
         <v-card-actions class="row justify-center">
           <v-btn

@@ -172,7 +172,7 @@
     <v-dialog max-width="700" v-model="deleteSessionDialog">
       <v-card variant="flat" class="pa-2 rounded-lg">
         <v-card-title class="text-h5 text-center text-indigo-darken-4">
-          Sitzung unwiederruflich löschen?
+          Sitzung unwiderruflich löschen?
         </v-card-title>
         <v-card-actions class="row justify-center">
           <v-btn
