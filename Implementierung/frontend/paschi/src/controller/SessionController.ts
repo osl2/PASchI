@@ -106,9 +106,9 @@ export class SessionController {
 
       await this.sessionService.delete(id);
       useSessionStore().deleteSession(id);
-      if (!session.seatArrangement?.room.visible) {
+      if (session.seatArrangement && !session.seatArrangement.room.visible) {
         const arrangementController = SeatArrangementController.getSeatArrangementController();
-        await arrangementController.deleteSeatArrangement(session.seatArrangement!.getId);
+        await arrangementController.deleteSeatArrangement(session.seatArrangement.getId);
       }
     }
   }
