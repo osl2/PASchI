@@ -196,9 +196,9 @@ export class SessionController {
       toParticipant,
       category
     );
-    useInteractionStore().addInteraction(interaction);
     session.addInteraction(interaction);
-    await this.sessionService.update(session).then();
+    useInteractionStore().addInteraction(interaction);
+    await this.sessionService.update(session);
 
     fromParticipant.addInteraction(interaction);
     toParticipant.addInteraction(interaction);
