@@ -72,7 +72,7 @@ test("Delete student", async () => {
   const students = studentController.getAllStudents();
 
   expect(student).toBeUndefined();
-  // expect(students.length).toBeGreaterThan(0);
+  expect(students.length).toBe(0);
 
   await studentController.deleteStudent(studentId);
 });
