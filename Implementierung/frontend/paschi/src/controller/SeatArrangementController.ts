@@ -87,8 +87,6 @@ export class SeatArrangementController {
       const y = center.y + radius * Math.sin(interval * i);
       await roomController.addChair(roomId, x, y, 0);
     }
-    // TODO: Entfernen wenn Backend richtige IDs übergibt
-    await roomController.updateRoom(roomId);
 
     let arrangement = new SeatArrangement(
       undefined,
