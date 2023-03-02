@@ -18,22 +18,12 @@ export const usePositionStore = defineStore('positions', {
       });
     },
     getPosition(id: string): Position | undefined {
-      let position: Position;
-      this.positions.forEach((element) => {
-        if (element.getId === id) {
-          // @ts-ignore
-          position = element;
+      for (const position of this.positions) {
+        if (position.getId === id) {
+          return <Position> position;
         }
-      });
-      // @ts-ignore
-      if (position !== undefined) {
-        return position;
       }
       return undefined;
-    },
-    getAllPositions(): Position[] {
-      // @ts-ignore
-      return this.positions;
     },
     getNextId(): number {
       return this.nextId++;
