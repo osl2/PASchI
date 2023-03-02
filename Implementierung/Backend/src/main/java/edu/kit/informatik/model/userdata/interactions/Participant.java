@@ -108,4 +108,12 @@ public class Participant extends DataObject {
     public void setCourses(List<Course> courses) {
         this.courses = courses;
     }
+
+    /**
+     * Setzten des booleschen Wertes visible
+     * @param visible {@code true}, wenn Teilnehmer angezeigt werden soll
+     */
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
 }
