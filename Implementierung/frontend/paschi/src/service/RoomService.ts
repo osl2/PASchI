@@ -1,11 +1,11 @@
-import { BaseService } from "@/service/BaseService";
+import {BASE_URL, BaseService} from "@/service/BaseService";
 import { Room } from "@/model/userdata/rooms/Room";
 import { RoomDto } from "@/dto/userdata/rooms/RoomDto";
 import { RoomMapper } from "@/dto/mapper/rooms/RoomMapper";
 import axios, { AxiosResponse } from "axios";
 import { useUserStore } from "@/store/UserStore";
 
-const ROOM_BASE_URL: string = "https://193.196.36.88/api/room";
+const ROOM_BASE_URL: string = BASE_URL + "/api/room";
 
 export class RoomService extends BaseService<Room, RoomDto> {
   private static roomService: RoomService = new RoomService();
@@ -43,6 +43,9 @@ export class RoomService extends BaseService<Room, RoomDto> {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+      })
+      .then(async (response: AxiosResponse<RoomDto>) => {
+        await this.getMapper().dtoToModel(response.data);
       })
       .catch((error) => {
         console.log(error);

@@ -9,9 +9,9 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapKeyJoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -41,7 +41,7 @@ public class SeatArrangement extends DataObject {
     @ManyToOne
     private Course course;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "chair_participant_mapping",
             joinColumns = @JoinColumn(name = "seatarrangementId"),
             inverseJoinColumns  = @JoinColumn(name = "participantId"))

@@ -27,6 +27,8 @@ public class Room extends DataObject {
 
     private String name;
 
+    private boolean visible;
+
     @OneToMany
     @Cascade(CascadeType.ALL)
     private List<Table> tables;
@@ -39,12 +41,14 @@ public class Room extends DataObject {
      * Konstruktor zum Erstellen eines Objektes
      * @param user {@link User}
      * @param name Name
+     * @param visible {@code true}, wenn Raum angezeigt werden soll
      * @param createdAt {@link Timestamp} der Erstellung
      * @param updatedAt {@link Timestamp} der letzten Änderung
      */
-    public Room(User user, String name, Timestamp createdAt, Timestamp updatedAt) {
+    public Room(User user, String name, boolean visible, Timestamp createdAt, Timestamp updatedAt) {
         super(user, createdAt, updatedAt);
         this.name = name;
+        this.visible = visible;
         this.tables = new ArrayList<>();
         this.chairs = new ArrayList<>();
     }

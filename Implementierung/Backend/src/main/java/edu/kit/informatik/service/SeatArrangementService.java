@@ -5,7 +5,7 @@ import edu.kit.informatik.dto.userdata.courses.SeatArrangementDto;
 import edu.kit.informatik.exceptions.EntityNotFoundException;
 import edu.kit.informatik.model.userdata.courses.SeatArrangement;
 import edu.kit.informatik.repositories.SeatArrangementRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;

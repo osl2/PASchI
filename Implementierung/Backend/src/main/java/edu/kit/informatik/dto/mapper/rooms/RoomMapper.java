@@ -63,6 +63,7 @@ public class RoomMapper implements IModelDtoMapper<Room, RoomDto> {
                 room.getId(),
                 room.getUser().getId(),
                 room.getName(),
+                room.isVisible(),
                 roomObjectDtos,
                 room.getCreatedAt(),
                 room.getUpdatedAt()
@@ -104,7 +105,7 @@ public class RoomMapper implements IModelDtoMapper<Room, RoomDto> {
             updatedAt = roomDto.getUpdatedAt();
         }
 
-        Room room = new Room(user, roomDto.getName(), roomDto.getCreatedAt(), updatedAt);
+        Room room = new Room(user, roomDto.getName(), roomDto.isVisible(), roomDto.getCreatedAt(), updatedAt);
 
         room.setChairs(chairs);
         room.setTables(tables);

@@ -1,13 +1,14 @@
-import { BaseService } from "@/service/BaseService";
+import {BASE_URL, BaseService} from "@/service/BaseService";
 import { Category } from "@/model/userdata/interactions/Category";
 import { CategoryDto } from "@/dto/userdata/interactions/CategoryDto";
 import { CategoryMapper } from "@/dto/mapper/interactions/CategoryMapper";
 import axios, { AxiosResponse } from "axios";
 import { useUserStore } from "@/store/UserStore";
 
-const CATEGORY_BASE_URL: string = "https://193.196.36.88/api/category";
+const CATEGORY_BASE_URL: string = BASE_URL + "/api/category";
 
 export class CategoryService extends BaseService<Category, CategoryDto> {
+
   private static categoryService: CategoryService = new CategoryService();
 
   private constructor() {
