@@ -96,8 +96,12 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
     @Override
     public String delete(String id, Authentication authentication) {
         Optional<Session> sessionOptional = sessionRepository.findById(id);
-        if (sessionOptional.isEmpty()) {
-            throw new EntityNotFoundException(Session.class, id);
+
+        List<Interaction> interactions = interactionRepository.findInteractionsBySession(
+                                    sessionOptional.orElseThrow(() -> new EntityNotFoundException(Session.class, id)));
+
+        for (Interaction interaction: interactions) {
+            interactionRepository.deleteById(interaction.getId());
         }
 
         this.sessionRepository.deleteById(id);
