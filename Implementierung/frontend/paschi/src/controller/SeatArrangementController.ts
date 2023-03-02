@@ -95,8 +95,6 @@ export class SeatArrangementController {
       course,
       room
     );
-    course.addSeatArrangement(arrangement);
-    CourseService.getService().update(course).then();
 
     const chairs = roomController.getRoomObjects(roomId)?.filter((roomObject) => roomObject instanceof Chair);
     for (let i = 0; i < students.length; i++) {

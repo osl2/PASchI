@@ -210,7 +210,7 @@ export class CourseController {
    * @param courseId Die Id des Kurses.
    */
   getSeatArrangements(courseId: string): SeatArrangement[] | undefined {
-    return useCourseStore().getCourse(courseId)?.seatArrangements.filter(arrangement => arrangement.room.visible);
+    return useCourseStore().getCourse(courseId)?.seatArrangements;
   }
 
   /**
