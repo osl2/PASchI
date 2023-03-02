@@ -36,6 +36,19 @@ export class RoomController {
     return useRoomStore().addRoom(room);
   }
 
+  async createInvisibleRoom(name: string): Promise<string> {
+    let room = new Room(
+      undefined,
+      useRoomStore().getNextId(),
+      UserController.getUserController().getUser(),
+      name
+    );
+
+    room.visible = false;
+    await this.roomService.add(room);
+    return useRoomStore().addRoom(room);
+  }
+
   async updateRoom(id: string) {
     const room = useRoomStore().getRoom(id);
     if (room) {
@@ -65,7 +78,7 @@ export class RoomController {
 
   getAllRooms(): Room[] {
     this.roomService.getAll().then();
-    return useRoomStore().getAllRooms();
+    return useRoomStore().getAllRooms().filter((room: Room) => room.visible);
   }
 
   async addChair(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number):

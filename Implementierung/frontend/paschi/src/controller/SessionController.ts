@@ -12,6 +12,7 @@ import {SessionService} from "@/service/SessionService";
 import {CourseService} from "@/service/CourseService";
 import {ParticipantService} from "@/service/ParticipantService";
 import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
+import {SeatArrangementController} from "@/controller/SeatArrangementController";
 
 /**
  * Steuert den Kontrollfluss für die Sitzungsverwaltung
@@ -105,6 +106,10 @@ export class SessionController {
 
       await this.sessionService.delete(id);
       useSessionStore().deleteSession(id);
+      if (!session.seatArrangement?.room.visible) {
+        const arrangementController = SeatArrangementController.getSeatArrangementController();
+        await arrangementController.deleteSeatArrangement(session.seatArrangement!.getId);
+      }
     }
   }
 
@@ -190,9 +195,9 @@ export class SessionController {
       toParticipant,
       category
     );
-    useInteractionStore().addInteraction(interaction);
     session.addInteraction(interaction);
-    await this.sessionService.update(session).then();
+    useInteractionStore().addInteraction(interaction);
+    await this.sessionService.update(session);
 
     fromParticipant.addInteraction(interaction);
     toParticipant.addInteraction(interaction);

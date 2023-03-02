@@ -1,13 +1,14 @@
 import {BASE_URL, BaseService} from "@/service/BaseService";
-import {User} from "@/model/User";
-import {UserDto} from "@/dto/UserDto";
-import axios, {AxiosResponse} from "axios";
-import {UserMapper} from "@/dto/mapper/UserMapper";
-import {useUserStore} from "@/store/UserStore";
+import { User } from "@/model/User";
+import { UserDto } from "@/dto/UserDto";
+import axios, { AxiosResponse } from "axios";
+import { UserMapper } from "@/dto/mapper/UserMapper";
+import { useUserStore } from "@/store/UserStore";
 
 const USER_BASE_URL: string = BASE_URL + "/api/user";
 
 export class UserService extends BaseService<User, UserDto> {
+
   private static userService: UserService = new UserService();
 
   private constructor() {

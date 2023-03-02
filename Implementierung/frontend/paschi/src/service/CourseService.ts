@@ -8,6 +8,7 @@ import { useUserStore } from "@/store/UserStore";
 const COURSE_BASE_URL: string = BASE_URL + "/api/course";
 
 export class CourseService extends BaseService<Course, CourseDto> {
+
   private static courseService: CourseService = new CourseService();
 
   private constructor() {

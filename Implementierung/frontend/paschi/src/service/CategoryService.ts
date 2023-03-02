@@ -8,6 +8,7 @@ import { useUserStore } from "@/store/UserStore";
 const CATEGORY_BASE_URL: string = BASE_URL + "/api/category";
 
 export class CategoryService extends BaseService<Category, CategoryDto> {
+
   private static categoryService: CategoryService = new CategoryService();
 
   private constructor() {

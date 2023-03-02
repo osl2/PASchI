@@ -7,12 +7,9 @@ import { useUserStore } from "@/store/UserStore";
 
 const PARTICIPANT_BASE_URL: string = BASE_URL + "/api/participant";
 
-export class ParticipantService extends BaseService<
-  Participant,
-  ParticipantDto
-> {
-  private static participantService: ParticipantService =
-    new ParticipantService();
+export class ParticipantService extends BaseService<Participant, ParticipantDto> {
+
+  private static participantService: ParticipantService = new ParticipantService();
 
   private constructor() {
     super(ParticipantMapper.getMapper());
