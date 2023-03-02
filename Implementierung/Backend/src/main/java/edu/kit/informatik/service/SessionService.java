@@ -5,7 +5,9 @@ import edu.kit.informatik.dto.userdata.courses.SessionDto;
 import edu.kit.informatik.exceptions.EntityNotFoundException;
 import edu.kit.informatik.model.userdata.courses.Session;
 import edu.kit.informatik.model.userdata.interactions.Interaction;
+import edu.kit.informatik.model.userdata.interactions.Participant;
 import edu.kit.informatik.repositories.InteractionRepository;
+import edu.kit.informatik.repositories.ParticipantRepository;
 import edu.kit.informatik.repositories.SessionRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.Authentication;
@@ -13,8 +15,10 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Service für {@link Session Sitzungen}
@@ -31,18 +35,22 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
     private final SessionRepository sessionRepository;
     private final InteractionRepository interactionRepository;
 
+    private final ParticipantRepository participantRepository;
+
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
      *
      * @param sessionRepository     {@link SessionRepository}
      * @param sessionMapper         {@link SessionMapper}
      * @param interactionRepository {@link InteractionRepository}
+     * @param participantRepository {@link ParticipantRepository}
      */
     public SessionService(SessionRepository sessionRepository, SessionMapper sessionMapper,
-                          InteractionRepository interactionRepository) {
+                          InteractionRepository interactionRepository, ParticipantRepository participantRepository) {
         super(sessionMapper);
         this.sessionRepository = sessionRepository;
         this.interactionRepository = interactionRepository;
+        this.participantRepository = participantRepository;
     }
 
     @Override
@@ -93,12 +101,27 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
                                                                 jAT.getTokenAttributes().get(ID_ATTRIBUTE).toString()));
     }
 
+    @Transactional
     @Override
     public String delete(String id, Authentication authentication) {
         Optional<Session> sessionOptional = sessionRepository.findById(id);
 
         List<Interaction> interactions = interactionRepository.findInteractionsBySession(
                                     sessionOptional.orElseThrow(() -> new EntityNotFoundException(Session.class, id)));
+        Set<Participant> participants = new HashSet<>();
+
+        for (Interaction interaction : interactions) {
+            participants.add(participantRepository.findParticipantById(interaction.getFrom().getId())
+                    .orElseThrow(() -> new EntityNotFoundException(Participant.class, interaction.getFrom().getId())));
+            participants.add(participantRepository.findParticipantById(interaction.getTo().getId())
+                    .orElseThrow(() -> new EntityNotFoundException(Participant.class, interaction.getTo().getId())));
+        }
+
+        for (Participant participant: participants) {
+            for (Interaction interaction: interactions) {
+                participant.getInteractions().remove(interaction);
+            }
+        }
 
         for (Interaction interaction: interactions) {
             interactionRepository.deleteById(interaction.getId());
