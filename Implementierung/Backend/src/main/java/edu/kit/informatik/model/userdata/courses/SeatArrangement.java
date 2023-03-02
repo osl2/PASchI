@@ -41,7 +41,8 @@ public class SeatArrangement extends DataObject {
     @ManyToOne
     private Course course;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH,
+        CascadeType.PERSIST})
     @JoinTable(name = "chair_participant_mapping",
             joinColumns = @JoinColumn(name = "seatarrangementId"),
             inverseJoinColumns  = @JoinColumn(name = "participantId"))
