@@ -148,15 +148,8 @@ export class CourseController {
       return undefined;
     }
 
-    let allStudents = useStudentStore().getAllStudents();
-    let students: Participant[] = [];
-    allStudents.forEach((student: Participant) => {
-      if (course!.getParticipant(student.getId) == undefined) {
-        students.push(student);
-      }
-    });
-
-    return students;
+    return useStudentStore().getAllStudents().filter(student => student.visible &&
+      course?.getParticipant(student.getId) == undefined);
   }
 
   /**
