@@ -7,7 +7,7 @@ import edu.kit.informatik.model.userdata.courses.Session;
 import edu.kit.informatik.model.userdata.interactions.Interaction;
 import edu.kit.informatik.repositories.InteractionRepository;
 import edu.kit.informatik.repositories.SessionRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;

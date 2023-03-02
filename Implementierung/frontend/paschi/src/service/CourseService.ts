@@ -1,13 +1,14 @@
-import { BaseService } from "@/service/BaseService";
+import {BASE_URL, BaseService} from "@/service/BaseService";
 import { Course } from "@/model/userdata/courses/Course";
 import { CourseDto } from "@/dto/userdata/courses/CourseDto";
 import { CourseMapper } from "@/dto/mapper/courses/CourseMapper";
 import axios, { AxiosResponse } from "axios";
 import { useUserStore } from "@/store/UserStore";
 
-const COURSE_BASE_URL: string = "https://193.196.36.88/api/course";
+const COURSE_BASE_URL: string = BASE_URL + "/api/course";
 
 export class CourseService extends BaseService<Course, CourseDto> {
+
   private static courseService: CourseService = new CourseService();
 
   private constructor() {
