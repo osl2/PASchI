@@ -25,9 +25,9 @@ public interface InteractionRepository extends JpaRepository<Interaction, String
     Optional<Interaction> findInteractionById(String id);
 
     /**
-     * Rückgabe eines {@link Optional} mit {@link Interaction}
+     * Rückgabe eines {@link List} mit {@link Interaction}
      * @param session {@link Session}
-     * @return {@link Optional} von {@link Interaction}
+     * @return {@link List} von {@link Interaction}
      */
-    Optional<List<Interaction>> findInteractionBySession(Session session);
+    List<Interaction> findInteractionsBySession(Session session);
 }
