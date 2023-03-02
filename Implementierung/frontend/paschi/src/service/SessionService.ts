@@ -100,7 +100,7 @@ export class SessionService extends BaseService<Session, SessionDto> {
   async delete(id: string) {
     const token = useUserStore().getUser()?.token;
     await axios
-      .post(SESSION_BASE_URL, {
+      .delete(SESSION_BASE_URL, {
         params: {
           id,
         },
