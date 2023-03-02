@@ -32,7 +32,7 @@ export class TableMapper implements IModelDtoMapper<Table, TableDto> {
   async dtoToModel(tableDto: TableDto): Promise<Table> {
     const userController = UserController.getUserController();
 
-    let table = useRoomObjectStore().getChair(tableDto.id);
+    let table = useRoomObjectStore().getTableByTimeCreated(tableDto.createdAt);
     if (table == undefined) {
       table = new Table(
         tableDto.id,
@@ -45,10 +45,9 @@ export class TableMapper implements IModelDtoMapper<Table, TableDto> {
       table.updatedAt = tableDto.updatedAt;
       table.createdAt = tableDto.createdAt;
       useRoomObjectStore().addChair(table);
-    } else if (table.updatedAt === tableDto.updatedAt) {
-      return table;
     }
 
+    table.setId = tableDto.id;
     table.position = await this.positionMapper.dtoToModel(tableDto.position);
     table.dimensions.length = tableDto.length;
     table.dimensions.width = tableDto.width;

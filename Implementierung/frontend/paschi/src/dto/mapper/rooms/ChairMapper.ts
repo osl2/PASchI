@@ -30,7 +30,7 @@ export class ChairMapper implements IModelDtoMapper<Chair, ChairDto> {
   async dtoToModel(chairDto: ChairDto): Promise<Chair> {
     const userController = UserController.getUserController();
 
-    let chair = useRoomObjectStore().getChair(chairDto.id);
+    let chair = useRoomObjectStore().getChairByTimeCreated(chairDto.createdAt);
     if (chair == undefined) {
       chair = new Chair(
         chairDto.id,
@@ -41,10 +41,9 @@ export class ChairMapper implements IModelDtoMapper<Chair, ChairDto> {
       chair.updatedAt = chairDto.updatedAt;
       chair.createdAt = chairDto.createdAt;
       useRoomObjectStore().addChair(chair);
-    } else if (chair.updatedAt === chairDto.updatedAt) {
-      return chair;
     }
 
+    chair.setId = chairDto.id;
     chair.position = await this.positionMapper.dtoToModel(chairDto.position);
     return chair;
   }

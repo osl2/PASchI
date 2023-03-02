@@ -25,6 +25,22 @@ export const useRoomObjectStore = defineStore('roomObjects', {
       }
       return undefined;
     },
+    getChairByTimeCreated(time: string): Chair | undefined {
+      for (const chair of this.chairs) {
+        if (chair.createdAt.substring(0, 23) === time.substring(0, 23)) {
+          return <Chair> chair;
+        }
+      }
+      return undefined;
+    },
+    getTableByTimeCreated(time: string): Table | undefined {
+      for (const table of this.tables) {
+        if (table.createdAt.substring(0, 23) === time.substring(0, 23)) {
+          return <Table> table;
+        }
+      }
+      return undefined;
+    },
     deleteRoomObject(id: string) {
       this.chairs.forEach((element, index) => {
         if (element.getId === id) {

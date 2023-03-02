@@ -107,9 +107,10 @@ export class RoomController {
       position
     );
     room.addRoomObject(chair);
+    const chairId = useRoomObjectStore().addChair(chair);
     await this.roomService.update(room).then();
 
-    return useRoomObjectStore().addChair(chair);
+    return chairId;
   }
 
   async addTable(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number, length: number,
@@ -139,9 +140,10 @@ export class RoomController {
       width
     );
     room.addRoomObject(table);
+    const tableId = useRoomObjectStore().addTable(table);
     await this.roomService.update(room);
 
-    return useRoomObjectStore().addTable(table);
+    return tableId;
   }
 
   getRoomObjects(roomId: string): RoomObject[] | undefined {
