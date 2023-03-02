@@ -35,6 +35,7 @@ public class ParticipantDto implements Comparable<ParticipantDto> {
     private ParticipantTypeDto participantType;
     private List<String> courseIds;
     private List<String> interactionIds;
+    private boolean visible;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
