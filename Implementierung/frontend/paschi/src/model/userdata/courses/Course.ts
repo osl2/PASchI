@@ -58,7 +58,7 @@ export class Course extends DataObject {
   removeParticipant(participantId: string) {
     this._participants.forEach((element: Participant, index: number) => {
       if (element.getId === participantId) {
-        this._participants.splice(index, 1)
+        this._participants.splice(index, 1);
       }
     });
     this.update();

@@ -80,7 +80,7 @@ export class SeatArrangementController {
 
     const center = {x: roomObjectUtilities.roomWidth / 2, y: roomObjectUtilities.roomHeight / 2};
     const radius = roomObjectUtilities.roomHeight / 3;
-    const interval = 2 * Math.PI / students.length + 1;
+    const interval = 2 * Math.PI / (students.length + 1);
 
     for (let i = 0; i < students.length + 1; i++) {
       const x = center.x + radius * Math.cos(interval * i);
@@ -101,7 +101,7 @@ export class SeatArrangementController {
     for (let i = 0; i < students.length; i++) {
       arrangement.setSeat(chairs![i], students[i]);
     }
-    // TODO: Macht statistik kaputt
+    // TODO: Fügt Lehrer zur Sitzordnung hinzu, macht aber Statistiken kaputt
     //arrangement.setSeat(chairs![students.length], CourseController.getCourseController().getTeacher());
 
     await this.arrangementService.add(arrangement);
