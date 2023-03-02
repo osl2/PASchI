@@ -95,11 +95,13 @@ test("Get all sessions", () => {
   expect(sessions.length).toBeGreaterThan(0);
 });
 
-test("Delete course", async () => {
+test("Delete session", async () => {
   await sessionController.deleteSession(sessionId!);
   session = sessionController.getSession(sessionId!);
+  const sessions = sessionController.getAllSessions();
 
   expect(session).toBeUndefined();
+  expect(sessions.length).toBe(0);
 
   await sessionController.deleteSession(sessionId!);
 });

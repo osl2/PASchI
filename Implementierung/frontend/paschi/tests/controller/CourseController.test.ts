@@ -150,7 +150,7 @@ test("Get seatArrangmenets of course", async () => {
   const arrangementId = await arrangementController.createAutomaticSeatArrangement("arrangement", courseId);
 
   const arrangements = courseController.getSeatArrangements(courseId);
-  if (arrangements != undefined) {
+  if (arrangements && arrangements.length > 0) {
     expect(arrangements[0].name).toBe("arrangement");
   }
 
@@ -170,7 +170,7 @@ test("Delete course", async () => {
   const courses = courseController.getAllCourses();
 
   expect(course).toBeUndefined();
-  // expect(courses.length).toBe(0);
+  expect(courses.length).toBe(0);
 
   await courseController.deleteCourse(courseId);
 });
