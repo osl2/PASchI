@@ -38,21 +38,25 @@ public class Participant extends DataObject {
     @ManyToMany
     private List<Interaction> interactions;
 
+    private boolean visible;
+
     /**
      *
      * @param user {@link User}
      * @param firstName Vorname
      * @param lastName Nachname
      * @param participantType {@link ParticipantType}
+     * @param visible {@code true}, wenn Teilnehmer angezeigt werden soll
      * @param createdAt {@link Timestamp} der Erstellung
      * @param updatedAt {@link Timestamp} der letzten Änderung
      */
     public Participant(User user, String firstName, String lastName,
-                       ParticipantType participantType, Timestamp createdAt, Timestamp updatedAt) {
+                       ParticipantType participantType, boolean visible, Timestamp createdAt, Timestamp updatedAt) {
         super(user, createdAt, updatedAt);
         this.firstName = firstName;
         this.lastName = lastName;
         this.participantType = participantType;
+        this.visible = visible;
         this.courses = new ArrayList<>();
         this.interactions = new ArrayList<>();
     }
