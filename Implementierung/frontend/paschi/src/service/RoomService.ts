@@ -8,6 +8,7 @@ import { useUserStore } from "@/store/UserStore";
 const ROOM_BASE_URL: string = BASE_URL + "/api/room";
 
 export class RoomService extends BaseService<Room, RoomDto> {
+
   private static roomService: RoomService = new RoomService();
 
   private constructor() {

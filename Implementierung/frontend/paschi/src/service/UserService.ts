@@ -21,9 +21,10 @@ export class UserService extends BaseService<User, UserDto> {
 
   async add(user: User) {
     const userDto = this.getMapper().modelToDto(user);
-    await axios.post(USER_BASE_URL, userDto).catch((error) => {
-      console.log(error);
-    });
+    await axios
+      .post(USER_BASE_URL, userDto).catch((error) => {
+        console.log(error);
+      });
   }
 
   async update(user: User) {

@@ -9,8 +9,7 @@ const SEAT_ARRANGEMENT_BASE_URL: string = BASE_URL + "/api/seatarrangement";
 
 export class SeatArrangementService extends BaseService<SeatArrangement, SeatArrangementDto> {
 
-  private static seatArrangementService: SeatArrangementService =
-    new SeatArrangementService();
+  private static seatArrangementService: SeatArrangementService = new SeatArrangementService();
 
   private constructor() {
     super(SeatArrangementMapper.getMapper());

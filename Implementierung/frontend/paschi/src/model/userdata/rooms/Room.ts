@@ -25,7 +25,7 @@ export class Room extends DataObject {
 
   removeRoomObject(objectId: string) {
     this.roomObjects.forEach((element: RoomObject, index: number) => {
-      if (element.getId == objectId) {
+      if (element.getId === objectId) {
         this._roomObjects.splice(index, 1);
       }
     });
@@ -33,12 +33,11 @@ export class Room extends DataObject {
   }
 
   getRoomObject(objectId: string): RoomObject | undefined {
-    for (let i = 0; i < this._roomObjects.length; i++) {
-      if (this._roomObjects.at(i)?.getId === objectId) {
-        return this._roomObjects.at(i);
+    for (const object of this._roomObjects) {
+      if (object.getId === objectId) {
+        return object;
       }
     }
-
     return undefined;
   }
 

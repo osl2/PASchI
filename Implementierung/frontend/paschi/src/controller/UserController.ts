@@ -37,8 +37,7 @@ export class UserController {
    * @param password Passwort
    */
   async login(email: string, password: string): Promise<string | undefined> {
-    let user: User | undefined;
-    user = await this.userService.login(email, password);
+    const user = await this.userService.login(email, password);
 
     if (user == undefined) {
       return undefined;
@@ -104,8 +103,8 @@ export class UserController {
    * @param lastName Nachname
    */
   async update(firstName: string, lastName: string) {
-    let user = this.getUser();
-    if (user !== undefined) {
+    const user = this.getUser();
+    if (user) {
       user.firstName = firstName;
       user.lastName = lastName;
       await this.userService.update(user);
@@ -137,9 +136,9 @@ export class UserController {
    */
   async delete() {
     const user = useUserStore().getUser();
-    if (user !== undefined) {
-      useUserStore().deleteUser();
+    if (user) {
       await this.userService.delete(user.getId);
+      this.clearStores();
     }
   }
 
