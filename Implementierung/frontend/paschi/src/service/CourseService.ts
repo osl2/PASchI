@@ -59,8 +59,8 @@ export class CourseService extends BaseService<Course, CourseDto> {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((response: AxiosResponse<CourseDto>) => {
-        course = this.getMapper().dtoToModel(response.data);
+      .then(async (response: AxiosResponse<CourseDto>) => {
+        course = await this.getMapper().dtoToModel(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -82,10 +82,10 @@ export class CourseService extends BaseService<Course, CourseDto> {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((response: AxiosResponse<CourseDto[]>) => {
-        response.data.forEach(async (courseDto: CourseDto) => {
-          courses.push(await this.getMapper().dtoToModel(courseDto));
-        });
+      .then(async (response: AxiosResponse<CourseDto[]>) => {
+        for (const courseDto of response.data) {
+          courses.push(await this.getMapper().dtoToModel(<CourseDto> courseDto));
+        }
       })
       .catch((error) => {
         console.log(error);

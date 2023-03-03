@@ -59,8 +59,8 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((response: AxiosResponse<CategoryDto>) => {
-        category = this.getMapper().dtoToModel(response.data);
+      .then(async (response: AxiosResponse<CategoryDto>) => {
+        category = await this.getMapper().dtoToModel(response.data);
       })
       .catch((error) => {
         console.log(error);

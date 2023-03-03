@@ -62,8 +62,8 @@ export class SessionService extends BaseService<Session, SessionDto> {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((response: AxiosResponse<SessionDto>) => {
-        session = this.getMapper().dtoToModel(response.data);
+      .then(async (response: AxiosResponse<SessionDto>) => {
+        session = await this.getMapper().dtoToModel(response.data);
       })
       .catch((error) => {
         console.log(error);

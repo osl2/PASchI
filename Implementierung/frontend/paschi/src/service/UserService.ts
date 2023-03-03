@@ -49,8 +49,8 @@ export class UserService extends BaseService<User, UserDto> {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((response: AxiosResponse<UserDto>) => {
-        user = this.getMapper().dtoToModel(response.data);
+      .then(async (response: AxiosResponse<UserDto>) => {
+        user = await this.getMapper().dtoToModel(response.data);
       })
       .catch((error) => {
         console.log(error);
