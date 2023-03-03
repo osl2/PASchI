@@ -135,7 +135,7 @@ export class SessionController {
    */
   getRecentSessions(): Session[] {
     const allSessions = useSessionStore().getAllSessions().sort((a: Session, b: Session) => {
-      return (a.createdAt <= b.createdAt) ? 1 : -1;
+      return (a.updatedAt <= b.updatedAt) ? 1 : -1;
     });
 
     const sessions = [];

@@ -59,7 +59,7 @@ export class CourseController {
     if (course) {
       course.name = name;
       course.subject = subject;
-      await this.courseService.update(course).then();
+      await this.courseService.update(course);
     }
   }
 
