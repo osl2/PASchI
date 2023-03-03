@@ -14,6 +14,9 @@ import {useRoomStore} from "@/store/RoomStore";
 import {usePositionStore} from "@/store/PositionStore";
 import {ParticipantService} from "@/service/ParticipantService";
 import {Teacher} from "@/model/userdata/interactions/Teacher";
+import {CourseService} from "@/service/CourseService";
+import {RoomService} from "@/service/RoomService";
+import {SessionService} from "@/service/SessionService";
 
 /**
  * Steuert den Kontrollfluss für die Benutzerverwaltung.
@@ -44,8 +47,9 @@ export class UserController {
     }
 
     useUserStore().setUser(user);
-    await CategoryController.getCategoryController().getAllCategories();
     await this.setTeacher();
+    await this.getData();
+    await CategoryController.getCategoryController().getAllCategories();
     return user.getId;
   }
 
@@ -55,8 +59,9 @@ export class UserController {
   async loginWithToken(): Promise<string | undefined>  {
     await this.userService.getToken();
     if (useUserStore().isLoggedIn()) {
-      await CategoryController.getCategoryController().getAllCategories();
       await this.setTeacher();
+      await this.getData();
+      await CategoryController.getCategoryController().getAllCategories();
     }
     return useUserStore().getUser()?.getId;
   }
@@ -140,6 +145,12 @@ export class UserController {
       await this.userService.delete(user.getId);
       this.clearStores();
     }
+  }
+
+  private async getData() {
+    await CourseService.getService().getAll();
+    await SessionService.getService().getAll();
+    await RoomService.getService().getAll();
   }
 
   private clearStores() {
