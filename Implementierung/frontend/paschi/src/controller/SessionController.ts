@@ -40,12 +40,17 @@ export class SessionController {
     Promise<string | undefined> {
 
     const course = useCourseStore().getCourse(courseId);
-    let arrangement = undefined;
-    if (seatArrangementId) {
-      arrangement = useSeatArrangementStore().getSeatArrangement(seatArrangementId);
-      if (arrangement == undefined) {
-        return undefined;
-      }
+    let arrangement: SeatArrangement | undefined;
+    if (!seatArrangementId) {
+      const arrangementController = SeatArrangementController.getSeatArrangementController();
+      seatArrangementId = await arrangementController.createAutomaticSeatArrangement("Default", courseId);
+    }
+    if (seatArrangementId == undefined) {
+      return undefined
+    }
+    arrangement = useSeatArrangementStore().getSeatArrangement(seatArrangementId);
+    if (arrangement == undefined) {
+      return undefined;
     }
     if (course == undefined) {
       return undefined

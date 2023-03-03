@@ -139,7 +139,7 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach((to, from, next) => {
   if (
     UserController.getUserController().isLoggedIn() ||
     to.name === "Login" ||
@@ -147,17 +147,17 @@ router.beforeEach(async (to, from, next) => {
   ) {
     next();
   } else {
-    await UserController.getUserController()
+    UserController.getUserController()
       .loginWithToken()
-      .then((res) => {
+      .then(async (res) => {
         if (res) {
           next();
         } else {
-          router.replace({ name: "Login" });
+          await router.replace({ name: "Login" });
         }
       })
-      .catch((err) => {
-        router.replace({ name: "Login" });
+      .catch(async () => {
+        await router.replace({ name: "Login" });
       });
   }
   // make sure the user is authenticated

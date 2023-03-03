@@ -47,7 +47,6 @@ export class UserController {
     }
 
     useUserStore().setUser(user);
-    await this.setTeacher();
     await this.getData();
     await CategoryController.getCategoryController().getAllCategories();
     return user.getId;
@@ -56,14 +55,17 @@ export class UserController {
   /**
    * Einloggen mit gültigem Token.
    */
-  async loginWithToken(): Promise<string | undefined>  {
-    await this.userService.getToken();
-    if (useUserStore().isLoggedIn()) {
-      await this.setTeacher();
-      await this.getData();
-      await CategoryController.getCategoryController().getAllCategories();
+  async loginWithToken(): Promise<string | undefined> {
+    const user = await this.userService.getToken();
+
+    if (user == undefined) {
+      return undefined;
     }
-    return useUserStore().getUser()?.getId;
+
+    useUserStore().setUser(user);
+    await this.getData();
+    await CategoryController.getCategoryController().getAllCategories();
+    return user.getId;
   }
 
   /**
@@ -148,6 +150,7 @@ export class UserController {
   }
 
   private async getData() {
+    await this.getTeacher();
     await CourseService.getService().getAll();
     await SessionService.getService().getAll();
     await RoomService.getService().getAll();
@@ -166,7 +169,7 @@ export class UserController {
     usePositionStore().$reset();
   }
 
-  private async setTeacher() {
+  private async getTeacher() {
     await ParticipantService.getService().getAll();
     let teacher = useStudentStore().getTeacher();
     if (teacher == undefined) {
