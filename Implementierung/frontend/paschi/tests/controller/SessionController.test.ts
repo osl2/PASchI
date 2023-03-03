@@ -54,30 +54,30 @@ test("Create session", async () => {
   expect(session?.course.getId).toBe(courseId);
 });
 
-// test("Update session", async () => {
-//   const _name = "Abschlusspräsentation";
-//   await sessionController.updateSession("0", _name);
-//   await sessionController.updateSession(courseId, _name);
-//
-//   expect(session?.name).toBe(_name);
-// });
+test("Update session", async () => {
+  const _name = "Abschlusspräsentation";
+  await sessionController.updateSession("0", _name);
+  await sessionController.updateSession(sessionId!, _name);
 
-// test("Get recent sessions", async () => {
-//   const id = await sessionController.createSession(courseId, undefined, "Kolloquium 2");
-//   let sessions = sessionController.getRecentSessions();
-//
-//   expect(sessions.length).toBe(2);
-//   expect(sessions[0].name).toBe("Kolloquium 2");
-//   expect(sessions[1].name).toBe("Abschlusspräsentation");
-//
-//   await sessionController.updateSession(sessionId!, sessionData.name);
-//   sessions = sessionController.getRecentSessions();
-//
-//   expect(sessions[1].name).toBe("Kolloquium 2");
-//   expect(sessions[0].name).toBe(sessionData.name);
-//
-//   await sessionController.deleteSession(id!);
-// });
+  expect(session?.name).toBe(_name);
+});
+
+test("Get recent sessions", async () => {
+  const id = await sessionController.createSession(courseId, undefined, "Kolloquium 2");
+  let sessions = sessionController.getRecentSessions();
+
+  expect(sessions.length).toBe(2);
+  expect(sessions[0].name).toBe("Kolloquium 2");
+  expect(sessions[1].name).toBe("Abschlusspräsentation");
+
+  await sessionController.updateSession(sessionId!, sessionData.name);
+  sessions = sessionController.getRecentSessions();
+
+  expect(sessions[1].name).toBe("Kolloquium 2");
+  expect(sessions[0].name).toBe(sessionData.name);
+
+  await sessionController.deleteSession(id!);
+});
 
 test("Get course of session", () => {
   expect(sessionController.getCourseOfSession(sessionId!)?.getId).toBe(courseId);
