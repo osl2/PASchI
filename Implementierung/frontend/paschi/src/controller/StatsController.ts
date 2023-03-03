@@ -175,8 +175,11 @@ export class StatsController {
       return undefined;
     }
 
-    session.interactions.forEach((interaction: Interaction) => {
+    for (const interaction of session.interactions) {
       // Anzahl und absolute Häufigkeit der Kategorien zählen.
+      if (interaction.fromParticipant.isTeacher()) {
+        continue;
+      }
       let category = interaction.category;
       let value = categories.get(category.name);
 
@@ -212,7 +215,7 @@ export class StatsController {
           students.set(from.getId, [1, 0, 0, 0]);
         }
       }
-    });
+    }
 
     return [categories, numCategories, students];
   }
