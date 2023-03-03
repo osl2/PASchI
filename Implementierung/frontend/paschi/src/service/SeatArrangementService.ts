@@ -82,10 +82,10 @@ export class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((response: AxiosResponse<SeatArrangementDto[]>) => {
-        response.data.forEach(async (arrangementDto: SeatArrangementDto) => {
+      .then(async (response: AxiosResponse<SeatArrangementDto[]>) => {
+        for (const arrangementDto of response.data) {
           arrangements.push(await this.getMapper().dtoToModel(arrangementDto));
-        });
+        }
       })
       .catch((error) => {
         console.log(error);
