@@ -1,6 +1,6 @@
 import {IModelDtoMapper} from "@/dto/mapper/IModelDtoMapper";
 
-export const BASE_URL = "http://localhost:8080";
+export const BASE_URL = "https://193.196.36.88";
 
 export abstract class BaseService<Entity, Dto> {
 
