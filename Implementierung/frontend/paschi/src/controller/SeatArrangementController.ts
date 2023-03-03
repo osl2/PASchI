@@ -13,6 +13,7 @@ import {SessionService} from "@/service/SessionService";
 import {RoomController} from "@/controller/RoomController";
 import {RoomObjectUtilities} from "@/components/room/RoomObjectUtilities";
 import {Chair} from "@/model/userdata/rooms/Chair";
+import {CourseController} from "@/controller/CourseController";
 
 /**
  * Steuert den Kontrollfluss für die Sitzordnungsveraltung
@@ -100,8 +101,7 @@ export class SeatArrangementController {
     for (let i = 0; i < students.length; i++) {
       arrangement.setSeat(chairs![i], students[i]);
     }
-    // TODO: Fügt Lehrer zur Sitzordnung hinzu, macht aber Statistiken kaputt
-    //arrangement.setSeat(chairs![students.length], CourseController.getCourseController().getTeacher());
+    arrangement.setSeat(chairs![students.length], CourseController.getCourseController().getTeacher());
 
     await this.arrangementService.add(arrangement);
     return useSeatArrangementStore().addSeatArrangement(arrangement);
