@@ -79,10 +79,10 @@ test("Update session", async () => {
 //
 //   await sessionController.deleteSession(id!);
 // });
-//
-// test("Get course of session", () => {
-//   expect(sessionController.getCourseOfSession(sessionId!)?.getId).toBe(courseId);
-// });
+
+test("Get course of session", () => {
+  expect(sessionController.getCourseOfSession(sessionId!)?.getId).toBe(courseId);
+});
 
 // test("Create interaction", async () => {
 //   interaction.fromId = await StudentController.getStudentConroller().createStudent("Luka", "Kosak");

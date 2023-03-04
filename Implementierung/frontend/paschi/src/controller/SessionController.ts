@@ -106,7 +106,7 @@ export class SessionController {
     const session = useSessionStore().getSession(id);
     if (session) {
       session.course.removeSession(id);
-      await CourseService.getService().update(session.course).then();
+      await CourseService.getService().update(session.course);
 
       for (const interaction of session.interactions) {
         interaction.fromParticipant.removeInteraction(interaction.getId);
