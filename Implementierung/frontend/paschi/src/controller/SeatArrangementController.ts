@@ -9,7 +9,6 @@ import {useStudentStore} from "@/store/StudentStore";
 import {Participant} from "@/model/userdata/interactions/Participant";
 import {SeatArrangementService} from "@/service/SeatArrangementService";
 import {CourseService} from "@/service/CourseService";
-import {SessionService} from "@/service/SessionService";
 import {RoomController} from "@/controller/RoomController";
 import {RoomObjectUtilities} from "@/components/room/RoomObjectUtilities";
 import {Chair} from "@/model/userdata/rooms/Chair";
@@ -96,6 +95,8 @@ export class SeatArrangementController {
       course,
       room
     );
+    course.addSeatArrangement(arrangement);
+    await CourseService.getService().update(course);
 
     const chairs = roomController.getRoomObjects(roomId)?.filter((roomObject) => roomObject instanceof Chair);
     for (let i = 0; i < students.length; i++) {
@@ -118,10 +119,10 @@ export class SeatArrangementController {
       arrangement.course.removeSeatArrangement(id);
       CourseService.getService().update(arrangement.course).then();
       useSessionStore().getAllSessions().forEach((session: Session) => {
-        if (session.seatArrangement !== undefined && session.seatArrangement.getId === id) {
+        if (session.seatArrangement.getId === id) {
           // TODO: copy
-          session.seatArrangement = undefined;
-          SessionService.getService().update(session);
+          // session.seatArrangement = undefined;
+          // SessionService.getService().update(session);
         }
       });
       await this.arrangementService.delete(id);

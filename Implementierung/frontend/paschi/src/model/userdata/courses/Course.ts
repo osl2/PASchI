@@ -18,6 +18,7 @@ export class Course extends DataObject {
   private _participants: Participant[];
   private _sessions: Session[];
   private _seatArrangements: SeatArrangement[];
+  private _defaultArrangement: SeatArrangement | undefined;
 
   /**
    * Konstruktor
@@ -46,6 +47,9 @@ export class Course extends DataObject {
   addParticipant(participant: Participant) {
     if (this.getParticipant(participant.getId) == undefined) {
       this._participants.push(participant);
+      if (this._defaultArrangement) {
+        this.removeSeatArrangement(this._defaultArrangement.getId);
+      }
     }
     this.update();
   }
@@ -59,6 +63,9 @@ export class Course extends DataObject {
     this._participants.forEach((element: Participant, index: number) => {
       if (element.getId === participantId) {
         this._participants.splice(index, 1)
+        if (this._defaultArrangement) {
+          this.removeSeatArrangement(this._defaultArrangement.getId);
+        }
       }
     });
     this.update();
@@ -130,6 +137,9 @@ export class Course extends DataObject {
   addSeatArrangement(seatArrangement: SeatArrangement) {
     if (this.getSeatArrangement(seatArrangement.getId) == undefined) {
       this._seatArrangements.push(seatArrangement);
+      if (!seatArrangement.room.visible) {
+        this._defaultArrangement = seatArrangement;
+      }
     }
     this.update();
   }
@@ -143,9 +153,21 @@ export class Course extends DataObject {
     this.seatArrangements.forEach((element: SeatArrangement, index: number) => {
       if (element.getId === arrangementId) {
         this._seatArrangements.splice(index, 1);
+        if (!element.room.visible) {
+          this._defaultArrangement = undefined;
+        }
       }
     });
     this.update();
+  }
+
+  defaultArrangementIsUsed(id: string): boolean {
+    for (const session of this._sessions) {
+      if (session.seatArrangement.getId === id) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -173,6 +195,13 @@ export class Course extends DataObject {
     }
 
     return undefined;
+  }
+
+  /**
+   * Gibt die aktuelle Standardsitzordnung des Kurses zurück, falls vorhanden.
+   */
+  get defaultArrangement(): SeatArrangement | undefined {
+    return this._defaultArrangement;
   }
 
   /**
@@ -217,5 +246,9 @@ export class Course extends DataObject {
   set seatArrangements(value: SeatArrangement[]) {
     this._seatArrangements = value;
     this.update();
+  }
+
+  set defaultArrangement(value: SeatArrangement | undefined) {
+    this._defaultArrangement = value;
   }
 }

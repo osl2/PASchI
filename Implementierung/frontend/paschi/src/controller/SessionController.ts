@@ -40,20 +40,27 @@ export class SessionController {
     Promise<string | undefined> {
 
     const course = useCourseStore().getCourse(courseId);
-    let arrangement: SeatArrangement | undefined;
-    if (!seatArrangementId) {
-      const arrangementController = SeatArrangementController.getSeatArrangementController();
-      seatArrangementId = await arrangementController.createAutomaticSeatArrangement("Default", courseId);
-    }
-    if (seatArrangementId == undefined) {
-      return undefined
-    }
-    arrangement = useSeatArrangementStore().getSeatArrangement(seatArrangementId);
-    if (arrangement == undefined) {
-      return undefined;
-    }
     if (course == undefined) {
       return undefined
+    }
+
+    let arrangement: SeatArrangement | undefined;
+    if (!seatArrangementId) {
+      if (course.defaultArrangement) {
+        arrangement = course.defaultArrangement;
+      } else {
+        const arrangementController = SeatArrangementController.getSeatArrangementController();
+        seatArrangementId = await arrangementController.createAutomaticSeatArrangement("Default", courseId);
+        if (seatArrangementId == undefined) {
+          return undefined;
+        }
+        arrangement = useSeatArrangementStore().getSeatArrangement(seatArrangementId);
+      }
+    } else {
+      arrangement = useSeatArrangementStore().getSeatArrangement(seatArrangementId);
+    }
+    if (arrangement == undefined) {
+      return undefined;
     }
 
     const currentDate = new Date();
@@ -111,7 +118,8 @@ export class SessionController {
 
       await this.sessionService.delete(id);
       useSessionStore().deleteSession(id);
-      if (session.seatArrangement && !session.seatArrangement.room.visible) {
+      const arrangement = session.seatArrangement;
+      if (!arrangement.room.visible && !session.course.defaultArrangementIsUsed(arrangement.getId)) {
         const arrangementController = SeatArrangementController.getSeatArrangementController();
         await arrangementController.deleteSeatArrangement(session.seatArrangement.getId);
       }

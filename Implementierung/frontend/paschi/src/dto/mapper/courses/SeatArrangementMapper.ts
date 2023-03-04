@@ -11,6 +11,7 @@ import {CourseService} from "@/service/CourseService";
 import {useRoomStore} from "@/store/RoomStore";
 import {useStudentStore} from "@/store/StudentStore";
 import {useRoomObjectStore} from "@/store/RoomObjectStore";
+import {ParticipantService} from "@/service/ParticipantService";
 
 export class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, SeatArrangementDto> {
 
@@ -78,11 +79,14 @@ export class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, S
 
     const map = Object.entries(arrangementDto.seatMap);
     const seatMap: Map<RoomObject, Participant> = new Map<RoomObject, Participant>();
-    map.forEach((value: [string, string]) => {
-      const participant = useStudentStore().getParticipant(value[1])!;
+    for (const value of map) {
+      let participant = useStudentStore().getParticipant(value[1]);
+      if (participant == undefined) {
+        participant = await ParticipantService.getService().getById(value[1]);
+      }
       const roomObject = useRoomObjectStore().getChair(value[0])!;
-      seatMap.set(roomObject, participant);
-    });
+      seatMap.set(roomObject, participant!);
+    }
 
     arrangement.seatMap = seatMap;
     return arrangement;

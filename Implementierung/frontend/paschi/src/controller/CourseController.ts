@@ -173,14 +173,14 @@ export class CourseController {
       course.removeParticipant(studentId);
       student.removeCourse(courseId);
       ParticipantService.getService().update(student).then();
-      course.seatArrangements.forEach((arrangement: SeatArrangement) => {
+      for (const arrangement of course.seatArrangements.filter(arrangement => arrangement.room.visible)) {
         arrangement.seatMap.forEach((student: Participant, chair: RoomObject) => {
           if (student.getId === studentId) {
             arrangement.removeSeat(chair);
             SeatArrangementService.getService().update(arrangement).then();
           }
         });
-      });
+      }
       this.courseService.update(course).then();
     }
   }
@@ -210,7 +210,7 @@ export class CourseController {
    * @param courseId Die Id des Kurses.
    */
   getSeatArrangements(courseId: string): SeatArrangement[] | undefined {
-    return useCourseStore().getCourse(courseId)?.seatArrangements;
+    return useCourseStore().getCourse(courseId)?.seatArrangements.filter(arrangement => arrangement.room.visible);
   }
 
   /**
