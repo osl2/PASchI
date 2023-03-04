@@ -79,17 +79,17 @@ test("Add table", async () => {
   expect(table?.dimensions.width).toBe(dimension.width);
 });
 
-// TODO: Backend löscht Raumobjekte nicht
-// test("Get and delete all room objects", async () => {
-//   const objects = roomController.getRoomObjects(roomId);
-//
-//   expect(objects?.length).toBe(2);
-//
-//   await roomController.removeRoomObject(roomId, chairId!);
-//   await roomController.removeRoomObject(roomId, tableId!);
-//
-//   expect(objects?.length).toBe(0);
-// });
+test("Get and delete all room objects", async () => {
+  const objects = roomController.getRoomObjects(roomId);
+
+  expect(objects?.length).toBe(2);
+
+  await roomController.removeRoomObject(roomId, chairId!);
+  await roomController.removeRoomObject(roomId, tableId!);
+
+  // TODO: Backend löscht Raumobjekte nicht
+  // expect(objects?.length).toBe(0);
+});
 
 test("Get all rooms", () => {
   const rooms = roomController.getAllRooms();
@@ -104,6 +104,4 @@ test("Delete room", async () => {
 
   expect(room).toBeUndefined();
   expect(rooms.length).toBe(0);
-
-  await roomController.deleteRoom(roomId);
 });

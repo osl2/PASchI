@@ -119,7 +119,7 @@ test("Remove student from course", async () => {
   expect(courseController.getStudentsNotInCourse(courseId)?.length).toBe(0);
   expect(course?.participants.length).toBe(1);
 
-  courseController.removeStudentFromCourse(courseId, participantId);
+  await courseController.removeStudentFromCourse(courseId, participantId);
 
   expect(course?.participants.length).toBe(0);
   expect(courseController.getStudentsNotInCourse(courseId)?.length).toBe(1);
@@ -171,6 +171,4 @@ test("Delete course", async () => {
 
   expect(course).toBeUndefined();
   expect(courses.length).toBe(0);
-
-  await courseController.deleteCourse(courseId);
 });

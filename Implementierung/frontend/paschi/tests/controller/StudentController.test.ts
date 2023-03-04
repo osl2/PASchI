@@ -73,6 +73,4 @@ test("Delete student", async () => {
 
   expect(student).toBeUndefined();
   expect(students.length).toBe(0);
-
-  await studentController.deleteStudent(studentId);
 });
