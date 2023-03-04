@@ -17,6 +17,7 @@ import {Teacher} from "@/model/userdata/interactions/Teacher";
 import {CourseService} from "@/service/CourseService";
 import {RoomService} from "@/service/RoomService";
 import {SessionService} from "@/service/SessionService";
+import {CourseController} from "@/controller/CourseController";
 
 /**
  * Steuert den Kontrollfluss für die Benutzerverwaltung.
@@ -151,6 +152,7 @@ export class UserController {
 
   private async getData() {
     await this.getTeacher();
+    console.log(CourseController.getCourseController().getTeacher());
     await CourseService.getService().getAll();
     await SessionService.getService().getAll();
     await RoomService.getService().getAll();
