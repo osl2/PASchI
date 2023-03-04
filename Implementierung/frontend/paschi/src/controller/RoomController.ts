@@ -5,7 +5,6 @@ import {UserController} from "@/controller/UserController";
 import {Chair} from "@/model/userdata/rooms/Chair";
 import {useRoomObjectStore} from "@/store/RoomObjectStore";
 import {Table} from "@/model/userdata/rooms/Table";
-import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {RoomObject} from "@/model/userdata/rooms/RoomObject";
 import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 import {usePositionStore} from "@/store/PositionStore";
@@ -60,16 +59,14 @@ export class RoomController {
     const arrangementController = SeatArrangementController.getSeatArrangementController();
     const room = useRoomStore().getRoom(id);
     if (room) {
-      useSeatArrangementStore()
-        .getAllSeatArrangements()
-        .forEach((arrangement: SeatArrangement) => {
-          if (arrangement.room.getId === id) {
-            arrangementController.deleteSeatArrangement(arrangement.getId);
-          }
-        });
+      for (const arrangement of useSeatArrangementStore().getAllSeatArrangements()) {
+        if (arrangement.room.getId === id) {
+          await arrangementController.deleteSeatArrangement(arrangement.getId);
+        }
+      }
+      await this.roomService.delete(id);
+      useRoomStore().deleteRoom(id);
     }
-    await this.roomService.delete(id);
-    useRoomStore().deleteRoom(id);
   }
 
   getRoom(id: string): Room | undefined {
@@ -108,7 +105,7 @@ export class RoomController {
     );
     room.addRoomObject(chair);
     useRoomObjectStore().addChair(chair);
-    await this.roomService.update(room).then();
+    await this.roomService.update(room);
 
     return chair.getId;
   }
@@ -161,12 +158,12 @@ export class RoomController {
       if (object) {
         room.removeRoomObject(objectId);
         usePositionStore().deletePosition(object.position.getId);
-        useSeatArrangementStore().getAllSeatArrangements().forEach((arrangement: SeatArrangement) => {
+        for (const arrangement of useSeatArrangementStore().getAllSeatArrangements()) {
           if (arrangement.room.getId === roomId) {
             arrangement.removeSeat(object!);
-            SeatArrangementService.getService().update(arrangement);
+            await SeatArrangementService.getService().update(arrangement);
           }
-        });
+        }
         useRoomObjectStore().deleteRoomObject(objectId);
         await this.roomService.update(room);
       }
