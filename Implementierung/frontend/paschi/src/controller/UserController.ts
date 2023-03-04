@@ -14,6 +14,10 @@ import {useRoomStore} from "@/store/RoomStore";
 import {usePositionStore} from "@/store/PositionStore";
 import {ParticipantService} from "@/service/ParticipantService";
 import {Teacher} from "@/model/userdata/interactions/Teacher";
+import {CourseService} from "@/service/CourseService";
+import {RoomService} from "@/service/RoomService";
+import {SessionService} from "@/service/SessionService";
+import {CourseController} from "@/controller/CourseController";
 
 /**
  * Steuert den Kontrollfluss für die Benutzerverwaltung.
@@ -44,21 +48,25 @@ export class UserController {
     }
 
     useUserStore().setUser(user);
+    await this.getData();
     await CategoryController.getCategoryController().getAllCategories();
-    await this.setTeacher();
     return user.getId;
   }
 
   /**
    * Einloggen mit gültigem Token.
    */
-  async loginWithToken(): Promise<string | undefined>  {
-    await this.userService.getToken();
-    if (useUserStore().isLoggedIn()) {
-      await CategoryController.getCategoryController().getAllCategories();
-      await this.setTeacher();
+  async loginWithToken(): Promise<string | undefined> {
+    const user = await this.userService.getToken();
+
+    if (user == undefined) {
+      return undefined;
     }
-    return useUserStore().getUser()?.getId;
+
+    useUserStore().setUser(user);
+    await this.getData();
+    await CategoryController.getCategoryController().getAllCategories();
+    return user.getId;
   }
 
   /**
@@ -142,6 +150,14 @@ export class UserController {
     }
   }
 
+  private async getData() {
+    await this.getTeacher();
+    console.log(CourseController.getCourseController().getTeacher());
+    await CourseService.getService().getAll();
+    await SessionService.getService().getAll();
+    await RoomService.getService().getAll();
+  }
+
   private clearStores() {
     useUserStore().$reset();
     useStudentStore().$reset();
@@ -155,7 +171,7 @@ export class UserController {
     usePositionStore().$reset();
   }
 
-  private async setTeacher() {
+  private async getTeacher() {
     await ParticipantService.getService().getAll();
     let teacher = useStudentStore().getTeacher();
     if (teacher == undefined) {

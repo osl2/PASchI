@@ -54,12 +54,9 @@ export class SessionMapper implements IModelDtoMapper<Session, SessionDto> {
     if (course == undefined) {
       course = await courseSerivce.getById(sessionDto.courseId);
     }
-    let arrangement;
-    if (sessionDto.seatArrangementId !== undefined) {
-      arrangement = useSeatArrangementStore().getSeatArrangement(sessionDto.seatArrangementId);
-      if (arrangement == undefined) {
-        arrangement = await arrangementService.getById(sessionDto.seatArrangementId);
-      }
+    let arrangement = useSeatArrangementStore().getSeatArrangement(sessionDto.seatArrangementId);
+    if (arrangement == undefined) {
+      arrangement = await arrangementService.getById(sessionDto.seatArrangementId);
     }
 
     let session = useSessionStore().getSession(sessionDto.id);
@@ -71,7 +68,7 @@ export class SessionMapper implements IModelDtoMapper<Session, SessionDto> {
         sessionDto.name,
         sessionDto.date,
         course!,
-        arrangement
+        arrangement!
       );
       session.createdAt = sessionDto.createdAt;
       session.updatedAt = sessionDto.updatedAt;
@@ -87,7 +84,7 @@ export class SessionMapper implements IModelDtoMapper<Session, SessionDto> {
     }
 
     session.name = sessionDto.name;
-    session.seatArrangement = arrangement;
+    session.seatArrangement = arrangement!;
     session.interactions = interactions;
     return session;
   }

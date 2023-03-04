@@ -207,7 +207,6 @@ import { computed, defineComponent, inject, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
 import { SessionController } from "@/controller/SessionController";
 import { useRouter } from "vue-router";
-import {SeatArrangementController} from "@/controller/SeatArrangementController";
 export default defineComponent({
   name: "CourseDetailsPage",
   components: {SideMenu, NavigationBar},
@@ -470,9 +469,7 @@ export default defineComponent({
     }
 
     async function newStandardSeatArrangement() {
-      const seatArrangementId = await SeatArrangementController.getSeatArrangementController().createAutomaticSeatArrangement("Standardsitzordnung", props.courseId);
-      const sessionId = await sessionController.createSession(props.courseId, seatArrangementId, "");
-      console.log(sessionId);
+      const sessionId = await sessionController.createSession(props.courseId, undefined, "");
       await router.push({
         name: "SessionPageDesktop",
         params: {

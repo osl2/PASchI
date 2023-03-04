@@ -59,8 +59,8 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((response: AxiosResponse<CategoryDto>) => {
-        category = this.getMapper().dtoToModel(response.data);
+      .then(async (response: AxiosResponse<CategoryDto>) => {
+        category = await this.getMapper().dtoToModel(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -82,10 +82,10 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((response: AxiosResponse<CategoryDto[]>) => {
-        response.data.forEach(async (categoryDto: CategoryDto) => {
+      .then(async (response: AxiosResponse<CategoryDto[]>) => {
+        for (const categoryDto of response.data) {
           categories.push(await this.getMapper().dtoToModel(categoryDto));
-        });
+        }
       })
       .catch((error) => {
         console.log(error);
