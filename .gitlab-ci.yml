@@ -13,6 +13,7 @@ variables:
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
+    - .cache/Cypress
     - .cache/Implementierung/frontend/paschi/*
     - Implementierung/frontend/paschi/Cypress
     - Implementierung/frontend/paschi/node_modules
