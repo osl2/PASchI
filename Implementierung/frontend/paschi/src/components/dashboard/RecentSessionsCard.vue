@@ -3,7 +3,7 @@
     <v-card-title>
       <v-row class="ma-2"> Letzte Sitzungen </v-row>
     </v-card-title>
-    <v-list-item v-for="session in sessions">
+    <v-list-item v-for="session in sessions" class="pa-2 ma-1">
       <v-list-item-title>
         <div>{{ session.name }} {{ session.date }}</div>
       </v-list-item-title>
