@@ -50,8 +50,9 @@
                   variant="tonal"
                   color="primary"
                   @click="interactionMapClick(session)"
-                  >InteraktionsKarte</v-btn
-                >
+                  >
+                  <v-icon>mdi mdi-map</v-icon>
+                </v-btn>
                 <v-btn
                   class="ml-2"
                   variant="tonal"
