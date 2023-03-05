@@ -146,8 +146,6 @@ export default defineComponent({
       if (stats !== undefined) {
         top5InteractionArray = stats[0];
         top5DisturberArray = stats[4];
-        console.log(top5InteractionArray);
-        console.log(top5DisturberArray);
         return stats[5] as Map<string, number>;
       }
     }
@@ -167,8 +165,6 @@ export default defineComponent({
       const categoryChartId = document.getElementById(
         "categoryChart"
       ) as HTMLCanvasElement;
-      // const top5InteractionChartId = document.getElementById('top5InteractionChart') as HTMLCanvasElement;
-      //const top5DisturberChartId = document.getElementById('top5DisturberChart') as HTMLCanvasElement;
 
       if (stats == undefined) {
         console.log("stats could not be loaded");
@@ -177,13 +173,11 @@ export default defineComponent({
 
       const categoryChartData = {
         labels:
-          // ['Störungsdummy', 'Antwortdummy', 'Fragendummy'],
           keys,
         datasets: [
           {
             label: "Anzahl",
             data:
-              //[5,3,2],
               values,
           },
         ],
