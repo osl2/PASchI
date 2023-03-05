@@ -9,10 +9,10 @@ import {useStudentStore} from "@/store/StudentStore";
 import {Participant} from "@/model/userdata/interactions/Participant";
 import {SeatArrangementService} from "@/service/SeatArrangementService";
 import {CourseService} from "@/service/CourseService";
-import {SessionService} from "@/service/SessionService";
 import {RoomController} from "@/controller/RoomController";
 import {RoomObjectUtilities} from "@/components/room/RoomObjectUtilities";
 import {Chair} from "@/model/userdata/rooms/Chair";
+import {CourseController} from "@/controller/CourseController";
 
 /**
  * Steuert den Kontrollfluss für die Sitzordnungsveraltung
@@ -20,7 +20,6 @@ import {Chair} from "@/model/userdata/rooms/Chair";
 export class SeatArrangementController {
 
   private static controller: SeatArrangementController = new SeatArrangementController();
-  private userController = UserController.getUserController();
   private arrangementService = SeatArrangementService.getService();
 
   private constructor() {
@@ -47,7 +46,7 @@ export class SeatArrangementController {
     let arrangement = new SeatArrangement(
       undefined,
       useSeatArrangementStore().getNextId(),
-      this.userController.getUser(),
+      UserController.getUserController().getUser(),
       name,
       course,
       room
@@ -91,18 +90,19 @@ export class SeatArrangementController {
     let arrangement = new SeatArrangement(
       undefined,
       useSeatArrangementStore().getNextId(),
-      this.userController.getUser(),
+      UserController.getUserController().getUser(),
       name,
       course,
       room
     );
+    course.addSeatArrangement(arrangement);
+    await CourseService.getService().update(course);
 
     const chairs = roomController.getRoomObjects(roomId)?.filter((roomObject) => roomObject instanceof Chair);
     for (let i = 0; i < students.length; i++) {
       arrangement.setSeat(chairs![i], students[i]);
     }
-    // TODO: Fügt Lehrer zur Sitzordnung hinzu, macht aber Statistiken kaputt
-    //arrangement.setSeat(chairs![students.length], CourseController.getCourseController().getTeacher());
+    arrangement.setSeat(chairs![students.length], CourseController.getCourseController().getTeacher());
 
     await this.arrangementService.add(arrangement);
     return useSeatArrangementStore().addSeatArrangement(arrangement);
@@ -117,11 +117,12 @@ export class SeatArrangementController {
     let arrangement = useSeatArrangementStore().getSeatArrangement(id);
     if (arrangement !== undefined) {
       arrangement.course.removeSeatArrangement(id);
+      CourseService.getService().update(arrangement.course).then();
       useSessionStore().getAllSessions().forEach((session: Session) => {
-        if (session.seatArrangement !== undefined && session.seatArrangement.getId === id) {
+        if (session.seatArrangement.getId === id) {
           // TODO: copy
-          session.seatArrangement = undefined;
-          SessionService.getService().update(session);
+          // session.seatArrangement = undefined;
+          // SessionService.getService().update(session);
         }
       });
       await this.arrangementService.delete(id);

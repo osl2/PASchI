@@ -9,8 +9,7 @@ const SEAT_ARRANGEMENT_BASE_URL: string = BASE_URL + "/api/seatarrangement";
 
 export class SeatArrangementService extends BaseService<SeatArrangement, SeatArrangementDto> {
 
-  private static seatArrangementService: SeatArrangementService =
-    new SeatArrangementService();
+  private static seatArrangementService: SeatArrangementService = new SeatArrangementService();
 
   private constructor() {
     super(SeatArrangementMapper.getMapper());
@@ -60,8 +59,8 @@ export class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((response: AxiosResponse<SeatArrangementDto>) => {
-        arrangement = this.getMapper().dtoToModel(response.data);
+      .then(async (response: AxiosResponse<SeatArrangementDto>) => {
+        arrangement = await this.getMapper().dtoToModel(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -83,10 +82,10 @@ export class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((response: AxiosResponse<SeatArrangementDto[]>) => {
-        response.data.forEach(async (arrangementDto: SeatArrangementDto) => {
+      .then(async (response: AxiosResponse<SeatArrangementDto[]>) => {
+        for (const arrangementDto of response.data) {
           arrangements.push(await this.getMapper().dtoToModel(arrangementDto));
-        });
+        }
       })
       .catch((error) => {
         console.log(error);

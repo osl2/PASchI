@@ -172,7 +172,7 @@
     <v-dialog max-width="700" v-model="deleteSessionDialog">
       <v-card variant="flat" class="pa-2 rounded-lg">
         <v-card-title class="text-h5 text-center text-indigo-darken-4">
-          Sitzung unwiederruflich löschen?
+          Sitzung unwiderruflich löschen?
         </v-card-title>
         <v-card-actions class="row justify-center">
           <v-btn
@@ -207,7 +207,6 @@ import { computed, defineComponent, inject, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
 import { SessionController } from "@/controller/SessionController";
 import { useRouter } from "vue-router";
-import {SeatArrangementController} from "@/controller/SeatArrangementController";
 export default defineComponent({
   name: "CourseDetailsPage",
   components: {SideMenu, NavigationBar},
@@ -470,9 +469,7 @@ export default defineComponent({
     }
 
     async function newStandardSeatArrangement() {
-      const seatArrangementId = await SeatArrangementController.getSeatArrangementController().createAutomaticSeatArrangement("Standardsitzordnung", props.courseId);
-      const sessionId = await sessionController.createSession(props.courseId, seatArrangementId, "");
-      console.log(sessionId);
+      const sessionId = await sessionController.createSession(props.courseId, undefined, "");
       await router.push({
         name: "SessionPageDesktop",
         params: {
