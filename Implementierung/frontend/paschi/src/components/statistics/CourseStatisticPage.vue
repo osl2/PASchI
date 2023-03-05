@@ -197,6 +197,7 @@ export default defineComponent({
             label: "Anzahl",
             data:
               involvementValues,
+            fill: false,
           },
         ],
       };
@@ -218,7 +219,6 @@ export default defineComponent({
         data: involvementChartData,
         options: {
           responsive: true,
-          maintainAspectRatio: false,
           plugins: {
             legend: {
               display: true,
@@ -226,6 +226,12 @@ export default defineComponent({
                 color: "rgb(0,0,0)",
               },
             },
+          },
+          scales: {
+            y: {
+              suggestedMin: 0,
+              suggestedMax: 100
+            }
           },
           animation: {
             onComplete: buildInvolvementChart,
@@ -250,6 +256,7 @@ export default defineComponent({
           animation: {
             onComplete: buildCategoryChart,
           },
+
         },
       });
 
