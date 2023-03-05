@@ -1,7 +1,7 @@
-@forward 'vuetify/settings' with (
-$application-background: #eeeeee,
-$navigation-drawer-background: rgb(var(--v-theme-secondary)),
-$app-bar-background: rgb(var(--v-theme-primary)),
+@forward "vuetify/settings" with (
+  $application-background: #eeeeee,
+  $navigation-drawer-background: rgb(var(--v-theme-secondary)),
+  $app-bar-background: rgb(var(--v-theme-primary)),
 );
 
 $min-window-width-desktop: 1500px;

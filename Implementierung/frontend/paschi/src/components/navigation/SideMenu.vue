@@ -1,10 +1,10 @@
 <template>
-  <v-navigation-drawer v-if="!isMobile" permanent absolute elevation="10" floating expand-on-hover rail>
+  <v-navigation-drawer style="border-bottom-right-radius: 10px; border-top-right-radius: 10px; height: 300px; top: 50%; transform: translate(0, -50%)" v-if="!isMobile" permanent absolute elevation="10" floating expand-on-hover rail>
     <v-list
       nav
       density="compact"
       active-class="sideMenu-active"
-      class="mt-12 text-white"
+      class="text-white"
     >
       <v-list-item
         :active="subRouteOf('Dashboard')"

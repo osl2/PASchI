@@ -33,6 +33,7 @@ export default createVuetify({
           interaction: "#ff8d00",
           secondary: "#3770a1",
           white: "#FFFFFF",
+          green: "#13a343",
         },
       },
     },
