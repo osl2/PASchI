@@ -112,7 +112,7 @@ import { StudentController } from "@/controller/StudentController";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import { Student } from "@/model/userdata/interactions/Student";
-import {computed, ComputedRef, defineComponent, Ref, ref} from "vue";
+import { defineComponent, Ref, ref} from "vue";
 import { useRouter } from "vue-router";
 
 export default defineComponent({
@@ -123,9 +123,9 @@ export default defineComponent({
     const router = useRouter();
 
     const studentController = StudentController.getStudentConroller();
-    const students: ComputedRef<Student[]> = computed(()=>{
-      return studentController.getAllStudents();
-    });
+    const students: Ref<Student[]> = ref<Student[]>(
+      studentController.getAllStudents()
+    ) as Ref<Student[]>;
     const enterStudentNameDialog: Ref<boolean> = ref(false);
     const studentFirstName: Ref<string> = ref("");
     const studentLastName: Ref<string> = ref("");
@@ -154,6 +154,7 @@ export default defineComponent({
         studentFirstName.value,
         studentLastName.value
       );
+      students.value = studentController.getAllStudents();
       enterStudentNameDialog.value = false;
     }
 
