@@ -1,0 +1,41 @@
+# Install Cypress, then run all tests (in parallel)
+stages:
+  - build
+  - test
+
+# Set environment variables for folders in "cache" job settings for npm modules and Cypress binary
+variables:
+  npm_config_cache: "$CI_PROJECT_DIR/Implementierung/frontend/paschi/.npm"
+  CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/Implementierung/frontend/paschi/cache/Cypress"
+
+# Cache using branch name
+# https://gitlab.com/help/ci/caching/index.md
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .cache/Cypress
+    - .cache/Implementierung/frontend/paschi/*
+    - Implementierung/frontend/paschi/Cypress
+    - Implementierung/frontend/paschi/node_modules
+    - Implementierung/frontend/paschi/build
+
+# Install NPM dependencies and Cypress
+install:
+  image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+  stage: build
+
+  script:
+    - cd ./Implementierung/frontend/paschi
+    - yarn install --frozen-lockfile
+    - yarn add wait-on
+    # check Cypress binary path and cached versions
+    - yarn run cypress cache path
+    - yarn run cypress cache list
+
+api-tests:
+  image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+  stage: test
+  script:
+    - ls
+    - cd ./Implementierung/frontend/paschi
+    - yarn dev & yarn cypress run --browser chrome --group "Login" --spec "cypress/e2e/*"
