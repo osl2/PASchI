@@ -44,7 +44,8 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
       participant.lastName,
       particpantType,
       courseIds,
-      interactionIds
+      interactionIds,
+      participant.visible
     );
   }
 
@@ -119,6 +120,7 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
 
       participant.courses = courses;
       participant.interactions = interactions;
+      participant.visible = participantDto.visible;
 
       return participant;
     }

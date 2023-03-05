@@ -112,7 +112,7 @@ import { StudentController } from "@/controller/StudentController";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import { Student } from "@/model/userdata/interactions/Student";
-import { defineComponent, Ref, ref } from "vue";
+import { defineComponent, Ref, ref} from "vue";
 import { useRouter } from "vue-router";
 
 export default defineComponent({
@@ -154,6 +154,7 @@ export default defineComponent({
         studentFirstName.value,
         studentLastName.value
       );
+      students.value = studentController.getAllStudents();
       enterStudentNameDialog.value = false;
     }
 

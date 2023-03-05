@@ -10,6 +10,7 @@ export abstract class Participant extends DataObject {
   private _lastName: string;
   private _courses: Course[];
   private _interactions: Interaction[];
+  private _visible: boolean = true;
 
   protected constructor(id: string | undefined, localId: number, user: User, firstName: string, lastName: string) {
     super(id, localId);
@@ -94,6 +95,10 @@ export abstract class Participant extends DataObject {
     return this._interactions;
   }
 
+  get visible(): boolean {
+    return this._visible;
+  }
+
   set firstName(value: string) {
     this._firstName = value;
     this.update();
@@ -112,5 +117,9 @@ export abstract class Participant extends DataObject {
   set interactions(value: Interaction[]) {
     this._interactions = value;
     this.update();
+  }
+
+  set visible(value: boolean) {
+    this._visible = value;
   }
 }

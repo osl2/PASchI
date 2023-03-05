@@ -139,7 +139,8 @@ export class CourseController {
       return undefined;
     }
 
-    return useStudentStore().getAllStudents().filter(student => course.getParticipant(student.getId) == undefined);
+    return useStudentStore().getAllStudents().filter(student => student.visible &&
+      course?.getParticipant(student.getId) == undefined);
   }
 
   /**

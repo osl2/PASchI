@@ -89,13 +89,16 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
                                                                 jAT.getTokenAttributes().get(ID_ATTRIBUTE).toString()));
     }
 
+    @Transactional
     @Override
     public String delete(String id, Authentication authentication) {
         Optional<Participant> participantOptional = this.participantRepository.findParticipantById(id);
         Participant participant = participantOptional.orElseThrow(() ->
                                                                     new EntityNotFoundException(Participant.class, id));
         super.checkAuthorization(authentication, participant.getUser().getId());
-        this.participantRepository.deleteById(id);
+        participant.setFirstName("Deleted");
+        participant.setLastName("User");
+        participant.setVisible(false);
 
         return id;
     }
