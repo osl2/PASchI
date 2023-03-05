@@ -4,15 +4,17 @@
       <v-row class="ma-2"> Letzte Sitzungen </v-row>
     </v-card-title>
     <v-list-item v-for="session in sessions">
-      <v-row class="ma-2">
-        {{ session.name }} {{ session.date }}
-        <v-spacer />
+      <v-list-item-title>
+        <div>{{ session.name }} {{ session.date }}</div>
+      </v-list-item-title>
+      <template v-slot:append>
         <v-btn
           variant="tonal"
           color="white"
           @click="navigateToInteractionMap(session)"
-          >InteraktionsKarte</v-btn
         >
+          <v-icon>mdi mdi-map</v-icon>
+        </v-btn>
         <v-btn
           class="ml-2"
           variant="tonal"
@@ -21,7 +23,7 @@
         >
           <v-icon> fas fa-chart-line </v-icon>
         </v-btn>
-      </v-row>
+      </template>
     </v-list-item>
   </v-card>
 </template>
