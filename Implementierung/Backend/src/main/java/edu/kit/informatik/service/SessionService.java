@@ -76,10 +76,10 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
             repositorySession.setInteractions(updateInteractions(repositorySession, newSession));
         }
         if (!newSession.getSeatArrangement().equals(repositorySession.getSeatArrangement())) {
-            repositorySession.setSeatArrangement(repositorySession.getSeatArrangement());
+            repositorySession.setSeatArrangement(newSession.getSeatArrangement());
         }
         if (!newSession.getName().equals(repositorySession.getName())) {
-            repositorySession.setName(repositorySession.getName());
+            repositorySession.setName(newSession.getName());
         }
 
         return mapper.modelToDto(repositorySession);
