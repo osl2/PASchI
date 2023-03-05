@@ -155,8 +155,7 @@ export default defineComponent({
     let involvementMap = getInvolvementMap();
     let involvementKeys = Array.from(involvementMap!.keys());
     let involvementValues = Array.from(involvementMap!.values());
-    console.log(involvementKeys);
-    console.log(involvementValues);
+
 
     function getCategoryMap() {
       if (stats !== undefined) {
@@ -184,8 +183,6 @@ export default defineComponent({
       const involvementChartId = document.getElementById(
         "involvementChart"
       ) as HTMLCanvasElement;
-      // const top5InteractionChartId = document.getElementById('top5InteractionChart') as HTMLCanvasElement;
-      // const top5DisturberChartId = document.getElementById('top5DisturberChart') as HTMLCanvasElement;
 
       if (stats == undefined) {
         console.log("stats could not be loaded");
@@ -194,13 +191,11 @@ export default defineComponent({
 
       const involvementChartData = {
         labels:
-          //['5.12 dummy', '6.12 dummy', '9.12 dummy', '10.12 dummy', '11.12 dummy'],
           involvementKeys,
         datasets: [
           {
             label: "Anzahl",
             data:
-              //[5,3,2,1,4],
               involvementValues,
           },
         ],
@@ -208,13 +203,11 @@ export default defineComponent({
 
       const categoryChartData = {
         labels:
-          // ['Störungsdummy', 'Antwortdummy', 'Fragendummy'],
           categoryKeys,
         datasets: [
           {
             label: "Anzahl",
             data:
-              //[5,3,2],
               categoryValues,
           },
         ],
