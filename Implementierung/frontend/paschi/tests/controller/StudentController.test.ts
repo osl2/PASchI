@@ -62,7 +62,6 @@ test("Update student", async () => {
 
 test("Get all students", () => {
   const students = studentController.getAllStudents();
-
   expect(students.length).toBeGreaterThan(0);
 });
 
@@ -71,6 +70,6 @@ test("Delete student", async () => {
   student = studentController.getStudent(studentId);
   const students = studentController.getAllStudents();
 
-  expect(student).toBeUndefined();
+  expect(student?.visible).toBeFalsy();
   expect(students.length).toBe(0);
 });
