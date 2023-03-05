@@ -67,9 +67,9 @@
                   <v-list-item v-for="studentId in top5InteractionArray">
                     <v-list-item-title>
                       {{
-                        studentController.getStudent(studentId[0]).firstName +
+                        studentController.getStudent(studentId[0])?.firstName +
                         " " +
-                        studentController.getStudent(studentId[0]).lastName
+                        studentController.getStudent(studentId[0])?.lastName
                       }}: {{ studentId[1] }} Interaktionen
                     </v-list-item-title>
                   </v-list-item>
@@ -91,9 +91,9 @@
                   <v-list-item v-for="studentId in top5DisturberArray">
                     <v-list-item-title>
                       {{
-                        studentController.getStudent(studentId[0]).firstName +
+                        studentController.getStudent(studentId[0])?.firstName +
                         " " +
-                        studentController.getStudent(studentId[0]).lastName
+                        studentController.getStudent(studentId[0])?.lastName
                       }}
                       : {{ studentId[1] }} Störungen
                     </v-list-item-title>

@@ -31,6 +31,8 @@ public class RoomDto implements Comparable<RoomDto> {
     private String id;
     private String userId;
     private String name;
+
+    private boolean visible;
     private List<RoomObjectDto> roomObjects;
     private Timestamp createdAt;
     private Timestamp updatedAt;

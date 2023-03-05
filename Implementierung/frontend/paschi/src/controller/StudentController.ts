@@ -1,5 +1,4 @@
 import {Student} from "@/model/userdata/interactions/Student";
-import {Course} from "@/model/userdata/courses/Course";
 import {useStudentStore} from "@/store/StudentStore";
 import {UserController} from "@/controller/UserController";
 import {CourseController} from "@/controller/CourseController";
@@ -11,7 +10,6 @@ import {ParticipantService} from "@/service/ParticipantService";
 export class StudentController {
 
   private static controller: StudentController = new StudentController();
-  private userController = UserController.getUserController();
   private studentService = ParticipantService.getService();
 
   private constructor() {
@@ -31,7 +29,7 @@ export class StudentController {
     const student = new Student(
       undefined,
       useStudentStore().getNextId(),
-      this.userController.getUser(),
+      UserController.getUserController().getUser(),
       firstName,
       lastName
     );
@@ -47,8 +45,8 @@ export class StudentController {
    * @param lastName Nachname
    */
   async updateStudent(id: string, firstName: string, lastName: string) {
-    let student = useStudentStore().getStudent(id);
-    if (student !== undefined) {
+    const student = useStudentStore().getStudent(id);
+    if (student) {
       student.firstName = firstName;
       student.lastName = lastName;
       await this.studentService.update(student).then();
@@ -61,13 +59,13 @@ export class StudentController {
    * @param id ID des Schülers
    */
   async deleteStudent(id: string) {
-    let student = useStudentStore().getStudent(id);
-    if (student !== undefined) {
-      student.courses.forEach((course: Course) => {
-        CourseController.getCourseController().removeStudentFromCourse(course.getId, id);
-      });
+    const student = useStudentStore().getStudent(id);
+    if (student) {
+      for (const course of student.courses) {
+        await CourseController.getCourseController().removeStudentFromCourse(course.getId, id);
+      }
       await this.studentService.delete(id);
-      useStudentStore().deleteStudent(id);
+      await this.studentService.getById(id);
     }
   }
 
@@ -85,6 +83,6 @@ export class StudentController {
    */
   getAllStudents(): Student[] {
     this.studentService.getAll().then();
-    return useStudentStore().getAllStudents();
+    return useStudentStore().getAllStudents().filter(student => student.visible);
   }
 }

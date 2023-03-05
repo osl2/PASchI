@@ -31,6 +31,14 @@ export const useInteractionStore = defineStore('interactions', {
       }
       return undefined;
     },
+    getInteractionByTimeStampAndSession(time: string, sessionId: string): Interaction | undefined {
+      for (const interaction of this.interactions) {
+        if (interaction.session.getId === sessionId && interaction.timeStamp === time) {
+          return <Interaction> interaction;
+        }
+      }
+      return undefined;
+    },
     getAllInteractions(): Interaction[] {
       // @ts-ignore
       return this.interactions;

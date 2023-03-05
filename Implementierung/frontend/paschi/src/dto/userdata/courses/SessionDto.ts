@@ -9,11 +9,11 @@ export class SessionDto {
   name: string;
   date: string;
   courseId: string;
-  seatArrangementId: string | undefined;
+  seatArrangementId: string;
   interactions: InteractionDto[];
 
   constructor(id: string, userId: string, createdAt: string, updatedAt: string, name: string, date: string,
-              courseId: string, seatArrangementId: string | undefined, interactionsDtos: InteractionDto[]) {
+              courseId: string, seatArrangementId: string, interactionsDtos: InteractionDto[]) {
     this.id = id;
     this.userId = userId;
     this.createdAt = createdAt;

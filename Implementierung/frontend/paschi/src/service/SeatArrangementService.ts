@@ -1,19 +1,15 @@
-import { BaseService } from "@/service/BaseService";
-import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
-import { SeatArrangementDto } from "@/dto/userdata/courses/SeatArrangementDto";
-import { SeatArrangementMapper } from "@/dto/mapper/courses/SeatArrangementMapper";
-import axios, { AxiosResponse } from "axios";
-import { useUserStore } from "@/store/UserStore";
+import {BASE_URL, BaseService} from "@/service/BaseService";
+import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
+import {SeatArrangementDto} from "@/dto/userdata/courses/SeatArrangementDto";
+import {SeatArrangementMapper} from "@/dto/mapper/courses/SeatArrangementMapper";
+import axios, {AxiosResponse} from "axios";
+import {useUserStore} from "@/store/UserStore";
 
-const SEAT_ARRANGEMENT_BASE_URL: string =
-  "https://193.196.36.88/api/seatarrangement";
+const SEAT_ARRANGEMENT_BASE_URL: string = BASE_URL + "/api/seatarrangement";
 
-export class SeatArrangementService extends BaseService<
-  SeatArrangement,
-  SeatArrangementDto
-> {
-  private static seatArrangementService: SeatArrangementService =
-    new SeatArrangementService();
+export class SeatArrangementService extends BaseService<SeatArrangement, SeatArrangementDto> {
+
+  private static seatArrangementService: SeatArrangementService = new SeatArrangementService();
 
   private constructor() {
     super(SeatArrangementMapper.getMapper());
@@ -63,8 +59,8 @@ export class SeatArrangementService extends BaseService<
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((response: AxiosResponse<SeatArrangementDto>) => {
-        arrangement = this.getMapper().dtoToModel(response.data);
+      .then(async (response: AxiosResponse<SeatArrangementDto>) => {
+        arrangement = await this.getMapper().dtoToModel(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -86,10 +82,10 @@ export class SeatArrangementService extends BaseService<
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((response: AxiosResponse<SeatArrangementDto[]>) => {
-        response.data.forEach(async (arrangementDto: SeatArrangementDto) => {
+      .then(async (response: AxiosResponse<SeatArrangementDto[]>) => {
+        for (const arrangementDto of response.data) {
           arrangements.push(await this.getMapper().dtoToModel(arrangementDto));
-        });
+        }
       })
       .catch((error) => {
         console.log(error);

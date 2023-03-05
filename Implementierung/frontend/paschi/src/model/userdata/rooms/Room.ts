@@ -7,6 +7,7 @@ export class Room extends DataObject {
   private readonly _user: User;
   private _name: string;
   private _roomObjects: RoomObject[];
+  private _visible: boolean = true;
 
   constructor(id: string | undefined, localId: number, user: User, name: string) {
     super(id, localId);
@@ -24,7 +25,7 @@ export class Room extends DataObject {
 
   removeRoomObject(objectId: string) {
     this.roomObjects.forEach((element: RoomObject, index: number) => {
-      if (element.getId == objectId) {
+      if (element.getId === objectId) {
         this._roomObjects.splice(index, 1);
       }
     });
@@ -32,12 +33,11 @@ export class Room extends DataObject {
   }
 
   getRoomObject(objectId: string): RoomObject | undefined {
-    for (let i = 0; i < this._roomObjects.length; i++) {
-      if (this._roomObjects.at(i)?.getId === objectId) {
-        return this._roomObjects.at(i);
+    for (const object of this._roomObjects) {
+      if (object.getId === objectId) {
+        return object;
       }
     }
-
     return undefined;
   }
 
@@ -53,6 +53,10 @@ export class Room extends DataObject {
     return this._roomObjects;
   }
 
+  get visible(): boolean {
+    return this._visible;
+  }
+
   set name(value: string) {
     this._name = value;
     this.update();
@@ -62,7 +66,11 @@ export class Room extends DataObject {
     this._roomObjects = value;
   }
 
-  // copy(): Room {
+  set visible(value: boolean) {
+    this._visible = value;
+  }
+
+// copy(): Room {
   //   const room = new Room(undefined, 0, this.user, this.name);
   //   this.roomObjects.forEach((object: RoomObject) => {
   //     if (object.isTable()) {

@@ -248,6 +248,7 @@ public class CourseControllerTest extends AbstractTest {
         participantDto.setFirstName(faker.name().firstName());
         participantDto.setLastName(faker.name().lastName());
         participantDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        participantDto.setVisible(true);
 
         return participantDto;
     }

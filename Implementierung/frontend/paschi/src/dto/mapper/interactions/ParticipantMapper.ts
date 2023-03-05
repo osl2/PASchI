@@ -44,7 +44,8 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
       participant.lastName,
       particpantType,
       courseIds,
-      interactionIds
+      interactionIds,
+      participant.visible
     );
   }
 
@@ -91,8 +92,6 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
         participant.createdAt = participantDto.createdAt;
         participant.updatedAt = participantDto.updatedAt;
         useStudentStore().addStudent(participant);
-      } else if (participant.updatedAt === participantDto.updatedAt) {
-        return participant;
       } else {
         participant.firstName = participantDto.firstName;
         participant.lastName = participantDto.lastName;
@@ -121,6 +120,7 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
 
       participant.courses = courses;
       participant.interactions = interactions;
+      participant.visible = participantDto.visible;
 
       return participant;
     }

@@ -5,7 +5,7 @@ import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.exceptions.EntityNotFoundException;
 import edu.kit.informatik.model.userdata.interactions.Participant;
 import edu.kit.informatik.repositories.ParticipantRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
@@ -70,7 +70,7 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
             repositoryParticipant.setInteractions(newParticipant.getInteractions());
         }
 
-        return participantDto;
+        return mapper.modelToDto(repositoryParticipant);
     }
 
     @Override
@@ -89,13 +89,16 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
                                                                 jAT.getTokenAttributes().get(ID_ATTRIBUTE).toString()));
     }
 
+    @Transactional
     @Override
     public String delete(String id, Authentication authentication) {
         Optional<Participant> participantOptional = this.participantRepository.findParticipantById(id);
         Participant participant = participantOptional.orElseThrow(() ->
                                                                     new EntityNotFoundException(Participant.class, id));
         super.checkAuthorization(authentication, participant.getUser().getId());
-        this.participantRepository.deleteById(id);
+        participant.setFirstName("Deleted");
+        participant.setLastName("User");
+        participant.setVisible(false);
 
         return id;
     }

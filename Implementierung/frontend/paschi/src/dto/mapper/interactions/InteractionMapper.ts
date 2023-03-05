@@ -64,7 +64,8 @@ export class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
       category = await categoryService.getById(interactionDto.categoryId);
     }
 
-    let interaction = useInteractionStore().getInteraction(interactionDto.id);
+    let interaction = useInteractionStore().getInteractionByTimeStampAndSession(interactionDto.timeStamp,
+      interactionDto.sessionId);
     if (interaction == undefined) {
       interaction = new Interaction(
         interactionDto.id,
@@ -79,10 +80,9 @@ export class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
       interaction.updatedAt = interactionDto.updatedAt;
       interaction.createdAt = interactionDto.createdAt;
       useInteractionStore().addInteraction(interaction);
-    } else if (interaction.updatedAt === interactionDto.updatedAt) {
-      return interaction;
     }
 
+    interaction.setId = interactionDto.id;
     interaction.fromParticipant = fromParticipant!;
     interaction.toParticipant = toParticipant!;
     interaction.category = category!;

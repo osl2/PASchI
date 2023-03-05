@@ -1,18 +1,15 @@
-import { BaseService } from "@/service/BaseService";
+import {BASE_URL, BaseService} from "@/service/BaseService";
 import { Participant } from "@/model/userdata/interactions/Participant";
 import { ParticipantDto } from "@/dto/userdata/interactions/ParticipantDto";
 import { ParticipantMapper } from "@/dto/mapper/interactions/ParticipantMapper";
 import axios, { AxiosResponse } from "axios";
 import { useUserStore } from "@/store/UserStore";
 
-const PARTICIPANT_BASE_URL: string = "https://193.196.36.88/api/participant";
+const PARTICIPANT_BASE_URL: string = BASE_URL + "/api/participant";
 
-export class ParticipantService extends BaseService<
-  Participant,
-  ParticipantDto
-> {
-  private static participantService: ParticipantService =
-    new ParticipantService();
+export class ParticipantService extends BaseService<Participant, ParticipantDto> {
+
+  private static participantService: ParticipantService = new ParticipantService();
 
   private constructor() {
     super(ParticipantMapper.getMapper());
@@ -62,8 +59,8 @@ export class ParticipantService extends BaseService<
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((response: AxiosResponse<ParticipantDto>) => {
-        participant = this.getMapper().dtoToModel(response.data);
+      .then(async (response: AxiosResponse<ParticipantDto>) => {
+        participant = await this.getMapper().dtoToModel(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -85,10 +82,10 @@ export class ParticipantService extends BaseService<
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((response: AxiosResponse<ParticipantDto[]>) => {
-        response.data.forEach(async (participantDto: ParticipantDto) => {
+      .then(async (response: AxiosResponse<ParticipantDto[]>) => {
+        for (const participantDto of response.data) {
           participants.push(await this.getMapper().dtoToModel(participantDto));
-        });
+        }
       })
       .catch((error) => {
         console.log(error);

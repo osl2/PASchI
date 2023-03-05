@@ -5,7 +5,7 @@ import edu.kit.informatik.dto.userdata.courses.CourseDto;
 import edu.kit.informatik.exceptions.EntityNotFoundException;
 import edu.kit.informatik.model.userdata.courses.Course;
 import edu.kit.informatik.repositories.CourseRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
@@ -71,7 +71,7 @@ public class CourseService extends BaseService<Course, CourseDto, CourseDto> {
             repositoryCourse.setSeatArrangements(newCourse.getSeatArrangements());
         }
 
-        return courseDto;
+        return mapper.modelToDto(repositoryCourse);
     }
 
     @Override

@@ -14,6 +14,9 @@ import {useRoomStore} from "@/store/RoomStore";
 import {usePositionStore} from "@/store/PositionStore";
 import {ParticipantService} from "@/service/ParticipantService";
 import {Teacher} from "@/model/userdata/interactions/Teacher";
+import {CourseService} from "@/service/CourseService";
+import {RoomService} from "@/service/RoomService";
+import {SessionService} from "@/service/SessionService";
 
 /**
  * Steuert den Kontrollfluss für die Benutzerverwaltung.
@@ -37,29 +40,32 @@ export class UserController {
    * @param password Passwort
    */
   async login(email: string, password: string): Promise<string | undefined> {
-    let user: User | undefined;
-    user = await this.userService.login(email, password);
+    const user = await this.userService.login(email, password);
 
     if (user == undefined) {
       return undefined;
     }
 
     useUserStore().setUser(user);
+    await this.getData();
     await CategoryController.getCategoryController().getAllCategories();
-    await this.setTeacher();
     return user.getId;
   }
 
   /**
    * Einloggen mit gültigem Token.
    */
-  async loginWithToken(): Promise<string | undefined>  {
-    await this.userService.getToken();
-    if (useUserStore().isLoggedIn()) {
-      await CategoryController.getCategoryController().getAllCategories();
-      await this.setTeacher();
+  async loginWithToken(): Promise<string | undefined> {
+    const user = await this.userService.getToken();
+
+    if (user == undefined) {
+      return undefined;
     }
-    return useUserStore().getUser()?.getId;
+
+    useUserStore().setUser(user);
+    await this.getData();
+    await CategoryController.getCategoryController().getAllCategories();
+    return user.getId;
   }
 
   /**
@@ -104,8 +110,8 @@ export class UserController {
    * @param lastName Nachname
    */
   async update(firstName: string, lastName: string) {
-    let user = this.getUser();
-    if (user !== undefined) {
+    const user = this.getUser();
+    if (user) {
       user.firstName = firstName;
       user.lastName = lastName;
       await this.userService.update(user);
@@ -137,10 +143,17 @@ export class UserController {
    */
   async delete() {
     const user = useUserStore().getUser();
-    if (user !== undefined) {
-      useUserStore().deleteUser();
+    if (user) {
       await this.userService.delete(user.getId);
+      this.clearStores();
     }
+  }
+
+  private async getData() {
+    await this.getTeacher();
+    await CourseService.getService().getAll();
+    await SessionService.getService().getAll();
+    await RoomService.getService().getAll();
   }
 
   private clearStores() {
@@ -156,7 +169,7 @@ export class UserController {
     usePositionStore().$reset();
   }
 
-  private async setTeacher() {
+  private async getTeacher() {
     await ParticipantService.getService().getAll();
     let teacher = useStudentStore().getTeacher();
     if (teacher == undefined) {

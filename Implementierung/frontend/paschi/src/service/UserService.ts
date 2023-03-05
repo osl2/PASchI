@@ -1,13 +1,14 @@
-import { BaseService } from "@/service/BaseService";
-import { User } from "@/model/User";
-import { UserDto } from "@/dto/UserDto";
-import axios, { AxiosResponse } from "axios";
-import { UserMapper } from "@/dto/mapper/UserMapper";
-import { useUserStore } from "@/store/UserStore";
+import {BASE_URL, BaseService} from "@/service/BaseService";
+import {User} from "@/model/User";
+import {UserDto} from "@/dto/UserDto";
+import axios, {AxiosResponse} from "axios";
+import {UserMapper} from "@/dto/mapper/UserMapper";
+import {useUserStore} from "@/store/UserStore";
 
-const USER_BASE_URL: string = "https://193.196.36.88/api/user";
+const USER_BASE_URL: string = BASE_URL + "/api/user";
 
 export class UserService extends BaseService<User, UserDto> {
+
   private static userService: UserService = new UserService();
 
   private constructor() {
@@ -20,9 +21,10 @@ export class UserService extends BaseService<User, UserDto> {
 
   async add(user: User) {
     const userDto = this.getMapper().modelToDto(user);
-    await axios.post(USER_BASE_URL, userDto).catch((error) => {
-      console.log(error);
-    });
+    await axios
+      .post(USER_BASE_URL, userDto).catch((error) => {
+        console.log(error);
+      });
   }
 
   async update(user: User) {
@@ -47,8 +49,8 @@ export class UserService extends BaseService<User, UserDto> {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((response: AxiosResponse<UserDto>) => {
-        user = this.getMapper().dtoToModel(response.data);
+      .then(async (response: AxiosResponse<UserDto>) => {
+        user = await this.getMapper().dtoToModel(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -70,10 +72,10 @@ export class UserService extends BaseService<User, UserDto> {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((response: AxiosResponse<UserDto[]>) => {
-        response.data.forEach(async (userDto: UserDto) => {
+      .then(async (response: AxiosResponse<UserDto[]>) => {
+        for (const userDto of response.data) {
           users.push(await this.getMapper().dtoToModel(userDto));
-        });
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -107,8 +109,8 @@ export class UserService extends BaseService<User, UserDto> {
           password,
         },
       })
-      .then((response: AxiosResponse<UserDto>) => {
-        user = this.getMapper().dtoToModel(response.data);
+      .then(async (response: AxiosResponse<UserDto>) => {
+        user = await this.getMapper().dtoToModel(response.data);
         if (response.data.token) {
           localStorage.setItem("token", response.data.token);
         }
@@ -124,7 +126,8 @@ export class UserService extends BaseService<User, UserDto> {
     }
   }
 
-  async getToken() {
+  async getToken(): Promise<User | undefined> {
+    let user;
     await axios
       .post(USER_BASE_URL + "/token", null, {
         headers: {
@@ -132,14 +135,7 @@ export class UserService extends BaseService<User, UserDto> {
         },
       })
       .then(async (response: AxiosResponse<UserDto>) => {
-        let user = useUserStore().getUser();
-        if (user) {
-          user.token = response.data.token;
-        } else {
-          useUserStore().setUser(
-            await this.getMapper().dtoToModel(response.data)
-          );
-        }
+        user = await this.getMapper().dtoToModel(response.data)
         if (response.data.token) {
           localStorage.setItem("token", response.data.token);
         }
@@ -147,6 +143,12 @@ export class UserService extends BaseService<User, UserDto> {
       .catch((error) => {
         console.log(error);
       });
+
+    if (user != undefined) {
+      return user;
+    } else {
+      return undefined;
+    }
   }
 
   async adminUpdate(user: User) {

@@ -1,13 +1,14 @@
-import { BaseService } from "@/service/BaseService";
+import {BASE_URL, BaseService} from "@/service/BaseService";
 import { Session } from "@/model/userdata/courses/Session";
 import { SessionDto } from "@/dto/userdata/courses/SessionDto";
 import { SessionMapper } from "@/dto/mapper/courses/SessionMapper";
 import axios, { AxiosResponse } from "axios";
 import { useUserStore } from "@/store/UserStore";
 
-const SESSION_BASE_URL: string = "https://193.196.36.88/api/session";
+const SESSION_BASE_URL: string = BASE_URL + "/api/session";
 
 export class SessionService extends BaseService<Session, SessionDto> {
+
   private static sessionService: SessionService = new SessionService();
 
   private constructor() {
@@ -44,6 +45,9 @@ export class SessionService extends BaseService<Session, SessionDto> {
           Authorization: `Bearer ${token}`,
         },
       })
+      .then(async (response: AxiosResponse<SessionDto>) => {
+        await this.getMapper().dtoToModel(response.data);
+      })
       .catch((error) => {
         console.log(error);
       });
@@ -58,8 +62,8 @@ export class SessionService extends BaseService<Session, SessionDto> {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((response: AxiosResponse<SessionDto>) => {
-        session = this.getMapper().dtoToModel(response.data);
+      .then(async (response: AxiosResponse<SessionDto>) => {
+        session = await this.getMapper().dtoToModel(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -81,10 +85,10 @@ export class SessionService extends BaseService<Session, SessionDto> {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((response: AxiosResponse<SessionDto[]>) => {
-        response.data.forEach(async (sessionDto: SessionDto) => {
+      .then(async (response: AxiosResponse<SessionDto[]>) => {
+        for (const sessionDto of response.data) {
           sessions.push(await this.getMapper().dtoToModel(sessionDto));
-        });
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -96,7 +100,7 @@ export class SessionService extends BaseService<Session, SessionDto> {
   async delete(id: string) {
     const token = useUserStore().getUser()?.token;
     await axios
-      .post(SESSION_BASE_URL, {
+      .delete(SESSION_BASE_URL, {
         params: {
           id,
         },

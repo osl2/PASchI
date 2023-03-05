@@ -2,15 +2,20 @@
   <navigation-bar>
     <template v-slot:append>
       <v-btn class="ma-2" rounded variant="tonal" @click="saveChangesClick"
-        >speichern</v-btn
-      >
-      <v-btn class="ma-2" rounded variant="flat" color="error" prepend-icon="fas fa-trash-can" @click="activateCardClick"
-        >Schüler löschen</v-btn
-      >
+      >speichern
+      </v-btn>
+      <v-btn v-if="snelting" class="ma-2" rounded variant="flat" color="error" prepend-icon="fas fa-trash-can"
+             @click="activateCardClick">
+        Schüler exmatrikulieren
+      </v-btn>
+      <v-btn v-else class="ma-2" rounded variant="flat" color="error" prepend-icon="fas fa-trash-can"
+             @click="activateCardClick">
+        Schüler löschen
+      </v-btn>
     </template>
   </navigation-bar>
   <v-main>
-    <side-menu />
+    <side-menu/>
     <v-container class="v-row justify-center">
       <v-form class="mt-5 v-col" style="max-width: 1000px">
         <v-text-field
@@ -31,8 +36,11 @@
     </v-container>
     <v-dialog max-width="700" v-model="deleteStudentDialog">
       <v-card variant="flat" class="pa-2 rounded-lg">
-        <v-card-title class="text-h5 text-center text-indigo-darken-4">
-          Schüler unwiederruflich löschen?
+        <v-card-title v-if="snelting" class="text-h5 text-center text-indigo-darken-4">
+          Schüler unwiderruflich exmatrikulieren?
+        </v-card-title>
+        <v-card-title v-else class="text-h5 text-center text-indigo-darken-4">
+          Schüler unwiderruflich löschen?
         </v-card-title>
         <v-card-actions class="row justify-center">
           <v-btn
@@ -40,7 +48,8 @@
             width="150"
             variant="tonal"
             @click="cancelDeleteClick"
-            >Abbrechen</v-btn
+          >Abbrechen
+          </v-btn
           >
           <v-btn
             height="50"
@@ -48,7 +57,8 @@
             variant="tonal"
             @click="deleteStudentClick"
             color="error"
-            >Bestätigen</v-btn
+          >Bestätigen
+          </v-btn
           >
         </v-card-actions>
       </v-card>
@@ -58,11 +68,13 @@
 
 <script lang="ts">
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
-import { StudentController } from "@/controller/StudentController";
-import { defineComponent, Ref, ref } from "vue";
+import {StudentController} from "@/controller/StudentController";
+import {defineComponent, Ref, ref} from "vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
-import { Student } from "@/model/userdata/interactions/Student";
-import { useRouter } from "vue-router";
+import {Student} from "@/model/userdata/interactions/Student";
+import {useRouter} from "vue-router";
+import {UserController} from "@/controller/UserController";
+
 export default defineComponent({
   name: "editStudentPage.vue",
   components: {
@@ -86,6 +98,7 @@ export default defineComponent({
     ) as Ref<Student | undefined>;
     const firstName = ref<string>(getStudentFirstName());
     const lastName = ref<string>(getStudentLastName());
+    const snelting = ref<boolean>(isSnelting());
 
     const deleteStudentDialog = ref<boolean>(false);
 
@@ -96,11 +109,16 @@ export default defineComponent({
       }
       return "";
     }
+
     function getStudentLastName(): string {
       if (student.value instanceof Student) {
         return student.value.lastName;
       }
       return "";
+    }
+
+    function isSnelting(): boolean {
+      return UserController.getUserController().getUser().lastName.toLowerCase() === "snelting";
     }
 
     //normale Methoden
@@ -121,7 +139,7 @@ export default defineComponent({
         firstName.value,
         lastName.value
       );
-      await router.push({ name: "ViewStudentsPage" });
+      await router.push({name: "ViewStudentsPage"});
     }
 
     /**
@@ -129,7 +147,7 @@ export default defineComponent({
      */
     async function deleteStudentClick() {
       await studentController.deleteStudent(props.studentId);
-      await router.push({ name: "ViewStudentsPage" });
+      await router.push({name: "ViewStudentsPage"});
     }
 
     /**
@@ -146,6 +164,7 @@ export default defineComponent({
       saveChangesClick,
       firstName,
       lastName,
+      snelting,
       deleteStudentDialog,
     };
   },

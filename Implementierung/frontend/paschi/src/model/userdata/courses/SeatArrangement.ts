@@ -22,6 +22,10 @@ export class SeatArrangement extends DataObject {
     this._room = room;
   }
 
+  isVisible(): boolean {
+    return this.room.visible;
+  }
+
   getParticipantForSeat(seat: RoomObject): Participant | undefined {
     return this._seatMap.get(seat);
   }

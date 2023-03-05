@@ -11,10 +11,10 @@ import edu.kit.informatik.repositories.ChairRepository;
 import edu.kit.informatik.repositories.PositionRepository;
 import edu.kit.informatik.repositories.RoomRepository;
 import edu.kit.informatik.repositories.TableRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +85,10 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
             repositoryRoom.setChairs(updateChair(repositoryRoom, newRoom));
         }
 
-        return roomDto;
+        Optional<Room> newrepositoryRoomOptional = this.roomRepository.findRoomById(roomDto.getId());
+
+        return mapper.modelToDto(newrepositoryRoomOptional.orElseThrow(() ->
+                new EntityNotFoundException(Room.class, roomDto.getId())));
     }
 
     @Override
@@ -114,7 +117,8 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
     }
 
     private Room saveRoomObjects(Room room) {
-        Room newRoom = new Room(room.getUser(), room.getName(), room.getCreatedAt(), room.getUpdatedAt());
+        Room newRoom = new Room(room.getUser(), room.getName(), room.isVisible(), room.getCreatedAt(),
+                                room.getUpdatedAt());
         for (int i = 0; i < room.getChairs().size(); i++) {
             room.getChairs().get(i).setPosition(positionRepository.save(room.getChairs().get(i).getPosition()));
             newRoom.addChair(chairRepository.save(room.getChairs().get(i)));
@@ -126,7 +130,6 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
         return newRoom;
     }
 
-    @Transactional
     private List<Table> updateTables(Room repositoryRoom, Room newRoom) {
         List<Table> returnTables = new ArrayList<>();
 
@@ -157,8 +160,6 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
         return returnTables;
     }
 
-
-    @Transactional
     private List<Chair> updateChair(Room reposioryRoom, Room newRoom) {
         List<Chair> returnChairs = new ArrayList<>();
 

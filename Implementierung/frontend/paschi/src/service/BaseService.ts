@@ -1,5 +1,7 @@
 import {IModelDtoMapper} from "@/dto/mapper/IModelDtoMapper";
 
+export const BASE_URL = "https://193.196.36.88";
+
 export abstract class BaseService<Entity, Dto> {
 
   private readonly mapper: IModelDtoMapper<Entity, Dto>;
