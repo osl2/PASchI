@@ -66,7 +66,7 @@ export class StudentController {
         CourseController.getCourseController().removeStudentFromCourse(course.getId, id);
       });
       await this.studentService.delete(id);
-      useStudentStore().deleteStudent(id);
+      await this.studentService.getById(id);
     }
   }
 
@@ -84,6 +84,6 @@ export class StudentController {
    */
   getAllStudents(): Student[] {
     this.studentService.getAll().then();
-    return useStudentStore().getAllStudents();
+    return useStudentStore().getAllStudents().filter(student => student.visible);
   }
 }
