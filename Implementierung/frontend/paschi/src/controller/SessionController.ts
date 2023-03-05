@@ -78,7 +78,7 @@ export class SessionController {
 
     await this.sessionService.add(session);
     course.addSession(session);
-    CourseService.getService().update(course).then();
+    await CourseService.getService().update(course);
 
     return useSessionStore().addSession(session);
   }
@@ -106,22 +106,22 @@ export class SessionController {
     const session = useSessionStore().getSession(id);
     if (session) {
       session.course.removeSession(id);
-      CourseService.getService().update(session.course).then();
+      await CourseService.getService().update(session.course);
 
-      session.interactions.forEach((interaction: Interaction) => {
+      for (const interaction of session.interactions) {
         interaction.fromParticipant.removeInteraction(interaction.getId);
         interaction.toParticipant.removeInteraction(interaction.getId);
-        ParticipantService.getService().update(interaction.toParticipant);
-        ParticipantService.getService().update(interaction.fromParticipant);
+        await ParticipantService.getService().update(interaction.toParticipant);
+        await ParticipantService.getService().update(interaction.fromParticipant);
         useInteractionStore().deleteInteraction(interaction.getId);
-      });
+      }
 
       await this.sessionService.delete(id);
       useSessionStore().deleteSession(id);
       const arrangement = session.seatArrangement;
       if (!arrangement.room.visible && !session.course.defaultArrangementIsUsed(arrangement.getId)) {
         const arrangementController = SeatArrangementController.getSeatArrangementController();
-        await arrangementController.deleteSeatArrangement(session.seatArrangement.getId);
+        await arrangementController.deleteSeatArrangement(arrangement.getId);
       }
     }
   }
@@ -148,7 +148,7 @@ export class SessionController {
    */
   getRecentSessions(): Session[] {
     const allSessions = useSessionStore().getAllSessions().sort((a: Session, b: Session) => {
-      return (a.createdAt <= b.createdAt) ? 1 : -1;
+      return (a.updatedAt <= b.updatedAt) ? 1 : -1;
     });
 
     const sessions = [];

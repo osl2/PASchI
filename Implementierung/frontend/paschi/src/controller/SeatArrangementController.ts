@@ -1,7 +1,6 @@
 import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 import {UserController} from "@/controller/UserController";
-import {Session} from "@/model/userdata/courses/Session";
 import {useRoomStore} from "@/store/RoomStore";
 import {useCourseStore} from "@/store/CourseStore";
 import {useSessionStore} from "@/store/SessionStore";
@@ -117,18 +116,18 @@ export class SeatArrangementController {
     let arrangement = useSeatArrangementStore().getSeatArrangement(id);
     if (arrangement !== undefined) {
       arrangement.course.removeSeatArrangement(id);
-      CourseService.getService().update(arrangement.course).then();
-      useSessionStore().getAllSessions().forEach((session: Session) => {
+      await CourseService.getService().update(arrangement.course);
+      for (const session of useSessionStore().getAllSessions()) {
         if (session.seatArrangement.getId === id) {
           // TODO: copy
           // session.seatArrangement = undefined;
           // SessionService.getService().update(session);
         }
-      });
+      }
       await this.arrangementService.delete(id);
       useSeatArrangementStore().deleteSeatArrangement(id);
       if (!arrangement.room.visible) {
-        RoomController.getRoomController().deleteRoom(arrangement.room.getId).then();
+        await RoomController.getRoomController().deleteRoom(arrangement.room.getId);
       }
     }
   }
@@ -203,13 +202,13 @@ export class SeatArrangementController {
    * @param arrangementId ID der Sitzordnung
    * @param chairId ID des Stuhls
    */
-  deleteMapping(arrangementId: string, chairId: string) {
+  async deleteMapping(arrangementId: string, chairId: string) {
     let arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
     if (arrangement !== undefined) {
       let chair = arrangement.room.getRoomObject(chairId);
       if (chair !== undefined) {
         arrangement.removeSeat(chair);
-        this.arrangementService.update(arrangement).then();
+        await this.arrangementService.update(arrangement);
       }
     }
   }
