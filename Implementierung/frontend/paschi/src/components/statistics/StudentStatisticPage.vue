@@ -34,7 +34,14 @@
                   !isNaN(statsController.getStudentStats(studentId)[1])
                 "
               >
-                {{ statsController.getStudentStats(studentId)[1] }} / 5
+                <v-rating
+                  v-model="statsController.getStudentStats(studentId)[1]"
+                  class="ma-2"
+                  readonly
+                  hover
+                  half-increments
+                  item-label-position="top"
+                ></v-rating>
               </v-card-item>
               <v-card-item v-else> Keine Daten verfügbar. </v-card-item>
             </v-card>
@@ -146,6 +153,8 @@ export default defineComponent({
           },
         },
       });
+
+
 
       function done() {
         downloadElement.href = categoryChart.toBase64Image();
