@@ -91,11 +91,16 @@
                 <v-list>
                   <v-list-item v-for="studentId in top5DisturberArray">
                     <v-list-item-title>
-                      {{
-                        studentController.getStudent(studentId[0])?.firstName +
-                        " " +
-                        studentController.getStudent(studentId[0])?.lastName
-                      }}: {{ studentId[1] }} Störungen
+                      <v-col>
+                        {{
+                          studentController.getStudent(studentId[0])?.firstName +
+                          " " +
+                          studentController.getStudent(studentId[0])?.lastName
+                        }}
+                      </v-col>
+                      <v-col>
+                        {{ studentId[1] }} Störungen
+                      </v-col>
                     </v-list-item-title>
                   </v-list-item>
                 </v-list>
