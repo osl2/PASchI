@@ -83,12 +83,11 @@ export default defineComponent({
     const studentController = StudentController.getStudentConroller();
     const firstName = studentController.getStudent(props.studentId)?.firstName;
     const lastName = studentController.getStudent(props.studentId)?.lastName;
-    let error = 0;
     let stats = statsController.getStudentStats(props.studentId);
 
-    let map = getMap();
-    let keys = Array.from(map!.keys());
-    let values = Array.from(map!.values());
+    const map = getMap();
+    const keys = Array.from(map!.keys());
+    const values = Array.from(map!.values());
 
     function getMap() {
       if (stats !== undefined) {
@@ -118,13 +117,11 @@ export default defineComponent({
 
       const data = {
         labels:
-          //['Störungsdummy', 'Antwortdummy', 'Fragendummy'],
           keys,
         datasets: [
           {
             label: "Anzahl",
             data:
-              //[5,47,19],
               values,
           },
         ],
@@ -163,7 +160,6 @@ export default defineComponent({
       lastName,
       saveStatisticClick,
       stats,
-      error,
       values,
       keys,
     };
