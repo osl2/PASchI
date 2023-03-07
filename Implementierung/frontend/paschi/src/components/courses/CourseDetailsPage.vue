@@ -311,8 +311,8 @@ export default defineComponent({
     /**
      * Methode zur Bestätigung der Löschung des zuvor bestimmten Kurses.
      */
-    async function confirmDeleteSessionClick() {
-      await courseController.deleteSession(
+    function confirmDeleteSessionClick() {
+      courseController.deleteSession(
         props.courseId,
         deleteSessionBuffer.value!.getId
       );

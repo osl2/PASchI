@@ -90,19 +90,4 @@ export class SeatArrangement extends DataObject {
   set seatMap(value: Map<RoomObject, Participant>) {
     this._seatMap = value;
   }
-
-  // copy(): SeatArrangement {
-  //   const map: Map<RoomObject, Participant> = new Map<RoomObject, Participant>();
-  //   this.seatMap.forEach((student: Participant, chair: RoomObject) => {
-  //     map.set(chair.copy(), student);
-  //   });
-  //
-  //   const arr = new SeatArrangement(undefined, 0, this.user, this.name, this.course, this.room.copy());
-  //
-  //   map.forEach((student: Participant, chair: RoomObject) => {
-  //     arr.setSeat(chair, student);
-  //     arr.room.addRoomObject(chair);
-  //   });
-  //   return arr;
-  // }
 }

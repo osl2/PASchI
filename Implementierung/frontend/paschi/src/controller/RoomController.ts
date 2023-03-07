@@ -48,7 +48,7 @@ export class RoomController {
     return useRoomStore().addRoom(room);
   }
 
-  async updateRoom(id: string) {
+  async saveRoom(id: string) {
     const room = useRoomStore().getRoom(id);
     if (room) {
       await this.roomService.update(room);
@@ -78,8 +78,8 @@ export class RoomController {
     return useRoomStore().getAllRooms().filter((room: Room) => room.visible);
   }
 
-  async addChair(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number):
-    Promise<string | undefined> {
+  addChair(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number):
+    string | undefined {
 
     const room = useRoomStore().getRoom(roomId);
     if (room == undefined) {
@@ -104,14 +104,11 @@ export class RoomController {
       position
     );
     room.addRoomObject(chair);
-    useRoomObjectStore().addChair(chair);
-    await this.roomService.update(room);
-
-    return chair.getId;
+    return useRoomObjectStore().addChair(chair);
   }
 
-  async addTable(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number, length: number,
-           width: number): Promise<string | undefined> {
+  addTable(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number, length: number,
+           width: number): string | undefined {
     const room = useRoomStore().getRoom(roomId);
     if (room == undefined) {
       return undefined;
@@ -137,10 +134,7 @@ export class RoomController {
       width
     );
     room.addRoomObject(table);
-    useRoomObjectStore().addTable(table);
-    await this.roomService.update(room);
-
-    return table.getId;
+    return useRoomObjectStore().addTable(table);
   }
 
   getRoomObjects(roomId: string): RoomObject[] | undefined {

@@ -3,7 +3,6 @@ import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 import {UserController} from "@/controller/UserController";
 import {useRoomStore} from "@/store/RoomStore";
 import {useCourseStore} from "@/store/CourseStore";
-import {useSessionStore} from "@/store/SessionStore";
 import {useStudentStore} from "@/store/StudentStore";
 import {Participant} from "@/model/userdata/interactions/Participant";
 import {SeatArrangementService} from "@/service/SeatArrangementService";
@@ -83,8 +82,9 @@ export class SeatArrangementController {
     for (let i = 0; i < students.length + 1; i++) {
       const x = center.x + radius * Math.cos(interval * i);
       const y = center.y + radius * Math.sin(interval * i);
-      await roomController.addChair(roomId, x, y, 0);
+      roomController.addChair(roomId, x, y, 0);
     }
+    await roomController.saveRoom(roomId);
 
     let arrangement = new SeatArrangement(
       undefined,
@@ -117,13 +117,6 @@ export class SeatArrangementController {
     if (arrangement !== undefined) {
       arrangement.course.removeSeatArrangement(id);
       await CourseService.getService().update(arrangement.course);
-      for (const session of useSessionStore().getAllSessions()) {
-        if (session.seatArrangement.getId === id) {
-          // TODO: copy
-          // session.seatArrangement = undefined;
-          // SessionService.getService().update(session);
-        }
-      }
       await this.arrangementService.delete(id);
       useSeatArrangementStore().deleteSeatArrangement(id);
       if (!arrangement.room.visible) {
@@ -203,13 +196,43 @@ export class SeatArrangementController {
    * @param chairId ID des Stuhls
    */
   async deleteMapping(arrangementId: string, chairId: string) {
-    let arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
+    const arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
     if (arrangement !== undefined) {
-      let chair = arrangement.room.getRoomObject(chairId);
+      const chair = arrangement.room.getRoomObject(chairId);
       if (chair !== undefined) {
         arrangement.removeSeat(chair);
         await this.arrangementService.update(arrangement);
       }
     }
+  }
+
+  /**
+   * Kopiert eine bestehende Sitzordnung.
+   *
+   * @param id Die ID der Sitzordnung
+   */
+  async copySeatArrangement(id: string): Promise<SeatArrangement | undefined> {
+    const arrangement = useSeatArrangementStore().getSeatArrangement(id);
+    if (arrangement == undefined) {
+      return undefined;
+    }
+
+    const newArrangement = new SeatArrangement(
+      undefined,
+      useSeatArrangementStore().getNextId(),
+      arrangement.user,
+      arrangement.name,
+      arrangement.course,
+      arrangement.room
+    );
+
+    for (const value of arrangement.seatMap) {
+      newArrangement.seatMap.set(value[0], value[1]);
+    }
+
+    await this.arrangementService.add(newArrangement);
+    useSeatArrangementStore().addSeatArrangement(newArrangement);
+
+    return newArrangement;
   }
 }

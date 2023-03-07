@@ -9,10 +9,6 @@ export class Chair extends RoomObject {
     super(id, localId, user, position, new Dimensions(500, 500));
   }
 
-  // copy(): RoomObject {
-  //   return new Chair(undefined, 0, this.user, this.position.copy());
-  // }
-
   isTable(): boolean {
     return false;
   }

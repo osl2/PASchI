@@ -1,6 +1,6 @@
 <template>
   <NavigationBar>
-    <template v-slot:prepend> Raum bearbeiten </template>
+    <template v-slot:prepend> Raum bearbeiten</template>
     <template v-slot:default class="row justify-center w-100">
       <v-app-bar-title class="v-col-auto">
         {{ roomName }}
@@ -8,7 +8,8 @@
     </template>
     <template v-slot:append>
       <v-btn color="green" variant="flat" rounded @click="saveClick()"
-        >speichern</v-btn
+      >speichern
+      </v-btn
       >
     </template>
   </NavigationBar>
@@ -28,7 +29,7 @@
         timeout="4000"
       >
         <v-icon>mdi mdi-egg</v-icon>
-        Snelting glaubt nicht, dass du so große Tische hast. <br />
+        Snelting glaubt nicht, dass du so große Tische hast. <br/>
         Lügen = Betrug = Strafe = 0 Punkte = Exmatrikulation
         <template v-slot:actions>
           <v-icon>fas fa-person-military-pointing</v-icon>
@@ -105,19 +106,19 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
-import { RoomObject } from "@/model/userdata/rooms/RoomObject";
-import { RoomController } from "@/controller/RoomController";
-import { Coordinate } from "@/components/room/Coordinate";
+import {computed, defineComponent, ref} from "vue";
+import {RoomObject} from "@/model/userdata/rooms/RoomObject";
+import {RoomController} from "@/controller/RoomController";
+import {Coordinate} from "@/components/room/Coordinate";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
-import { useRoomObjectUtilities } from "@/components/room/RoomObjectUtilities";
-import { useRouter } from "vue-router";
-import { Chair } from "@/model/userdata/rooms/Chair";
+import {useRoomObjectUtilities} from "@/components/room/RoomObjectUtilities";
+import {useRouter} from "vue-router";
+import {Chair} from "@/model/userdata/rooms/Chair";
 import RoomDisplay from "@/components/room/RoomDisplay.vue";
 
 export default defineComponent({
   name: "RoomEditor.vue",
-  components: { RoomDisplay, NavigationBar },
+  components: {RoomDisplay, NavigationBar},
   props: {
     roomId: {
       type: String,
@@ -138,7 +139,7 @@ export default defineComponent({
     const roomWidth = roomObjectUtilities.roomWidth;
     const roomHeight = roomObjectUtilities.roomHeight;
 
-    let translationOffset: Coordinate = { x: 0, y: 0 };
+    let translationOffset: Coordinate = {x: 0, y: 0};
 
     const roomInventoryOnBottom = false;
 
@@ -204,7 +205,8 @@ export default defineComponent({
         case "resize":
           return resizeRoomObject;
         case "delete":
-          return () => {};
+          return () => {
+          };
       }
     });
 
@@ -217,19 +219,20 @@ export default defineComponent({
         case "resize":
           return finalizeRoomObjectResize;
         case "delete":
-          return () => {};
+          return () => {
+          };
       }
     });
 
-    let lastValidTranslationCoordinate: Coordinate = { x: 0, y: 0 };
+    let lastValidTranslationCoordinate: Coordinate = {x: 0, y: 0};
 
-    let previousRotationCoordinate: Coordinate = { x: 0, y: 0 };
+    let previousRotationCoordinate: Coordinate = {x: 0, y: 0};
 
     let lastValidRotation = 0;
 
-    let previousResizeCoordinate: Coordinate = { x: 0, y: 0 };
+    let previousResizeCoordinate: Coordinate = {x: 0, y: 0};
 
-    let lastValidResize: Coordinate = { x: 0, y: 0 };
+    let lastValidResize: Coordinate = {x: 0, y: 0};
 
     function calculateRoomObjectResize(
       roomObject: RoomObject,
@@ -253,13 +256,13 @@ export default defineComponent({
           (roomObjectVertices[1].x - roomObjectVertices[0].x) /
           Math.sqrt(
             Math.pow(roomObjectVertices[1].x - roomObjectVertices[0].x, 2) +
-              Math.pow(roomObjectVertices[1].y - roomObjectVertices[0].y, 2)
+            Math.pow(roomObjectVertices[1].y - roomObjectVertices[0].y, 2)
           ),
         y:
           (roomObjectVertices[1].y - roomObjectVertices[0].y) /
           Math.sqrt(
             Math.pow(roomObjectVertices[1].x - roomObjectVertices[0].x, 2) +
-              Math.pow(roomObjectVertices[1].y - roomObjectVertices[0].y, 2)
+            Math.pow(roomObjectVertices[1].y - roomObjectVertices[0].y, 2)
           ),
       };
 
@@ -268,24 +271,24 @@ export default defineComponent({
           (roomObjectVertices[0].x - roomObjectVertices[3].x) /
           Math.sqrt(
             Math.pow(roomObjectVertices[0].x - roomObjectVertices[3].x, 2) +
-              Math.pow(roomObjectVertices[0].y - roomObjectVertices[3].y, 2)
+            Math.pow(roomObjectVertices[0].y - roomObjectVertices[3].y, 2)
           ),
         y:
           (roomObjectVertices[0].y - roomObjectVertices[3].y) /
           Math.sqrt(
             Math.pow(roomObjectVertices[0].x - roomObjectVertices[3].x, 2) +
-              Math.pow(roomObjectVertices[0].y - roomObjectVertices[3].y, 2)
+            Math.pow(roomObjectVertices[0].y - roomObjectVertices[3].y, 2)
           ),
       };
 
       const directionVertical = Math.sign(
         currentCoordinateFromOrigin.x * normalizedRoomObjectVertical.x +
-          currentCoordinateFromOrigin.y * normalizedRoomObjectVertical.y
+        currentCoordinateFromOrigin.y * normalizedRoomObjectVertical.y
       );
 
       const directionHorizontal = Math.sign(
         currentCoordinateFromOrigin.x * normalizedRoomObjectHorizontal.x +
-          currentCoordinateFromOrigin.y * normalizedRoomObjectHorizontal.y
+        currentCoordinateFromOrigin.y * normalizedRoomObjectHorizontal.y
       );
 
       const resizeDelta: Coordinate = {
@@ -294,13 +297,13 @@ export default defineComponent({
           ((currentCoordinateFromOrigin.x - previousCoordinateFromOrigin.x) *
             normalizedRoomObjectHorizontal.x +
             (currentCoordinateFromOrigin.y - previousCoordinateFromOrigin.y) *
-              normalizedRoomObjectHorizontal.y),
+            normalizedRoomObjectHorizontal.y),
         y:
           directionVertical *
           ((currentCoordinateFromOrigin.x - previousCoordinateFromOrigin.x) *
             normalizedRoomObjectVertical.x +
             (currentCoordinateFromOrigin.y - previousCoordinateFromOrigin.y) *
-              normalizedRoomObjectVertical.y),
+            normalizedRoomObjectVertical.y),
       };
 
       return resizeDelta;
@@ -321,21 +324,21 @@ export default defineComponent({
       };
       const direction = Math.sign(
         previousCoordinateFromOrigin.x * currentCoordinateFromOrigin.y -
-          previousCoordinateFromOrigin.y * currentCoordinateFromOrigin.x
+        previousCoordinateFromOrigin.y * currentCoordinateFromOrigin.x
       );
       const rotationDelta =
         direction *
         Math.acos(
           (previousCoordinateFromOrigin.x * currentCoordinateFromOrigin.x +
             previousCoordinateFromOrigin.y * currentCoordinateFromOrigin.y) /
-            (Math.sqrt(
+          (Math.sqrt(
               previousCoordinateFromOrigin.x ** 2 +
-                previousCoordinateFromOrigin.y ** 2
+              previousCoordinateFromOrigin.y ** 2
             ) *
-              Math.sqrt(
-                currentCoordinateFromOrigin.x ** 2 +
-                  currentCoordinateFromOrigin.y ** 2
-              ))
+            Math.sqrt(
+              currentCoordinateFromOrigin.x ** 2 +
+              currentCoordinateFromOrigin.y ** 2
+            ))
         );
       previousRotationCoordinate = currentCoordinate;
       return rotationDelta;
@@ -498,8 +501,8 @@ export default defineComponent({
       roomObjectErrorStyle.value = false;
     }
 
-    async function addTable() {
-      await roomController.addTable(
+    function addTable() {
+      roomController.addTable(
         roomId,
         roomWidth / 2,
         roomHeight / 2,
@@ -509,8 +512,8 @@ export default defineComponent({
       );
     }
 
-    async function addChair() {
-      await roomController.addChair(roomId, roomWidth / 2, roomHeight / 2, 0);
+    function addChair() {
+      roomController.addChair(roomId, roomWidth / 2, roomHeight / 2, 0);
     }
 
     function selectRoomObject(
@@ -538,7 +541,7 @@ export default defineComponent({
     }
 
     async function saveClick() {
-      await roomController.updateRoom(props.roomId);
+      await roomController.saveRoom(props.roomId);
       await router.push("/rooms");
     }
 

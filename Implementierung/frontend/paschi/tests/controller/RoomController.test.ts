@@ -46,7 +46,6 @@ afterAll(async () => {
 test("Create room", async () => {
   roomId = await roomController.createRoom(roomName);
   room = roomController.getRoom(roomId);
-  await roomController.updateRoom(roomId);
 
   expect(room).toBeDefined();
   expect(room?.name).toBe(roomName);
@@ -54,8 +53,9 @@ test("Create room", async () => {
 
 test("Add chair", async () => {
   const position = {x: 10, y: 20, angle: 0};
-  await roomController.addChair("24", position.x, position.y, position.angle);
-  chairId = await roomController.addChair(roomId, position.x, position.y, position.angle);
+  roomController.addChair("24", position.x, position.y, position.angle);
+  chairId = roomController.addChair(roomId, position.x, position.y, position.angle);
+  await roomController.saveRoom(roomId);
   const chair = roomController.getRoomObject(roomId, chairId!);
 
   expect(chair?.position.xCoordinate).toBe(position.x);
@@ -66,10 +66,11 @@ test("Add chair", async () => {
 test("Add table", async () => {
   const position = {x: 0, y: 0, angle: 0};
   const dimension = {length: 10, width: 10};
-  await roomController.addTable("24", position.x, position.y, position.angle, dimension.length,
+  roomController.addTable("24", position.x, position.y, position.angle, dimension.length,
     dimension.width);
-  tableId = await roomController.addTable(roomId, position.x, position.y, position.angle, dimension.length,
+  tableId = roomController.addTable(roomId, position.x, position.y, position.angle, dimension.length,
     dimension.width);
+  await roomController.saveRoom(roomId);
   const table = roomController.getRoomObject(roomId, tableId!);
 
   expect(table?.position.xCoordinate).toBe(position.x);
