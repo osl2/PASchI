@@ -52,11 +52,11 @@ test("Create room", async () => {
 });
 
 test("Add chair", async () => {
-  const position = {x: 10, y: 20, angle: 0};
+  const position = {x: 0, y: 0, angle: 0};
   roomController.addChair("24", position.x, position.y, position.angle);
   chairId = roomController.addChair(roomId, position.x, position.y, position.angle);
-  await roomController.saveRoom(roomId);
   const chair = roomController.getRoomObject(roomId, chairId!);
+  await roomController.saveRoom(roomId);
 
   expect(chair?.position.xCoordinate).toBe(position.x);
   expect(chair?.position.yCoordinate).toBe(position.y);
@@ -70,8 +70,8 @@ test("Add table", async () => {
     dimension.width);
   tableId = roomController.addTable(roomId, position.x, position.y, position.angle, dimension.length,
     dimension.width);
-  await roomController.saveRoom(roomId);
   const table = roomController.getRoomObject(roomId, tableId!);
+  await roomController.saveRoom(roomId);
 
   expect(table?.position.xCoordinate).toBe(position.x);
   expect(table?.position.yCoordinate).toBe(position.y);
