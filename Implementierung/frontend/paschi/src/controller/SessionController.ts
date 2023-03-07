@@ -121,7 +121,7 @@ export class SessionController {
       useSessionStore().deleteSession(id);
       const arrangementController = SeatArrangementController.getSeatArrangementController();
       const arrangement = session.seatArrangement;
-      if (!arrangement.room.visible) {
+      if (!arrangement.isVisible()) {
         if (!session.course.defaultArrangementIsUsed(arrangement.getId)) {
           await arrangementController.deleteSeatArrangement(arrangement.getId);
         }

@@ -119,7 +119,7 @@ export class SeatArrangementController {
       await CourseService.getService().update(arrangement.course);
       await this.arrangementService.delete(id);
       useSeatArrangementStore().deleteSeatArrangement(id);
-      if (!arrangement.room.visible) {
+      if (!arrangement.isVisible()) {
         await RoomController.getRoomController().deleteRoom(arrangement.room.getId);
       }
     }

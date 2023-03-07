@@ -173,7 +173,7 @@ export class CourseController {
       course.removeParticipant(studentId);
       student.removeCourse(courseId);
       await ParticipantService.getService().update(student);
-      for (const arrangement of course.seatArrangements.filter(arrangement => arrangement.room.visible)) {
+      for (const arrangement of course.seatArrangements.filter(arrangement => arrangement.isVisible())) {
         for (const value of arrangement.seatMap) {
           if (value[1].getId === studentId) {
             arrangement.removeSeat(value[0]);
