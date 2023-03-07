@@ -9,7 +9,6 @@ import {SessionController} from "@/controller/SessionController";
 import {SeatArrangementController} from "@/controller/SeatArrangementController";
 import {CourseService} from "@/service/CourseService";
 import {ParticipantService} from "@/service/ParticipantService";
-import {SeatArrangementService} from "@/service/SeatArrangementService";
 import {Teacher} from "@/model/userdata/interactions/Teacher";
 
 export class CourseController {
@@ -176,8 +175,8 @@ export class CourseController {
       for (const arrangement of course.seatArrangements.filter(arrangement => arrangement.isVisible())) {
         for (const value of arrangement.seatMap) {
           if (value[1].getId === studentId) {
-            arrangement.removeSeat(value[0]);
-            await SeatArrangementService.getService().update(arrangement);
+            const arrangementController = SeatArrangementController.getSeatArrangementController();
+            await arrangementController.deleteMapping(arrangement.getId, value[0].getId);
           }
         }
       }

@@ -10,7 +10,6 @@ import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 import {usePositionStore} from "@/store/PositionStore";
 import {SeatArrangementController} from "@/controller/SeatArrangementController";
 import {RoomService} from "@/service/RoomService";
-import {SeatArrangementService} from "@/service/SeatArrangementService";
 
 export class RoomController {
   private static controller: RoomController = new RoomController();
@@ -154,8 +153,8 @@ export class RoomController {
         usePositionStore().deletePosition(object.position.getId);
         for (const arrangement of useSeatArrangementStore().getAllSeatArrangements()) {
           if (arrangement.room.getId === roomId) {
-            arrangement.removeSeat(object!);
-            await SeatArrangementService.getService().update(arrangement);
+            const arrangementController = SeatArrangementController.getSeatArrangementController();
+            await arrangementController.deleteMapping(arrangement.getId, object.getId);
           }
         }
         useRoomObjectStore().deleteRoomObject(objectId);
