@@ -11,6 +11,7 @@ import {RoomController} from "@/controller/RoomController";
 import {RoomObjectUtilities} from "@/components/room/RoomObjectUtilities";
 import {Chair} from "@/model/userdata/rooms/Chair";
 import {CourseController} from "@/controller/CourseController";
+import {SessionService} from "@/service/SessionService";
 
 /**
  * Steuert den Kontrollfluss für die Sitzordnungsveraltung
@@ -174,7 +175,7 @@ export class SeatArrangementController {
    * @param chairId ID des Stuhls
    * @param participantId ID des Teilnehmers
    */
-  addMapping(arrangementId: string, chairId: string, participantId: string) {
+  async addMapping(arrangementId: string, chairId: string, participantId: string) {
     let arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
     let participant = useStudentStore().getParticipant(participantId);
     if (arrangement == undefined || participant == undefined) {
@@ -185,6 +186,7 @@ export class SeatArrangementController {
       return undefined;
     }
 
+    await this.replaceSeatArrangement(arrangement);
     arrangement.setSeat(chair, participant);
     this.arrangementService.update(arrangement).then();
   }
@@ -200,33 +202,38 @@ export class SeatArrangementController {
     if (arrangement !== undefined) {
       const chair = arrangement.room.getRoomObject(chairId);
       if (chair !== undefined) {
+        await this.replaceSeatArrangement(arrangement);
         arrangement.removeSeat(chair);
         await this.arrangementService.update(arrangement);
       }
     }
   }
 
-  /**
-   * Kopiert eine bestehende Sitzordnung.
-   *
-   * @param id Die ID der Sitzordnung
-   */
-  async copySeatArrangement(id: string): Promise<SeatArrangement | undefined> {
-    const arrangement = useSeatArrangementStore().getSeatArrangement(id);
-    if (arrangement == undefined) {
-      return undefined;
+  private async replaceSeatArrangement(arr: SeatArrangement) {
+    let newArrangement: SeatArrangement | undefined;
+    const sessions = arr.course.sessions.filter(session => session.seatArrangement.getId === arr.getId);
+    for (const session of sessions) {
+      if (newArrangement == undefined) {
+        newArrangement = await this.copySeatArrangement(arr);
+      }
+      if (newArrangement) {
+        session.seatArrangement = newArrangement;
+        await SessionService.getService().update(session);
+      }
     }
+  }
 
+  private async copySeatArrangement(arr: SeatArrangement): Promise<SeatArrangement> {
     const newArrangement = new SeatArrangement(
       undefined,
       useSeatArrangementStore().getNextId(),
-      arrangement.user,
-      arrangement.name,
-      arrangement.course,
-      arrangement.room
+      arr.user,
+      arr.name,
+      arr.course,
+      arr.room
     );
 
-    for (const value of arrangement.seatMap) {
+    for (const value of arr.seatMap) {
       newArrangement.seatMap.set(value[0], value[1]);
     }
 

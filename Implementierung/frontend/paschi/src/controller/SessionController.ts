@@ -58,7 +58,7 @@ export class SessionController {
         arrangement = useSeatArrangementStore().getSeatArrangement(seatArrangementId);
       }
     } else {
-      arrangement = await arrangementController.copySeatArrangement(seatArrangementId);
+      arrangement = await useSeatArrangementStore().getSeatArrangement(seatArrangementId);
     }
     if (arrangement == undefined) {
       return undefined;
