@@ -46,15 +46,4 @@ export class Position extends DataObject {
     this._orientation = value;
     this.update();
   }
-
-  copy(): Position {
-    return new Position(
-      undefined,
-      0,
-      this.user,
-      this.xCoordinate,
-      this.yCoordinate,
-      this.orientation
-    );
-  }
 }

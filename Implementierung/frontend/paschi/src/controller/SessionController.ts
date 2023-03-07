@@ -39,6 +39,8 @@ export class SessionController {
   async createSession(courseId: string, seatArrangementId: string | undefined, name: string):
     Promise<string | undefined> {
 
+    const arrangementController = SeatArrangementController.getSeatArrangementController();
+
     const course = useCourseStore().getCourse(courseId);
     if (course == undefined) {
       return undefined
@@ -49,7 +51,6 @@ export class SessionController {
       if (course.defaultArrangement) {
         arrangement = course.defaultArrangement;
       } else {
-        const arrangementController = SeatArrangementController.getSeatArrangementController();
         seatArrangementId = await arrangementController.createAutomaticSeatArrangement("Default", courseId);
         if (seatArrangementId == undefined) {
           return undefined;
@@ -57,7 +58,7 @@ export class SessionController {
         arrangement = useSeatArrangementStore().getSeatArrangement(seatArrangementId);
       }
     } else {
-      arrangement = useSeatArrangementStore().getSeatArrangement(seatArrangementId);
+      arrangement = await useSeatArrangementStore().getSeatArrangement(seatArrangementId);
     }
     if (arrangement == undefined) {
       return undefined;
@@ -118,9 +119,13 @@ export class SessionController {
 
       await this.sessionService.delete(id);
       useSessionStore().deleteSession(id);
+      const arrangementController = SeatArrangementController.getSeatArrangementController();
       const arrangement = session.seatArrangement;
-      if (!arrangement.room.visible && !session.course.defaultArrangementIsUsed(arrangement.getId)) {
-        const arrangementController = SeatArrangementController.getSeatArrangementController();
+      if (!arrangement.isVisible()) {
+        if (!session.course.defaultArrangementIsUsed(arrangement.getId)) {
+          await arrangementController.deleteSeatArrangement(arrangement.getId);
+        }
+      } else {
         await arrangementController.deleteSeatArrangement(arrangement.getId);
       }
     }
