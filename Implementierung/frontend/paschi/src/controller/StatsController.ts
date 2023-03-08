@@ -271,7 +271,9 @@ export class StatsController {
       return (a[3] <= b[3]) ? 1 : -1;
     });
     studentStats.forEach((value: [string, number, number, number]) => {
-      topDisturbance.push([value[0], value[3]]);
+      if (value[3] != 0) {
+        topDisturbance.push([value[0], value[3]]);
+      }
     });
 
     return [topInteractions, topQuality, bottomInteractions, bottomQuality, topDisturbance];
