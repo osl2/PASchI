@@ -168,6 +168,19 @@ export class SeatArrangementController {
     return arrangement.getStudentsNotAssigned();
   }
 
+  teacherAssigned(arrangementId: string): boolean | undefined {
+    const arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
+    if (arrangement == undefined) {
+      return undefined;
+    }
+    for (const value of arrangement.seatMap) {
+      if (value[1].isTeacher()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   /**
    * Mappt einen Teilnehmer auf einen Stuhl.
    *
