@@ -152,8 +152,8 @@ export class StatsController {
     session.seatArrangement.seatMap.forEach(participant =>
       participant.isTeacher() ? 0 : ++numStudentsInCourse);
     let participants = 0;
-    students.forEach(() => ++participants);
-    let participantionRate = (participants / numStudentsInCourse) * 100;
+    students.forEach((value) => value[0] > 0 ? ++participants : 0);
+    const participantionRate = +((participants / numStudentsInCourse) * 100).toFixed(2);
 
     const statsArray = this.getTopStudents(students);
     statsArray.push(categories);
@@ -173,7 +173,7 @@ export class StatsController {
 
     for (const interaction of session.interactions) {
       // Anzahl und absolute Häufigkeit der Kategorien zählen.
-      if (interaction.fromParticipant.isTeacher()) {
+      if (interaction.fromParticipant.isTeacher() || !interaction.fromParticipant.visible) {
         continue;
       }
       let category = interaction.category;
@@ -193,20 +193,21 @@ export class StatsController {
 
       // Schülerstatistiken berechnen.
       if (valueArray != undefined) {
-        ++valueArray[0];
-        if (quality != undefined) {
-          valueArray[1]++;
-          valueArray[2] += this.getQualityAsNumber(quality) + 1;
-        }
         if (disturbance) {
           ++valueArray[3];
+        } else {
+          ++valueArray[0];
+          if (quality != undefined) {
+            valueArray[1]++;
+            valueArray[2] += this.getQualityAsNumber(quality);
+          }
         }
         students.set(from.getId, valueArray);
       } else {
-        if (quality != undefined && disturbance) {
-          students.set(from.getId, [1, 1, this.getQualityAsNumber(quality) + 1, 1]);
+        if (quality != undefined) {
+          students.set(from.getId, [1, 1, this.getQualityAsNumber(quality), 0]);
         } else if (disturbance) {
-          students.set(from.getId, [1, 0, 0, 1]);
+          students.set(from.getId, [0, 0, 0, 1]);
         } else {
           students.set(from.getId, [1, 0, 0, 0]);
         }
@@ -239,7 +240,9 @@ export class StatsController {
       return (a[1] <= b[1]) ? 1 : -1;
     });
     studentStats.forEach((value: [string, number, number, number]) => {
-      topInteractions.push([value[0], value[1]]);
+      if (value[1] != 0) {
+        topInteractions.push([value[0], value[1]]);
+      }
     });
 
     // Schüler nach durchschnittlicher Qualität absteigend sortieren.
@@ -255,7 +258,9 @@ export class StatsController {
       return (a[1] <= b[1]) ? 1 : -1;
     });
     studentStats.forEach((value: [string, number, number, number]) => {
-      bottomInteractions.push([value[0], value[1]]);
+      if (value[1] != 0) {
+        bottomInteractions.push([value[0], value[1]]);
+      }
     });
 
     // Schüler nach durchschnittlicher Qualität aufsteigend sortieren.
