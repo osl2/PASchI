@@ -1,5 +1,6 @@
 package edu.kit.informatik.unittests.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.javafaker.Faker;
 import edu.kit.informatik.dto.RoleDto;
 import edu.kit.informatik.dto.UserDto;
@@ -10,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -24,6 +26,8 @@ import java.util.List;
 import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class UserControllerTest extends AbstractTest {
 
@@ -48,6 +52,7 @@ public class UserControllerTest extends AbstractTest {
     @Override
     public void setDown() {
         this.userRepository.deleteAll();
+        this.users.clear();
     }
 
 
@@ -80,16 +85,42 @@ public class UserControllerTest extends AbstractTest {
 
         this.users = repositoryUser;
     }
+    private UserDto login(UserDto userDto) throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                .content(super.mapToJson(userDto))
+        ).andReturn();
 
-    private void deleteFromDataBase() {
+        MvcResult mvcResultLogin = mvc.perform(MockMvcRequestBuilders.post(BASE_URL + "/login")
+                .param("email", userDto.getEmail()).param("password", userDto.getPassword())
+        ).andReturn();
 
-        for (UserDto user: users) {
-            if (user.getId() != null) {
-                this.userRepository.deleteById(user.getId());
-            }
-        }
+        return super.mapFromJson(mvcResultLogin.getResponse().getContentAsString(StandardCharsets.UTF_8),
+                                                                                                        UserDto.class);
+    }
 
-        users.clear();
+    @Test
+    public void login() throws Exception {
+        Faker faker = new Faker(new Locale("de"));
+        UserDto userDto = getNewUser(faker);
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                .content(super.mapToJson(userDto))
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
+        String content = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+        UserDto repoDto = super.mapFromJson(content, UserDto.class);
+        MvcResult mvcResultLogin = mvc.perform(MockMvcRequestBuilders.post(BASE_URL + "/login")
+                .param("email", repoDto.getEmail()).param("password", userDto.getPassword())
+        ).andReturn();
+        int statusLogin = mvcResultLogin.getResponse().getStatus();
+        assertEquals(200, statusLogin);
+        String contentLogin = mvcResultLogin.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+        UserDto contentDto = super.mapFromJson(contentLogin, UserDto.class);
+
+        assertNotNull(contentDto.getToken());
     }
 
     @Test
@@ -107,13 +138,13 @@ public class UserControllerTest extends AbstractTest {
             UserDto userdto = super.mapFromJson(content, UserDto.class);
 
             assertEquals(users.get(i).getEmail(), userdto.getEmail());
-            assertEquals(users.get(i).getPassword(), userdto.getPassword());
+            userdto.setPassword(userdto.getPassword().substring(8));
+            assertTrue(new BCryptPasswordEncoder().matches(users.get(i).getPassword(), userdto.getPassword()));
             assertEquals(users.get(i).getFirstName(), userdto.getFirstName());
             assertEquals(users.get(i).getLastName(), userdto.getLastName());
             assertEquals(users.get(i).getRole(), userdto.getRole());
             users.set(i, userdto);
         }
-        deleteFromDataBase();
     }
 
     @Test
@@ -154,8 +185,6 @@ public class UserControllerTest extends AbstractTest {
         for (int i = 0; i < users.size(); i++) {
             assertEquals(users.get(i), userFromDataBase.get(i));
         }
-
-        deleteFromDataBase();
     }
 
     @Test
@@ -176,7 +205,6 @@ public class UserControllerTest extends AbstractTest {
             assertEquals(user, userdto);
         }
 
-        deleteFromDataBase();
     }
 
     @Test
@@ -200,7 +228,6 @@ public class UserControllerTest extends AbstractTest {
             assertEquals(users.get(i), userDtos.get(i));
         }
 
-        deleteFromDataBase();
     }
 
     @Test
@@ -243,6 +270,7 @@ public class UserControllerTest extends AbstractTest {
         userDto.setLastName(lastName);
         userDto.setPassword(faker.crypto().md5());
         userDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        userDto.setAuth(true);
 
         return userDto;
     }
