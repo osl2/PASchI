@@ -153,7 +153,7 @@ export class StatsController {
       participant.isTeacher() ? 0 : ++numStudentsInCourse);
     let participants = 0;
     students.forEach((value) => value[0] > 0 ? ++participants : 0);
-    const participantionRate = +((participants / numStudentsInCourse) * 100).toFixed(2);
+    const participantionRate = +((participants / numStudentsInCourse) * 100).toFixed(0);
 
     const statsArray = this.getTopStudents(students);
     statsArray.push(categories);
@@ -186,8 +186,10 @@ export class StatsController {
       }
       ++numCategories;
 
-      let from = interaction.fromParticipant;
+      const from = interaction.fromParticipant;
+      const to = interaction.toParticipant;
       let valueArray = students.get(from.getId);
+      let valueArrayTo = students.get(to.getId);
       let quality = interaction.category.getQuality();
       let disturbance = interaction.category.name.toLowerCase() === CATEGORY_NAME;
 
@@ -195,6 +197,11 @@ export class StatsController {
       if (valueArray != undefined) {
         if (disturbance) {
           ++valueArray[3];
+          if (valueArrayTo) {
+            ++valueArrayTo[3];
+          } else {
+            students.set(to.getId, [0, 0, 0, 1]);
+          }
         } else {
           ++valueArray[0];
           if (quality != undefined) {
@@ -208,6 +215,11 @@ export class StatsController {
           students.set(from.getId, [1, 1, this.getQualityAsNumber(quality), 0]);
         } else if (disturbance) {
           students.set(from.getId, [0, 0, 0, 1]);
+          if (valueArrayTo) {
+            ++valueArrayTo[3];
+          } else {
+            students.set(to.getId, [0, 0, 0, 1]);
+          }
         } else {
           students.set(from.getId, [1, 0, 0, 0]);
         }
