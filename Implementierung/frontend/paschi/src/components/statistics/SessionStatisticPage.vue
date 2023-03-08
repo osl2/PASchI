@@ -17,7 +17,7 @@
     </template>
   </navigation-bar>
   <v-main>
-    <SideMenu />
+    <SideMenu/>
     <div id="content">
       <v-container fluid>
         <v-row justify="space-around" align-content="stretch">
@@ -26,13 +26,13 @@
               <v-card-title>
                 <v-row class="ma-2">
                   Aufschlüsselung der Interaktionen nach Kategorien
-                  <v-spacer />
+                  <v-spacer/>
                 </v-row>
               </v-card-title>
               <v-card-item v-if="stats !== undefined && keys.length !== 0">
-                <canvas id="categoryChart" />
+                <canvas id="categoryChart"/>
               </v-card-item>
-              <v-card-item v-else> Keine Daten verfügbar. </v-card-item>
+              <v-card-item v-else> Keine Daten verfügbar.</v-card-item>
             </v-card>
           </v-col>
           <v-col>
@@ -40,7 +40,7 @@
               <v-card-title>
                 <v-row class="ma-2">
                   Beteiligungsqoute
-                  <v-spacer />
+                  <v-spacer/>
                 </v-row>
               </v-card-title>
               <v-card-item
@@ -48,7 +48,7 @@
               >
                 {{ statsController.getSessionStats(sessionId)[6] }} %
               </v-card-item>
-              <v-card-item v-else> Keine Daten verfügbar. </v-card-item>
+              <v-card-item v-else> Keine Daten verfügbar.</v-card-item>
             </v-card>
           </v-col>
         </v-row>
@@ -59,7 +59,7 @@
               <v-card-title>
                 <v-row class="ma-2">
                   Top 5 der Schüler nach Anzahl Interaktionen
-                  <v-spacer />
+                  <v-spacer/>
                 </v-row>
               </v-card-title>
               <v-card-item v-if="stats[0].length !== 0">
@@ -75,7 +75,7 @@
                   </v-list-item>
                 </v-list>
               </v-card-item>
-              <v-card-item v-else> Keine Daten verfügbar. </v-card-item>
+              <v-card-item v-else> Keine Daten verfügbar.</v-card-item>
             </v-card>
           </v-col>
           <v-col>
@@ -83,7 +83,7 @@
               <v-card-title>
                 <v-row class="ma-2">
                   Top 5 Schüler nach Anzahl Störungen
-                  <v-spacer />
+                  <v-spacer/>
                 </v-row>
               </v-card-title>
               <v-card-item v-if="stats[4].length !== 0">
@@ -100,7 +100,7 @@
                   </v-list-item>
                 </v-list>
               </v-card-item>
-              <v-card-item v-else> Keine Daten verfügbar. </v-card-item>
+              <v-card-item v-else> Keine Daten verfügbar.</v-card-item>
             </v-card>
           </v-col>
         </v-row>
@@ -110,17 +110,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from "vue";
+import {defineComponent, onMounted} from "vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import Chart from "chart.js/auto";
-import { StatsController } from "@/controller/StatsController";
-import { StudentController } from "@/controller/StudentController";
-import { SessionController } from "@/controller/SessionController";
+import {StatsController} from "@/controller/StatsController";
+import {StudentController} from "@/controller/StudentController";
+import {SessionController} from "@/controller/SessionController";
 
 export default defineComponent({
   name: "SessionStatisticPage",
-  components: { SideMenu, NavigationBar },
+  components: {SideMenu, NavigationBar},
   props: {
     sessionId: {
       type: String,
@@ -164,6 +164,10 @@ export default defineComponent({
     }
 
     onMounted(() => {
+      if (document.getElementById("categoryChart") == null) {
+        return;
+      }
+
       const categoryChartId = document.getElementById(
         "categoryChart"
       ) as HTMLCanvasElement;
@@ -177,14 +181,14 @@ export default defineComponent({
 
       const categoryChartData = {
         labels:
-          // ['Störungsdummy', 'Antwortdummy', 'Fragendummy'],
-          keys,
+        // ['Störungsdummy', 'Antwortdummy', 'Fragendummy'],
+        keys,
         datasets: [
           {
             label: "Anzahl",
             data:
-              //[5,3,2],
-              values,
+            //[5,3,2],
+            values,
           },
         ],
       };

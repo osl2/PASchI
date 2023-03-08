@@ -141,7 +141,7 @@ export class StatsController {
     // Anzahl und absolute Häufigkeit der Kategorien zählen.
     // Statistiken der Teilnehmer sammeln.
     let sessionStats = this.getInteractionStats(sessionId, categories, students, numCategories);
-    if (sessionStats != undefined) {
+    if (sessionStats) {
       categories = sessionStats[0];
       //numCategories = sessionStats[1];
       students = sessionStats[2];
