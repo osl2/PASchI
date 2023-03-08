@@ -85,18 +85,6 @@ public class UserControllerTest extends AbstractTest {
 
         this.users = repositoryUser;
     }
-    private UserDto login(UserDto userDto) throws Exception {
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
-                .content(super.mapToJson(userDto))
-        ).andReturn();
-
-        MvcResult mvcResultLogin = mvc.perform(MockMvcRequestBuilders.post(BASE_URL + "/login")
-                .param("email", userDto.getEmail()).param("password", userDto.getPassword())
-        ).andReturn();
-
-        return super.mapFromJson(mvcResultLogin.getResponse().getContentAsString(StandardCharsets.UTF_8),
-                                                                                                        UserDto.class);
-    }
 
     @Test
     public void login() throws Exception {
