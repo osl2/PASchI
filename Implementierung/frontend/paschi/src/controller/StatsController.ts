@@ -149,17 +149,11 @@ export class StatsController {
 
     // Beteiligunsquote berechnen.
     let numStudentsInCourse = 0;
-    session.course.participants.forEach(() => ++numStudentsInCourse);
+    session.seatArrangement.seatMap.forEach(participant =>
+      participant.isTeacher() ? 0 : ++numStudentsInCourse);
     let participants = 0;
-    students.forEach(() => {
-      ++participants
-    });
+    students.forEach(() => ++participants);
     let participantionRate = (participants / numStudentsInCourse) * 100;
-
-    /*  // Relative Häufigkeit der Kategorien berechnen.
-      categories.forEach((value: number, category: string) => {
-        categories.set(category, (value / numCategories) * 100);
-      });*/
 
     const statsArray = this.getTopStudents(students);
     statsArray.push(categories);
