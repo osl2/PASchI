@@ -1,7 +1,6 @@
 import {StudentController} from "@/controller/StudentController";
 import {SessionController} from "@/controller/SessionController";
 import {CourseController} from "@/controller/CourseController";
-import {Interaction} from "@/model/userdata/interactions/Interaction";
 import {Session} from "@/model/userdata/courses/Session";
 import {Quality} from "@/model/userdata/interactions/Quality";
 
@@ -30,17 +29,20 @@ export class StatsController {
       return undefined;
     }
 
-    let categories: Map<string, number> = new Map<string, number>();
-    let avgQuality;
+    const categories: Map<string, number> = new Map<string, number>();
+    let avgQuality: number;
     let numInteractions = 0;
     let numCategories = 0;
     let qualitySum = 0;
 
-    student.interactions.forEach((interaction: Interaction) => {
+    const interactions = student.interactions.filter(interaction =>
+      (interaction.fromParticipant.getId === studentId || interaction.category.name.toLowerCase() === CATEGORY_NAME));
+
+    for (const interaction of interactions) {
       // Anzahl und absolute Häufigkeit der Kategorien zählen.
-      let category = interaction.category;
-      let value = categories.get(category.name);
-      if (value != undefined) {
+      const category = interaction.category;
+      const value = categories.get(category.name);
+      if (value) {
         categories.set(category.name, value + 1);
       } else {
         categories.set(category.name, 1);
@@ -48,14 +50,14 @@ export class StatsController {
       ++numCategories;
 
       // Summe der Qualitäten aller Interaktionen.
-      let quality = interaction.category.getQuality();
-      if (quality != undefined) {
-        qualitySum += this.getQualityAsNumber(quality) + 1;
+      const quality = interaction.category.getQuality();
+      if (quality) {
+        qualitySum += this.getQualityAsNumber(quality);
         ++numInteractions;
       }
-    });
+    }
 
-    avgQuality = qualitySum / numInteractions;
+    avgQuality = +(qualitySum / numInteractions).toFixed(1);
 
     const statsArray = [];
     statsArray.push(categories);
