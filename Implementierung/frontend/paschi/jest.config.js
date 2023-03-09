@@ -17,6 +17,13 @@ module.exports = {
   // clearMocks: false,
 
   // Indicates whether the coverage information should be collected while executing the test
+  collectCoverageFrom: [
+    "src/**/*.ts",
+    "!src/main.ts",
+    "!src/controller/StatsController.ts",
+    "!src/plugins/**",
+    "!src/components/**"
+  ],
   collectCoverage: true,
   "transform": {
     "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
