@@ -48,7 +48,7 @@ export class UserController {
 
     useUserStore().setUser(user);
     await this.getData();
-    await CategoryController.getCategoryController().getAllCategories();
+    await CategoryController.getCategoryController().fetchCategories();
     return user.getId;
   }
 
@@ -64,7 +64,7 @@ export class UserController {
 
     useUserStore().setUser(user);
     await this.getData();
-    await CategoryController.getCategoryController().getAllCategories();
+    await CategoryController.getCategoryController().fetchCategories();
     return user.getId;
   }
 

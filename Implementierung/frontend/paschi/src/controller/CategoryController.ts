@@ -5,8 +5,8 @@ import {RatedCategory} from "@/model/userdata/interactions/RatedCategory";
 import {Quality} from "@/model/userdata/interactions/Quality";
 import {CategoryService} from "@/service/CategoryService";
 
-const NAME_ERROR = "Name schon vergeben";
-const DEFAULT_CATEGORIES = ["Störung", "Antwort", "Frage"];
+export const NAME_ERROR = "Name schon vergeben";
+export const DEFAULT_CATEGORIES = ["Störung", "Antwort", "Frage"];
 
 export class CategoryController {
 
@@ -24,8 +24,9 @@ export class CategoryController {
     if (useCategoryStore().hasName(name)) {
       return NAME_ERROR;
     }
-    let category = new Category(undefined, useCategoryStore().getNextId(),
+    const category = new Category(undefined, useCategoryStore().getNextId(),
       UserController.getUserController().getUser(), name);
+
     await this.categoryService.add(category);
     return useCategoryStore().addCategory(category);
   }
@@ -38,6 +39,7 @@ export class CategoryController {
     let category = new RatedCategory(undefined, useCategoryStore().getNextId(),
       UserController.getUserController().getUser(),
       name, Quality.ONE_STAR);
+
     useCategoryStore().addRatedCategory(category)
     await this.categoryService.add(category);
     useCategoryStore().addCategory(category);
@@ -46,24 +48,28 @@ export class CategoryController {
     category = new RatedCategory(undefined, useCategoryStore().getNextId(),
       UserController.getUserController().getUser(),
       name, Quality.TWO_STAR);
+
     useCategoryStore().addRatedCategory(category)
     await this.categoryService.add(category);
 
     category = new RatedCategory(undefined, useCategoryStore().getNextId(),
       UserController.getUserController().getUser(),
       name, Quality.THREE_STAR);
+
     useCategoryStore().addRatedCategory(category)
     await this.categoryService.add(category);
 
     category = new RatedCategory(undefined, useCategoryStore().getNextId(),
       UserController.getUserController().getUser(),
       name, Quality.FOUR_STAR);
+
     useCategoryStore().addRatedCategory(category)
     await this.categoryService.add(category);
 
     category = new RatedCategory(undefined, useCategoryStore().getNextId(),
       UserController.getUserController().getUser(),
       name, Quality.FIVE_STAR);
+
     useCategoryStore().addRatedCategory(category)
     await this.categoryService.add(category);
 
@@ -72,19 +78,14 @@ export class CategoryController {
 
   async deleteCategory(id: string) {
     const category = useCategoryStore().getCategory(id);
-    if (category !== undefined) {
-      useCategoryStore().deleteCategory(category.name);
+    if (category) {
       await this.categoryService.delete(id);
+      useCategoryStore().deleteCategory(category.name);
     }
   }
 
   getCategory(id: string): Category | undefined {
-    let category = useCategoryStore().getCategory(id);
-    if (category == undefined) {
-      return undefined;
-    }
-
-    return category;
+    return useCategoryStore().getCategory(id);
   }
 
   getCategoryWithQuality(name: string, quality: Quality): RatedCategory | undefined {
@@ -92,20 +93,10 @@ export class CategoryController {
     if (categories.length == 0) {
       return undefined;
     }
-    let category;
-    categories.forEach((element: RatedCategory) => {
-      if (element.quality === quality) {
-        category = element;
-      }
-    });
-
-    if (category == undefined) {
-      return undefined;
-    }
-    return category;
+    return categories.find(category => category.getQuality() === quality);
   }
 
-  getCategories(): Category[] {
+  getAllCategories(): Category[] {
     return useCategoryStore().getAllCategories();
   }
 
@@ -113,7 +104,7 @@ export class CategoryController {
     return useCategoryStore().getRatedCategories(name);
   }
 
-  async getAllCategories() {
+  async fetchCategories() {
     await this.categoryService.getAll();
     if (useCategoryStore().getAllCategories().length == 0) {
       await this.createCategory(DEFAULT_CATEGORIES[0]);

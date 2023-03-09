@@ -23,8 +23,4 @@ export class RatedCategory extends Category {
     this._quality = quality;
     this.update();
   }
-
-  get quality(): Quality {
-    return this._quality;
-  }
 }

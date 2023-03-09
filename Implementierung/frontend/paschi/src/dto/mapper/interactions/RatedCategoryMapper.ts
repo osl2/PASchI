@@ -18,7 +18,7 @@ export class RatedCategoryMapper implements IModelDtoMapper<RatedCategory, Rated
   }
 
   modelToDto(ratedCategory: RatedCategory): RatedCategoryDto {
-    const qualityDto = this.qualityMapper.modelToDto(ratedCategory.quality);
+    const qualityDto = this.qualityMapper.modelToDto(ratedCategory.getQuality()!);
 
     return new RatedCategoryDto(
       ratedCategory.getId,
