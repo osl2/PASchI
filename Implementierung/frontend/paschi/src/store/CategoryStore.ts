@@ -25,7 +25,7 @@ export const useCategoryStore = defineStore('categories', {
       });
       this.ratedCategories.forEach((element, index) => {
         if (element.name === name) {
-          this.ratedCategories.splice(index, 1);
+          this.ratedCategories.splice(index, 5);
         }
       });
     },
@@ -62,7 +62,7 @@ export const useCategoryStore = defineStore('categories', {
         }
       });
       categories.sort((a: RatedCategory, b: RatedCategory) => {
-        return (a.quality <= b.quality) ? 1 : -1;
+        return (a.getQuality()! <= b.getQuality()!) ? 1 : -1;
       });
 
       return categories;
