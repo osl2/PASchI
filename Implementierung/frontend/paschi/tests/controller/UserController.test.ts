@@ -11,7 +11,7 @@ const userController = UserController.getUserController();
 const adminController = AdminController.getAdminController();
 let user: User;
 
-test("Register", async () => {
+beforeAll(async () => {
   await userController.register(
     userData.firstName,
     userData.lastName,
