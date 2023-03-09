@@ -36,13 +36,13 @@ export class SeatArrangementController {
    * @param courseId ID des Kurses
    */
   async createSeatArrangement(name: string, roomId: string, courseId: string): Promise<string | undefined> {
-    let room = useRoomStore().getRoom(roomId);
-    let course = useCourseStore().getCourse(courseId);
+    const room = useRoomStore().getRoom(roomId);
+    const course = useCourseStore().getCourse(courseId);
     if (room == undefined || course == undefined) {
       return undefined;
     }
 
-    let arrangement = new SeatArrangement(
+    const arrangement = new SeatArrangement(
       undefined,
       useSeatArrangementStore().getNextId(),
       UserController.getUserController().getUser(),
@@ -114,8 +114,8 @@ export class SeatArrangementController {
    * @param id ID der Sitzordnung
    */
   async deleteSeatArrangement(id: string) {
-    let arrangement = useSeatArrangementStore().getSeatArrangement(id);
-    if (arrangement !== undefined) {
+    const arrangement = useSeatArrangementStore().getSeatArrangement(id);
+    if (arrangement) {
       arrangement.course.removeSeatArrangement(id);
       await CourseService.getService().update(arrangement.course);
       await this.arrangementService.delete(id);
@@ -148,11 +148,7 @@ export class SeatArrangementController {
    * @param arrangementId ID der Sitzordnung
    */
   getAllStudents(arrangementId: string): Participant[] | undefined {
-    const arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
-    if (arrangement == undefined) {
-      return undefined;
-    }
-    return arrangement.getAllStudents();
+    return useSeatArrangementStore().getSeatArrangement(arrangementId)?.getAllStudents();
   }
 
   /**
@@ -161,11 +157,7 @@ export class SeatArrangementController {
    * @param arrangementId ID der Sitzordnung
    */
   getStudentsNotAssigned(arrangementId: string): Participant[] | undefined {
-    const arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
-    if (arrangement == undefined) {
-      return undefined;
-    }
-    return arrangement.getStudentsNotAssigned();
+    return useSeatArrangementStore().getSeatArrangement(arrangementId)?.getStudentsNotAssigned();
   }
 
   /**
@@ -176,12 +168,12 @@ export class SeatArrangementController {
    * @param participantId ID des Teilnehmers
    */
   async addMapping(arrangementId: string, chairId: string, participantId: string) {
-    let arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
-    let participant = useStudentStore().getParticipant(participantId);
+    const arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
+    const participant = useStudentStore().getParticipant(participantId);
     if (arrangement == undefined || participant == undefined) {
       return undefined;
     }
-    let chair = arrangement.room.getRoomObject(chairId);
+    const chair = arrangement.room.getRoomObject(chairId);
     if (chair == undefined) {
       return undefined;
     }
@@ -199,9 +191,9 @@ export class SeatArrangementController {
    */
   async deleteMapping(arrangementId: string, chairId: string) {
     const arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
-    if (arrangement !== undefined) {
+    if (arrangement) {
       const chair = arrangement.room.getRoomObject(chairId);
-      if (chair !== undefined) {
+      if (chair) {
         await this.replaceSeatArrangement(arrangement);
         arrangement.removeSeat(chair);
         await this.arrangementService.update(arrangement);
