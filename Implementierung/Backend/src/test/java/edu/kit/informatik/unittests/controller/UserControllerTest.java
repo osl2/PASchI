@@ -2,8 +2,6 @@ package edu.kit.informatik.unittests.controller;
 
 import com.github.javafaker.Faker;
 import edu.kit.informatik.dto.UserDto;
-import edu.kit.informatik.dto.mapper.UserMapper;
-import edu.kit.informatik.repositories.UserRepository;
 import edu.kit.informatik.unittests.DatabaseManipulator;
 import edu.kit.informatik.unittests.EntityGenerator;
 import org.junit.After;
@@ -32,11 +30,6 @@ public class UserControllerTest extends AbstractTest {
 
     @Autowired
     DatabaseManipulator databaseManipulator;
-    @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
-    private UserRepository userRepository;
 
     private List<UserDto> users;
 
@@ -50,7 +43,7 @@ public class UserControllerTest extends AbstractTest {
     @After
     @Override
     public void setDown() {
-        this.userRepository.deleteAll();
+        databaseManipulator.clearUserRepository();
         this.users.clear();
     }
 
@@ -67,19 +60,10 @@ public class UserControllerTest extends AbstractTest {
         return users;
     }
 
-    private void addUserToDatabase() {
+    private void addUsersToDatabase() {
         List<UserDto> repositoryUser = new ArrayList<>();
         for (UserDto user: this.users) {
-            repositoryUser.add(userMapper.modelToDto(this.userRepository.save(userMapper.dtoToModel(user))));
-        }
-
-        assertEquals(users.size(), repositoryUser.size());
-        for (int i= 0; i< users.size(); i++) {
-            assertEquals(users.get(i).getEmail(), repositoryUser.get(i).getEmail());
-            assertEquals(users.get(i).getPassword(), repositoryUser.get(i).getPassword());
-            assertEquals(users.get(i).getFirstName(), repositoryUser.get(i).getFirstName());
-            assertEquals(users.get(i).getLastName(), repositoryUser.get(i).getLastName());
-            assertEquals(users.get(i).getRole(), repositoryUser.get(i).getRole());
+            repositoryUser.add(databaseManipulator.addUser(user));
         }
 
         this.users = repositoryUser;
@@ -136,7 +120,7 @@ public class UserControllerTest extends AbstractTest {
 
     @Test
     public void updateUser() throws Exception {
-        addUserToDatabase();
+        addUsersToDatabase();
 
         List<UserDto> newUsers = getNewUsers();
 
@@ -172,7 +156,7 @@ public class UserControllerTest extends AbstractTest {
 
     @Test
     public void getOneUser() throws Exception {
-        addUserToDatabase();
+        addUsersToDatabase();
 
         for (UserDto user: users) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + user.getId())
@@ -192,7 +176,7 @@ public class UserControllerTest extends AbstractTest {
 
     @Test
     public void getAllUser() throws Exception {
-        addUserToDatabase();
+        addUsersToDatabase();
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/admin")
         ).andReturn();
@@ -216,7 +200,7 @@ public class UserControllerTest extends AbstractTest {
     @Test
     public void delete() throws Exception {
         List<UserDto> before = databaseManipulator.getUsers();
-        addUserToDatabase();
+        addUsersToDatabase();
 
         for (UserDto user: users) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL).content(user.getId()).param("id", user.getId())
