@@ -28,7 +28,6 @@ public class CategoryControllerTest extends AbstractTest {
 
     private static final String BASE_URL = "/api/category";
 
-
     @Autowired
     private DatabaseManipulator databaseManipulator;
 
@@ -78,7 +77,7 @@ public class CategoryControllerTest extends AbstractTest {
     public void addCategories() throws Exception {
         for (RatedCategoryDto categoryDto: categories) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
-                            .content(super.mapToJson(categoryDto))
+                    .content(super.mapToJson(categoryDto))
                     .header("Authorization", "Bearer " + userDto.getToken())
             ).andReturn();
 
