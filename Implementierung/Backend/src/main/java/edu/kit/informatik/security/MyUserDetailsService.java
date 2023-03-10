@@ -19,6 +19,8 @@ import java.util.Optional;
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 
+    private static final String USER_NOT_FOUND = "User mit Email '%s' nicht gefunden";
+
     private final UserRepository userRepository;
 
     /**
@@ -31,10 +33,10 @@ public class MyUserDetailsService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> userOptional = userRepository.findUserByEmail(username);
         if (userOptional.isEmpty()) {
-            throw new UsernameNotFoundException(username);
+            throw new UsernameNotFoundException(String.format(USER_NOT_FOUND, username));
         }
 
         return userOptional.get();
