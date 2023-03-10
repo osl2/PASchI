@@ -20,9 +20,9 @@ import java.util.HashMap;
 
 public final class EntityGenerator {
 
-    public static UserDto createNewUser(Faker faker) {
+    private static UserDto createNewUser(Faker faker, RoleDto roleDto) {
         UserDto userDto = new UserDto();
-        userDto.setRole(RoleDto.USER);
+        userDto.setRole(roleDto);
 
         String firstName = faker.name().firstName();
         String lastName = faker.name().lastName();
@@ -35,6 +35,14 @@ public final class EntityGenerator {
         userDto.setAuth(true);
 
         return userDto;
+    }
+
+    public static UserDto createNewUser(Faker faker) {
+        return createNewUser(faker, RoleDto.USER);
+    }
+
+    public static UserDto createNewAdmin(Faker faker) {
+        return createNewUser(faker, RoleDto.ADMIN);
     }
 
     public static RatedCategoryDto createNewCategory(Faker faker, UserDto userDto) {
