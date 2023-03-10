@@ -45,7 +45,7 @@ public final class EntityGenerator {
         return createNewUser(faker, RoleDto.ADMIN);
     }
 
-    public static RatedCategoryDto createNewCategory(Faker faker, UserDto userDto) {
+    public static RatedCategoryDto createNewRatedCategory(Faker faker, UserDto userDto) {
 
         RatedCategoryDto categoryDto = new RatedCategoryDto();
 
@@ -54,6 +54,19 @@ public final class EntityGenerator {
         categoryDto.setName(name + " " + faker.number().randomDigit());
         categoryDto.setUserId(userDto.getId());
         categoryDto.setQuality(QualityDto.FOUR_STAR);
+        categoryDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+
+        return categoryDto;
+    }
+
+    public static RatedCategoryDto createNewCategory(Faker faker, UserDto userDto) {
+
+        RatedCategoryDto categoryDto = new RatedCategoryDto();
+
+        String name = faker.team().name();
+
+        categoryDto.setName(name + " " + faker.number().randomDigit());
+        categoryDto.setUserId(userDto.getId());
         categoryDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
 
         return categoryDto;
