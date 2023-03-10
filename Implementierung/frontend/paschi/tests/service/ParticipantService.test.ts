@@ -53,7 +53,7 @@ test("Add and get particpant", async () => {
   expect(participants[0].lastName).toBe(student.lastName);
 });
 
-test("Get by id", async () => {
+test("Get participant by id", async () => {
   const participant = await service.getById(student.getId);
 
   expect(participant?.getId).toBe(student.getId);
