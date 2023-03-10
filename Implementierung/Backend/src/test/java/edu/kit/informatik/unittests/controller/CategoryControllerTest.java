@@ -2,7 +2,6 @@ package edu.kit.informatik.unittests.controller;
 
 import com.github.javafaker.Faker;
 import edu.kit.informatik.dto.UserDto;
-import edu.kit.informatik.dto.mapper.UserMapper;
 import edu.kit.informatik.dto.mapper.interactions.CategoryMapper;
 import edu.kit.informatik.dto.mapper.interactions.RatedCategoryMapper;
 import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
@@ -44,9 +43,6 @@ public class CategoryControllerTest extends AbstractTest {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private UserMapper userMapper;
 
     private List<RatedCategoryDto> categories;
 
