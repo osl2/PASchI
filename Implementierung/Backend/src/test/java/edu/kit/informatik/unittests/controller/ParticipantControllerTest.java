@@ -170,4 +170,18 @@ public class ParticipantControllerTest extends AbstractTest {
 
     }
 
+    @Test
+    public void getWrongParticipant() throws Exception{
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + participants.get(0).getId())
+                .header("Authorization", "Bearer " + userDto.getToken())
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getErrorMessage();
+
+        assertEquals(404, status);
+        assertEquals("Entity of class 'Participant' with id: '" + participants.get(0).getId() +"' not found", content);
+
+    }
+
 }
