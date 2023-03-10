@@ -1,10 +1,10 @@
 package edu.kit.informatik.unittests.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.kit.informatik.PAschIApplication;
 import edu.kit.informatik.dto.UserDto;
+import edu.kit.informatik.unittests.DatabaseInserter;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParseException;
@@ -32,7 +32,7 @@ public abstract class AbstractTest {
     @Autowired
     DatabaseInserter databaseInserter;
 
-    protected void setUp() {
+    protected void setUp() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).apply(SecurityMockMvcConfigurers.springSecurity()).build();
     }
 
@@ -43,7 +43,7 @@ public abstract class AbstractTest {
     }
 
     protected <T> T mapFromJson(String json, Class<T> clazz)
-            throws JsonParseException, JsonMappingException, IOException {
+            throws JsonParseException, IOException {
 
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(json, clazz);
@@ -56,7 +56,13 @@ public abstract class AbstractTest {
                 .param("email", userDto.getEmail()).param("password", userDto.getPassword())
         ).andReturn();
 
-        return mapFromJson(mvcResultLogin.getResponse().getContentAsString(StandardCharsets.UTF_8),
+        if (mvcResultLogin.getResponse().getStatus() != 200) {
+            throw new RuntimeException(String.valueOf(mvcResultLogin.getResponse().getStatus()));
+        }
+
+        UserDto returnDto = mapFromJson(mvcResultLogin.getResponse().getContentAsString(StandardCharsets.UTF_8),
                 UserDto.class);
+        //System.out.println(returnDto);
+        return returnDto;
     }
 }
