@@ -132,18 +132,20 @@ public class UserControllerTest extends AbstractTest {
         List<UserDto> newUsers = getNewUsers();
 
         for (int i = 0; i < users.size(); i++) {
+            users.set(i, super.login(users.get(i)));
+
             users.get(i).setFirstName(newUsers.get(i).getFirstName());
             users.get(i).setLastName(newUsers.get(i).getLastName());
-            users.get(i).setRole(newUsers.get(i).getRole());
+            users.get(i).setRole(RoleDto.ADMIN);
             users.get(i).setPassword(newUsers.get(i).getPassword());
-            users.get(i).setAuth(newUsers.get(i).isAuth());
+            users.get(i).setAuth(false);
         }
 
         for (UserDto userDto: users) {
 
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(BASE_URL).contentType(MediaType.APPLICATION_JSON)
                         .content(super.mapToJson(userDto))
-                    .header("Authorization", "Bearer " + mainUserDto.getToken())
+                    .header("Authorization", "Bearer " + userDto.getToken())
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -164,7 +166,11 @@ public class UserControllerTest extends AbstractTest {
         assertEquals(userFromDataBase.size(), users.size());
 
         for (int i = 0; i < users.size(); i++) {
-            assertEquals(users.get(i), userFromDataBase.get(i));
+            assertEquals(users.get(i).getFirstName(), userFromDataBase.get(i).getFirstName());
+            assertEquals(users.get(i).getLastName(), userFromDataBase.get(i).getLastName());
+            assertEquals(users.get(i).getPassword(), userFromDataBase.get(i).getPassword());
+            assertNotEquals(users.get(i).getRole(), userFromDataBase.get(i).getRole());
+            assertNotEquals(users.get(i).isAuth(), userFromDataBase.get(i).isAuth());
         }
     }
 
