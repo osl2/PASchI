@@ -164,6 +164,13 @@ test("Get all courses", () => {
   expect(courses.length).toBeGreaterThan(0);
 });
 
+test("Get teacher", () => {
+  const teacher = courseController.getTeacher();
+
+  expect(teacher).toBeDefined();
+  expect(teacher.isTeacher()).toBeTruthy();
+});
+
 test("Delete course", async () => {
   await courseController.deleteCourse(courseId);
   course = courseController.getCourse(courseId);
