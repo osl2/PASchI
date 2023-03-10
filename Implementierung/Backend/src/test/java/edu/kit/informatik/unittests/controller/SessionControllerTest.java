@@ -35,7 +35,7 @@ public class SessionControllerTest extends AbstractTest {
     @Autowired
     private DatabaseManipulator databaseManipulator;
 
-    private CourseDto course;
+    private CourseDto courseDto;
     private List<SessionDto> sessions;
     private UserDto userDto;
 
@@ -45,7 +45,7 @@ public class SessionControllerTest extends AbstractTest {
         super.setUp();
         Faker faker = new Faker(new Locale("de"));
         userDto = super.addAndLogin(EntityGenerator.createNewUser(faker));
-        course = databaseManipulator.addCourse(EntityGenerator.createNewCourse(faker, userDto));
+        courseDto = databaseManipulator.addCourse(EntityGenerator.createNewCourse(faker, userDto));
         this.sessions = addSomeSessions();
     }
 
@@ -65,7 +65,7 @@ public class SessionControllerTest extends AbstractTest {
         Faker faker = new Faker(new Locale("de"));
 
         for (int i = 0; i < 10; i++) {
-            sessionDtos.add(EntityGenerator.createNewSession(faker, course, userDto));
+            sessionDtos.add(EntityGenerator.createNewSession(faker, courseDto, userDto));
         }
 
         return sessionDtos;
