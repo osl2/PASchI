@@ -51,6 +51,10 @@ public abstract class AbstractTest {
 
     protected UserDto addAndLogin(UserDto userDto) throws Exception {
         databaseManipulator.addUser(userDto);
+        return login(userDto);
+    }
+
+    protected UserDto login(UserDto userDto) throws Exception {
 
         MvcResult mvcResultLogin = mvc.perform(MockMvcRequestBuilders.post("/api/user" + "/login")
                 .param("email", userDto.getEmail()).param("password", userDto.getPassword())
