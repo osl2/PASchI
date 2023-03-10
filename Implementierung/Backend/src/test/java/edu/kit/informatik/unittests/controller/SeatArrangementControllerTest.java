@@ -171,4 +171,18 @@ public class SeatArrangementControllerTest extends AbstractTest {
         }
 
     }
+
+    @Test
+    public void getWrongSeatArrangement() throws Exception{
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + seatArrangements.get(0).getId())
+                .header("Authorization", "Bearer " + userDto.getToken())
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getErrorMessage();
+
+        assertEquals(404, status);
+        assertEquals("Entity of class 'SeatArrangement' with id: '" + seatArrangements.get(0).getId() +"' not found", content);
+
+    }
 }
