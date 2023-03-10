@@ -1,11 +1,11 @@
 package edu.kit.informatik.unittests.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.javafaker.Faker;
-import edu.kit.informatik.dto.RoleDto;
 import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.dto.mapper.UserMapper;
 import edu.kit.informatik.repositories.UserRepository;
+import edu.kit.informatik.unittests.DatabaseManipulator;
+import edu.kit.informatik.unittests.EntityGenerator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,9 +16,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -34,6 +31,8 @@ public class UserControllerTest extends AbstractTest {
     private static final String BASE_URL = "/api/user";
 
     @Autowired
+    DatabaseManipulator databaseManipulator;
+    @Autowired
     private UserMapper userMapper;
 
     @Autowired
@@ -43,9 +42,9 @@ public class UserControllerTest extends AbstractTest {
 
     @Before
     @Override
-    public void setUp() {
+    public void setUp() throws Exception {
         super.setUp();
-        this.users = addSomeUsers();
+        this.users = getNewUsers();
     }
 
     @After
@@ -56,13 +55,13 @@ public class UserControllerTest extends AbstractTest {
     }
 
 
-    private List<UserDto> addSomeUsers() {
+    private List<UserDto> getNewUsers() {
 
         List<UserDto> users = new ArrayList<>();
         Faker faker = new Faker(new Locale("de"));
 
         for (int i = 0; i < 10; i++) {
-            users.add(getNewUser(faker));
+            users.add(EntityGenerator.createNewUser(faker));
         }
 
         return users;
@@ -89,7 +88,7 @@ public class UserControllerTest extends AbstractTest {
     @Test
     public void login() throws Exception {
         Faker faker = new Faker(new Locale("de"));
-        UserDto userDto = getNewUser(faker);
+        UserDto userDto = EntityGenerator.createNewUser(faker);
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
                 .content(super.mapToJson(userDto))
         ).andReturn();
@@ -139,11 +138,7 @@ public class UserControllerTest extends AbstractTest {
     public void updateUser() throws Exception {
         addUserToDatabase();
 
-        List<UserDto> newUsers = new ArrayList<>();
-
-        for (int i = 0; i < users.size(); i++) {
-            newUsers.add(getNewUser(new Faker()));
-        }
+        List<UserDto> newUsers = getNewUsers();
 
         for (int i = 0; i < users.size(); i++) {
             users.get(i).setFirstName(newUsers.get(i).getFirstName());
@@ -163,7 +158,7 @@ public class UserControllerTest extends AbstractTest {
             assertEquals(200, status);
         }
 
-        List<UserDto> userFromDataBase = getUserFromDataBase();
+        List<UserDto> userFromDataBase = databaseManipulator.getUsers();
 
         userFromDataBase.sort(Comparator.naturalOrder());
         users.sort(Comparator.naturalOrder());
@@ -220,7 +215,7 @@ public class UserControllerTest extends AbstractTest {
 
     @Test
     public void delete() throws Exception {
-        List<UserDto> before = getUserFromDataBase();
+        List<UserDto> before = databaseManipulator.getUsers();
         addUserToDatabase();
 
         for (UserDto user: users) {
@@ -230,7 +225,7 @@ public class UserControllerTest extends AbstractTest {
             int status = mvcResult.getResponse().getStatus();
             assertEquals(200, status);
         }
-        List<UserDto> after = getUserFromDataBase();
+        List<UserDto> after = databaseManipulator.getUsers();
 
         assertEquals(before.size(), after.size());
 
@@ -238,28 +233,5 @@ public class UserControllerTest extends AbstractTest {
             assertEquals(before.get(i), after.get(i));
         }
 
-    }
-
-    private List<UserDto> getUserFromDataBase() {
-        return userMapper.modelToDto(this.userRepository.findAll());
-    }
-
-
-
-    private UserDto getNewUser(Faker faker) {
-        UserDto userDto = new UserDto();
-        userDto.setRole(RoleDto.USER);
-
-        String firstName = faker.name().firstName();
-        String lastName = faker.name().lastName();
-
-        userDto.setEmail(firstName + "." + lastName +  "@kit.edu");
-        userDto.setFirstName(firstName);
-        userDto.setLastName(lastName);
-        userDto.setPassword(faker.crypto().md5());
-        userDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
-        userDto.setAuth(true);
-
-        return userDto;
     }
 }
