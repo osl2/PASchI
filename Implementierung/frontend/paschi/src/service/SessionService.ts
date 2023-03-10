@@ -69,11 +69,7 @@ export class SessionService extends BaseService<Session, SessionDto> {
         console.log(error);
       });
 
-    if (session != undefined) {
-      return session;
-    } else {
-      return undefined;
-    }
+    return session;
   }
 
   async getAll(): Promise<Session[]> {
