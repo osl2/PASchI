@@ -62,6 +62,7 @@ public abstract class AbstractTest {
 
         UserDto returnDto = mapFromJson(mvcResultLogin.getResponse().getContentAsString(StandardCharsets.UTF_8),
                 UserDto.class);
+        returnDto.setPassword(userDto.getPassword());
         //System.out.println(returnDto);
         return returnDto;
     }
