@@ -2,13 +2,13 @@ package edu.kit.informatik.unittests.controller;
 
 import com.github.javafaker.Faker;
 import edu.kit.informatik.dto.UserDto;
-import edu.kit.informatik.dto.mapper.interactions.CategoryMapper;
 import edu.kit.informatik.dto.mapper.interactions.RatedCategoryMapper;
 import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
 import edu.kit.informatik.dto.userdata.interactions.RatedCategoryDto;
 import edu.kit.informatik.model.userdata.interactions.RatedCategory;
 import edu.kit.informatik.repositories.CategoryBaseRepository;
 import edu.kit.informatik.repositories.UserRepository;
+import edu.kit.informatik.unittests.DatabaseManipulator;
 import edu.kit.informatik.unittests.EntityGenerator;
 import org.junit.After;
 import org.junit.Before;
@@ -32,11 +32,9 @@ public class CategoryControllerTest extends AbstractTest {
 
     private static final String BASE_URL = "/api/category";
 
-    @Autowired
-    private CategoryMapper categoryMapper;
 
     @Autowired
-    private RatedCategoryMapper ratedCategoryMapper;
+    private DatabaseManipulator databaseManipulator;
 
     @Autowired
     private CategoryBaseRepository<RatedCategory> categoryRepository;
@@ -78,19 +76,9 @@ public class CategoryControllerTest extends AbstractTest {
     }
 
     private void addCategoryToDatabase() {
-
         List<RatedCategoryDto> repositoryCategory = new ArrayList<>();
         for (RatedCategoryDto categoryDto: this.categories) {
-            RatedCategory category = ratedCategoryMapper.dtoToModel(categoryDto);
-
-            repositoryCategory.add(ratedCategoryMapper.modelToDto(this.categoryRepository.save(category)));
-        }
-
-        assertEquals(categories.size(), repositoryCategory.size());
-        for (int i = 0; i< categories.size(); i++) {
-            assertEquals(categories.get(i).getUserId(), repositoryCategory.get(i).getUserId());
-            assertEquals(categories.get(i).getName(), repositoryCategory.get(i).getName());
-            assertNotNull(repositoryCategory.get(i).getId());
+            repositoryCategory.add(databaseManipulator.addCategory(categoryDto));
         }
 
         this.categories = repositoryCategory;
@@ -164,7 +152,7 @@ public class CategoryControllerTest extends AbstractTest {
 
     @Test
     public void deleteCategories() throws Exception {
-        List<CategoryDto> before = getCategoriesFromDataBase();
+        List<CategoryDto> before = databaseManipulator.getCategories();
         addCategoryToDatabase();
 
         for (CategoryDto categoryDto: categories) {
@@ -176,7 +164,7 @@ public class CategoryControllerTest extends AbstractTest {
             int status = mvcResult.getResponse().getStatus();
             assertEquals(200, status);
         }
-        List<CategoryDto> after = getCategoriesFromDataBase();
+        List<CategoryDto> after = databaseManipulator.getCategories();
 
         assertEquals(before.size(), after.size());
 
@@ -186,15 +174,4 @@ public class CategoryControllerTest extends AbstractTest {
 
     }
 
-    private List<CategoryDto> getCategoriesFromDataBase() {
-
-        List<RatedCategory> categoryList = categoryRepository.findAll();
-        List<CategoryDto> categoryDtoList = new ArrayList<>();
-
-        for (RatedCategory ratedCategory: categoryList) {
-            categoryDtoList.add(categoryMapper.modelToDto(ratedCategory));
-        }
-
-        return categoryDtoList;
-    }
 }
