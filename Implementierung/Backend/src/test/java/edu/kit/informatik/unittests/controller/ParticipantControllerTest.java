@@ -2,10 +2,10 @@ package edu.kit.informatik.unittests.controller;
 
 import com.github.javafaker.Faker;
 import edu.kit.informatik.dto.UserDto;
-import edu.kit.informatik.dto.mapper.interactions.ParticipantMapper;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.repositories.ParticipantRepository;
 import edu.kit.informatik.repositories.UserRepository;
+import edu.kit.informatik.unittests.DatabaseManipulator;
 import edu.kit.informatik.unittests.EntityGenerator;
 import org.junit.After;
 import org.junit.Before;
@@ -30,7 +30,7 @@ public class ParticipantControllerTest extends AbstractTest {
 
 
     @Autowired
-    private ParticipantMapper participantMapper;
+    private DatabaseManipulator databaseManipulator;
 
     @Autowired
     private ParticipantRepository participantRepository;
@@ -71,17 +71,10 @@ public class ParticipantControllerTest extends AbstractTest {
     }
 
 
-    private void addParticipantToDatabase() {
+    private void addParticipantsToDatabase() {
         List<ParticipantDto> repositoryParticipant = new ArrayList<>();
         for (ParticipantDto participantDto: this.participants) {
-            repositoryParticipant.add(participantMapper.modelToDto(this.participantRepository.save(participantMapper.dtoToModel(participantDto))));
-        }
-
-        assertEquals(participants.size(), repositoryParticipant.size());
-        for (int i= 0; i< participants.size(); i++) {
-            assertEquals(participants.get(i).getFirstName(), repositoryParticipant.get(i).getFirstName());
-            assertEquals(participants.get(i).getLastName(), repositoryParticipant.get(i).getLastName());
-            assertEquals(participants.get(i).getUserId(), repositoryParticipant.get(i).getUserId());
+            repositoryParticipant.add(databaseManipulator.addParticipant(participantDto));
         }
 
         this.participants = repositoryParticipant;
@@ -114,7 +107,7 @@ public class ParticipantControllerTest extends AbstractTest {
 
     @Test
     public void getOneParticipant() throws Exception {
-        addParticipantToDatabase();
+        addParticipantsToDatabase();
 
         for (ParticipantDto participant: participants) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + participant.getId())
@@ -134,7 +127,7 @@ public class ParticipantControllerTest extends AbstractTest {
 
     @Test
     public void getAllParticipants() throws Exception {
-        addParticipantToDatabase();
+        addParticipantsToDatabase();
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL)
                 .header("Authorization", "Bearer " + userDto.getToken())
@@ -157,8 +150,8 @@ public class ParticipantControllerTest extends AbstractTest {
 
     @Test
     public void deleteParticipants() throws Exception {
-        addParticipantToDatabase();
-        List<ParticipantDto> before = getParticipantsFromDataBase();
+        addParticipantsToDatabase();
+        List<ParticipantDto> before = databaseManipulator.getParticipants();
 
 
         for (ParticipantDto participantDto: participants) {
@@ -171,7 +164,7 @@ public class ParticipantControllerTest extends AbstractTest {
             assertEquals(200, status);
         }
 
-        List<ParticipantDto> after = getParticipantsFromDataBase();
+        List<ParticipantDto> after = databaseManipulator.getParticipants();
 
         assertEquals(before.size(), after.size());
 
@@ -185,10 +178,5 @@ public class ParticipantControllerTest extends AbstractTest {
         }
 
     }
-
-    private List<ParticipantDto> getParticipantsFromDataBase() {
-        return participantMapper.modelToDto(this.participantRepository.findAll());
-    }
-
 
 }

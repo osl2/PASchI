@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.kit.informatik.PAschIApplication;
 import edu.kit.informatik.dto.UserDto;
-import edu.kit.informatik.unittests.DatabaseInserter;
+import edu.kit.informatik.unittests.DatabaseManipulator;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParseException;
@@ -30,7 +30,7 @@ public abstract class AbstractTest {
     WebApplicationContext webApplicationContext;
 
     @Autowired
-    DatabaseInserter databaseInserter;
+    DatabaseManipulator databaseManipulator;
 
     protected void setUp() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).apply(SecurityMockMvcConfigurers.springSecurity()).build();
@@ -50,7 +50,7 @@ public abstract class AbstractTest {
     }
 
     protected UserDto addAndLogin(UserDto userDto) throws Exception {
-        databaseInserter.addUserToDatabase(userDto);
+        databaseManipulator.addUser(userDto);
 
         MvcResult mvcResultLogin = mvc.perform(MockMvcRequestBuilders.post("/api/user" + "/login")
                 .param("email", userDto.getEmail()).param("password", userDto.getPassword())
