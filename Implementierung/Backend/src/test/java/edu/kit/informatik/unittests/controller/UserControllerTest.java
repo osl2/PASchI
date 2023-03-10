@@ -136,7 +136,7 @@ public class UserControllerTest extends AbstractTest {
                 .param("email", "123@kit.edu").param("password", userDto.getPassword())
         ).andReturn();
         int statusLogin = mvcResultLogin.getResponse().getStatus();
-        String content = mvcResultLogin.getResponse().getContentAsString(StandardCharsets.UTF_8);
+        String content = mvcResultLogin.getResponse().getErrorMessage();
         System.out.println(content);
         assertEquals(401, statusLogin);
 
