@@ -96,6 +96,10 @@ public final class DatabaseManipulator {
         return roomMapper.modelToDto(this.roomRepository.save(roomMapper.dtoToModel(roomDto)));
     }
 
+    public SeatArrangementDto addSeatArrangement(SeatArrangementDto seatArrangementDto) {
+        return seatArrangementMapper.modelToDto(this.seatArrangementRepository.save(seatArrangementMapper.dtoToModel(seatArrangementDto)));
+    }
+
     public List<UserDto> getUsers() {
         return userMapper.modelToDto(this.userRepository.findAll());
     }
