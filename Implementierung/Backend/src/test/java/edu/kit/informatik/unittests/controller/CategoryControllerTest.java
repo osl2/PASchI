@@ -1,18 +1,16 @@
 package edu.kit.informatik.unittests.controller;
 
 import com.github.javafaker.Faker;
-import edu.kit.informatik.dto.RoleDto;
 import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.dto.mapper.UserMapper;
 import edu.kit.informatik.dto.mapper.interactions.CategoryMapper;
 import edu.kit.informatik.dto.mapper.interactions.RatedCategoryMapper;
 import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
-import edu.kit.informatik.dto.userdata.interactions.QualityDto;
 import edu.kit.informatik.dto.userdata.interactions.RatedCategoryDto;
-import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.interactions.RatedCategory;
 import edu.kit.informatik.repositories.CategoryBaseRepository;
 import edu.kit.informatik.repositories.UserRepository;
+import edu.kit.informatik.unittests.EntityGenerator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,9 +20,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -55,18 +50,22 @@ public class CategoryControllerTest extends AbstractTest {
 
     private List<RatedCategoryDto> categories;
 
+    private UserDto userDto;
+
     @Before
     @Override
-    public void setUp() {
+    public void setUp() throws Exception {
         super.setUp();
+        userDto = super.addAndLogin(EntityGenerator.createNewUser(new Faker(new Locale("de"))));
         this.categories = addSomeCategories();
     }
 
     @After
     @Override
     public void setDown() {
-        this.userRepository.deleteAll();
         this.categoryRepository.deleteAll();
+        this.userRepository.deleteAll();
+        categories.clear();
     }
 
     private List<RatedCategoryDto> addSomeCategories() {
@@ -75,22 +74,11 @@ public class CategoryControllerTest extends AbstractTest {
         Faker faker = new Faker(new Locale("de"));
 
         for (int i = 0; i < 10; i++) {
-            categoryDtos.add(getNewCategory(faker));
+            categoryDtos.add(EntityGenerator.createNewCategory(faker, userDto));
         }
 
         return categoryDtos;
 
-    }
-
-    private void deleteFromDataBase() {
-
-        for (RatedCategoryDto categoryDto: categories) {
-            if (categoryDto.getId() != null) {
-                this.categoryRepository.deleteById(categoryDto.getId());
-            }
-        }
-
-        categories.clear();
     }
 
     private void addCategoryToDatabase() {
@@ -116,7 +104,7 @@ public class CategoryControllerTest extends AbstractTest {
     public void addCategories() throws Exception {
         for (RatedCategoryDto categoryDto: categories) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
-                            .content(super.mapToJson(categoryDto))
+                            .content(super.mapToJson(categoryDto)).header("Authorization", "Bearer " + userDto.getToken())
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -130,7 +118,6 @@ public class CategoryControllerTest extends AbstractTest {
             assertNotNull(categoryDtoFromContent.getId());
             categories.set(categories.indexOf(categoryDto), categoryDtoFromContent);
         }
-        deleteFromDataBase();
     }
 
 
@@ -140,6 +127,7 @@ public class CategoryControllerTest extends AbstractTest {
 
         for (RatedCategoryDto categoryDto: categories) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + categoryDto.getId())
+                    .header("Authorization", "Bearer " + userDto.getToken())
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -152,7 +140,6 @@ public class CategoryControllerTest extends AbstractTest {
             assertEquals(categoryDto, categoryDtoFromDatabase);
         }
 
-        deleteFromDataBase();
     }
 
     @Test
@@ -160,6 +147,7 @@ public class CategoryControllerTest extends AbstractTest {
         addCategoryToDatabase();
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL)
+                .header("Authorization", "Bearer " + userDto.getToken())
         ).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
@@ -175,8 +163,6 @@ public class CategoryControllerTest extends AbstractTest {
         for (int i = 0; i < categories.size(); i++) {
             assertEquals(categories.get(i), categoryDtos.get(i));
         }
-
-        deleteFromDataBase();
     }
 
     @Test
@@ -185,7 +171,9 @@ public class CategoryControllerTest extends AbstractTest {
         addCategoryToDatabase();
 
         for (CategoryDto categoryDto: categories) {
-            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL).content(categoryDto.getId()).param("id", categoryDto.getId())
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL).content(categoryDto.getId())
+                    .param("id", categoryDto.getId())
+                    .header("Authorization", "Bearer " + userDto.getToken())
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -211,38 +199,5 @@ public class CategoryControllerTest extends AbstractTest {
         }
 
         return categoryDtoList;
-    }
-
-
-    private RatedCategoryDto getNewCategory(Faker faker) {
-
-        RatedCategoryDto categoryDto = new RatedCategoryDto();
-
-        String name = faker.team().name();
-
-        categoryDto.setName(name + " " + faker.number().randomDigit());
-
-        User user = userRepository.save(userMapper.dtoToModel(getNewUser(faker)));
-        categoryDto.setUserId(user.getId());
-        categoryDto.setQuality(QualityDto.FIVE_STAR);
-        categoryDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
-
-        return categoryDto;
-    }
-
-    private UserDto getNewUser(Faker faker) {
-        UserDto userDto = new UserDto();
-        userDto.setRole(RoleDto.USER);
-
-        String firstName = faker.name().firstName();
-        String lastName = faker.name().lastName();
-
-        userDto.setEmail(firstName + "." + lastName +  "@kit.edu");
-        userDto.setFirstName(firstName);
-        userDto.setLastName(lastName);
-        userDto.setPassword(faker.crypto().md5());
-        userDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
-
-        return userDto;
     }
 }
