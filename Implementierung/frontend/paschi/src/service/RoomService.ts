@@ -69,11 +69,7 @@ export class RoomService extends BaseService<Room, RoomDto> {
         console.log(error);
       });
 
-    if (room != undefined) {
-      return room;
-    } else {
-      return undefined;
-    }
+    return room;
   }
 
   async getAll(): Promise<Room[]> {
