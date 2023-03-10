@@ -70,9 +70,12 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
     @Override
     public SeatArrangementDto getById(String id, Authentication authentication) {
         Optional<SeatArrangement> seatArrangementOptional = this.seatArrangementRepository.findSeatArrangementById(id);
-        
-        return seatArrangementOptional.map(this.mapper::modelToDto).orElseThrow(() ->
-                                                                new EntityNotFoundException(SeatArrangement.class, id));
+        SeatArrangement seatArrangement = seatArrangementOptional.orElseThrow(() ->
+                                                        new EntityNotFoundException(SeatArrangement.class, id));
+        super.checkAuthorization(authentication, seatArrangement.getUser().getId());
+
+
+        return this.mapper.modelToDto(seatArrangement);
     }
 
     @Override
@@ -86,8 +89,10 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
     @Override
     public String delete(String id, Authentication authentication) {
         Optional<SeatArrangement> seatArrangementOptional = this.seatArrangementRepository.findSeatArrangementById(id);
+        SeatArrangement seatArrangement = seatArrangementOptional.orElseThrow(() ->
+                                                            new EntityNotFoundException(SeatArrangement.class, id));
+        super.checkAuthorization(authentication, seatArrangement.getUser().getId());
 
-        seatArrangementOptional.orElseThrow(() -> new EntityNotFoundException(SeatArrangement.class, id));
         this.seatArrangementRepository.deleteById(id);
         
         return id;

@@ -94,8 +94,10 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
     @Override
     public RoomDto getById(String id, Authentication authentication) {
         Optional<Room> roomOptional = this.roomRepository.findRoomById(id);
+        Room room = roomOptional.orElseThrow(() -> new EntityNotFoundException(Room.class, id));
+        super.checkAuthorization(authentication, room.getUser().getId());
 
-        return roomOptional.map(this.mapper::modelToDto).orElseThrow(() -> new EntityNotFoundException(Room.class, id));
+        return this.mapper.modelToDto(room);
     }
 
     @Override
@@ -109,10 +111,10 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
     @Override
     public String delete(String id, Authentication authentication) {
         Optional<Room> roomOptional = this.roomRepository.findRoomById(id);
+        Room room = roomOptional.orElseThrow(() -> new EntityNotFoundException(Room.class, id));
+        super.checkAuthorization(authentication, room.getUser().getId());
 
-        roomOptional.orElseThrow(() -> new EntityNotFoundException(Room.class, id));
         this.roomRepository.deleteById(id);
-
         return id;
     }
 

@@ -88,9 +88,11 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
     @Override
     public SessionDto getById(String id, Authentication authentication) {
         Optional<Session> sessionOptional = sessionRepository.findSessionById(id);
+        Session session = sessionOptional.orElseThrow(() -> new EntityNotFoundException(Session.class, id));
 
-        return sessionOptional.map(this.mapper::modelToDto).orElseThrow(() -> new EntityNotFoundException(
-                Session.class, id));
+        super.checkAuthorization(authentication, session.getUser().getId());
+
+        return this.mapper.modelToDto(session);
     }
 
     @Override
@@ -105,9 +107,11 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
     @Override
     public String delete(String id, Authentication authentication) {
         Optional<Session> sessionOptional = sessionRepository.findById(id);
+        Session session = sessionOptional.orElseThrow(() -> new EntityNotFoundException(Session.class, id));
 
-        List<Interaction> interactions = interactionRepository.findInteractionsBySession(
-                                    sessionOptional.orElseThrow(() -> new EntityNotFoundException(Session.class, id)));
+        super.checkAuthorization(authentication, session.getUser().getId());
+
+        List<Interaction> interactions = interactionRepository.findInteractionsBySession(session);
         Set<Participant> participants = new HashSet<>();
 
         for (Interaction interaction : interactions) {
