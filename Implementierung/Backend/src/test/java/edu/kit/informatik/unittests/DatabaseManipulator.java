@@ -76,5 +76,17 @@ public final class DatabaseManipulator {
         return categoryDtoList;
     }
 
+    public void clearUserRepository() {
+        this.userRepository.deleteAll();
+    }
+
+    public void clearParticipantRepository() {
+        this.participantRepository.deleteAll();
+    }
+
+    public void clearCategoryRepository() {
+        this.categoryRepository.deleteAll();
+    }
+
 
 }
