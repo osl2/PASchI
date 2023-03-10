@@ -3,11 +3,9 @@ package edu.kit.informatik.unittests.controller;
 
 import com.github.javafaker.Faker;
 import edu.kit.informatik.dto.UserDto;
-import edu.kit.informatik.dto.mapper.courses.SeatArrangementMapper;
 import edu.kit.informatik.dto.userdata.courses.CourseDto;
 import edu.kit.informatik.dto.userdata.courses.SeatArrangementDto;
 import edu.kit.informatik.dto.userdata.rooms.RoomDto;
-import edu.kit.informatik.repositories.SeatArrangementRepository;
 import edu.kit.informatik.unittests.DatabaseManipulator;
 import edu.kit.informatik.unittests.EntityGenerator;
 import org.junit.After;
@@ -34,11 +32,6 @@ public class SeatArrangementControllerTest extends AbstractTest {
 
     @Autowired
     private DatabaseManipulator databaseManipulator;
-    @Autowired
-    private SeatArrangementMapper seatArrangementMapper;
-
-    @Autowired
-    private SeatArrangementRepository seatArrangementRepository;
 
     private List<SeatArrangementDto> seatArrangements;
     private UserDto userDto;
@@ -82,16 +75,7 @@ public class SeatArrangementControllerTest extends AbstractTest {
     private void addSeatArrangementToDatabase() {
         List<SeatArrangementDto> repositorySeatArrangement = new ArrayList<>();
         for (SeatArrangementDto seatArrangementDto: this.seatArrangements) {
-            repositorySeatArrangement.add(seatArrangementMapper.modelToDto(this.seatArrangementRepository.save(seatArrangementMapper.dtoToModel(seatArrangementDto))));
-        }
-
-        assertEquals(seatArrangements.size(), repositorySeatArrangement.size());
-        for (int i= 0; i< seatArrangements.size(); i++) {
-            assertEquals(seatArrangements.get(i).getUserId(), repositorySeatArrangement.get(i).getUserId());
-            assertEquals(seatArrangements.get(i).getName(), repositorySeatArrangement.get(i).getName());
-            assertEquals(seatArrangements.get(i).getCourseId(), repositorySeatArrangement.get(i).getCourseId());
-            assertEquals(seatArrangements.get(i).getSeatMap(), repositorySeatArrangement.get(i).getSeatMap());
-            assertNotNull(repositorySeatArrangement.get(i).getId());
+            repositorySeatArrangement.add(databaseManipulator.addSeatArrangement(seatArrangementDto));
         }
 
         this.seatArrangements = repositorySeatArrangement;
@@ -101,7 +85,8 @@ public class SeatArrangementControllerTest extends AbstractTest {
     public void addSeatArrangements() throws Exception{
         for (SeatArrangementDto seatArrangementDto: seatArrangements) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
-                            .content(super.mapToJson(seatArrangementDto))
+                    .content(super.mapToJson(seatArrangementDto))
+                    .header("Authorization", "Bearer " + userDto.getToken())
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -126,6 +111,7 @@ public class SeatArrangementControllerTest extends AbstractTest {
 
         for (SeatArrangementDto seatArrangementDto: seatArrangements) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + seatArrangementDto.getId())
+                    .header("Authorization", "Bearer " + userDto.getToken())
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -144,6 +130,7 @@ public class SeatArrangementControllerTest extends AbstractTest {
         addSeatArrangementToDatabase();
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL)
+                .header("Authorization", "Bearer " + userDto.getToken())
         ).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
@@ -167,7 +154,9 @@ public class SeatArrangementControllerTest extends AbstractTest {
         addSeatArrangementToDatabase();
 
         for (SeatArrangementDto seatArrangementDto: seatArrangements) {
-            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL).content(seatArrangementDto.getId()).param("id", seatArrangementDto.getId())
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL).content(seatArrangementDto.getId())
+                    .param("id", seatArrangementDto.getId())
+                    .header("Authorization", "Bearer " + userDto.getToken())
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
