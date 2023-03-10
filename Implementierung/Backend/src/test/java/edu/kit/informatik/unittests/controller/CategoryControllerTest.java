@@ -163,4 +163,18 @@ public class CategoryControllerTest extends AbstractTest {
 
     }
 
+    @Test
+    public void getWrongCategory() throws Exception{
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + categories.get(0).getId())
+                .header("Authorization", "Bearer " + userDto.getToken())
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getErrorMessage();
+
+        assertEquals(404, status);
+        assertEquals("Entity of class 'Category' with id: '" + categories.get(0).getId() +"' not found", content);
+
+    }
+
 }
