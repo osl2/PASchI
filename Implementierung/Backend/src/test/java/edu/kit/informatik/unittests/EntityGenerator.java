@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import edu.kit.informatik.dto.RoleDto;
 import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.dto.userdata.courses.CourseDto;
+import edu.kit.informatik.dto.userdata.courses.SeatArrangementDto;
 import edu.kit.informatik.dto.userdata.courses.SessionDto;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantTypeDto;
@@ -15,6 +16,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public final class EntityGenerator {
 
@@ -99,5 +101,25 @@ public final class EntityGenerator {
         roomDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
 
         return roomDto;
+    }
+
+    public static SeatArrangementDto createNewSeatArrangement(Faker faker, UserDto userDto, CourseDto courseDto,
+                                                                RoomDto roomDto) {
+
+        SeatArrangementDto seatArrangementDto = new SeatArrangementDto();
+
+        String name = faker.team().name();
+
+        seatArrangementDto.setName(name + " " + faker.number().randomDigit());
+
+        seatArrangementDto.setUserId(userDto.getId());
+        seatArrangementDto.setSeatMap(new HashMap<>());
+
+        seatArrangementDto.setCourseId(courseDto.getId());
+
+        seatArrangementDto.setRoomId(roomDto.getId());
+        seatArrangementDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+
+        return seatArrangementDto;
     }
 }
