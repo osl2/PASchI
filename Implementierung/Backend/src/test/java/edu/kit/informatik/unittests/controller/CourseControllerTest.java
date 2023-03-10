@@ -9,12 +9,10 @@ import edu.kit.informatik.dto.mapper.courses.CourseMapper;
 import edu.kit.informatik.dto.mapper.interactions.ParticipantMapper;
 import edu.kit.informatik.dto.userdata.courses.CourseDto;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
-import edu.kit.informatik.dto.userdata.interactions.ParticipantTypeDto;
-import edu.kit.informatik.model.User;
-import edu.kit.informatik.model.userdata.interactions.Participant;
 import edu.kit.informatik.repositories.CourseRepository;
 import edu.kit.informatik.repositories.ParticipantRepository;
 import edu.kit.informatik.repositories.UserRepository;
+import edu.kit.informatik.unittests.EntityGenerator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,9 +22,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -57,15 +52,16 @@ public class CourseControllerTest extends AbstractTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private UserMapper userMapper;
 
     private List<CourseDto> courses;
 
+    private UserDto userDto;
+
     @Before
     @Override
-    public void setUp() {
+    public void setUp() throws Exception {
         super.setUp();
+        userDto = super.addAndLogin(EntityGenerator.createNewUser(new Faker(new Locale("de"))));
         this.courses = addSomeCourses();
     }
 
@@ -75,6 +71,7 @@ public class CourseControllerTest extends AbstractTest {
         this.courseRepository.deleteAll();
         this.participantRepository.deleteAll();
         this.userRepository.deleteAll();
+        this.courses.clear();
     }
 
     private List<CourseDto> addSomeCourses() {
@@ -83,22 +80,11 @@ public class CourseControllerTest extends AbstractTest {
         Faker faker = new Faker(new Locale("de"));
 
         for (int i = 0; i < 10; i++) {
-            courseDtos.add(getNewCourse(faker));
+            //courseDtos.add(getNewCourse(faker));
         }
 
         return courseDtos;
 
-    }
-
-    private void deleteFromDataBase() {
-
-        for (CourseDto courseDto: courses) {
-            if (courseDto.getId() != null) {
-                this.courseRepository.deleteById(courseDto.getId());
-            }
-        }
-
-        courses.clear();
     }
 
     private void addCourseToDatabase() {
@@ -122,7 +108,8 @@ public class CourseControllerTest extends AbstractTest {
     public void addCourses() throws Exception{
         for (CourseDto courseDto: courses) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
-                            .content(super.mapToJson(courseDto))
+                    .content(super.mapToJson(courseDto))
+                    .header("Authorization", "Bearer " + userDto.getToken())
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -136,7 +123,6 @@ public class CourseControllerTest extends AbstractTest {
             assertNotNull(courseDtoFromContent.getId());
             courses.set(courses.indexOf(courseDto), courseDtoFromContent);
         }
-        deleteFromDataBase();
     }
 
 
@@ -146,6 +132,7 @@ public class CourseControllerTest extends AbstractTest {
 
         for (CourseDto courseDto: courses) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + courseDto.getId())
+                    .header("Authorization", "Bearer " + userDto.getToken())
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -157,8 +144,6 @@ public class CourseControllerTest extends AbstractTest {
 
             assertEquals(courseDto, courseDtoFromDatabase);
         }
-
-        deleteFromDataBase();
     }
 
     @Test
@@ -166,6 +151,7 @@ public class CourseControllerTest extends AbstractTest {
         addCourseToDatabase();
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL)
+                .header("Authorization", "Bearer " + userDto.getToken())
         ).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
@@ -181,8 +167,6 @@ public class CourseControllerTest extends AbstractTest {
         for (int i= 0; i < courses.size(); i++) {
             assertEquals(courses.get(i), courseDtos.get(i));
         }
-
-        deleteFromDataBase();
     }
 
     @Test
@@ -191,7 +175,9 @@ public class CourseControllerTest extends AbstractTest {
         addCourseToDatabase();
 
         for (CourseDto courseDto: courses) {
-            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL).content(courseDto.getId()).param("id", courseDto.getId())
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL)
+                    .content(courseDto.getId()).param("id", courseDto.getId())
+                    .header("Authorization", "Bearer " + userDto.getToken())
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -211,27 +197,12 @@ public class CourseControllerTest extends AbstractTest {
         return courseMapper.modelToDto(this.courseRepository.findAll());
     }
 
-
-    private CourseDto getNewCourse(Faker faker) {
-
-        CourseDto courseDto = new CourseDto();
-
-        String name = faker.team().name();
-
-        courseDto.setName(name + " " + faker.number().randomDigit());
-        courseDto.setSubject(name);
-        User user = this.userRepository.save(userMapper.dtoToModel(getNewUser(faker)));
-        courseDto.setUserId(user.getId());
-        courseDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
-
+    private CourseDto addParticipants(CourseDto courseDto, List<ParticipantDto> participantDtos) {
         List<String> participantIds = new ArrayList<>();
 
 
-        for (int i = 0; i < 10; i++) {
-            Participant participant = participantRepository.save(participantMapper.dtoToModel(
-                                                                    getNewParticipant(faker, user.getId())));
-
-            participantIds.add(participant.getId());
+        for (ParticipantDto participantDto : participantDtos) {
+            participantIds.add(participantDto.getId());
         }
 
         courseDto.setParticipantIds(participantIds);
@@ -239,34 +210,4 @@ public class CourseControllerTest extends AbstractTest {
         return courseDto;
     }
 
-    private ParticipantDto getNewParticipant(Faker faker, String userId) {
-        ParticipantDto participantDto = new ParticipantDto();
-
-        participantDto.setParticipantType(ParticipantTypeDto.Student);
-
-        participantDto.setUserId(userId);
-        participantDto.setFirstName(faker.name().firstName());
-        participantDto.setLastName(faker.name().lastName());
-        participantDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
-        participantDto.setVisible(true);
-
-        return participantDto;
-    }
-
-    private UserDto getNewUser(Faker faker) {
-        UserDto userDto = new UserDto();
-        userDto.setRole(RoleDto.USER);
-
-        String firstName = faker.name().firstName();
-        String lastName = faker.name().lastName();
-
-        userDto.setEmail(firstName + "." + lastName +  "@kit.edu");
-        userDto.setFirstName(firstName);
-        userDto.setLastName(lastName);
-        userDto.setPassword(faker.crypto().md5());
-        userDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
-
-
-        return userDto;
-    }
 }
