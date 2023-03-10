@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import static edu.kit.informatik.service.UserService.EMAIL_ALREADY_EXITS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -165,6 +166,20 @@ public class UserControllerTest extends AbstractTest {
             assertEquals(users.get(i).getRole(), userdto.getRole());
             users.set(i, userdto);
         }
+    }
+
+    @Test
+    public void addUsersWithExistingEmail() throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                .content(super.mapToJson(mainUserDto))
+                .header("Authorization", "Bearer " + mainUserDto.getToken())
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(400, status);
+
+        String content = mvcResult.getResponse().getErrorMessage();
+        assertEquals(EMAIL_ALREADY_EXITS, content);
     }
 
     @Test
