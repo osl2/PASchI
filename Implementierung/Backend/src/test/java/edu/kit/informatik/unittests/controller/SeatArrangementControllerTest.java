@@ -52,8 +52,8 @@ public class SeatArrangementControllerTest extends AbstractTest {
     @After
     @Override
     public void setDown() {
-        databaseManipulator.clearCourseRepository();
         databaseManipulator.clearSeatArrangementRepository();
+        databaseManipulator.clearCourseRepository();
         databaseManipulator.clearRoomRepository();
         databaseManipulator.clearUserRepository();
         this.seatArrangements.clear();
