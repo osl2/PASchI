@@ -40,7 +40,7 @@ public class CategoryControllerTest extends AbstractTest {
     public void setUp() throws Exception {
         super.setUp();
         userDto = super.addAndLogin(EntityGenerator.createNewUser(new Faker(new Locale("de"))));
-        this.categories = addSomeCategories();
+        this.categories = addSomeRatedCategories();
     }
 
     @After
@@ -49,6 +49,19 @@ public class CategoryControllerTest extends AbstractTest {
         databaseManipulator.clearCategoryRepository();
         databaseManipulator.clearUserRepository();
         categories.clear();
+    }
+
+    private List<RatedCategoryDto> addSomeRatedCategories() {
+
+        List<RatedCategoryDto> categoryDtos = new ArrayList<>();
+        Faker faker = new Faker(new Locale("de"));
+
+        for (int i = 0; i < 10; i++) {
+            categoryDtos.add(EntityGenerator.createNewRatedCategory(faker, userDto));
+        }
+
+        return categoryDtos;
+
     }
 
     private List<RatedCategoryDto> addSomeCategories() {
@@ -75,6 +88,15 @@ public class CategoryControllerTest extends AbstractTest {
 
     @Test
     public void addCategories() throws Exception {
+        this.categories = addSomeCategories();
+        privateAddCategories();
+    }
+
+    @Test
+    public void addRatedCategories() throws Exception {
+        privateAddCategories();
+    }
+    private void privateAddCategories() throws Exception {
         for (RatedCategoryDto categoryDto: categories) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
                     .content(super.mapToJson(categoryDto))
