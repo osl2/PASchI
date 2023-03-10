@@ -177,4 +177,20 @@ public class CategoryControllerTest extends AbstractTest {
 
     }
 
+    @Test
+    public void getWrongCategoryOfUser() throws Exception {
+        addCategoryToDatabase();
+        UserDto newuserDto = super.addAndLogin(EntityGenerator.createNewUser(new Faker(new Locale("de"))));
+
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + categories.get(0).getId())
+                .header("Authorization", "Bearer " + newuserDto.getToken())
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getErrorMessage();
+
+        assertEquals(401, status);
+        assertEquals("User authentication does not match with userid '"+ categories.get(0).getUserId() +"'", content);
+    }
+
 }
