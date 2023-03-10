@@ -157,7 +157,8 @@ public class SessionControllerTest extends AbstractTest {
         addSessionToDatabase();
 
         for (SessionDto sessionDto: sessions) {
-            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL).content(sessionDto.getId()).param("id", sessionDto.getId())
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL)
+                    .param("id", sessionDto.getId())
                     .header("Authorization", "Bearer " + userDto.getToken())
             ).andReturn();
 

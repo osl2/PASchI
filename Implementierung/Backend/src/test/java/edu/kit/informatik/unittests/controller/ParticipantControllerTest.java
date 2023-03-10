@@ -146,7 +146,7 @@ public class ParticipantControllerTest extends AbstractTest {
 
 
         for (ParticipantDto participantDto: participants) {
-            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL).content(participantDto.getId())
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL)
                     .param("id", participantDto.getId())
                     .header("Authorization", "Bearer " + userDto.getToken())
             ).andReturn();

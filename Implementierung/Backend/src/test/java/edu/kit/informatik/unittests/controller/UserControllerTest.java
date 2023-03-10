@@ -341,7 +341,7 @@ public class UserControllerTest extends AbstractTest {
         addUsersToDatabase();
 
         for (UserDto user: users) {
-            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL).content(user.getId())
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL)
                     .param("id", user.getId())
                     .header("Authorization", "Bearer " + mainUserDto.getToken())
             ).andReturn();

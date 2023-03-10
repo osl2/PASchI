@@ -167,7 +167,7 @@ public class CategoryControllerTest extends AbstractTest {
         addCategoryToDatabase();
 
         for (CategoryDto categoryDto: categories) {
-            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL).content(categoryDto.getId())
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL)
                     .param("id", categoryDto.getId())
                     .header("Authorization", "Bearer " + userDto.getToken())
             ).andReturn();

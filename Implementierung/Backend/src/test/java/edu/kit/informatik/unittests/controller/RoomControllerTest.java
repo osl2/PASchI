@@ -145,7 +145,7 @@ public class RoomControllerTest extends AbstractTest {
 
         for (RoomDto roomDto: rooms) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL)
-                    .content(roomDto.getId()).param("id", roomDto.getId())
+                    .param("id", roomDto.getId())
                     .header("Authorization", "Bearer " + userDto.getToken())
             ).andReturn();
 

@@ -148,7 +148,7 @@ public class CourseControllerTest extends AbstractTest {
 
         for (CourseDto courseDto: courses) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL)
-                    .content(courseDto.getId()).param("id", courseDto.getId())
+                    .param("id", courseDto.getId())
                     .header("Authorization", "Bearer " + userDto.getToken())
             ).andReturn();
 
