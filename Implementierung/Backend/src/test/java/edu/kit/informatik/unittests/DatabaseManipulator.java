@@ -2,14 +2,17 @@ package edu.kit.informatik.unittests;
 
 import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.dto.mapper.UserMapper;
+import edu.kit.informatik.dto.mapper.courses.CourseMapper;
 import edu.kit.informatik.dto.mapper.interactions.CategoryMapper;
 import edu.kit.informatik.dto.mapper.interactions.ParticipantMapper;
 import edu.kit.informatik.dto.mapper.interactions.RatedCategoryMapper;
+import edu.kit.informatik.dto.userdata.courses.CourseDto;
 import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.dto.userdata.interactions.RatedCategoryDto;
 import edu.kit.informatik.model.userdata.interactions.RatedCategory;
 import edu.kit.informatik.repositories.CategoryBaseRepository;
+import edu.kit.informatik.repositories.CourseRepository;
 import edu.kit.informatik.repositories.ParticipantRepository;
 import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,9 @@ public final class DatabaseManipulator {
     @Autowired
     private CategoryBaseRepository<RatedCategory> categoryRepository;
     @Autowired
+    private CourseRepository courseRepository;
+
+    @Autowired
     private UserMapper userMapper;
     @Autowired
     private ParticipantMapper participantMapper;
@@ -38,6 +44,8 @@ public final class DatabaseManipulator {
     private CategoryMapper categoryMapper;
     @Autowired
     private RatedCategoryMapper ratedCategoryMapper;
+    @Autowired
+    private CourseMapper courseMapper;
 
     public UserDto addUser(UserDto userDto) {
         UserDto newUserDto = new UserDto(userDto.getId(), userDto.getFirstName(), userDto.getLastName(),
@@ -54,6 +62,10 @@ public final class DatabaseManipulator {
 
     public RatedCategoryDto addCategory(RatedCategoryDto ratedCategoryDto) {
         return ratedCategoryMapper.modelToDto(this.categoryRepository.save(ratedCategoryMapper.dtoToModel(ratedCategoryDto)));
+    }
+
+    public CourseDto addCourse(CourseDto courseDto) {
+        return courseMapper.modelToDto(this.courseRepository.save(courseMapper.dtoToModel(courseDto)));
     }
 
     public List<UserDto> getUsers() {
@@ -76,6 +88,10 @@ public final class DatabaseManipulator {
         return categoryDtoList;
     }
 
+    public List<CourseDto> getCourses() {
+        return courseMapper.modelToDto(this.courseRepository.findAll());
+    }
+
     public void clearUserRepository() {
         this.userRepository.deleteAll();
     }
@@ -86,6 +102,10 @@ public final class DatabaseManipulator {
 
     public void clearCategoryRepository() {
         this.categoryRepository.deleteAll();
+    }
+
+    public void clearCourseRepository() {
+        this.courseRepository.deleteAll();
     }
 
 
