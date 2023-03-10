@@ -66,11 +66,7 @@ export class ParticipantService extends BaseService<Participant, ParticipantDto>
         console.log(error);
       });
 
-    if (participant != undefined) {
-      return participant;
-    } else {
-      return undefined;
-    }
+    return participant;
   }
 
   async getAll(): Promise<Participant[]> {

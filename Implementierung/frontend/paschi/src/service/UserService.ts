@@ -56,11 +56,7 @@ export class UserService extends BaseService<User, UserDto> {
         console.log(error);
       });
 
-    if (user != undefined) {
-      return user;
-    } else {
-      return undefined;
-    }
+    return user;
   }
 
   async getAll(): Promise<User[]> {
@@ -140,11 +136,7 @@ export class UserService extends BaseService<User, UserDto> {
         console.log(error);
       });
 
-    if (user != undefined) {
-      return user;
-    } else {
-      return undefined;
-    }
+    return user;
   }
 
   async adminUpdate(user: User) {
