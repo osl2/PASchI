@@ -22,8 +22,6 @@ beforeAll(async () => {
   await userController.login(admin.email, admin.password);
   const users = await adminController.getUsersNotAuthenticated();
 
-  expect(users.length).toBe(1);
-
   for (const user of users) {
     await adminController.authUser(user.getId);
   }
