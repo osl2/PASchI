@@ -88,6 +88,7 @@ export class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, S
       seatMap.set(roomObject, participant!);
     }
 
+    arrangement.name = arrangementDto.name;
     arrangement.seatMap = seatMap;
     return arrangement;
   }
