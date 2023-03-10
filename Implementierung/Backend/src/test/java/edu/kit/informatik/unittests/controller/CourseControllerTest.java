@@ -2,9 +2,7 @@ package edu.kit.informatik.unittests.controller;
 
 
 import com.github.javafaker.Faker;
-import edu.kit.informatik.dto.RoleDto;
 import edu.kit.informatik.dto.UserDto;
-import edu.kit.informatik.dto.mapper.UserMapper;
 import edu.kit.informatik.dto.mapper.courses.CourseMapper;
 import edu.kit.informatik.dto.mapper.interactions.ParticipantMapper;
 import edu.kit.informatik.dto.userdata.courses.CourseDto;
@@ -44,9 +42,6 @@ public class CourseControllerTest extends AbstractTest {
     private CourseMapper courseMapper;
 
     @Autowired
-    private ParticipantMapper participantMapper;
-
-    @Autowired
     private ParticipantRepository participantRepository;
 
     @Autowired
@@ -80,7 +75,7 @@ public class CourseControllerTest extends AbstractTest {
         Faker faker = new Faker(new Locale("de"));
 
         for (int i = 0; i < 10; i++) {
-            //courseDtos.add(getNewCourse(faker));
+            courseDtos.add(EntityGenerator.createNewCourse(faker, userDto));
         }
 
         return courseDtos;
