@@ -45,7 +45,7 @@ public class SessionControllerTest extends AbstractTest {
         super.setUp();
         Faker faker = new Faker(new Locale("de"));
         userDto = super.addAndLogin(EntityGenerator.createNewUser(faker));
-        course = EntityGenerator.createNewCourse(faker, userDto);
+        course = databaseManipulator.addCourse(EntityGenerator.createNewCourse(faker, userDto));
         this.sessions = addSomeSessions();
     }
 
@@ -87,7 +87,8 @@ public class SessionControllerTest extends AbstractTest {
         for (int i = 0; i< sessions.size(); i++) {
 
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
-                            .content(super.mapToJson(sessions.get(i)))
+                    .content(super.mapToJson(sessions.get(i)))
+                    .header("Authorization", "Bearer " + userDto.getToken())
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -113,6 +114,7 @@ public class SessionControllerTest extends AbstractTest {
 
         for (SessionDto session: sessions) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + session.getId())
+                    .header("Authorization", "Bearer " + userDto.getToken())
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -131,6 +133,7 @@ public class SessionControllerTest extends AbstractTest {
         addSessionToDatabase();
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL)
+                .header("Authorization", "Bearer " + userDto.getToken())
         ).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
@@ -155,6 +158,7 @@ public class SessionControllerTest extends AbstractTest {
 
         for (SessionDto sessionDto: sessions) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL).content(sessionDto.getId()).param("id", sessionDto.getId())
+                    .header("Authorization", "Bearer " + userDto.getToken())
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
