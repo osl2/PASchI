@@ -358,4 +358,18 @@ public class UserControllerTest extends AbstractTest {
         }
 
     }
+
+    @Test
+    public void adminUpdateWithNotExistingUser() throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(BASE_URL + "/admin").contentType(MediaType.APPLICATION_JSON)
+                .content(super.mapToJson(users.get(0)))
+                .header("Authorization", "Bearer " + mainUserDto.getToken())
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getErrorMessage();
+
+        assertEquals(404, status);
+        assertEquals("Entity of class 'User' with id: '" + users.get(0).getId() + "' not found", content);
+    }
 }
