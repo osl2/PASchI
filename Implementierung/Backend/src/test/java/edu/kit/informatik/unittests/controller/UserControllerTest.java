@@ -101,6 +101,48 @@ public class UserControllerTest extends AbstractTest {
     }
 
     @Test
+    public void getNewToken() throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL + "/token")
+                .header("Authorization", "Bearer " + mainUserDto.getToken())
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
+        String content = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+        UserDto repoDto = super.mapFromJson(content, UserDto.class);
+
+        assertNotEquals(mainUserDto.getToken(), repoDto.getToken());
+        assertEquals(mainUserDto.getEmail(), repoDto.getEmail());
+        repoDto.setPassword(repoDto.getPassword().substring(8));
+        assertTrue(new BCryptPasswordEncoder().matches(mainUserDto.getPassword(), repoDto.getPassword()));
+        assertEquals(mainUserDto.getFirstName(), repoDto.getFirstName());
+        assertEquals(mainUserDto.getLastName(), repoDto.getLastName());
+        assertEquals(mainUserDto.getRole(), repoDto.getRole());
+    }
+
+    @Test
+    public void wrongUsernameLogin() throws Exception {
+        Faker faker = new Faker(new Locale("de"));
+        UserDto userDto = EntityGenerator.createNewUser(faker);
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                .content(super.mapToJson(userDto))
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
+
+        MvcResult mvcResultLogin = mvc.perform(MockMvcRequestBuilders.post(BASE_URL + "/login")
+                .param("email", "123@kit.edu").param("password", userDto.getPassword())
+        ).andReturn();
+        int statusLogin = mvcResultLogin.getResponse().getStatus();
+        String content = mvcResultLogin.getResponse().getContentAsString(StandardCharsets.UTF_8);
+        System.out.println(content);
+        assertEquals(401, statusLogin);
+
+    }
+
+    @Test
     public void addUsers() throws Exception {
 
         for (int i = 0; i< users.size(); i++) {
