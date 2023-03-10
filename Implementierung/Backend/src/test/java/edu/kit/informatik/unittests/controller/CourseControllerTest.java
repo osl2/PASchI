@@ -3,13 +3,9 @@ package edu.kit.informatik.unittests.controller;
 
 import com.github.javafaker.Faker;
 import edu.kit.informatik.dto.UserDto;
-import edu.kit.informatik.dto.mapper.courses.CourseMapper;
-import edu.kit.informatik.dto.mapper.interactions.ParticipantMapper;
 import edu.kit.informatik.dto.userdata.courses.CourseDto;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
-import edu.kit.informatik.repositories.CourseRepository;
-import edu.kit.informatik.repositories.ParticipantRepository;
-import edu.kit.informatik.repositories.UserRepository;
+import edu.kit.informatik.unittests.DatabaseManipulator;
 import edu.kit.informatik.unittests.EntityGenerator;
 import org.junit.After;
 import org.junit.Before;
@@ -34,19 +30,8 @@ public class CourseControllerTest extends AbstractTest {
 
     private static final String BASE_URL = "/api/course";
 
-
     @Autowired
-    private CourseRepository courseRepository;
-
-    @Autowired
-    private CourseMapper courseMapper;
-
-    @Autowired
-    private ParticipantRepository participantRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
+    DatabaseManipulator databaseManipulator;
 
     private List<CourseDto> courses;
 
@@ -63,9 +48,9 @@ public class CourseControllerTest extends AbstractTest {
     @After
     @Override
     public void setDown() {
-        this.courseRepository.deleteAll();
-        this.participantRepository.deleteAll();
-        this.userRepository.deleteAll();
+        databaseManipulator.clearCourseRepository();
+        databaseManipulator.clearParticipantRepository();
+        databaseManipulator.clearUserRepository();
         this.courses.clear();
     }
 
@@ -82,18 +67,10 @@ public class CourseControllerTest extends AbstractTest {
 
     }
 
-    private void addCourseToDatabase() {
+    private void addCoursesToDatabase() {
         List<CourseDto> repositoryCourse = new ArrayList<>();
         for (CourseDto courseDto: this.courses) {
-            repositoryCourse.add(courseMapper.modelToDto(this.courseRepository.save(courseMapper.dtoToModel(courseDto))));
-        }
-
-        assertEquals(courses.size(), repositoryCourse.size());
-        for (int i= 0; i< courses.size(); i++) {
-            assertEquals(courses.get(i).getUserId(), repositoryCourse.get(i).getUserId());
-            assertEquals(courses.get(i).getName(), repositoryCourse.get(i).getName());
-            assertEquals(courses.get(i).getSubject(), repositoryCourse.get(i).getSubject());
-            assertNotNull(repositoryCourse.get(i).getId());
+            repositoryCourse.add(databaseManipulator.addCourse(courseDto));
         }
 
         this.courses = repositoryCourse;
@@ -123,7 +100,7 @@ public class CourseControllerTest extends AbstractTest {
 
     @Test
     public void getOneCourse() throws Exception {
-        addCourseToDatabase();
+        addCoursesToDatabase();
 
         for (CourseDto courseDto: courses) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + courseDto.getId())
@@ -143,7 +120,7 @@ public class CourseControllerTest extends AbstractTest {
 
     @Test
     public void getAllCourse() throws Exception {
-        addCourseToDatabase();
+        addCoursesToDatabase();
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL)
                 .header("Authorization", "Bearer " + userDto.getToken())
@@ -166,8 +143,8 @@ public class CourseControllerTest extends AbstractTest {
 
     @Test
     public void deleteCourses() throws Exception {
-        List<CourseDto> before = getCoursesFromDataBase();
-        addCourseToDatabase();
+        List<CourseDto> before = databaseManipulator.getCourses();
+        addCoursesToDatabase();
 
         for (CourseDto courseDto: courses) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL)
@@ -178,7 +155,7 @@ public class CourseControllerTest extends AbstractTest {
             int status = mvcResult.getResponse().getStatus();
             assertEquals(200, status);
         }
-        List<CourseDto> after = getCoursesFromDataBase();
+        List<CourseDto> after = databaseManipulator.getCourses();
 
         assertEquals(before.size(), after.size());
 
@@ -186,10 +163,6 @@ public class CourseControllerTest extends AbstractTest {
             assertEquals(before.get(i), after.get(i));
         }
 
-    }
-
-    private List<CourseDto> getCoursesFromDataBase() {
-        return courseMapper.modelToDto(this.courseRepository.findAll());
     }
 
     private CourseDto addParticipants(CourseDto courseDto, List<ParticipantDto> participantDtos) {
