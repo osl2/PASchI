@@ -66,11 +66,7 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
         console.log(error);
       });
 
-    if (category != undefined) {
-      return category;
-    } else {
-      return undefined;
-    }
+    return category;
   }
 
   async getAll(): Promise<Category[]> {

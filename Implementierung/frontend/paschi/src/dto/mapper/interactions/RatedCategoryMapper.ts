@@ -51,6 +51,7 @@ export class RatedCategoryMapper implements IModelDtoMapper<RatedCategory, Rated
       category.updatedAt = ratedCategoryDto.updatedAt;
     }
 
+    category.name = ratedCategoryDto.name;
     return category;
   }
 }

@@ -48,7 +48,6 @@ export class UserController {
 
     useUserStore().setUser(user);
     await this.getData();
-    await CategoryController.getCategoryController().fetchCategories();
     return user.getId;
   }
 
@@ -68,7 +67,6 @@ export class UserController {
 
     useUserStore().setUser(user);
     await this.getData();
-    await CategoryController.getCategoryController().fetchCategories();
     return user.getId;
   }
 
@@ -158,6 +156,7 @@ export class UserController {
     await CourseService.getService().getAll();
     await SessionService.getService().getAll();
     await RoomService.getService().getAll();
+    await CategoryController.getCategoryController().fetchCategories();
   }
 
   private clearStores() {

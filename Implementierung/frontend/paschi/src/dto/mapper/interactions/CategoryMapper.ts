@@ -53,6 +53,7 @@ export class CategoryMapper implements IModelDtoMapper<Category, CategoryDto> {
       useCategoryStore().addCategory(category);
     }
 
+    category.name = categoryDto.name;
     return category;
   }
 }
