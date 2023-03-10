@@ -11,10 +11,10 @@ export class UserDto {
   password: string;
   auth: boolean ;
   role: RoleDto;
-  token: string | undefined;
+  token: string;
 
   constructor(id: string, createdAt: string, updatedAt: string, firstName: string, lastName: string, email: string,
-              password: string, auth: boolean, role: RoleDto, token: string | undefined) {
+              password: string, auth: boolean, role: RoleDto, token: string) {
     this.id = id;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;

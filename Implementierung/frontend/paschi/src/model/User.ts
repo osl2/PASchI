@@ -15,7 +15,7 @@ export class User extends DataObject {
   private _password: string;
   private _auth: boolean;
   private _role: Role;
-  private _token: string | undefined;
+  private _token: string;
 
   /**
    * Konstruktor
@@ -30,7 +30,7 @@ export class User extends DataObject {
    * @param token Token zur Authentifikation
    */
   constructor(id: string | undefined, firstName: string, lastName: string, email: string, password: string,
-              auth: boolean, role: Role, token: string | undefined) {
+              auth: boolean, role: Role, token: string) {
     super(id, 0);
     this._firstName = firstName;
     this._lastName = lastName;
@@ -93,7 +93,7 @@ export class User extends DataObject {
   /**
    * Gibt den Token zurück.
    */
-  get token(): string | undefined {
+  get token(): string {
     return this._token;
   }
 
@@ -152,7 +152,7 @@ export class User extends DataObject {
    *
    * @param value Token
    */
-  set token(value: string | undefined) {
+  set token(value: string) {
     this._token = value;
     this.update();
   }

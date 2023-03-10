@@ -56,7 +56,11 @@ export class UserController {
    * Einloggen mit gültigem Token.
    */
   async loginWithToken(): Promise<string | undefined> {
-    const user = await this.userService.getToken();
+    const token = localStorage.getItem("token");
+    if (token == null) {
+      return undefined;
+    }
+    const user = await this.userService.getToken(token);
 
     if (user == undefined) {
       return undefined;
@@ -97,7 +101,7 @@ export class UserController {
       password,
       false,
       Role.USER,
-      undefined
+      ""
     );
     await this.userService.add(user);
     user.deletePassword();
