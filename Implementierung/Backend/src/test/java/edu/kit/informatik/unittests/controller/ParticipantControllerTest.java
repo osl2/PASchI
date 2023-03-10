@@ -3,8 +3,6 @@ package edu.kit.informatik.unittests.controller;
 import com.github.javafaker.Faker;
 import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
-import edu.kit.informatik.repositories.ParticipantRepository;
-import edu.kit.informatik.repositories.UserRepository;
 import edu.kit.informatik.unittests.DatabaseManipulator;
 import edu.kit.informatik.unittests.EntityGenerator;
 import org.junit.After;
@@ -28,15 +26,8 @@ public class ParticipantControllerTest extends AbstractTest {
 
     private static final String BASE_URL = "/api/participant";
 
-
     @Autowired
     private DatabaseManipulator databaseManipulator;
-
-    @Autowired
-    private ParticipantRepository participantRepository;
-
-    @Autowired
-    private UserRepository userRepository;
 
     private List<ParticipantDto> participants;
 
@@ -53,8 +44,8 @@ public class ParticipantControllerTest extends AbstractTest {
     @After
     @Override
     public void setDown() {
-        this.participantRepository.deleteAll();
-        this.userRepository.deleteAll();
+        databaseManipulator.clearParticipantRepository();
+        databaseManipulator.clearUserRepository();
         this.participants.clear();
     }
 

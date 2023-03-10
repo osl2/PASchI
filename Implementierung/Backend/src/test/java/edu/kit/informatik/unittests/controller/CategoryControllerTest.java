@@ -2,12 +2,8 @@ package edu.kit.informatik.unittests.controller;
 
 import com.github.javafaker.Faker;
 import edu.kit.informatik.dto.UserDto;
-import edu.kit.informatik.dto.mapper.interactions.RatedCategoryMapper;
 import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
 import edu.kit.informatik.dto.userdata.interactions.RatedCategoryDto;
-import edu.kit.informatik.model.userdata.interactions.RatedCategory;
-import edu.kit.informatik.repositories.CategoryBaseRepository;
-import edu.kit.informatik.repositories.UserRepository;
 import edu.kit.informatik.unittests.DatabaseManipulator;
 import edu.kit.informatik.unittests.EntityGenerator;
 import org.junit.After;
@@ -36,12 +32,6 @@ public class CategoryControllerTest extends AbstractTest {
     @Autowired
     private DatabaseManipulator databaseManipulator;
 
-    @Autowired
-    private CategoryBaseRepository<RatedCategory> categoryRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
     private List<RatedCategoryDto> categories;
 
     private UserDto userDto;
@@ -57,8 +47,8 @@ public class CategoryControllerTest extends AbstractTest {
     @After
     @Override
     public void setDown() {
-        this.categoryRepository.deleteAll();
-        this.userRepository.deleteAll();
+        databaseManipulator.clearCategoryRepository();
+        databaseManipulator.clearUserRepository();
         categories.clear();
     }
 
