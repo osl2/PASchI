@@ -14,7 +14,7 @@ beforeAll(async () => {
   // TODO: Entfernen, wenn das Backend richtig läuft @ugqbo
   setActivePinia(createPinia());
   const admin = {email: "admin@kit.edu", password: "admin"};
-  const user = {firstName: "Service", lastName: "Test", email: "service3@test.jest", password: "test"};
+  const user = {firstName: "Service", lastName: "Test", email: "service4@test.jest", password: "test"};
   const userController = UserController.getUserController();
   const adminController = AdminController.getAdminController();
 

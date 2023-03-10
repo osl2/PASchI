@@ -66,11 +66,7 @@ export class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
         console.log(error);
       });
 
-    if (arrangement != undefined) {
-      return arrangement;
-    } else {
-      return undefined;
-    }
+    return arrangement;
   }
 
   async getAll(): Promise<SeatArrangement[]> {
