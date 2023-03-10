@@ -2,14 +2,21 @@ package edu.kit.informatik.unittests;
 
 import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.dto.mapper.UserMapper;
+import edu.kit.informatik.dto.mapper.interactions.CategoryMapper;
 import edu.kit.informatik.dto.mapper.interactions.ParticipantMapper;
+import edu.kit.informatik.dto.mapper.interactions.RatedCategoryMapper;
+import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
+import edu.kit.informatik.dto.userdata.interactions.RatedCategoryDto;
+import edu.kit.informatik.model.userdata.interactions.RatedCategory;
+import edu.kit.informatik.repositories.CategoryBaseRepository;
 import edu.kit.informatik.repositories.ParticipantRepository;
 import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,12 +25,19 @@ public final class DatabaseManipulator {
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private UserMapper userMapper;
+
     @Autowired
     private ParticipantRepository participantRepository;
     @Autowired
+    private CategoryBaseRepository<RatedCategory> categoryRepository;
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
     private ParticipantMapper participantMapper;
+    @Autowired
+    private CategoryMapper categoryMapper;
+    @Autowired
+    private RatedCategoryMapper ratedCategoryMapper;
 
     public UserDto addUser(UserDto userDto) {
         UserDto newUserDto = new UserDto(userDto.getId(), userDto.getFirstName(), userDto.getLastName(),
@@ -38,6 +52,10 @@ public final class DatabaseManipulator {
         return participantMapper.modelToDto(this.participantRepository.save(participantMapper.dtoToModel(participantDto)));
     }
 
+    public RatedCategoryDto addCategory(RatedCategoryDto ratedCategoryDto) {
+        return ratedCategoryMapper.modelToDto(this.categoryRepository.save(ratedCategoryMapper.dtoToModel(ratedCategoryDto)));
+    }
+
     public List<UserDto> getUsers() {
         return userMapper.modelToDto(this.userRepository.findAll());
     }
@@ -46,6 +64,17 @@ public final class DatabaseManipulator {
         return participantMapper.modelToDto(this.participantRepository.findAll());
     }
 
+    public List<CategoryDto> getCategories() {
+
+        List<RatedCategory> categoryList = categoryRepository.findAll();
+        List<CategoryDto> categoryDtoList = new ArrayList<>();
+
+        for (RatedCategory ratedCategory: categoryList) {
+            categoryDtoList.add(categoryMapper.modelToDto(ratedCategory));
+        }
+
+        return categoryDtoList;
+    }
 
 
 }
