@@ -1,21 +1,13 @@
 package edu.kit.informatik.unittests.controller;
 
 import com.github.javafaker.Faker;
-import edu.kit.informatik.dto.RoleDto;
 import edu.kit.informatik.dto.UserDto;
-import edu.kit.informatik.dto.mapper.UserMapper;
-import edu.kit.informatik.dto.mapper.courses.CourseMapper;
-import edu.kit.informatik.dto.mapper.courses.SessionMapper;
 import edu.kit.informatik.dto.userdata.courses.CourseDto;
 import edu.kit.informatik.dto.userdata.courses.SessionDto;
 import edu.kit.informatik.dto.userdata.interactions.InteractionDto;
-import edu.kit.informatik.model.User;
-import edu.kit.informatik.model.userdata.courses.Course;
-import edu.kit.informatik.model.userdata.interactions.Participant;
-import edu.kit.informatik.repositories.CourseRepository;
-import edu.kit.informatik.repositories.ParticipantRepository;
-import edu.kit.informatik.repositories.SessionRepository;
-import edu.kit.informatik.repositories.UserRepository;
+import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
+import edu.kit.informatik.unittests.DatabaseManipulator;
+import edu.kit.informatik.unittests.EntityGenerator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,44 +32,31 @@ public class SessionControllerTest extends AbstractTest {
 
     private static final String BASE_URL = "/api/session";
 
-
     @Autowired
-    private SessionMapper sessionMapper;
+    private DatabaseManipulator databaseManipulator;
 
-    @Autowired
-    private SessionRepository sessionRepository;
-
-    @Autowired
-    private ParticipantRepository participantRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
-    private CourseRepository courseRepository;
-
-    @Autowired
-    private CourseMapper courseMapper;
-
+    private CourseDto course;
     private List<SessionDto> sessions;
+    private UserDto userDto;
 
     @Before
     @Override
-    public void setUp() {
+    public void setUp() throws Exception {
         super.setUp();
+        Faker faker = new Faker(new Locale("de"));
+        userDto = super.addAndLogin(EntityGenerator.createNewUser(faker));
+        course = EntityGenerator.createNewCourse(faker, userDto);
         this.sessions = addSomeSessions();
     }
 
     @After
     @Override
     public void setDown() {
-        this.sessionRepository.deleteAll();
-        this.participantRepository.deleteAll();
-        this.courseRepository.deleteAll();
-        this.userRepository.deleteAll();
+        databaseManipulator.clearSessionRepository();
+        databaseManipulator.clearParticipantRepository();
+        databaseManipulator.clearCourseRepository();
+        databaseManipulator.clearUserRepository();
+        this.sessions.clear();
     }
 
     private List<SessionDto> addSomeSessions() {
@@ -86,7 +65,7 @@ public class SessionControllerTest extends AbstractTest {
         Faker faker = new Faker(new Locale("de"));
 
         for (int i = 0; i < 10; i++) {
-            sessionDtos.add(getNewSession(faker));
+            sessionDtos.add(EntityGenerator.createNewSession(faker, course, userDto));
         }
 
         return sessionDtos;
@@ -96,30 +75,10 @@ public class SessionControllerTest extends AbstractTest {
     private void addSessionToDatabase() {
         List<SessionDto> repositoryUser = new ArrayList<>();
         for (SessionDto sessionDto: this.sessions) {
-            repositoryUser.add(sessionMapper.modelToDto(this.sessionRepository.save(sessionMapper.dtoToModel(sessionDto))));
-        }
-
-        assertEquals(sessions.size(), repositoryUser.size());
-        for (int i= 0; i< sessions.size(); i++) {
-            assertEquals(sessions.get(i).getName(), repositoryUser.get(i).getName());
-            assertEquals(sessions.get(i).getUserId(), repositoryUser.get(i).getUserId());
-            assertEquals(sessions.get(i).getDate(), repositoryUser.get(i).getDate());
-            assertEquals(sessions.get(i).getCourseId(), repositoryUser.get(i).getCourseId());
-            assertEquals(sessions.get(i).getSeatArrangementId(), repositoryUser.get(i).getSeatArrangementId());
+            repositoryUser.add(databaseManipulator.addSession(sessionDto));
         }
 
         this.sessions = repositoryUser;
-    }
-
-    private void deleteFromDataBase() {
-
-        for (SessionDto sessionDto: sessions) {
-            if (sessionDto.getId() != null) {
-                this.sessionRepository.deleteById(sessionDto.getId());
-            }
-        }
-
-        sessions.clear();
     }
 
     @Test
@@ -145,7 +104,6 @@ public class SessionControllerTest extends AbstractTest {
             assertEquals(sessions.get(i).getSeatArrangementId(), sessionDto.getSeatArrangementId());
             sessions.set(i, sessionDto);
         }
-        deleteFromDataBase();
     }
 
 
@@ -166,8 +124,6 @@ public class SessionControllerTest extends AbstractTest {
 
             assertEquals(sessionDto, session);
         }
-
-        deleteFromDataBase();
     }
 
     @Test
@@ -190,13 +146,11 @@ public class SessionControllerTest extends AbstractTest {
         for (int i= 0; i < sessions.size(); i++) {
             assertEquals(sessions.get(i), sessionDto.get(i));
         }
-
-        deleteFromDataBase();
     }
 
     @Test
     public void deleteSessions() throws Exception {
-        List<SessionDto> before = getSessionFromDataBase();
+        List<SessionDto> before = databaseManipulator.getSessions();
         addSessionToDatabase();
 
         for (SessionDto sessionDto: sessions) {
@@ -206,7 +160,7 @@ public class SessionControllerTest extends AbstractTest {
             int status = mvcResult.getResponse().getStatus();
             assertEquals(200, status);
         }
-        List<SessionDto> after = getSessionFromDataBase();
+        List<SessionDto> after = databaseManipulator.getSessions();
 
         assertEquals(before.size(), after.size());
 
@@ -216,29 +170,9 @@ public class SessionControllerTest extends AbstractTest {
 
     }
 
-    private List<SessionDto> getSessionFromDataBase() {
-        return sessionMapper.modelToDto(this.sessionRepository.findAll());
-    }
-
-
-    private SessionDto getNewSession(Faker faker) {
-        SessionDto sessionDto = new SessionDto();
-
-        sessionDto.setName(faker.funnyName().name());
-        User user = userRepository.save(userMapper.dtoToModel(getNewUser(faker)));
-        sessionDto.setUserId(user.getId());
-        Course course = courseRepository.save(courseMapper.dtoToModel(getNewCourse(faker, user.getId())));
-        sessionDto.setCourseId(course.getId());
-        sessionDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
-
-        sessionDto.setDate(Timestamp.from(Instant.now()).toString());
-
-        return sessionDto;
-    }
-
     private List<InteractionDto> addInteractions(Faker faker, String sessionId, String userId) {
 
-        List<Participant> participants = participantRepository.findAll();
+        List<ParticipantDto> participants = databaseManipulator.getParticipants();
 
         List<InteractionDto> interactionDtos = new ArrayList<>();
 
@@ -265,35 +199,5 @@ public class SessionControllerTest extends AbstractTest {
         }
 
         return interactionDtos;
-    }
-
-    private UserDto getNewUser(Faker faker) {
-        UserDto userDto = new UserDto();
-        userDto.setRole(RoleDto.USER);
-
-        String firstName = faker.name().firstName();
-        String lastName = faker.name().lastName();
-
-        userDto.setEmail(firstName + "." + lastName +  "@kit.edu");
-        userDto.setFirstName(firstName);
-        userDto.setLastName(lastName);
-        userDto.setPassword(faker.crypto().md5());
-        userDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
-
-        return userDto;
-    }
-
-    private CourseDto getNewCourse(Faker faker, String userId) {
-
-        CourseDto courseDto = new CourseDto();
-
-        String name = faker.team().name();
-
-        courseDto.setName(name + " " + faker.number().randomDigit());
-        courseDto.setSubject(name);
-        courseDto.setUserId(userId);
-        courseDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
-
-        return courseDto;
     }
 }
