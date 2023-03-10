@@ -9,10 +9,12 @@ import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantTypeDto;
 import edu.kit.informatik.dto.userdata.interactions.QualityDto;
 import edu.kit.informatik.dto.userdata.interactions.RatedCategoryDto;
+import edu.kit.informatik.dto.userdata.rooms.RoomDto;
 
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 
 public final class EntityGenerator {
 
@@ -86,5 +88,16 @@ public final class EntityGenerator {
         sessionDto.setDate(Timestamp.from(Instant.now()).toString());
 
         return sessionDto;
+    }
+
+    public static RoomDto createNewRoom(Faker faker, UserDto userDto) {
+        RoomDto roomDto = new RoomDto();
+
+        roomDto.setName(faker.funnyName().name());
+        roomDto.setUserId(userDto.getId());
+        roomDto.setRoomObjects(new ArrayList<>());
+        roomDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+
+        return roomDto;
     }
 }

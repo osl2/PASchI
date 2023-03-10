@@ -7,15 +7,18 @@ import edu.kit.informatik.dto.mapper.courses.SessionMapper;
 import edu.kit.informatik.dto.mapper.interactions.CategoryMapper;
 import edu.kit.informatik.dto.mapper.interactions.ParticipantMapper;
 import edu.kit.informatik.dto.mapper.interactions.RatedCategoryMapper;
+import edu.kit.informatik.dto.mapper.rooms.RoomMapper;
 import edu.kit.informatik.dto.userdata.courses.CourseDto;
 import edu.kit.informatik.dto.userdata.courses.SessionDto;
 import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.dto.userdata.interactions.RatedCategoryDto;
+import edu.kit.informatik.dto.userdata.rooms.RoomDto;
 import edu.kit.informatik.model.userdata.interactions.RatedCategory;
 import edu.kit.informatik.repositories.CategoryBaseRepository;
 import edu.kit.informatik.repositories.CourseRepository;
 import edu.kit.informatik.repositories.ParticipantRepository;
+import edu.kit.informatik.repositories.RoomRepository;
 import edu.kit.informatik.repositories.SessionRepository;
 import edu.kit.informatik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +43,8 @@ public final class DatabaseManipulator {
     private CourseRepository courseRepository;
     @Autowired
     private SessionRepository sessionRepository;
+    @Autowired
+    private RoomRepository roomRepository;
 
     @Autowired
     private UserMapper userMapper;
@@ -53,6 +58,8 @@ public final class DatabaseManipulator {
     private CourseMapper courseMapper;
     @Autowired
     private SessionMapper sessionMapper;
+    @Autowired
+    private RoomMapper roomMapper;
 
     public UserDto addUser(UserDto userDto) {
         UserDto newUserDto = new UserDto(userDto.getId(), userDto.getFirstName(), userDto.getLastName(),
@@ -77,6 +84,9 @@ public final class DatabaseManipulator {
 
     public SessionDto addSession(SessionDto sessionDto) {
         return sessionMapper.modelToDto(this.sessionRepository.save(sessionMapper.dtoToModel(sessionDto)));
+    }
+    public RoomDto addRoom(RoomDto roomDto) {
+        return roomMapper.modelToDto(this.roomRepository.save(roomMapper.dtoToModel(roomDto)));
     }
 
     public List<UserDto> getUsers() {
@@ -107,6 +117,10 @@ public final class DatabaseManipulator {
         return sessionMapper.modelToDto(this.sessionRepository.findAll());
     }
 
+    public List<RoomDto> getRooms() {
+        return roomMapper.modelToDto(this.roomRepository.findAll());
+    }
+
     public void clearUserRepository() {
         this.userRepository.deleteAll();
     }
@@ -127,5 +141,8 @@ public final class DatabaseManipulator {
         this.sessionRepository.deleteAll();
     }
 
+    public void clearRoomRepository() {
+        this.roomRepository.deleteAll();
+    }
 
 }
