@@ -32,8 +32,10 @@ import java.util.Optional;
 
 @Component
 public class UserService extends BaseService<User, UserDto, UserDto> {
-
-    private static final String EMAIL_ALREADY_EXITS = "EMAIL_ALREADY_EXITS";
+    /**
+     * Message, wenn eine E-Mail bereits verwendet wurde
+     */
+    public static final String EMAIL_ALREADY_EXITS = "EMAIL_ALREADY_EXITS";
 
     private final UserRepository userRepository;
 
@@ -173,8 +175,8 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
     public UserDto adminUpdate(UserDto userDto) throws EntityNotFoundException {
         Optional<User> repositoryUserOptional = userRepository.findUserById(userDto.getId());
 
-        User repositoryUser = repositoryUserOptional.orElseThrow(() -> new EntityNotFoundException(
-                                                                                User.class, userDto.getId()));
+        User repositoryUser = repositoryUserOptional.orElseThrow(() ->
+                                                            new EntityNotFoundException(User.class, userDto.getId()));
         User newUser = this.mapper.dtoToModel(userDto);
 
         if (!newUser.isAuth() == repositoryUser.isAuth()) {
