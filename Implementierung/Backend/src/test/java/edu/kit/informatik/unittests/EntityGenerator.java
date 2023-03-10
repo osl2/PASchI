@@ -1,8 +1,10 @@
-package edu.kit.informatik.unittests.controller;
+package edu.kit.informatik.unittests;
 
 import com.github.javafaker.Faker;
 import edu.kit.informatik.dto.RoleDto;
 import edu.kit.informatik.dto.UserDto;
+import edu.kit.informatik.dto.userdata.interactions.QualityDto;
+import edu.kit.informatik.dto.userdata.interactions.RatedCategoryDto;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -27,5 +29,18 @@ public final class EntityGenerator {
         return userDto;
     }
 
+    public static RatedCategoryDto createNewCategory(Faker faker, UserDto userDto) {
+
+        RatedCategoryDto categoryDto = new RatedCategoryDto();
+
+        String name = faker.team().name();
+
+        categoryDto.setName(name + " " + faker.number().randomDigit());
+        categoryDto.setUserId(userDto.getId());
+        categoryDto.setQuality(QualityDto.FOUR_STAR);
+        categoryDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+
+        return categoryDto;
+    }
 
 }
