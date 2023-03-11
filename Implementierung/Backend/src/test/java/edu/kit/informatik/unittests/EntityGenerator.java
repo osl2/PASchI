@@ -10,7 +10,10 @@ import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantTypeDto;
 import edu.kit.informatik.dto.userdata.interactions.QualityDto;
 import edu.kit.informatik.dto.userdata.interactions.RatedCategoryDto;
+import edu.kit.informatik.dto.userdata.rooms.ChairDto;
+import edu.kit.informatik.dto.userdata.rooms.PositionDto;
 import edu.kit.informatik.dto.userdata.rooms.RoomDto;
+import edu.kit.informatik.dto.userdata.rooms.TableDto;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -142,5 +145,31 @@ public final class EntityGenerator {
         seatArrangementDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
 
         return seatArrangementDto;
+    }
+
+    private static PositionDto createNewPositionDto(Faker faker, UserDto userDto) {
+        PositionDto positionDto = new PositionDto();
+        positionDto.setUserId(userDto.getId());
+        positionDto.setXCoordinate(faker.number().numberBetween(0, 16000));
+        positionDto.setYCoordinate(faker.number().numberBetween(0, 12000));
+        positionDto.setOrientation(faker.number().numberBetween(0, (int) (2 * Math.PI)));
+
+        positionDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        return positionDto;
+    }
+
+    public static ChairDto createNewChairDto(Faker faker, UserDto userDto) {
+        return new ChairDto("0" , userDto.getId(), createNewPositionDto(faker, userDto),
+                Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)), Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+    }
+
+    public static TableDto createNewTableDto(Faker faker, UserDto userDto) {
+        TableDto tableDto = new TableDto();
+        tableDto.setLength(faker.number().numberBetween(250, 750));
+        tableDto.setWidth(faker.number().numberBetween(1000, 3000));
+        tableDto.setPosition(createNewPositionDto(faker, userDto));
+        tableDto.setUserId(userDto.getId());
+        tableDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        return tableDto;
     }
 }
