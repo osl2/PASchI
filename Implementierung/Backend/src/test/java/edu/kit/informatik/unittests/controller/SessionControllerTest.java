@@ -3,9 +3,11 @@ package edu.kit.informatik.unittests.controller;
 import com.github.javafaker.Faker;
 import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.dto.userdata.courses.CourseDto;
+import edu.kit.informatik.dto.userdata.courses.SeatArrangementDto;
 import edu.kit.informatik.dto.userdata.courses.SessionDto;
 import edu.kit.informatik.dto.userdata.interactions.InteractionDto;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
+import edu.kit.informatik.dto.userdata.rooms.RoomDto;
 import edu.kit.informatik.unittests.DatabaseManipulator;
 import edu.kit.informatik.unittests.EntityGenerator;
 import org.junit.After;
@@ -54,6 +56,8 @@ public class SessionControllerTest extends AbstractTest {
     public void setDown() {
         databaseManipulator.clearSessionRepository();
         databaseManipulator.clearParticipantRepository();
+        databaseManipulator.clearSeatArrangementRepository();
+        databaseManipulator.clearRoomRepository();
         databaseManipulator.clearCourseRepository();
         databaseManipulator.clearUserRepository();
         this.sessions.clear();
@@ -72,7 +76,7 @@ public class SessionControllerTest extends AbstractTest {
     }
 
 
-    private void addSessionToDatabase() {
+    private void addSessionsToDatabase() {
         List<SessionDto> repositoryUser = new ArrayList<>();
         for (SessionDto sessionDto: this.sessions) {
             repositoryUser.add(databaseManipulator.addSession(sessionDto));
@@ -110,7 +114,7 @@ public class SessionControllerTest extends AbstractTest {
 
     @Test
     public void getOneSession() throws Exception {
-        addSessionToDatabase();
+        addSessionsToDatabase();
 
         for (SessionDto session: sessions) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + session.getId())
@@ -130,7 +134,7 @@ public class SessionControllerTest extends AbstractTest {
 
     @Test
     public void getAllSessions() throws Exception {
-        addSessionToDatabase();
+        addSessionsToDatabase();
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL)
                 .header("Authorization", "Bearer " + userDto.getToken())
@@ -152,9 +156,46 @@ public class SessionControllerTest extends AbstractTest {
     }
 
     @Test
+    public void updateSessions() throws Exception {
+        addSessionsToDatabase();
+
+        List<SessionDto> sessionDtos = addSomeSessions();
+
+        for (int i = 0; i < sessions.size(); i++) {
+            sessions.get(i).setName(sessionDtos.get(i).getName());
+            sessions.get(i).setInteractions(new ArrayList<>());
+            sessions.get(i).setSeatArrangementId(addSeatArrangement().getId());
+        }
+
+        for (SessionDto sessionDto: sessions) {
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                    .content(super.mapToJson(sessionDto))
+                    .header("Authorization", "Bearer " + userDto.getToken())
+            ).andReturn();
+
+            int status = mvcResult.getResponse().getStatus();
+            assertEquals(200, status);
+        }
+
+        List<SessionDto> sessionDtosFromDB = databaseManipulator.getSessions();
+
+        sessionDtosFromDB.sort(Comparator.naturalOrder());
+        sessions.sort(Comparator.naturalOrder());
+
+        assertEquals(sessionDtosFromDB.size(), sessions.size());
+
+        for (int i = 0; i < sessions.size(); i++) {
+            assertEquals(sessionDtosFromDB.get(i).getName(), sessions.get(i).getName());
+            assertEquals(sessionDtosFromDB.get(i).getCreatedAt(), sessions.get(i).getCreatedAt());
+            assertEquals(sessionDtosFromDB.get(i).getSeatArrangementId(), sessions.get(i).getSeatArrangementId());
+            assertEquals(sessionDtosFromDB.get(i).getInteractions(), sessions.get(i).getInteractions());
+        }
+    }
+
+    @Test
     public void deleteSessions() throws Exception {
         List<SessionDto> before = databaseManipulator.getSessions();
-        addSessionToDatabase();
+        addSessionsToDatabase();
 
         for (SessionDto sessionDto: sessions) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL)
@@ -173,6 +214,47 @@ public class SessionControllerTest extends AbstractTest {
             assertEquals(before.get(i), after.get(i));
         }
 
+    }
+
+    @Test
+    public void getNonExistingSession() throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + sessions.get(0).getId())
+                .header("Authorization", "Bearer " + userDto.getToken())
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getErrorMessage();
+
+        assertEquals(404, status);
+        assertEquals("Entity of class 'Session' with id: '" + sessions.get(0).getId() +"' not found", content);
+    }
+
+    @Test
+    public void updateNonExistingSession() throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                .content(super.mapToJson(sessions.get(0)))
+                .header("Authorization", "Bearer " + userDto.getToken())
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getErrorMessage();
+
+        assertEquals(404, status);
+        assertEquals("Entity of class 'Session' with id: '" + sessions.get(0).getId() +"' not found", content);
+    }
+
+    @Test
+    public void deleteNonExistingSession() throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL)
+                .param("id", "0")
+                .header("Authorization", "Bearer " + userDto.getToken())
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getErrorMessage();
+
+        assertEquals(404, status);
+        assertEquals("Entity of class 'Session' with id: '0' not found", content);
     }
 
     private List<InteractionDto> addInteractions(Faker faker, String sessionId, String userId) {
@@ -204,5 +286,12 @@ public class SessionControllerTest extends AbstractTest {
         }
 
         return interactionDtos;
+    }
+
+    private SeatArrangementDto addSeatArrangement() {
+        Faker faker = new Faker(new Locale("de"));
+        RoomDto roomDto = databaseManipulator.addRoom(EntityGenerator.createNewRoom(faker, this.userDto));
+
+        return databaseManipulator.addSeatArrangement(EntityGenerator.createNewSeatArrangement(faker, this.userDto, this.courseDto, roomDto));
     }
 }
