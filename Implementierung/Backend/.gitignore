@@ -4,6 +4,7 @@ target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+/htmlReport
 
 ### Application.properties sollte nur lokal sein + Keys ###
 application.properties
