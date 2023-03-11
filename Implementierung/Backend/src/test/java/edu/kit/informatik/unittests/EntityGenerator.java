@@ -122,6 +122,7 @@ public final class EntityGenerator {
         roomDto.setName(faker.funnyName().name());
         roomDto.setUserId(userDto.getId());
         roomDto.setRoomObjects(new ArrayList<>());
+        roomDto.setVisible(true);
         roomDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
 
         return roomDto;
