@@ -36,7 +36,7 @@ export class StatsController {
     let qualitySum = 0;
 
     const interactions = student.interactions.filter(interaction =>
-      (interaction.fromParticipant.getId === studentId || interaction.category.name.toLowerCase() === CATEGORY_NAME));
+      (interaction.category.name.toLowerCase() === CATEGORY_NAME) || interaction.fromParticipant.getId === studentId);
 
     for (const interaction of interactions) {
       // Anzahl und absolute Häufigkeit der Kategorien zählen.
@@ -77,7 +77,7 @@ export class StatsController {
    7. Map(datum, Beteiligunsquote)
    ]
    */
-  getCourseStats(courseId: string): (Map<string, number> | any[])[] | undefined {
+  getCourseStats(courseId: string): any[] | undefined {
     const course = CourseController.getCourseController().getCourse(courseId);
     if (course == undefined) {
       return undefined;
@@ -91,7 +91,7 @@ export class StatsController {
     course.sessions.forEach((session: Session) => {
       // Anzahl und absolute Häufigkeit der Kategorien zählen.
       // Statistiken der Teilnehmer sammeln.
-      let interactionStats = this.getInteractionStats(session.getId, categories, students, numCategories);
+      let interactionStats = this.getInteractionStats(session, categories, students, numCategories);
       if (interactionStats != undefined) {
         categories = interactionStats[0];
         numCategories = interactionStats[1];
@@ -140,7 +140,7 @@ export class StatsController {
 
     // Anzahl und absolute Häufigkeit der Kategorien zählen.
     // Statistiken der Teilnehmer sammeln.
-    let sessionStats = this.getInteractionStats(sessionId, categories, students, numCategories);
+    let sessionStats = this.getInteractionStats(session, categories, students, numCategories);
     if (sessionStats) {
       categories = sessionStats[0];
       //numCategories = sessionStats[1];
@@ -163,13 +163,9 @@ export class StatsController {
   }
 
 
-  private getInteractionStats(sessionId: string, categories: Map<string, number>,
+  private getInteractionStats(session: Session, categories: Map<string, number>,
                               students: Map<string, [number, number, number, number]>,
-                              numCategories: number): any[] | undefined {
-    let session = SessionController.getSessionController().getSession(sessionId);
-    if (session == undefined) {
-      return undefined;
-    }
+                              numCategories: number): any[] {
 
     for (const interaction of session.interactions) {
       // Anzahl und absolute Häufigkeit der Kategorien zählen.
