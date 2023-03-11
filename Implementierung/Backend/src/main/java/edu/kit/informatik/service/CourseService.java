@@ -49,7 +49,7 @@ public class CourseService extends BaseService<Course, CourseDto, CourseDto> {
     public CourseDto update(CourseDto courseDto, Authentication authentication) {
         super.checkAuthorization(authentication, courseDto.getUserId());
 
-        Optional<Course> repositoryCourseOptional = this.courseRepository.findById(courseDto.getId());
+        Optional<Course> repositoryCourseOptional = this.courseRepository.findCourseById(courseDto.getId());
 
         Course repositoryCourse = repositoryCourseOptional.orElseThrow(() ->
                                                         new EntityNotFoundException(Course.class, courseDto.getId()));
