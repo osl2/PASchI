@@ -149,6 +149,43 @@ public class SeatArrangementControllerTest extends AbstractTest {
     }
 
     @Test
+    public void updateSeatArrangement() throws Exception {
+        addSeatArrangements();
+
+        List<SeatArrangementDto> seatArrangementDtos = addSomeSeatArrangements();
+
+        for (int i = 0; i < seatArrangements.size(); i++) {
+            seatArrangements.get(i).setName(seatArrangementDtos.get(i).getName());
+            seatArrangements.get(i).setRoomId(seatArrangementDtos.get(i).getRoomId());
+            //seatArrangements.get(i).setSeatMap();
+        }
+
+        for (SeatArrangementDto seatArrangementDto: seatArrangements) {
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                    .content(super.mapToJson(seatArrangementDto))
+                    .header("Authorization", "Bearer " + userDto.getToken())
+            ).andReturn();
+
+            int status = mvcResult.getResponse().getStatus();
+            assertEquals(200, status);
+        }
+
+        List<SeatArrangementDto> seatArrangementDtosFromDB = databaseManipulator.getSeatArrangements();
+
+        seatArrangementDtosFromDB.sort(Comparator.naturalOrder());
+        seatArrangements.sort(Comparator.naturalOrder());
+
+        assertEquals(seatArrangementDtosFromDB.size(), seatArrangements.size());
+
+        for (int i = 0; i < seatArrangements.size(); i++) {
+            assertEquals(seatArrangementDtosFromDB.get(i).getName(), seatArrangements.get(i).getName());
+            assertEquals(seatArrangementDtosFromDB.get(i).getCreatedAt(), seatArrangements.get(i).getCreatedAt());
+            assertEquals(seatArrangementDtosFromDB.get(i).getRoomId(), seatArrangements.get(i).getRoomId());
+            //assertEquals(seatArrangementDtosFromDB.get(i).getSeatMap(), seatArrangements.get(i).getSeatMap());
+        }
+    }
+
+    @Test
     public void deleteSeatArrangements() throws Exception {
         List<SeatArrangementDto> before = databaseManipulator.getSeatArrangements();
         addSeatArrangementToDatabase();
@@ -169,15 +206,14 @@ public class SeatArrangementControllerTest extends AbstractTest {
         for (int i = 0; i< before.size(); i++) {
             assertEquals(before.get(i), after.get(i));
         }
-
     }
 
     @Test
-    public void getWrongSeatArrangement() throws Exception{
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + seatArrangements.get(0).getId())
+    public void updateNonExistingSeatArrangement() throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                .content(super.mapToJson(seatArrangements.get(0)))
                 .header("Authorization", "Bearer " + userDto.getToken())
         ).andReturn();
-
         int status = mvcResult.getResponse().getStatus();
         String content = mvcResult.getResponse().getErrorMessage();
 
@@ -187,7 +223,21 @@ public class SeatArrangementControllerTest extends AbstractTest {
     }
 
     @Test
-    public void deleteWrongSeatArrangement() throws Exception{
+    public void getNonExistingSeatArrangement() throws Exception{
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + seatArrangements.get(0).getId())
+                .header("Authorization", "Bearer " + userDto.getToken())
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getErrorMessage();
+
+        assertEquals(404, status);
+        assertEquals("Entity of class 'SeatArrangement' with id: '"
+                        + seatArrangements.get(0).getId() +"' not found", content);
+    }
+
+    @Test
+    public void deleteNonExistingSeatArrangement() throws Exception{
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL)
                 .param("id", "0")
                 .header("Authorization", "Bearer " + userDto.getToken())
@@ -198,6 +248,5 @@ public class SeatArrangementControllerTest extends AbstractTest {
 
         assertEquals(404, status);
         assertEquals("Entity of class 'SeatArrangement' with id: '0' not found", content);
-
     }
 }
