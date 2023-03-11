@@ -54,7 +54,7 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
                                                                 .findSeatArrangementById(seatArrangementDto.getId());
         
         SeatArrangement repositorySeatArrangement = repositorySeatArrangementOptional.orElseThrow(
-                        () -> new EntityNotFoundException(SeatArrangementService.class, seatArrangementDto.getId()));
+                        () -> new EntityNotFoundException(SeatArrangement.class, seatArrangementDto.getId()));
         SeatArrangement newSeatArrangement = this.mapper.dtoToModel(seatArrangementDto);
 
         if (!newSeatArrangement.getName().equals(repositorySeatArrangement.getName())) {
