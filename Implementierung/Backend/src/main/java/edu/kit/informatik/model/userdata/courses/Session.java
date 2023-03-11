@@ -4,6 +4,7 @@ import edu.kit.informatik.model.DataObject;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.interactions.Interaction;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -34,7 +35,7 @@ public class Session extends DataObject {
     @ManyToOne
     private Course course;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Interaction> interactions;
 
     @Cascade(CascadeType.SAVE_UPDATE)
