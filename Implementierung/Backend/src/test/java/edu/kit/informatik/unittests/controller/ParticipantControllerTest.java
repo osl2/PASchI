@@ -2,6 +2,7 @@ package edu.kit.informatik.unittests.controller;
 
 import com.github.javafaker.Faker;
 import edu.kit.informatik.dto.UserDto;
+import edu.kit.informatik.dto.userdata.courses.CourseDto;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.unittests.DatabaseManipulator;
 import edu.kit.informatik.unittests.EntityGenerator;
@@ -45,6 +46,7 @@ public class ParticipantControllerTest extends AbstractTest {
     @Override
     public void setDown() {
         databaseManipulator.clearParticipantRepository();
+        databaseManipulator.clearCourseRepository();
         databaseManipulator.clearUserRepository();
         this.participants.clear();
     }
@@ -169,6 +171,19 @@ public class ParticipantControllerTest extends AbstractTest {
         }
 
     }
+    @Test
+    public void deleteWrongParticipant() throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL)
+                .param("id", "0")
+                .header("Authorization", "Bearer " + userDto.getToken())
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getErrorMessage();
+
+        assertEquals(404, status);
+        assertEquals("Entity of class 'Participant' with id: '0' not found", content);
+    }
 
     @Test
     public void getWrongParticipant() throws Exception{
@@ -181,6 +196,63 @@ public class ParticipantControllerTest extends AbstractTest {
 
         assertEquals(404, status);
         assertEquals("Entity of class 'Participant' with id: '" + participants.get(0).getId() +"' not found", content);
+    }
+
+    @Test
+    public void updateWrongParticipant() throws Exception{
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                .content(super.mapToJson(participants.get(0)))
+                .header("Authorization", "Bearer " + userDto.getToken())
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getErrorMessage();
+
+        assertEquals(404, status);
+        assertEquals("Entity of class 'Participant' with id: '" + participants.get(0).getId() +"' not found", content);
+    }
+
+    @Test
+    public void updateParticipant() throws Exception {
+        addParticipantsToDatabase();
+
+        List<ParticipantDto> participantDtos = addSomeParticipants();
+        CourseDto course = databaseManipulator.addCourse(
+                           EntityGenerator.createNewCourse(new Faker(new Locale("de")), userDto));
+        List<String> courseIds = new ArrayList<>();
+        courseIds.add(course.getId());
+
+
+        for (int i = 0; i < participants.size(); i++) {
+
+            participants.get(i).setFirstName(participantDtos.get(i).getFirstName());
+            participants.get(i).setLastName(participantDtos.get(i).getLastName());
+            participants.get(i).setCourseIds(courseIds);
+        }
+
+        for (ParticipantDto participantDto: participants) {
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                    .content(super.mapToJson(participantDto))
+                    .header("Authorization", "Bearer " + userDto.getToken())
+            ).andReturn();
+
+            int status = mvcResult.getResponse().getStatus();
+            assertEquals(200, status);
+        }
+
+        List<ParticipantDto> participantDtosFromDB = databaseManipulator.getParticipants();
+
+        participantDtosFromDB.sort(Comparator.naturalOrder());
+        participants.sort(Comparator.naturalOrder());
+
+        assertEquals(participantDtosFromDB.size(), participants.size());
+
+        for (int i = 0; i < participants.size(); i++) {
+            assertEquals(participantDtosFromDB.get(i).getFirstName(), participants.get(i).getFirstName());
+            assertEquals(participantDtosFromDB.get(i).getLastName(), participants.get(i).getLastName());
+            assertEquals(participantDtosFromDB.get(i).getCreatedAt(), participants.get(i).getCreatedAt());
+            assertEquals(participantDtosFromDB.get(i).getCourseIds(), participants.get(i).getCourseIds());
+        }
 
     }
 
