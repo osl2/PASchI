@@ -78,12 +78,11 @@ export class Course extends DataObject {
    * @param participantId ID des Teilnehmers
    */
   getParticipant(participantId: string): Participant | undefined {
-    for (let i = 0; i < this._participants.length; i++) {
-      if (this._participants.at(i)?.getId === participantId) {
-        return this._participants.at(i);
+    for (const participant of this._participants) {
+      if (participant.getId === participantId) {
+        return participant;
       }
     }
-
     return undefined;
   }
 
@@ -120,12 +119,11 @@ export class Course extends DataObject {
    * @param sessionId ID der Sitzung
    */
   getSession(sessionId: string): Session | undefined {
-    for (let i = 0; i < this._sessions.length; i++) {
-      if (this._sessions.at(i)?.getId === sessionId) {
-        return this._sessions.at(i);
+    for (const session of this._sessions) {
+      if (session.getId === sessionId) {
+        return session;
       }
     }
-
     return undefined;
   }
 
@@ -188,12 +186,11 @@ export class Course extends DataObject {
    * @param arrangementId ID der Sitzungordnung
    */
   getSeatArrangement(arrangementId: string): SeatArrangement | undefined {
-    for (let i = 0; i < this._seatArrangements.length; i++) {
-      if (this._seatArrangements.at(i)?.getId === arrangementId) {
-        return this._seatArrangements.at(i);
+    for (const arrangement of this._seatArrangements) {
+      if (arrangement.getId === arrangementId) {
+        return arrangement;
       }
     }
-
     return undefined;
   }
 
