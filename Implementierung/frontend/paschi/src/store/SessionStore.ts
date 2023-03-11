@@ -19,22 +19,15 @@ export const useSessionStore = defineStore('sessions', {
       });
     },
     getSession(id: string): Session | undefined {
-      let session: Session;
-      this.sessions.forEach((element) => {
-        if (element.getId === id) {
-          // @ts-ignore
-          session = element;
+      for (const session of this.sessions) {
+        if (session.getId === id) {
+          return <Session>session;
         }
-      });
-      // @ts-ignore
-      if (session !== undefined) {
-        return session;
       }
       return undefined;
     },
     getAllSessions(): Session[] {
-      // @ts-ignore
-      return this.sessions;
+      return <Session[]>this.sessions;
     },
     getNextId(): number {
       return this.nextId++;
