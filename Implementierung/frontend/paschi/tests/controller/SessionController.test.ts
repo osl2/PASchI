@@ -6,6 +6,10 @@ import {Session} from "@/model/userdata/courses/Session";
 import {CourseController} from "@/controller/CourseController";
 import {StudentController} from "@/controller/StudentController";
 import {CategoryController} from "@/controller/CategoryController";
+import {useInteractionStore} from "@/store/InteractionStore";
+import {SessionService} from "@/service/SessionService";
+import {useCourseStore} from "@/store/CourseStore";
+import {ParticipantService} from "@/service/ParticipantService";
 
 const sessionController = SessionController.getSessionController();
 const sessionData = {name: "Kolloquium 1"};
@@ -94,12 +98,15 @@ test("Create and get interaction", async () => {
   interactionParticipants.fromId = await StudentController.getStudentConroller().createStudent("Luka", "Kosak");
   interactionParticipants.toId = await StudentController.getStudentConroller().createStudent("Gregor", "Snelting");
   const categoryId = await CategoryController.getCategoryController().createCategory("Kategorie");
+  CourseController.getCourseController().addStudentToCourse(courseId, interactionParticipants.fromId);
+  CourseController.getCourseController().addStudentToCourse(courseId, interactionParticipants.toId);
   await sessionController.createInteraction("24", interactionParticipants.fromId,
     interactionParticipants.toId, categoryId);
   interactionId = await sessionController.createInteraction(sessionId!, interactionParticipants.fromId,
     interactionParticipants.toId, categoryId);
   const interactions = sessionController.getInteractionsOfSession(sessionId!);
   const interaction = interactions![0];
+  useInteractionStore().getInteraction(interaction.getId);
   StudentController.getStudentConroller().getAllStudents();
   CourseController.getCourseController().getAllCourses();
 
@@ -149,7 +156,11 @@ test("Get interactions of participant", () => {
   expect(interaction.toParticipant.getId).toBe(interactionParticipants.toId);
 });
 
-test("Get all sessions", () => {
+test("Get all sessions", async () => {
+  useInteractionStore().$reset();
+  useCourseStore().$reset();
+  await ParticipantService.getService().getAll();
+  await SessionService.getService().getAll();
   const sessions = sessionController.getAllSessions();
 
   expect(sessions.length).toBeGreaterThan(0);

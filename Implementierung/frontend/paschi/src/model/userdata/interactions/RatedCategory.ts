@@ -4,7 +4,7 @@ import {User} from "@/model/User";
 
 export class RatedCategory extends Category {
 
-  private _quality: Quality;
+  private readonly _quality: Quality;
 
   constructor(id: string | undefined, localId: number, user: User, name: string, quality: Quality) {
     super(id, localId, user, name);
@@ -17,10 +17,5 @@ export class RatedCategory extends Category {
 
   getQuality(): Quality | undefined {
     return this._quality;
-  }
-
-  set setQuality(quality: Quality) {
-    this._quality = quality;
-    this.update();
   }
 }

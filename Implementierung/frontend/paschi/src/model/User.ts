@@ -11,10 +11,10 @@ export class User extends DataObject {
 
   private _firstName: string;
   private _lastName: string;
-  private _email: string;
+  private readonly _email: string;
   private _password: string;
   private _auth: boolean;
-  private _role: Role;
+  private readonly _role: Role;
   private _token: string;
 
   /**
@@ -118,32 +118,12 @@ export class User extends DataObject {
   }
 
   /**
-   * Setzt die E-Mail.
-   *
-   * @param value E-Mail
-   */
-  set email(value: string) {
-    this._email = value;
-    this.update();
-  }
-
-  /**
    * Setzt den Wahrheitswert, ob der Nutzer freigeschalten ist
    *
    * @param value Wahrheitswert, ob der Nutzer freigeschalten ist
    */
   set auth(value: boolean) {
     this._auth = value;
-    this.update();
-  }
-
-  /**
-   * Setzt die Rolle.
-   *
-   * @param value Rolle
-   */
-  set role(value: Role) {
-    this._role = value;
     this.update();
   }
 
