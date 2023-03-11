@@ -100,6 +100,7 @@ test("Create and get interaction", async () => {
     interactionParticipants.toId, categoryId);
   const interactions = sessionController.getInteractionsOfSession(sessionId!);
   const interaction = interactions![0];
+  StudentController.getStudentConroller().getAllStudents();
 
   expect(interactions?.length).toBe(1);
   expect(interaction.getId).toBe(interactionId);
