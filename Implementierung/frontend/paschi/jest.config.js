@@ -20,8 +20,8 @@ module.exports = {
   collectCoverageFrom: [
     "src/**/*.ts",
     "!src/main.ts",
-    "!src/controller/StatsController.ts",
     "!src/plugins/**",
+    "!src/dto/mapper/IModelDtoMapper.ts",
     "!src/components/**"
   ],
   collectCoverage: true,
