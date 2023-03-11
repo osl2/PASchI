@@ -118,6 +118,32 @@ public class RoomControllerTest extends AbstractTest {
         }
     }
 
+    @Test
+    public void addRoomWithObjects() throws Exception{
+        addRoomToDatabase();
+
+        RoomDto roomDto =  rooms.get(0);
+
+        List<RoomObjectDto> objectDtos = new ArrayList<>();
+        objectDtos.addAll(getSomeTables());
+        objectDtos.addAll(getSomeChairs());
+        roomDto.setRoomObjects(objectDtos);
+
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                .content(super.mapToJson(roomDto))
+                .header("Authorization", "Bearer " + userDto.getToken())
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
+
+        String content = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+        RoomDto repoDto = super.mapFromJson(content, RoomDto.class);
+
+        checkEquals(roomDto, repoDto);
+    }
+
 
     @Test
     public void getOneRoom() throws Exception {
@@ -212,33 +238,6 @@ public class RoomControllerTest extends AbstractTest {
     }
 
 
-
-    @Test
-    public void saveWithObjects() throws Exception{
-        addRoomToDatabase();
-
-        RoomDto roomDto =  rooms.get(0);
-
-        List<RoomObjectDto> objectDtos = new ArrayList<>();
-        objectDtos.addAll(getSomeTables());
-        objectDtos.addAll(getSomeChairs());
-        roomDto.setRoomObjects(objectDtos);
-
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
-                .content(super.mapToJson(roomDto))
-                .header("Authorization", "Bearer " + userDto.getToken())
-        ).andReturn();
-
-        int status = mvcResult.getResponse().getStatus();
-        assertEquals(200, status);
-
-        String content = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
-
-        RoomDto repoDto = super.mapFromJson(content, RoomDto.class);
-
-        checkEquals(roomDto, repoDto);
-    }
-
     @Test
     public void updateRoomWithObjects() throws Exception {
         RoomDto roomDto =  rooms.get(0);
@@ -278,6 +277,31 @@ public class RoomControllerTest extends AbstractTest {
 
         assertEquals(404, status);
         assertEquals("Entity of class 'Room' with id: '" + rooms.get(0).getId() +"' not found", content);
+    }
+
+    @Test
+    public void getNonExistingRoom() throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + "0")
+                .header("Authorization", "Bearer " + userDto.getToken())
+        ).andReturn();
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getErrorMessage();
+
+        assertEquals(404, status);
+        assertEquals("Entity of class 'Room' with id: '0' not found", content);
+    }
+
+    @Test
+    public void deleteNonExistingRoom() throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL)
+                .param("id", "0")
+                .header("Authorization", "Bearer " + userDto.getToken())
+        ).andReturn();
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getErrorMessage();
+
+        assertEquals(404, status);
+        assertEquals("Entity of class 'Room' with id: '0' not found", content);
     }
 
     private void checkEquals(RoomDto expectedDto, RoomDto actualDto) {
