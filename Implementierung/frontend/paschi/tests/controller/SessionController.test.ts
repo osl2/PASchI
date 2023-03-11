@@ -101,6 +101,7 @@ test("Create and get interaction", async () => {
   const interactions = sessionController.getInteractionsOfSession(sessionId!);
   const interaction = interactions![0];
   StudentController.getStudentConroller().getAllStudents();
+  CourseController.getCourseController().getAllCourses();
 
   expect(interactions?.length).toBe(1);
   expect(interaction.getId).toBe(interactionId);
