@@ -18,16 +18,10 @@ export const useInteractionStore = defineStore('interactions', {
       });
     },
     getInteraction(id: string): Interaction | undefined {
-      let interaction: Interaction;
-      this.interactions.forEach((element) => {
-        if (element.getId === id) {
-          // @ts-ignore
-          interaction = element;
+      for (const interaction of this.interactions) {
+        if (interaction.getId === id) {
+          return <Interaction>interaction;
         }
-      });
-      // @ts-ignore
-      if (interaction !== undefined) {
-        return interaction;
       }
       return undefined;
     },
@@ -39,10 +33,6 @@ export const useInteractionStore = defineStore('interactions', {
         }
       }
       return undefined;
-    },
-    getAllInteractions(): Interaction[] {
-      // @ts-ignore
-      return this.interactions;
     },
     getNextId(): number {
       return this.nextId++;
