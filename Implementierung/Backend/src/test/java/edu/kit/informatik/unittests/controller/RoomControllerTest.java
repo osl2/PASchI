@@ -2,7 +2,10 @@ package edu.kit.informatik.unittests.controller;
 
 import com.github.javafaker.Faker;
 import edu.kit.informatik.dto.UserDto;
+import edu.kit.informatik.dto.userdata.rooms.ChairDto;
 import edu.kit.informatik.dto.userdata.rooms.RoomDto;
+import edu.kit.informatik.dto.userdata.rooms.RoomObjectDto;
+import edu.kit.informatik.dto.userdata.rooms.TableDto;
 import edu.kit.informatik.unittests.DatabaseManipulator;
 import edu.kit.informatik.unittests.EntityGenerator;
 import org.junit.After;
@@ -58,6 +61,27 @@ public class RoomControllerTest extends AbstractTest {
         }
 
         return roomDtos;
+    }
+
+    private List<ChairDto> getSomeChairs() {
+        List<ChairDto> chairDtos = new ArrayList<>();
+        Faker faker = new Faker(new Locale("de"));
+
+        for (int i = 0; i < 1; i++) {
+            chairDtos.add(EntityGenerator.createNewChairDto(faker, userDto));
+        }
+
+        return chairDtos;
+    }
+
+    private List<TableDto> getSomeTables() {
+        List<TableDto> tableDtos = new ArrayList<>();
+        Faker faker = new Faker(new Locale("de"));
+
+        for (int i = 0; i < 1; i++) {
+            tableDtos.add(EntityGenerator.createNewTableDto(faker, userDto));
+        }
+        return tableDtos;
     }
 
 
@@ -159,6 +183,61 @@ public class RoomControllerTest extends AbstractTest {
         for (int i = 0; i< before.size(); i++) {
             assertEquals(before.get(i), after.get(i));
         }
+
+    }
+
+    @Test
+    public void updateRoom() throws Exception {
+        addRoomToDatabase();
+
+        RoomDto roomDto =  rooms.get(0);
+
+        List<RoomObjectDto> objectDtos = new ArrayList<>();
+        objectDtos.addAll(getSomeTables());
+        objectDtos.addAll(getSomeChairs());
+        roomDto.setRoomObjects(objectDtos);
+
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                .content(super.mapToJson(roomDto))
+                .header("Authorization", "Bearer " + userDto.getToken())
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
+
+        String content = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+        RoomDto repoDto = super.mapFromJson(content, RoomDto.class);
+        assertEquals(roomDto.getName(), repoDto.getName());
+        assertEquals(roomDto.getCreatedAt(), repoDto.getCreatedAt());
+        assertEquals(roomDto.getRoomObjects().size(), repoDto.getRoomObjects().size());
+        for (int i = 0; i < roomDto.getRoomObjects().size(); i++) {
+
+            if (roomDto.getRoomObjects().get(i) instanceof ChairDto chairDto) {
+                ChairDto repoChairDto = (ChairDto) repoDto.getRoomObjects().get(i);
+                assertEquals(chairDto.getUserId(), repoChairDto.getPosition().getUserId());
+                assertEquals(chairDto.getCreatedAt(), repoChairDto.getPosition().getCreatedAt());
+
+                assertEquals(chairDto.getPosition().getXCoordinate(), repoChairDto.getPosition().getXCoordinate(), 0);
+                assertEquals(chairDto.getPosition().getYCoordinate(), repoChairDto.getPosition().getYCoordinate(), 0);
+                assertEquals(chairDto.getPosition().getOrientation(), repoChairDto.getPosition().getOrientation(), 0);
+                assertEquals(chairDto.getPosition().getUserId(), repoChairDto.getPosition().getUserId());
+                assertEquals(chairDto.getPosition().getCreatedAt(), repoChairDto.getPosition().getCreatedAt());
+            } else if (roomDto.getRoomObjects().get(i) instanceof TableDto tableDto) {
+                TableDto repoTableDto = (TableDto) repoDto.getRoomObjects().get(i);
+                assertEquals(tableDto.getUserId(), repoTableDto.getPosition().getUserId());
+                assertEquals(tableDto.getCreatedAt(), repoTableDto.getPosition().getCreatedAt());
+                assertEquals(tableDto.getLength(), repoTableDto.getLength(), 0);
+                assertEquals(tableDto.getWidth(), repoTableDto.getWidth(), 0);
+
+                assertEquals(tableDto.getPosition().getXCoordinate(), repoTableDto.getPosition().getXCoordinate(), 0);
+                assertEquals(tableDto.getPosition().getYCoordinate(), repoTableDto.getPosition().getYCoordinate(), 0);
+                assertEquals(tableDto.getPosition().getOrientation(), repoTableDto.getPosition().getOrientation(), 0);
+                assertEquals(tableDto.getPosition().getUserId(), repoTableDto.getPosition().getUserId());
+                assertEquals(tableDto.getPosition().getCreatedAt(), repoTableDto.getPosition().getCreatedAt());
+            }
+        }
+        assertEquals(roomDto.getName(), roomDto.getName());
 
     }
 }
