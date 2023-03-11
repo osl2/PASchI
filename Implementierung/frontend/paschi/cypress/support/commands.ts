@@ -23,7 +23,16 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-Cypress.Commands.add('clickLink', (label) => {
-  cy.url().should("include", "/login");
-})
+Cypress.Commands.add('login', (label) => {
+  cy.visit("/login");
+  cy.get("input[name='email']").type(user.email);
+  cy.get("input[name='password']").type(user.password);
+  cy.get("button[type=submit]").click();
+  cy.url().should("include", "/admin");
+  cy.contains("Akzeptierte Accounts");
+  cy.contains("Accountanträge");
+  cy.contains("Administratorseite");
+  cy.contains("Abmelden");
+  cy.get("button").contains("Abmelden").click();
+  cy.url().should("include", "/login");})
 

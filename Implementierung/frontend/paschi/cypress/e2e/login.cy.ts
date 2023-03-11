@@ -14,7 +14,7 @@ describe("Login test", () => {
     cy.contains("Abmelden");
     cy.get("button").contains("Abmelden").click();
     cy.url().should("include", "/login");
-    cy.clickLink('Buy Now')
+    cy.login();
 
 
   });
