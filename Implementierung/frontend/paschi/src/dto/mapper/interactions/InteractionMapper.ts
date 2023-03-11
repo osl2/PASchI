@@ -64,7 +64,7 @@ export class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
       category = await categoryService.getById(interactionDto.categoryId);
     }
 
-    let interaction = useInteractionStore().getInteractionByTimeStampAndSession(interactionDto.timeStamp,
+    let interaction = useInteractionStore().getInteractionByTimeCreatedAndSession(interactionDto.createdAt,
       interactionDto.sessionId);
     if (interaction == undefined) {
       interaction = new Interaction(

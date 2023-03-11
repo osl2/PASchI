@@ -31,10 +31,11 @@ export const useInteractionStore = defineStore('interactions', {
       }
       return undefined;
     },
-    getInteractionByTimeStampAndSession(time: string, sessionId: string): Interaction | undefined {
+    getInteractionByTimeCreatedAndSession(time: string, sessionId: string): Interaction | undefined {
       for (const interaction of this.interactions) {
-        if (interaction.session.getId === sessionId && interaction.timeStamp === time) {
-          return <Interaction> interaction;
+        if (interaction.session.getId === sessionId
+          && interaction.createdAt.substring(0, 23) === time.substring(0, 23)) {
+          return <Interaction>interaction;
         }
       }
       return undefined;
