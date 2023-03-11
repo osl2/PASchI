@@ -1,5 +1,5 @@
 import {Student} from "@/model/userdata/interactions/Student";
-import {useStudentStore} from "@/store/StudentStore";
+import {useStudentStore} from "@/store/ParticipantStore";
 import {UserController} from "@/controller/UserController";
 import {CourseController} from "@/controller/CourseController";
 import {ParticipantService} from "@/service/ParticipantService";

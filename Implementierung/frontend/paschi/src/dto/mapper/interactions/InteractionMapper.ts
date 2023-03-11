@@ -6,7 +6,7 @@ import {UserController} from "@/controller/UserController";
 import {SessionService} from "@/service/SessionService";
 import {ParticipantService} from "@/service/ParticipantService";
 import {useSessionStore} from "@/store/SessionStore";
-import {useStudentStore} from "@/store/StudentStore";
+import {useStudentStore} from "@/store/ParticipantStore";
 import {useCategoryStore} from "@/store/CategoryStore";
 import {CategoryService} from "@/service/CategoryService";
 

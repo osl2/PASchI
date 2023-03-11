@@ -3,7 +3,7 @@ import {useUserStore} from "@/store/UserStore";
 import {Role} from "@/model/Role";
 import {UserService} from "@/service/UserService";
 import {CategoryController} from "@/controller/CategoryController";
-import {useStudentStore} from "@/store/StudentStore";
+import {useStudentStore} from "@/store/ParticipantStore";
 import {useCourseStore} from "@/store/CourseStore";
 import {useSessionStore} from "@/store/SessionStore";
 import {useCategoryStore} from "@/store/CategoryStore";

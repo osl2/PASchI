@@ -3,7 +3,7 @@ import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 import {UserController} from "@/controller/UserController";
 import {useRoomStore} from "@/store/RoomStore";
 import {useCourseStore} from "@/store/CourseStore";
-import {useStudentStore} from "@/store/StudentStore";
+import {useStudentStore} from "@/store/ParticipantStore";
 import {Participant} from "@/model/userdata/interactions/Participant";
 import {SeatArrangementService} from "@/service/SeatArrangementService";
 import {CourseService} from "@/service/CourseService";

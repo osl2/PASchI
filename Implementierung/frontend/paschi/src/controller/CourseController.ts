@@ -4,7 +4,7 @@ import {Session} from "@/model/userdata/courses/Session";
 import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {useCourseStore} from "@/store/CourseStore";
 import {UserController} from "@/controller/UserController";
-import {useStudentStore} from "@/store/StudentStore";
+import {useStudentStore} from "@/store/ParticipantStore";
 import {SessionController} from "@/controller/SessionController";
 import {SeatArrangementController} from "@/controller/SeatArrangementController";
 import {CourseService} from "@/service/CourseService";
