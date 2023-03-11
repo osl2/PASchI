@@ -89,7 +89,7 @@ export default defineComponent({
     const passwordError = ref(false);
 
     onMounted(() => {
-      userController.loginWithToken().then((res) => {
+      userController.loginWithToken(null).then((res) => {
         if (res) {
           if (userController.getUser().isAdmin()) {
             router.push("/admin");

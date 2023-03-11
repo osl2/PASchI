@@ -54,8 +54,10 @@ export class UserController {
   /**
    * Einloggen mit gültigem Token.
    */
-  async loginWithToken(): Promise<string | undefined> {
-    const token = localStorage.getItem("token");
+  async loginWithToken(token: string | null): Promise<string | undefined> {
+    if (token == null) {
+      token = localStorage.getItem("token");
+    }
     if (token == null) {
       return undefined;
     }

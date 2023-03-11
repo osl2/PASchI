@@ -148,7 +148,7 @@ router.beforeEach((to, from, next) => {
     next();
   } else {
     UserController.getUserController()
-      .loginWithToken()
+      .loginWithToken(null)
       .then(async (res) => {
         if (res) {
           next();

@@ -54,6 +54,23 @@ test("Update", async () => {
   expect(user.lastName).toBe(_lastName);
 });
 
+test("Login with token", async () => {
+  try {
+    await userController.loginWithToken(null);
+  } catch (error) {
+    console.log("localstorage undefined");
+  }
+  setActivePinia(createPinia());
+
+  expect(userController.isLoggedIn()).toBeFalsy();
+
+  await userController.loginWithToken(user.token);
+  user = userController.getUser();
+
+  expect(user).toBeDefined();
+  expect(userController.isLoggedIn()).toBeTruthy();
+});
+
 test("Logout", async () => {
   try {
     userController.logout();
