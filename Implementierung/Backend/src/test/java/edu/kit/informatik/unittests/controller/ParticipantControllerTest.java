@@ -171,46 +171,6 @@ public class ParticipantControllerTest extends AbstractTest {
         }
 
     }
-    @Test
-    public void deleteWrongParticipant() throws Exception {
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL)
-                .param("id", "0")
-                .header("Authorization", "Bearer " + userDto.getToken())
-        ).andReturn();
-
-        int status = mvcResult.getResponse().getStatus();
-        String content = mvcResult.getResponse().getErrorMessage();
-
-        assertEquals(404, status);
-        assertEquals("Entity of class 'Participant' with id: '0' not found", content);
-    }
-
-    @Test
-    public void getWrongParticipant() throws Exception{
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + participants.get(0).getId())
-                .header("Authorization", "Bearer " + userDto.getToken())
-        ).andReturn();
-
-        int status = mvcResult.getResponse().getStatus();
-        String content = mvcResult.getResponse().getErrorMessage();
-
-        assertEquals(404, status);
-        assertEquals("Entity of class 'Participant' with id: '" + participants.get(0).getId() +"' not found", content);
-    }
-
-    @Test
-    public void updateWrongParticipant() throws Exception{
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(BASE_URL).contentType(MediaType.APPLICATION_JSON)
-                .content(super.mapToJson(participants.get(0)))
-                .header("Authorization", "Bearer " + userDto.getToken())
-        ).andReturn();
-
-        int status = mvcResult.getResponse().getStatus();
-        String content = mvcResult.getResponse().getErrorMessage();
-
-        assertEquals(404, status);
-        assertEquals("Entity of class 'Participant' with id: '" + participants.get(0).getId() +"' not found", content);
-    }
 
     @Test
     public void updateParticipant() throws Exception {
@@ -256,4 +216,44 @@ public class ParticipantControllerTest extends AbstractTest {
 
     }
 
+    @Test
+    public void deleteNonExistingParticipant() throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL)
+                .param("id", "0")
+                .header("Authorization", "Bearer " + userDto.getToken())
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getErrorMessage();
+
+        assertEquals(404, status);
+        assertEquals("Entity of class 'Participant' with id: '0' not found", content);
+    }
+
+    @Test
+    public void getNonExistingParticipant() throws Exception{
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + "0")
+                .header("Authorization", "Bearer " + userDto.getToken())
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getErrorMessage();
+
+        assertEquals(404, status);
+        assertEquals("Entity of class 'Participant' with id: '0' not found", content);
+    }
+
+    @Test
+    public void updateNonExistingParticipant() throws Exception{
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                .content(super.mapToJson(participants.get(0)))
+                .header("Authorization", "Bearer " + userDto.getToken())
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getErrorMessage();
+
+        assertEquals(404, status);
+        assertEquals("Entity of class 'Participant' with id: '" + participants.get(0).getId() +"' not found", content);
+    }
 }
