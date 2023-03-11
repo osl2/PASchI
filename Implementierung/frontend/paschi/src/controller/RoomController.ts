@@ -63,6 +63,9 @@ export class RoomController {
           await arrangementController.deleteSeatArrangement(arrangement.getId);
         }
       }
+      for (const roomObject of room.roomObjects) {
+        await this.removeRoomObject(id, roomObject.getId);
+      }
       await this.roomService.delete(id);
       useRoomStore().deleteRoom(id);
     }
