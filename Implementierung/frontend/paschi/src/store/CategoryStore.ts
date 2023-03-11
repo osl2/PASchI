@@ -30,37 +30,23 @@ export const useCategoryStore = defineStore('categories', {
       });
     },
     getCategory(id: string): Category | undefined {
-      let category: Category;
-      this.categories.forEach((element) => {
-        if (element.getId === id) {
-          // @ts-ignore
-          category = element
+      for (const category of this.categories) {
+        if (category.getId === id) {
+          return <Category>category;
         }
-      });
-      this.ratedCategories.forEach((element) => {
-        if (element.getId === id) {
-          // @ts-ignore
-          category = element
+      }
+      for (const category of this.ratedCategories) {
+        if (category.getId === id) {
+          return <RatedCategory>category;
         }
-      });
-      // @ts-ignore
-      if (category !== undefined) {
-        return category;
       }
       return undefined;
     },
     getAllCategories(): Category[] {
-      // @ts-ignore
-      return this.categories;
+      return <Category[]>this.categories;
     },
     getRatedCategories(name: string): RatedCategory[] {
-      const categories: RatedCategory[] = [];
-      this.ratedCategories.forEach((element) => {
-        if (element.name === name) {
-          // @ts-ignore
-          categories.push(element);
-        }
-      });
+      const categories = <RatedCategory[]>this.ratedCategories.filter(category => category.name === name);
       categories.sort((a: RatedCategory, b: RatedCategory) => {
         return (a.getQuality()! <= b.getQuality()!) ? 1 : -1;
       });
@@ -70,33 +56,8 @@ export const useCategoryStore = defineStore('categories', {
     getNextId(): number {
       return this.nextId++;
     },
-    getByName(name: string): Category[] {
-      let categories: Category[] = [];
-      this.categories.forEach((element) => {
-        if (element.name === name) {
-          // @ts-ignore
-          categories.push(element);
-        }
-      });
-      this.ratedCategories.forEach((element) => {
-        if (element.name === name) {
-          // @ts-ignore
-          categories.push(element);
-        }
-      });
-
-      return categories;
-    },
     hasName(name: string): boolean {
-      let hasName = false;
-      this.categories.forEach((element) => {
-        if (element.name === name) {
-          // @ts-ignore
-          hasName = true;
-        }
-      });
-
-      return hasName;
+      return this.categories.find(category => category.name === name) != undefined;
     }
   }
 })
