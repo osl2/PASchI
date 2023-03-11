@@ -226,7 +226,6 @@ public class CourseControllerTest extends AbstractTest {
 
         assertEquals(404, status);
         assertEquals("Entity of class 'Course' with id: '" + courses.get(0).getId() +"' not found", content);
-
     }
 
     @Test
