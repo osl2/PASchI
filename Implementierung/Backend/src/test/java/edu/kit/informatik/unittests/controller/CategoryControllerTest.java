@@ -77,7 +77,7 @@ public class CategoryControllerTest extends AbstractTest {
 
     }
 
-    private void addCategoryToDatabase() {
+    private void addCategoriesToDatabase() {
         List<RatedCategoryDto> repositoryCategory = new ArrayList<>();
         for (RatedCategoryDto categoryDto: this.categories) {
             repositoryCategory.add(databaseManipulator.addCategory(categoryDto));
@@ -119,7 +119,7 @@ public class CategoryControllerTest extends AbstractTest {
 
     @Test
     public void getOneCategory() throws Exception {
-        addCategoryToDatabase();
+        addCategoriesToDatabase();
 
         for (RatedCategoryDto categoryDto: categories) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + categoryDto.getId())
@@ -140,7 +140,7 @@ public class CategoryControllerTest extends AbstractTest {
 
     @Test
     public void getAllCategories() throws Exception {
-        addCategoryToDatabase();
+        addCategoriesToDatabase();
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL)
                 .header("Authorization", "Bearer " + userDto.getToken())
@@ -162,9 +162,43 @@ public class CategoryControllerTest extends AbstractTest {
     }
 
     @Test
+    public void updateCategories() throws Exception {
+        addCategoriesToDatabase();
+
+        List<RatedCategoryDto> categoryDtos = addSomeCategories();
+
+        for (int i = 0; i < categoryDtos.size(); i++) {
+            categories.get(i).setName(categoryDtos.get(i).getName());
+        }
+
+        for (RatedCategoryDto categoryDto: categories) {
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                    .content(super.mapToJson(categoryDto))
+                    .header("Authorization", "Bearer " + userDto.getToken())
+            ).andReturn();
+
+            int status = mvcResult.getResponse().getStatus();
+            assertEquals(200, status);
+        }
+
+        List<CategoryDto> categoryDtosFromDB = databaseManipulator.getCategories();
+
+        categoryDtosFromDB.sort(Comparator.naturalOrder());
+        categories.sort(Comparator.naturalOrder());
+
+        assertEquals(categoryDtosFromDB.size(), categories.size());
+
+        for (int i = 0; i < categories.size(); i++) {
+            assertEquals(categoryDtosFromDB.get(i).getName(), categories.get(i).getName());
+            assertEquals(categoryDtosFromDB.get(i).getCreatedAt(), categories.get(i).getCreatedAt());
+        }
+
+    }
+
+    @Test
     public void deleteCategories() throws Exception {
         List<CategoryDto> before = databaseManipulator.getCategories();
-        addCategoryToDatabase();
+        addCategoriesToDatabase();
 
         for (CategoryDto categoryDto: categories) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL)
@@ -186,7 +220,7 @@ public class CategoryControllerTest extends AbstractTest {
     }
 
     @Test
-    public void getWrongCategory() throws Exception{
+    public void getNonExistingCategory() throws Exception{
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + categories.get(0).getId())
                 .header("Authorization", "Bearer " + userDto.getToken())
         ).andReturn();
@@ -196,12 +230,39 @@ public class CategoryControllerTest extends AbstractTest {
 
         assertEquals(404, status);
         assertEquals("Entity of class 'Category' with id: '" + categories.get(0).getId() +"' not found", content);
+    }
 
+    @Test
+    public void updateNonExistingCategory() throws Exception{
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                .content(super.mapToJson(categories.get(0)))
+                .header("Authorization", "Bearer " + userDto.getToken())
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getErrorMessage();
+
+        assertEquals(404, status);
+        assertEquals("Entity of class 'Category' with id: '" + categories.get(0).getId() +"' not found", content);
+    }
+
+    @Test
+    public void deleteNonExistingCategory() throws Exception{
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL)
+                .param("id", "0")
+                .header("Authorization", "Bearer " + userDto.getToken())
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getErrorMessage();
+
+        assertEquals(404, status);
+        assertEquals("Entity of class 'Category' with id: '0' not found", content);
     }
 
     @Test
     public void getWrongCategoryOfUser() throws Exception {
-        addCategoryToDatabase();
+        addCategoriesToDatabase();
         UserDto newuserDto = super.addAndLogin(EntityGenerator.createNewUser(new Faker(new Locale("de"))));
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + categories.get(0).getId())
