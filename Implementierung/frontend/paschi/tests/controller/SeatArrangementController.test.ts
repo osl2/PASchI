@@ -6,6 +6,7 @@ import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {CourseController} from "@/controller/CourseController";
 import {RoomController} from "@/controller/RoomController";
 import {StudentController} from "@/controller/StudentController";
+import {Chair} from "@/model/userdata/rooms/Chair";
 
 const arrangementController = SeatArrangementController.getSeatArrangementController();
 const arrangementData = {name: "Sitzordnung"};
@@ -14,14 +15,14 @@ let arrangement: SeatArrangement | undefined;
 let courseId: string;
 let roomId: string;
 const participants: string[] = [];
-const chairs: string[] = [];
+let chairs: Chair[] = [];
 
 beforeAll(async () => {
   // await beforeEachTest();
   // TODO: Entfernen, wenn das Backend richtig läuft @ugqbo
   setActivePinia(createPinia());
   const admin = {email: "admin@kit.edu", password: "admin"};
-  const user = {firstName: "Test", lastName: "5", email: "test5@test.jest", password: "test"};
+  const user = {firstName: "Test", lastName: "5", email: "test7@test.jest", password: "test"};
   const userController = UserController.getUserController();
   const adminController = AdminController.getAdminController();
 
@@ -65,7 +66,7 @@ test("Create automatic seat arrangement", async () => {
   for (let i = 0; i < 5; i++) {
     const studentId = await StudentController.getStudentConroller().createStudent("firstName", "lastName");
     participants.push(studentId);
-    CourseController.getCourseController().addStudentToCourse(courseId, studentId);
+    await CourseController.getCourseController().addStudentToCourse(courseId, studentId);
   }
 
   await arrangementController.createAutomaticSeatArrangement("Default", "24");
@@ -82,21 +83,25 @@ test("Create automatic seat arrangement", async () => {
 });
 
 test("Add mapping", async () => {
+  const roomController = RoomController.getRoomController();
   const teacher = CourseController.getCourseController().getTeacher();
   for (let i = 0; i < 6; i++) {
-    const chairId = RoomController.getRoomController().addChair(
+    roomController.addChair(
       roomId,
       (i + 10) * 100,
       (i + 10) * 100,
       0
     );
-    chairs.push(chairId!);
+  }
+  await roomController.saveRoom(roomId);
+  chairs = roomController.getRoomObjects(roomId)!;
+  for (let i = 0; i < 6; i++) {
     if (i == 5) {
-      await arrangementController.addMapping(arrangementId!, chairId!, "24");
+      await arrangementController.addMapping(arrangementId!, chairs[i].getId, "24");
       await arrangementController.addMapping(arrangementId!, "24", teacher.getId);
-      await arrangementController.addMapping(arrangementId!, chairId!, teacher.getId);
+      await arrangementController.addMapping(arrangementId!, chairs[i].getId, teacher.getId);
     } else {
-      await arrangementController.addMapping(arrangementId!, chairId!, participants[i]);
+      await arrangementController.addMapping(arrangementId!, chairs[i].getId, participants[i]);
     }
   }
 
@@ -110,8 +115,8 @@ test("Get all students", () => {
 });
 
 test("Delete mapping", async () => {
-  await arrangementController.deleteMapping(arrangementId!, chairs[0]);
-  const chair = RoomController.getRoomController().getRoomObject(roomId, chairs[0]);
+  await arrangementController.deleteMapping(arrangementId!, chairs[0].getId);
+  const chair = RoomController.getRoomController().getRoomObject(roomId, chairs[0].getId);
 
   expect(arrangement?.seatMap.size).toBe(5);
   expect(arrangement?.seatMap.has(chair!)).toBeFalsy();
