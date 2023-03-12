@@ -96,10 +96,7 @@
                           studentController.getStudent(studentId[0])?.firstName +
                           " " +
                           studentController.getStudent(studentId[0])?.lastName
-                        }}
-                      </v-col>
-                      <v-col>
-                        {{ studentId[1] }} Störungen
+                        }}: {{ studentId[1] }} Störungen
                       </v-col>
                     </v-list-item-title>
                   </v-list-item>
