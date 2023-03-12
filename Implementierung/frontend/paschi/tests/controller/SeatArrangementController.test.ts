@@ -22,7 +22,7 @@ beforeAll(async () => {
   // TODO: Entfernen, wenn das Backend richtig läuft @ugqbo
   setActivePinia(createPinia());
   const admin = {email: "admin@kit.edu", password: "admin"};
-  const user = {firstName: "Test", lastName: "5", email: "test7@test.jest", password: "test"};
+  const user = {firstName: "Test", lastName: "5", email: "test5@test.jest", password: "test"};
   const userController = UserController.getUserController();
   const adminController = AdminController.getAdminController();
 
@@ -143,3 +143,4 @@ test("Delete seat arrangement", async () => {
   expect(arrangement).toBeUndefined();
   expect(arrangements.length).toBe(0);
 });
+
