@@ -91,11 +91,16 @@
                 <v-list>
                   <v-list-item v-for="studentId in top5DisturberArray">
                     <v-list-item-title>
-                      {{
-                        studentController.getStudent(studentId[0])?.firstName +
-                        " " +
-                        studentController.getStudent(studentId[0])?.lastName
-                      }}: {{ studentId[1] }} Störungen
+                      <v-col>
+                        {{
+                          studentController.getStudent(studentId[0])?.firstName +
+                          " " +
+                          studentController.getStudent(studentId[0])?.lastName
+                        }}
+                      </v-col>
+                      <v-col>
+                        {{ studentId[1] }} Störungen
+                      </v-col>
                     </v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -182,8 +187,6 @@ export default defineComponent({
       const involvementChartId = document.getElementById(
         "involvementChart"
       ) as HTMLCanvasElement;
-      // const top5InteractionChartId = document.getElementById('top5InteractionChart') as HTMLCanvasElement;
-      // const top5DisturberChartId = document.getElementById('top5DisturberChart') as HTMLCanvasElement;
 
       if (stats == undefined) {
         console.log("stats could not be loaded");
@@ -192,27 +195,24 @@ export default defineComponent({
 
       const involvementChartData = {
         labels:
-          //['5.12 dummy', '6.12 dummy', '9.12 dummy', '10.12 dummy', '11.12 dummy'],
           involvementKeys,
         datasets: [
           {
             label: "Anzahl",
             data:
-              //[5,3,2,1,4],
               involvementValues,
+            fill: false,
           },
         ],
       };
 
       const categoryChartData = {
         labels:
-          // ['Störungsdummy', 'Antwortdummy', 'Fragendummy'],
           categoryKeys,
         datasets: [
           {
             label: "Anzahl",
             data:
-              //[5,3,2],
               categoryValues,
           },
         ],
@@ -223,7 +223,6 @@ export default defineComponent({
         data: involvementChartData,
         options: {
           responsive: true,
-          maintainAspectRatio: false,
           plugins: {
             legend: {
               display: true,
@@ -231,6 +230,12 @@ export default defineComponent({
                 color: "rgb(0,0,0)",
               },
             },
+          },
+          scales: {
+            y: {
+              suggestedMin: 0,
+              suggestedMax: 100
+            }
           },
           animation: {
             onComplete: buildInvolvementChart,
@@ -255,6 +260,7 @@ export default defineComponent({
           animation: {
             onComplete: buildCategoryChart,
           },
+
         },
       });
 

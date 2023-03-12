@@ -192,7 +192,7 @@
           <v-row class="ma-2">
             <v-col><div>Von</div></v-col>
             <v-col><div>Nach</div></v-col>
-            <v-col><div>Katetegorie</div></v-col>
+            <v-col><div>Kategorie</div></v-col>
             <v-col><div>Qualität</div></v-col>
             <v-col><div>Zeit</div></v-col>
           </v-row>
@@ -254,7 +254,7 @@
           <v-row class="ma-2">
             <v-col><div>Von</div></v-col>
             <v-col><div>Nach</div></v-col>
-            <v-col><div>Katetegorie</div></v-col>
+            <v-col><div>Kategorie</div></v-col>
             <v-col><div>Qualität</div></v-col>
             <v-col><div>Zeit</div></v-col>
           </v-row>
