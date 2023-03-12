@@ -145,13 +145,13 @@ export class UserController {
   /**
    * Löscht den Benutzeraccount.
    */
-  async delete() {
-    const user = useUserStore().getUser();
-    if (user) {
-      await this.userService.delete(user.getId);
-      this.clearStores();
-    }
-  }
+  // async delete() {
+  //   const user = useUserStore().getUser();
+  //   if (user) {
+  //     await this.userService.delete(user.getId);
+  //     this.clearStores();
+  //   }
+  // }
 
   private async getData() {
     await this.getTeacher();

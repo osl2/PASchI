@@ -2,6 +2,8 @@ import {UserController} from "@/controller/UserController";
 import {AdminController} from "@/controller/AdminController";
 import {createPinia, setActivePinia} from "pinia";
 import {User} from "@/model/User";
+import {UserService} from "@/service/UserService";
+import {useUserStore} from "@/store/UserStore";
 
 setActivePinia(createPinia());
 
@@ -27,6 +29,13 @@ beforeAll(async () => {
   }
 
   setActivePinia(createPinia());
+});
+
+afterAll(async () => {
+  setActivePinia(createPinia());
+  let _user = await UserService.getService().login(admin.email, admin.password);
+  useUserStore().setUser(_user!);
+  await UserService.getService().delete(user.getId);
 });
 
 test("Login", async () => {
@@ -81,15 +90,15 @@ test("Logout", async () => {
   expect(userController.isLoggedIn()).toBeFalsy();
 });
 
-test("Delete account", async () => {
-  await userController.login(userData.email, userData.password);
-  user = userController.getUser();
-
-  expect(user).toBeDefined();
-
-  await userController.delete();
-  const userId = await userController.login(userData.email, userData.password);
-
-  // TODO: Backend löscht nicht
-  // expect(userId).toBeUndefined();
-});
+// test("Delete account", async () => {
+//   await userController.login(userData.email, userData.password);
+//   user = userController.getUser();
+//
+//   expect(user).toBeDefined();
+//
+//   await userController.delete();
+//   const userId = await userController.login(userData.email, userData.password);
+//
+//   // TODO: Backend löscht nicht
+//   // expect(userId).toBeUndefined();
+// });
