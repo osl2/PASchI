@@ -98,8 +98,8 @@ test("Create and get interaction", async () => {
   interactionParticipants.fromId = await StudentController.getStudentConroller().createStudent("Luka", "Kosak");
   interactionParticipants.toId = await StudentController.getStudentConroller().createStudent("Gregor", "Snelting");
   const categoryId = await CategoryController.getCategoryController().createCategory("Kategorie");
-  CourseController.getCourseController().addStudentToCourse(courseId, interactionParticipants.fromId);
-  CourseController.getCourseController().addStudentToCourse(courseId, interactionParticipants.toId);
+  await CourseController.getCourseController().addStudentToCourse(courseId, interactionParticipants.fromId);
+  await CourseController.getCourseController().addStudentToCourse(courseId, interactionParticipants.toId);
   await sessionController.createInteraction("24", interactionParticipants.fromId,
     interactionParticipants.toId, categoryId);
   interactionId = await sessionController.createInteraction(sessionId!, interactionParticipants.fromId,

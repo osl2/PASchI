@@ -57,7 +57,7 @@ beforeAll(async () => {
   courseId = await courseController.createCourse("Kurs", "Fach");
   for (let i = 0; i < 6; i++) {
     studentIds.push(await studentController.createStudent("Student", `${i + 1}`));
-    courseController.addStudentToCourse(courseId, studentIds[i]);
+    await courseController.addStudentToCourse(courseId, studentIds[i]);
   }
   sessionId = (await sessionController.createSession(courseId, undefined, "Sitzung"))!;
   session = sessionController.getSession(sessionId)!;

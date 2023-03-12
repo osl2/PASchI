@@ -148,14 +148,14 @@ export class CourseController {
    * @param courseId Die Id des Kurses zurück.
    * @param studentId Die Id des Schülers.
    */
-  addStudentToCourse(courseId: string, studentId: string) {
+  async addStudentToCourse(courseId: string, studentId: string) {
     const course = useCourseStore().getCourse(courseId);
     const student = useStudentStore().getStudent(studentId);
     if (course && student) {
       course.addParticipant(student);
       student.addCourse(course);
       ParticipantService.getService().update(student).then();
-      this.courseService.update(course).then();
+      await this.courseService.update(course);
     }
   }
 

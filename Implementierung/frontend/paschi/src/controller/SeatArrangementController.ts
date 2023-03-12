@@ -52,7 +52,7 @@ export class SeatArrangementController {
     );
     await this.arrangementService.add(arrangement);
     course.addSeatArrangement(arrangement);
-    CourseService.getService().update(course).then();
+    await CourseService.getService().update(course);
 
     return useSeatArrangementStore().addSeatArrangement(arrangement);
   }
@@ -95,8 +95,6 @@ export class SeatArrangementController {
       course,
       room
     );
-    course.addSeatArrangement(arrangement);
-    await CourseService.getService().update(course);
 
     const chairs = roomController.getRoomObjects(roomId)?.filter((roomObject) => roomObject instanceof Chair);
     for (let i = 0; i < students.length; i++) {
@@ -105,6 +103,8 @@ export class SeatArrangementController {
     arrangement.setSeat(chairs![students.length], CourseController.getCourseController().getTeacher());
 
     await this.arrangementService.add(arrangement);
+    course.addSeatArrangement(arrangement);
+    await CourseService.getService().update(course);
     return useSeatArrangementStore().addSeatArrangement(arrangement);
   }
 
@@ -180,7 +180,7 @@ export class SeatArrangementController {
 
     await this.replaceSeatArrangement(arrangement);
     arrangement.setSeat(chair, participant);
-    this.arrangementService.update(arrangement).then();
+    await this.arrangementService.update(arrangement);
   }
 
   /**
