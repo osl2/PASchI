@@ -99,7 +99,7 @@ export default defineComponent({
     }
 
     const unseatedParticipants = computed(() => {
-      return seatArrangement.value?.getStudentsNotAssigned();
+      return seatArrangementController.getStudentsNotAssigned(props.seatArrangementId);
     });
 
     onMounted(() => {
