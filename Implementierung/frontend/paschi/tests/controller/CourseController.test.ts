@@ -90,7 +90,7 @@ test("Add student to course and get student", async () => {
 
   expect(courseController.getStudentsOfCourse(courseId)?.length).toBe(0);
 
-  courseController.addStudentToCourse(courseId, participantId);
+  await courseController.addStudentToCourse(courseId, participantId);
   const student = courseController.getStudentsOfCourse(courseId);
 
   if (student != undefined) {
@@ -123,7 +123,9 @@ test("Remove student from course", async () => {
 
   const roomController = RoomController.getRoomController();
   const roomId = await roomController.createRoom("raum");
-  const chairId = roomController.addChair(roomId, 0, 0, 0);
+  roomController.addChair(roomId, 0, 0, 0);
+  await roomController.saveRoom(roomId);
+  const chairId = roomController.getRoomObjects(roomId)![0].getId;
   const arrangementController = SeatArrangementController.getSeatArrangementController();
   arrangementId = await arrangementController.createSeatArrangement("arrangement", roomId, courseId);
   await arrangementController.addMapping(arrangementId!, chairId!, participantId);
@@ -175,7 +177,7 @@ test("Get teacher", () => {
 test("Delete course", async () => {
   const sessionController = SessionController.getSessionController();
   await sessionController.createSession(courseId, undefined, "session");
-  courseController.addStudentToCourse(courseId, participantId);
+  await courseController.addStudentToCourse(courseId, participantId);
 
   await courseController.deleteCourse(courseId);
   course = courseController.getCourse(courseId);
