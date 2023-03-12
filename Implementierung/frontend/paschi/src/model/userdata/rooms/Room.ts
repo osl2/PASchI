@@ -69,14 +69,4 @@ export class Room extends DataObject {
   set visible(value: boolean) {
     this._visible = value;
   }
-
-// copy(): Room {
-  //   const room = new Room(undefined, 0, this.user, this.name);
-  //   this.roomObjects.forEach((object: RoomObject) => {
-  //     if (object.isTable()) {
-  //       room.addRoomObject(object.copy());
-  //     }
-  //   });
-  //   return room;
-  // }
 }

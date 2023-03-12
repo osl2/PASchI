@@ -9,10 +9,11 @@
         >
       </v-row>
     </v-card-title>
-    <v-card-item @click="navigateToCourse(course)" v-for="course in courses">
-      <v-row class="ma-2">
+    <v-list-item @click="navigateToCourse(course)" v-for="course in courses" class="pa-2 ma-1">
+      <v-list-item-title>
         {{ course.name }}
-        <v-spacer />
+      </v-list-item-title>
+      <template v-slot:append>
         <v-btn
           class="ml-2"
           variant="tonal"
@@ -21,8 +22,8 @@
         >
           <v-icon> fas fa-chart-line </v-icon>
         </v-btn>
-      </v-row>
-    </v-card-item>
+      </template>
+    </v-list-item>
   </v-card>
 </template>
 

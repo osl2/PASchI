@@ -1,5 +1,4 @@
 import {Student} from "@/model/userdata/interactions/Student";
-import {Course} from "@/model/userdata/courses/Course";
 import {useStudentStore} from "@/store/StudentStore";
 import {UserController} from "@/controller/UserController";
 import {CourseController} from "@/controller/CourseController";
@@ -62,11 +61,11 @@ export class StudentController {
   async deleteStudent(id: string) {
     const student = useStudentStore().getStudent(id);
     if (student) {
-      student.courses.forEach((course: Course) => {
-        CourseController.getCourseController().removeStudentFromCourse(course.getId, id);
-      });
+      for (const course of student.courses) {
+        await CourseController.getCourseController().removeStudentFromCourse(course.getId, id);
+      }
       await this.studentService.delete(id);
-      useStudentStore().deleteStudent(id);
+      await this.studentService.getById(id);
     }
   }
 
@@ -84,6 +83,6 @@ export class StudentController {
    */
   getAllStudents(): Student[] {
     this.studentService.getAll().then();
-    return useStudentStore().getAllStudents();
+    return useStudentStore().getAllStudents().filter(student => student.visible);
   }
 }

@@ -5,12 +5,10 @@ import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {useCourseStore} from "@/store/CourseStore";
 import {UserController} from "@/controller/UserController";
 import {useStudentStore} from "@/store/StudentStore";
-import {RoomObject} from "@/model/userdata/rooms/RoomObject";
 import {SessionController} from "@/controller/SessionController";
 import {SeatArrangementController} from "@/controller/SeatArrangementController";
 import {CourseService} from "@/service/CourseService";
 import {ParticipantService} from "@/service/ParticipantService";
-import {SeatArrangementService} from "@/service/SeatArrangementService";
 import {Teacher} from "@/model/userdata/interactions/Teacher";
 
 export class CourseController {
@@ -59,7 +57,7 @@ export class CourseController {
     if (course) {
       course.name = name;
       course.subject = subject;
-      await this.courseService.update(course).then();
+      await this.courseService.update(course);
     }
   }
 
@@ -71,16 +69,16 @@ export class CourseController {
   async deleteCourse(id: string) {
     const course = useCourseStore().getCourse(id);
     if (course) {
-      course.participants.forEach((student: Participant) => {
-        student.removeCourse(id);
-        ParticipantService.getService().update(student);
-      });
-      course.sessions.forEach((session: Session) => {
-        SessionController.getSessionController().deleteSession(session.getId);
-      });
-      course.seatArrangements.forEach((arrangement: SeatArrangement) => {
-        SeatArrangementController.getSeatArrangementController().deleteSeatArrangement(arrangement.getId);
-      });
+      for (const participant of course.participants) {
+        participant.removeCourse(id);
+        await ParticipantService.getService().update(participant);
+      }
+      for (const session of course.sessions) {
+        await SessionController.getSessionController().deleteSession(session.getId);
+      }
+      for (const arrangement of course.seatArrangements) {
+        await SeatArrangementController.getSeatArrangementController().deleteSeatArrangement(arrangement.getId);
+      }
       await this.courseService.delete(id);
       useCourseStore().deleteCourse(id);
     }
@@ -140,7 +138,8 @@ export class CourseController {
       return undefined;
     }
 
-    return useStudentStore().getAllStudents().filter(student => course.getParticipant(student.getId) == undefined);
+    return useStudentStore().getAllStudents().filter(student => student.visible &&
+      course?.getParticipant(student.getId) == undefined);
   }
 
   /**
@@ -166,22 +165,22 @@ export class CourseController {
    * @param courseId Die Id des Kurses.
    * @param studentId Die Id des Schülers.
    */
-  removeStudentFromCourse(courseId: string, studentId: string) {
+  async removeStudentFromCourse(courseId: string, studentId: string) {
     const course = useCourseStore().getCourse(courseId);
     const student = useStudentStore().getStudent(studentId);
     if (course && student) {
       course.removeParticipant(studentId);
       student.removeCourse(courseId);
-      ParticipantService.getService().update(student).then();
-      for (const arrangement of course.seatArrangements.filter(arrangement => arrangement.room.visible)) {
-        arrangement.seatMap.forEach((student: Participant, chair: RoomObject) => {
-          if (student.getId === studentId) {
-            arrangement.removeSeat(chair);
-            SeatArrangementService.getService().update(arrangement).then();
+      await ParticipantService.getService().update(student);
+      for (const arrangement of course.seatArrangements.filter(arrangement => arrangement.isVisible())) {
+        for (const value of arrangement.seatMap) {
+          if (value[1].getId === studentId) {
+            const arrangementController = SeatArrangementController.getSeatArrangementController();
+            await arrangementController.deleteMapping(arrangement.getId, value[0].getId);
           }
-        });
+        }
       }
-      this.courseService.update(course).then();
+      await this.courseService.update(course);
     }
   }
 

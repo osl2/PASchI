@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import {Chair} from "@/model/userdata/rooms/Chair";
 import {Table} from "@/model/userdata/rooms/Table";
+import {Position} from "@/model/userdata/rooms/Position";
 
 export const useRoomObjectStore = defineStore('roomObjects', {
   state: () => ({
@@ -20,23 +21,25 @@ export const useRoomObjectStore = defineStore('roomObjects', {
     getChair(id: string): Chair | undefined {
       for (const chair of this.chairs) {
         if (chair.getId === id) {
-          return <Chair> chair;
+          return <Chair>chair;
         }
       }
       return undefined;
     },
-    getChairByTimeCreated(time: string): Chair | undefined {
+    getChairByTimeCreatedAndPosition(time: string, pos: Position): Chair | undefined {
       for (const chair of this.chairs) {
-        if (chair.createdAt.substring(0, 23) === time.substring(0, 23)) {
-          return <Chair> chair;
+        if (chair.createdAt.substring(0, 23) === time.substring(0, 23)
+          && chair.position.xCoordinate === pos.xCoordinate && chair.position.yCoordinate === pos.yCoordinate) {
+          return <Chair>chair;
         }
       }
       return undefined;
     },
-    getTableByTimeCreated(time: string): Table | undefined {
+    getTableByTimeCreatedAndPosition(time: string, pos: Position): Table | undefined {
       for (const table of this.tables) {
-        if (table.createdAt.substring(0, 23) === time.substring(0, 23)) {
-          return <Table> table;
+        if (table.createdAt.substring(0, 23) === time.substring(0, 23)
+          && table.position.xCoordinate == pos.xCoordinate && table.position.yCoordinate == pos.yCoordinate) {
+          return <Table>table;
         }
       }
       return undefined;

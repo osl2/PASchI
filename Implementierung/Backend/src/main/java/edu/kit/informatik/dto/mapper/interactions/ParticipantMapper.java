@@ -67,6 +67,7 @@ public class ParticipantMapper implements IModelDtoMapper<Participant, Participa
                 participantTypeDto,
                 courseIds,
                 interactionIds,
+                participant.isVisible(),
                 participant.getCreatedAt(),
                 participant.getUpdatedAt()
         );
@@ -107,7 +108,7 @@ public class ParticipantMapper implements IModelDtoMapper<Participant, Participa
         }
 
         Participant participant = new Participant(user, participantDto.getFirstName(), participantDto.getLastName(),
-                                                    participantType, participantDto.getCreatedAt(), updatedAt);
+                                participantType, participantDto.isVisible(), participantDto.getCreatedAt(), updatedAt);
 
         participant.setCourses(courses);
         participant.setInteractions(interactions);

@@ -5,13 +5,11 @@ import {UserController} from "@/controller/UserController";
 import {Chair} from "@/model/userdata/rooms/Chair";
 import {useRoomObjectStore} from "@/store/RoomObjectStore";
 import {Table} from "@/model/userdata/rooms/Table";
-import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {RoomObject} from "@/model/userdata/rooms/RoomObject";
 import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 import {usePositionStore} from "@/store/PositionStore";
 import {SeatArrangementController} from "@/controller/SeatArrangementController";
 import {RoomService} from "@/service/RoomService";
-import {SeatArrangementService} from "@/service/SeatArrangementService";
 
 export class RoomController {
   private static controller: RoomController = new RoomController();
@@ -49,7 +47,7 @@ export class RoomController {
     return useRoomStore().addRoom(room);
   }
 
-  async updateRoom(id: string) {
+  async saveRoom(id: string) {
     const room = useRoomStore().getRoom(id);
     if (room) {
       await this.roomService.update(room);
@@ -60,16 +58,14 @@ export class RoomController {
     const arrangementController = SeatArrangementController.getSeatArrangementController();
     const room = useRoomStore().getRoom(id);
     if (room) {
-      useSeatArrangementStore()
-        .getAllSeatArrangements()
-        .forEach((arrangement: SeatArrangement) => {
-          if (arrangement.room.getId === id) {
-            arrangementController.deleteSeatArrangement(arrangement.getId);
-          }
-        });
+      for (const arrangement of useSeatArrangementStore().getAllSeatArrangements()) {
+        if (arrangement.room.getId === id) {
+          await arrangementController.deleteSeatArrangement(arrangement.getId);
+        }
+      }
+      await this.roomService.delete(id);
+      useRoomStore().deleteRoom(id);
     }
-    await this.roomService.delete(id);
-    useRoomStore().deleteRoom(id);
   }
 
   getRoom(id: string): Room | undefined {
@@ -81,8 +77,8 @@ export class RoomController {
     return useRoomStore().getAllRooms().filter((room: Room) => room.visible);
   }
 
-  async addChair(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number):
-    Promise<string | undefined> {
+  addChair(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number):
+    string | undefined {
 
     const room = useRoomStore().getRoom(roomId);
     if (room == undefined) {
@@ -107,14 +103,11 @@ export class RoomController {
       position
     );
     room.addRoomObject(chair);
-    useRoomObjectStore().addChair(chair);
-    await this.roomService.update(room).then();
-
-    return chair.getId;
+    return useRoomObjectStore().addChair(chair);
   }
 
-  async addTable(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number, length: number,
-           width: number): Promise<string | undefined> {
+  addTable(roomId: string, xCoordinate: number, yCoordinate: number, orientation: number, length: number,
+           width: number): string | undefined {
     const room = useRoomStore().getRoom(roomId);
     if (room == undefined) {
       return undefined;
@@ -140,10 +133,7 @@ export class RoomController {
       width
     );
     room.addRoomObject(table);
-    useRoomObjectStore().addTable(table);
-    await this.roomService.update(room);
-
-    return table.getId;
+    return useRoomObjectStore().addTable(table);
   }
 
   getRoomObjects(roomId: string): RoomObject[] | undefined {
@@ -161,12 +151,12 @@ export class RoomController {
       if (object) {
         room.removeRoomObject(objectId);
         usePositionStore().deletePosition(object.position.getId);
-        useSeatArrangementStore().getAllSeatArrangements().forEach((arrangement: SeatArrangement) => {
+        for (const arrangement of useSeatArrangementStore().getAllSeatArrangements()) {
           if (arrangement.room.getId === roomId) {
-            arrangement.removeSeat(object!);
-            SeatArrangementService.getService().update(arrangement);
+            const arrangementController = SeatArrangementController.getSeatArrangementController();
+            await arrangementController.deleteMapping(arrangement.getId, object.getId);
           }
-        });
+        }
         useRoomObjectStore().deleteRoomObject(objectId);
         await this.roomService.update(room);
       }

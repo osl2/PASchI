@@ -39,6 +39,8 @@ export class SessionController {
   async createSession(courseId: string, seatArrangementId: string | undefined, name: string):
     Promise<string | undefined> {
 
+    const arrangementController = SeatArrangementController.getSeatArrangementController();
+
     const course = useCourseStore().getCourse(courseId);
     if (course == undefined) {
       return undefined
@@ -49,7 +51,6 @@ export class SessionController {
       if (course.defaultArrangement) {
         arrangement = course.defaultArrangement;
       } else {
-        const arrangementController = SeatArrangementController.getSeatArrangementController();
         seatArrangementId = await arrangementController.createAutomaticSeatArrangement("Default", courseId);
         if (seatArrangementId == undefined) {
           return undefined;
@@ -57,7 +58,7 @@ export class SessionController {
         arrangement = useSeatArrangementStore().getSeatArrangement(seatArrangementId);
       }
     } else {
-      arrangement = useSeatArrangementStore().getSeatArrangement(seatArrangementId);
+      arrangement = await useSeatArrangementStore().getSeatArrangement(seatArrangementId);
     }
     if (arrangement == undefined) {
       return undefined;
@@ -78,7 +79,7 @@ export class SessionController {
 
     await this.sessionService.add(session);
     course.addSession(session);
-    CourseService.getService().update(course).then();
+    await CourseService.getService().update(course);
 
     return useSessionStore().addSession(session);
   }
@@ -106,22 +107,26 @@ export class SessionController {
     const session = useSessionStore().getSession(id);
     if (session) {
       session.course.removeSession(id);
-      CourseService.getService().update(session.course).then();
+      await CourseService.getService().update(session.course);
 
-      session.interactions.forEach((interaction: Interaction) => {
+      for (const interaction of session.interactions) {
         interaction.fromParticipant.removeInteraction(interaction.getId);
         interaction.toParticipant.removeInteraction(interaction.getId);
-        ParticipantService.getService().update(interaction.toParticipant);
-        ParticipantService.getService().update(interaction.fromParticipant);
+        await ParticipantService.getService().update(interaction.toParticipant);
+        await ParticipantService.getService().update(interaction.fromParticipant);
         useInteractionStore().deleteInteraction(interaction.getId);
-      });
+      }
 
       await this.sessionService.delete(id);
       useSessionStore().deleteSession(id);
+      const arrangementController = SeatArrangementController.getSeatArrangementController();
       const arrangement = session.seatArrangement;
-      if (!arrangement.room.visible && !session.course.defaultArrangementIsUsed(arrangement.getId)) {
-        const arrangementController = SeatArrangementController.getSeatArrangementController();
-        await arrangementController.deleteSeatArrangement(session.seatArrangement.getId);
+      if (!arrangement.isVisible()) {
+        if (!session.course.defaultArrangementIsUsed(arrangement.getId)) {
+          await arrangementController.deleteSeatArrangement(arrangement.getId);
+        }
+      } else {
+        await arrangementController.deleteSeatArrangement(arrangement.getId);
       }
     }
   }
@@ -148,7 +153,7 @@ export class SessionController {
    */
   getRecentSessions(): Session[] {
     const allSessions = useSessionStore().getAllSessions().sort((a: Session, b: Session) => {
-      return (a.createdAt <= b.createdAt) ? 1 : -1;
+      return (a.updatedAt <= b.updatedAt) ? 1 : -1;
     });
 
     const sessions = [];

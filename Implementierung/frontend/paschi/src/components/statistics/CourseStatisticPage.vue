@@ -24,7 +24,7 @@
             <v-card color="primary-lighten-1">
               <v-card-title>
                 <v-row class="ma-2">
-                  durchschnittliche Beteiligungsquote im Zeitverlauf
+                  Durchschnittliche Beteiligungsquote im Zeitverlauf
                   <v-spacer />
                 </v-row>
               </v-card-title>
@@ -160,7 +160,6 @@ export default defineComponent({
     let involvementMap = getInvolvementMap();
     let involvementKeys = Array.from(involvementMap!.keys());
     let involvementValues = Array.from(involvementMap!.values());
-
 
     function getCategoryMap() {
       if (stats !== undefined) {

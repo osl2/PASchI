@@ -137,7 +137,7 @@ export class Course extends DataObject {
   addSeatArrangement(seatArrangement: SeatArrangement) {
     if (this.getSeatArrangement(seatArrangement.getId) == undefined) {
       this._seatArrangements.push(seatArrangement);
-      if (!seatArrangement.room.visible) {
+      if (!seatArrangement.isVisible()) {
         this._defaultArrangement = seatArrangement;
       }
     }
@@ -153,7 +153,7 @@ export class Course extends DataObject {
     this.seatArrangements.forEach((element: SeatArrangement, index: number) => {
       if (element.getId === arrangementId) {
         this._seatArrangements.splice(index, 1);
-        if (!element.room.visible) {
+        if (!element.isVisible()) {
           this._defaultArrangement = undefined;
         }
       }

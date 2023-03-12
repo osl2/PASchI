@@ -110,7 +110,7 @@ export class CourseMapper implements IModelDtoMapper<Course, CourseDto> {
     course.sessions = sessions;
     course.seatArrangements = arrangements;
     course.seatArrangements.forEach(arrangement => {
-      if (!arrangement.room.visible) {
+      if (!arrangement.isVisible()) {
         course!.defaultArrangement = arrangement;
       }
     });

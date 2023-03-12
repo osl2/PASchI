@@ -50,8 +50,9 @@
                   variant="tonal"
                   color="primary"
                   @click="interactionMapClick(session)"
-                  >InteraktionsKarte</v-btn
-                >
+                  >
+                  <v-icon>mdi mdi-map</v-icon>
+                </v-btn>
                 <v-btn
                   class="ml-2"
                   variant="tonal"
@@ -217,7 +218,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const isMobile: Ref<boolean> = inject("isMobile") as Ref<boolean>;
+    const isMobile: Ref<boolean> = inject('isMobile') as Ref<boolean>
 
     const router = useRouter();
 
@@ -310,8 +311,8 @@ export default defineComponent({
     /**
      * Methode zur Bestätigung der Löschung des zuvor bestimmten Kurses.
      */
-    async function confirmDeleteSessionClick() {
-      await courseController.deleteSession(
+    function confirmDeleteSessionClick() {
+      courseController.deleteSession(
         props.courseId,
         deleteSessionBuffer.value!.getId
       );
@@ -422,7 +423,7 @@ export default defineComponent({
      * bei Desktop eine Liste mit Sitzornungen geöffnet
      */
     async function addSessionClick() {
-      if (window.innerWidth < 1500) {
+      if (isMobile.value) {
         await router.push({
           name: "SessionPage",
           params: {
