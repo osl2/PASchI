@@ -1,7 +1,7 @@
 <template>
   <navigation-bar>
     <template v-slot:append>
-      <v-btn class="ma-2" rounded variant="tonal" @click="saveChangesClick"
+      <v-btn class="ma-2" rounded variant="flat" color="green" @click="saveChangesClick"
       >speichern
       </v-btn>
       <v-btn v-if="snelting" class="ma-2" rounded variant="flat" color="error" prepend-icon="fas fa-trash-can"
