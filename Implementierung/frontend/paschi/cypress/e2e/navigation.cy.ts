@@ -20,11 +20,11 @@ describe("Navigation test", () => {
   it("tests navigation-bar in desktop", () => {
     cy.visit("/login");
     cy.userLogin(user.email, user.password);
-    cy.navBarTo("students");
-    cy.navBarTo("courses");
-    cy.navBarTo("rooms");
-    cy.navBarTo("settings");
-    cy.navBarTo("dashboard");
+    cy.sideMenuTo("students");
+    cy.sideMenuTo("courses");
+    cy.sideMenuTo("rooms");
+    cy.sideMenuTo("settings");
+    cy.sideMenuTo("dashboard");
     cy.logOut();
   });
 });

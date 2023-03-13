@@ -30,7 +30,8 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface Chainable<Subject> {
-      navBarTo(destination: "dashboard"|"students"|"courses"|"rooms"|"settings"): void;
+      addStudent(firstName: string, lastName: string): void;
+      sideMenuTo(destination: "dashboard"|"students"|"courses"|"rooms"|"settings"): void;
       navDropDownTo(destination: "dashboard"|"students"|"courses"|"settings"): void;
       adminLogin(eMail: string, password: string): void;
       adminLogin(eMail: string, password: string): void;
@@ -40,6 +41,12 @@ declare global {
   }
 }
 
+Cypress.Commands.add('addStudent', (firstName, lastName) => {
+  cy.get(".v-toolbar").within(() => {
+    cy.get("button").filter(":contains(Schüler erstellen)").click()
+  })})
+
+
 Cypress.Commands.add('navDropDownTo', (destination: "dashboard"|"students"|"courses"|"settings")=> {
   cy.get(".v-toolbar").within(() => {
     cy.get(".mdi-menu").parents("button").click()
@@ -47,59 +54,59 @@ Cypress.Commands.add('navDropDownTo', (destination: "dashboard"|"students"|"cour
   switch (destination) {
     case "dashboard":
       cy.get(".v-overlay__content").within(() => {
-        cy.get(".v-list-item").filter(':contains("Dashboard")').click()
+        cy.get(".v-list-item[name=dashboard]").click()
       })
       cy.url().should("include", "/dashboard");
       break;
     case "students":
       cy.get(".v-overlay__content").within(() => {
-        cy.get(".v-list-item").filter(':contains("Schüler")').click()
+        cy.get(".v-list-item[name=viewStudents]").click()
       })
       cy.url().should("include", "/view-students");
       break;
     case "courses":
       cy.get(".v-overlay__content").within(() => {
-        cy.get(".v-list-item").filter(':contains("Kurse")').click()
+        cy.get(".v-list-item[name=viewCourses]").click()
       })
       cy.url().should("include", "/view-courses");
       break;
     case "settings":
       cy.get(".v-overlay__content").within(() => {
-        cy.get(".v-list-item").filter(':contains("Benutzereinstellungen")').click()
+        cy.get(".v-list-item[name=editAccount]").click()
       })
       cy.url().should("include", "/edit-account");
       break;
   }
 })
-Cypress.Commands.add('navBarTo', (destination: "dashboard"|"students"|"courses"|"rooms"|"settings")=>{
+Cypress.Commands.add('sideMenuTo', (destination: "dashboard"|"students"|"courses"|"rooms"|"settings")=>{
   switch (destination) {
     case "dashboard":
       cy.get(".v-navigation-drawer").within(() => {
-        cy.get(".v-list-item").filter(':contains("Dashboard")').click()
+        cy.get(".v-list-item[name=dashboard]").click()
       })
       cy.url().should("include", "/dashboard");
       break;
     case "students":
       cy.get(".v-navigation-drawer").within(() => {
-        cy.get(".v-list-item").filter(':contains("Schüler")').click()
+        cy.get(".v-list-item[name=viewStudents]").click()
       })
       cy.url().should("include", "/view-students");
       break;
     case "courses":
       cy.get(".v-navigation-drawer").within(() => {
-        cy.get(".v-list-item").filter(':contains("Kurse")').click()
+        cy.get(".v-list-item[name=viewCourses]").click()
       })
       cy.url().should("include", "/view-courses");
       break;
     case "rooms":
       cy.get(".v-navigation-drawer").within(() => {
-        cy.get(".v-list-item").filter(':contains("Räume")').click()
+        cy.get(".v-list-item[name=viewRooms]").click()
       })
       cy.url().should("include", "/view-rooms");
       break;
     case "settings":
       cy.get(".v-navigation-drawer").within(() => {
-        cy.get(".v-list-item").filter(':contains("Benutzereinstellungen")').click()
+        cy.get(".v-list-item[name=editAccount]").click()
       })
       cy.url().should("include", "/edit-account");
       break;

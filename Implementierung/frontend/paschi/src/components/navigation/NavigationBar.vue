@@ -18,6 +18,7 @@
               <v-list-item-title> Zurück </v-list-item-title>
             </v-list-item>
             <v-list-item
+              name="dashboard"
               :active="subRouteOf('Dashboard')"
               prepend-icon="fas fa-gauge"
               @click="router.push('/dashboard')"
@@ -25,6 +26,7 @@
               <v-list-item-title> Dashboard </v-list-item-title>
             </v-list-item>
             <v-list-item
+              name="viewStudents"
               :active="subRouteOf('ViewStudentsPage')"
               prepend-icon="fas fa-users"
               @click="router.push('/view-students')"
@@ -32,6 +34,7 @@
               <v-list-item-title> Schüler </v-list-item-title>
             </v-list-item>
             <v-list-item
+              name="viewCourses"
               :active="subRouteOf('ViewCoursesPage')"
               prepend-icon="fas fa-people-group"
               @click="router.push('/view-courses')"
@@ -39,6 +42,7 @@
               <v-list-item-title> Kurse </v-list-item-title>
             </v-list-item>
             <v-list-item
+              name="editAccount"
               :active="subRouteOf('EditAccountPage')"
               prepend-icon="fas fa-gear"
               @click="router.push('/edit-account')"
