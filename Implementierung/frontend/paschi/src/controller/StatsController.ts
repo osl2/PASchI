@@ -88,7 +88,7 @@ export class StatsController {
     let participation: Map<string, number> = new Map<string, number>();
     let numCategories = 0;
 
-    course.sessions.forEach((session: Session) => {
+    for (const session of course.sessions) {
       // Anzahl und absolute Häufigkeit der Kategorien zählen.
       // Statistiken der Teilnehmer sammeln.
       let interactionStats = this.getInteractionStats(session, categories, students, numCategories);
@@ -103,12 +103,7 @@ export class StatsController {
       if (sessionStats != undefined) {
         participation.set(session.date, sessionStats[6]);
       }
-    });
-
-    /*// Relative Häufigkeit der Kategorien berechnen.
-    categories.forEach((value: number, category: string) => {
-      categories.set(category, (value / numCategories) * 100);
-    });*/
+    }
 
     const statsArray = this.getTopStudents(students);
     statsArray.push(categories);
@@ -258,7 +253,9 @@ export class StatsController {
       return (a[2] >= b[2]) ? 1 : -1;
     });
     studentStats.forEach((value: [string, number, number, number]) => {
-      topQuality.push([value[0], value[2]]);
+      if (value[2] != 0) {
+        topQuality.push([value[0], value[2]]);
+      }
     });
 
     // Schüler nach Anzahl der Interaktionen aufsteigend sortieren.
@@ -276,7 +273,9 @@ export class StatsController {
       return (a[2] <= b[2]) ? 1 : -1;
     });
     studentStats.forEach((value: [string, number, number, number]) => {
-      bottomQuality.push([value[0], value[2]]);
+      if (value[2] != 0) {
+        bottomQuality.push([value[0], value[2]]);
+      }
     });
 
     // Schüler nach Anzahl der Störungen absteigend sortieren.
