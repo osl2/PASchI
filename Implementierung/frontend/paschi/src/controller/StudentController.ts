@@ -49,7 +49,7 @@ export class StudentController {
     if (student) {
       student.firstName = firstName;
       student.lastName = lastName;
-      await this.studentService.update(student).then();
+      await this.studentService.update(student);
     }
   }
 

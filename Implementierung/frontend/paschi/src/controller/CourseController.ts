@@ -154,7 +154,7 @@ export class CourseController {
     if (course && student) {
       course.addParticipant(student);
       student.addCourse(course);
-      ParticipantService.getService().update(student).then();
+      await ParticipantService.getService().update(student);
       await this.courseService.update(course);
     }
   }

@@ -118,20 +118,20 @@ test("Create and get interaction", async () => {
   expect(interaction.session.getId).toBe(sessionId);
 });
 
-test("Undo interaction", () => {
+test("Undo interaction", async () => {
   expect(sessionController.hasUndo(sessionId!)).toBeTruthy();
 
-  sessionController.undoInteraction(sessionId!);
+  await sessionController.undoInteraction(sessionId!);
   const interactions = sessionController.getInteractionsOfSession(sessionId!);
 
   expect(interactions?.length).toBe(0);
   expect(sessionController.hasUndo(sessionId!)).toBeFalsy();
 });
 
-test("Redo interaction", () => {
+test("Redo interaction", async () => {
   expect(sessionController.hasRedo(sessionId!)).toBeTruthy();
 
-  sessionController.redoInteraction(sessionId!);
+  await sessionController.redoInteraction(sessionId!);
   const interactions = sessionController.getInteractionsOfSession(sessionId!);
   const interaction = interactions![0];
 
