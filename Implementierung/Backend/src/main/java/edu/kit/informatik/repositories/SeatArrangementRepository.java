@@ -2,6 +2,7 @@ package edu.kit.informatik.repositories;
 
 import edu.kit.informatik.model.userdata.courses.Course;
 import edu.kit.informatik.model.userdata.courses.SeatArrangement;
+import edu.kit.informatik.model.userdata.rooms.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import edu.kit.informatik.model.User;
@@ -38,5 +39,7 @@ public interface SeatArrangementRepository extends JpaRepository<SeatArrangement
      * @return {@link Optional} von {@link SeatArrangement}
      */
     List<SeatArrangement> findSeatArrangementsByUserId(String userId);
+
+    List<SeatArrangement> findSeatArrangementByRoom(Room room);
 
 }

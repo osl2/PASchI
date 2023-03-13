@@ -104,4 +104,8 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
 
         return id;
     }
+
+    protected void delete(Participant participant) {
+        participantRepository.deleteById(participant.getId());
+    }
 }
