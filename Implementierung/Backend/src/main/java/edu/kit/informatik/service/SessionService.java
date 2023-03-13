@@ -94,9 +94,11 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
     @Override
     public SessionDto getById(String id, Authentication authentication) {
         Optional<Session> sessionOptional = sessionRepository.findSessionById(id);
+        Session session = sessionOptional.orElseThrow(() -> new EntityNotFoundException(Session.class, id));
 
-        return sessionOptional.map(this.mapper::modelToDto).orElseThrow(() -> new EntityNotFoundException(
-                Session.class, id));
+        super.checkAuthorization(authentication, session.getUser().getId());
+
+        return this.mapper.modelToDto(session);
     }
 
     @Override
@@ -111,12 +113,26 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
     @Override
     public String delete(String id, Authentication authentication) {
         Optional<Session> sessionOptional = sessionRepository.findById(id);
-
         Session session = sessionOptional.orElseThrow(() -> new EntityNotFoundException(Session.class, id));
 
+        super.checkAuthorization(authentication, session.getUser().getId());
+
+        return delete(session);
+    }
+
+    /**
+     * Methode zum Löschen einer {@link Session}
+     * ->Löscht auch die {@link Interaction} aus den {@link Participant}
+     * ->Löscht auch die {@link Session} aus dem {@link Course}
+     * @param session {@link Session}
+     * @return Id des {@link Session}
+     */
+    @Transactional
+    protected String delete(Session session) {
         List<Interaction> interactions = interactionRepository.findInteractionsBySession(session);
         Set<Participant> participants = new HashSet<>();
 
+        //Teilnehemer anhand der Interaktionen auslesen
         for (Interaction interaction : interactions) {
             participants.add(participantRepository.findParticipantById(interaction.getFrom().getId())
                     .orElseThrow(() -> new EntityNotFoundException(Participant.class, interaction.getFrom().getId())));
@@ -131,18 +147,19 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
         }
 
         for (Interaction interaction: interactions) {
+            session.removeInteraction(interaction);
             interactionRepository.deleteById(interaction.getId());
         }
 
         Course course = courseRepository.findCourseBySessions(session);
+
         if (course != null) {
             course.getSessions().remove(session);
         }
 
+        this.sessionRepository.deleteById(session.getId());
 
-        this.sessionRepository.deleteById(id);
-
-        return id;
+        return session.getId();
     }
 
     private List<Interaction> updateInteractions(Session repositorySession , Session newSession) {

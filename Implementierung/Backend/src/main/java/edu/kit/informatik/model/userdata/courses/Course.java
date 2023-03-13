@@ -4,6 +4,7 @@ import edu.kit.informatik.model.DataObject;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.interactions.Participant;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -32,15 +33,15 @@ public class Course extends DataObject {
     private String name;
     private String subject;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @Cascade(CascadeType.SAVE_UPDATE)
     private List<Participant> participants;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @Cascade(CascadeType.ALL)
     private List<Session> sessions;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<SeatArrangement> seatArrangements;
 
     /**

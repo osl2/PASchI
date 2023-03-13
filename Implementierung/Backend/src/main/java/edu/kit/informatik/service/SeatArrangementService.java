@@ -60,7 +60,7 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
                                                                 .findSeatArrangementById(seatArrangementDto.getId());
         
         SeatArrangement repositorySeatArrangement = repositorySeatArrangementOptional.orElseThrow(
-                        () -> new EntityNotFoundException(SeatArrangementService.class, seatArrangementDto.getId()));
+                        () -> new EntityNotFoundException(SeatArrangement.class, seatArrangementDto.getId()));
         SeatArrangement newSeatArrangement = this.mapper.dtoToModel(seatArrangementDto);
 
         if (!newSeatArrangement.getName().equals(repositorySeatArrangement.getName())) {
@@ -76,9 +76,12 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
     @Override
     public SeatArrangementDto getById(String id, Authentication authentication) {
         Optional<SeatArrangement> seatArrangementOptional = this.seatArrangementRepository.findSeatArrangementById(id);
-        
-        return seatArrangementOptional.map(this.mapper::modelToDto).orElseThrow(() ->
-                                                                new EntityNotFoundException(SeatArrangement.class, id));
+        SeatArrangement seatArrangement = seatArrangementOptional.orElseThrow(() ->
+                                                        new EntityNotFoundException(SeatArrangement.class, id));
+        super.checkAuthorization(authentication, seatArrangement.getUser().getId());
+
+
+        return this.mapper.modelToDto(seatArrangement);
     }
 
     @Override
@@ -92,16 +95,21 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
     @Override
     public String delete(String id, Authentication authentication) {
         Optional<SeatArrangement> seatArrangementOptional = this.seatArrangementRepository.findSeatArrangementById(id);
-
         SeatArrangement seatArrangement = seatArrangementOptional.orElseThrow(() ->
-                                                                new EntityNotFoundException(SeatArrangement.class, id));
+                                                            new EntityNotFoundException(SeatArrangement.class, id));
+        super.checkAuthorization(authentication, seatArrangement.getUser().getId());
+
+        return delete(seatArrangement);
+    }
+
+    protected String delete(SeatArrangement seatArrangement) {
         Course course = courseRepository.findCourseBySeatArrangements(seatArrangement);
         if (course != null) {
             course.getSeatArrangements().remove(seatArrangement);
         }
 
-        this.seatArrangementRepository.deleteById(id);
-        
-        return id;
+        this.seatArrangementRepository.deleteById(seatArrangement.getId());
+
+        return seatArrangement.getId();
     }
 }

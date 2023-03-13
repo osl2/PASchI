@@ -1,8 +1,12 @@
 package edu.kit.informatik.dto.userdata.rooms;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import edu.kit.informatik.model.userdata.rooms.Chair;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.rooms.Position;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.sql.Timestamp;
 
@@ -13,6 +17,10 @@ import java.sql.Timestamp;
  * @author ugqbo
  * @version 1.0
  */
+@NoArgsConstructor
+@Getter
+@Setter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ChairDto extends RoomObjectDto {
 
     /**

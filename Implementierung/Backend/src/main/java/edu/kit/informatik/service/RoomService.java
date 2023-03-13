@@ -3,6 +3,7 @@ package edu.kit.informatik.service;
 import edu.kit.informatik.dto.mapper.rooms.RoomMapper;
 import edu.kit.informatik.dto.userdata.rooms.RoomDto;
 import edu.kit.informatik.exceptions.EntityNotFoundException;
+import edu.kit.informatik.model.userdata.courses.SeatArrangement;
 import edu.kit.informatik.model.userdata.rooms.Chair;
 import edu.kit.informatik.model.userdata.rooms.Position;
 import edu.kit.informatik.model.userdata.rooms.Room;
@@ -10,6 +11,7 @@ import edu.kit.informatik.model.userdata.rooms.Table;
 import edu.kit.informatik.repositories.ChairRepository;
 import edu.kit.informatik.repositories.PositionRepository;
 import edu.kit.informatik.repositories.RoomRepository;
+import edu.kit.informatik.repositories.SeatArrangementRepository;
 import edu.kit.informatik.repositories.TableRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -36,23 +38,27 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
     private final ChairRepository chairRepository;
     private final TableRepository tableRepository;
     private final PositionRepository positionRepository;
+    private final SeatArrangementRepository seatArrangementRepository;
 
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
      *
-     * @param roomRepository     {@link RoomRepository}
-     * @param roomMapper         {@link RoomMapper}
-     * @param chairRepository {@link ChairRepository}
-     * @param tableRepository {@link TableRepository}
-     * @param positionRepository {@link PositionRepository}
+     * @param roomRepository            {@link RoomRepository}
+     * @param roomMapper                {@link RoomMapper}
+     * @param chairRepository           {@link ChairRepository}
+     * @param tableRepository           {@link TableRepository}
+     * @param positionRepository        {@link PositionRepository}
+     * @param seatArrangementRepository {@link SeatArrangementRepository}
      */
     public RoomService(RoomRepository roomRepository, RoomMapper roomMapper, ChairRepository chairRepository,
-                                        TableRepository tableRepository, PositionRepository positionRepository) {
+                       TableRepository tableRepository, PositionRepository positionRepository,
+                       SeatArrangementRepository seatArrangementRepository) {
         super(roomMapper);
         this.roomRepository = roomRepository;
         this.chairRepository = chairRepository;
         this.tableRepository = tableRepository;
         this.positionRepository = positionRepository;
+        this.seatArrangementRepository = seatArrangementRepository;
     }
 
     @Override
@@ -94,8 +100,10 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
     @Override
     public RoomDto getById(String id, Authentication authentication) {
         Optional<Room> roomOptional = this.roomRepository.findRoomById(id);
+        Room room = roomOptional.orElseThrow(() -> new EntityNotFoundException(Room.class, id));
+        super.checkAuthorization(authentication, room.getUser().getId());
 
-        return roomOptional.map(this.mapper::modelToDto).orElseThrow(() -> new EntityNotFoundException(Room.class, id));
+        return this.mapper.modelToDto(room);
     }
 
     @Override
@@ -109,11 +117,35 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
     @Override
     public String delete(String id, Authentication authentication) {
         Optional<Room> roomOptional = this.roomRepository.findRoomById(id);
+        Room room = roomOptional.orElseThrow(() -> new EntityNotFoundException(Room.class, id));
+        super.checkAuthorization(authentication, room.getUser().getId());
 
-        roomOptional.orElseThrow(() -> new EntityNotFoundException(Room.class, id));
-        this.roomRepository.deleteById(id);
+        return delete(room);
+    }
 
-        return id;
+    protected String delete(Room room) {
+        List<SeatArrangement> seatArrangements = seatArrangementRepository.findSeatArrangementByRoom(room);
+        if (seatArrangements.size() != 0) {
+            throw new IllegalArgumentException("Es müssen zuvor alle Kurse mit den zu dem Raum gehörenden"
+                    + "Sitzordnungen gelöscht werden");
+        }
+
+        List<Chair> chairs = room.getChairs();
+        for (Chair chair: chairs) {
+            Position position = chair.getPosition();
+            chairRepository.deleteById(chair.getId());
+            positionRepository.deleteById(position.getId());
+        }
+
+        List<Table> tables = room.getTables();
+        for (Table table: tables) {
+            Position position = table.getPosition();
+            tableRepository.deleteById(table.getId());
+            positionRepository.deleteById(position.getId());
+        }
+
+        this.roomRepository.deleteById(room.getId());
+        return room.getId();
     }
 
     private Room saveRoomObjects(Room room) {
@@ -157,15 +189,32 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
             }
         }
 
+        if (returnTables.size() < repositoryRoom.getTables().size()) {
+            for (Table repositoryTable: repositoryRoom.getTables()) {
+                boolean found = false;
+                for (Table returnTable: returnTables)  {
+                    // Tische werden als gleich befunden, wenn der Erstell-Timestamp gleich ist
+                    if (repositoryTable.getCreatedAt().equals(returnTable.getCreatedAt())) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    returnTables.remove(repositoryTable);
+                    tableRepository.deleteById(repositoryTable.getId());
+                }
+            }
+        }
+
         return returnTables;
     }
 
-    private List<Chair> updateChair(Room reposioryRoom, Room newRoom) {
+    private List<Chair> updateChair(Room repositoryRoom, Room newRoom) {
         List<Chair> returnChairs = new ArrayList<>();
 
         for (Chair newChair: newRoom.getChairs()) {
             boolean found = false;
-            for (Chair repositoryChair: reposioryRoom.getChairs())  {
+            for (Chair repositoryChair: repositoryRoom.getChairs())  {
                 // Stühle werden als gleich befunden, wenn der Erstell-Timestamp gleich ist
                 if (repositoryChair.getCreatedAt().equals(newChair.getCreatedAt())) {
                     Position oldPosition = repositoryChair.getPosition();
@@ -182,6 +231,23 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
             }
             if (!found) {
                 returnChairs.add(newChair);
+            }
+        }
+
+        if (returnChairs.size() < repositoryRoom.getChairs().size()) {
+            for (Chair repositoryChair: repositoryRoom.getChairs()) {
+                boolean found = false;
+                for (Chair returnChair: returnChairs)  {
+                    // Tische werden als gleich befunden, wenn der Erstell-Timestamp gleich ist
+                    if (repositoryChair.getCreatedAt().equals(returnChair.getCreatedAt())) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    returnChairs.remove(repositoryChair);
+                    chairRepository.deleteById(repositoryChair.getId());
+                }
             }
         }
 

@@ -3,93 +3,144 @@ package edu.kit.informatik.unittests.controller;
 import com.github.javafaker.Faker;
 import edu.kit.informatik.dto.RoleDto;
 import edu.kit.informatik.dto.UserDto;
-import edu.kit.informatik.dto.mapper.UserMapper;
-import edu.kit.informatik.repositories.UserRepository;
+import edu.kit.informatik.unittests.DatabaseManipulator;
+import edu.kit.informatik.unittests.EntityGenerator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
+import static edu.kit.informatik.service.UserService.EMAIL_ALREADY_EXITS;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class UserControllerTest extends AbstractTest {
 
     private static final String BASE_URL = "/api/user";
 
     @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
-    private UserRepository userRepository;
+    DatabaseManipulator databaseManipulator;
 
     private List<UserDto> users;
 
+    private UserDto mainUserDto;
+
     @Before
     @Override
-    public void setUp() {
+    public void setUp() throws Exception {
         super.setUp();
-        this.users = addSomeUsers();
+        mainUserDto = super.addAndLogin(EntityGenerator.createNewAdmin(new Faker(new Locale("de"))));
+        this.users = getNewUsers();
     }
 
     @After
     @Override
     public void setDown() {
-        this.userRepository.deleteAll();
+        databaseManipulator.clearUserRepository();
+        this.users.clear();
     }
 
 
-    private List<UserDto> addSomeUsers() {
+    private List<UserDto> getNewUsers() {
 
         List<UserDto> users = new ArrayList<>();
         Faker faker = new Faker(new Locale("de"));
 
         for (int i = 0; i < 10; i++) {
-            users.add(getNewUser(faker));
+            users.add(EntityGenerator.createNewUser(faker));
         }
 
         return users;
     }
 
-    private void addUserToDatabase() {
+    private void addUsersToDatabase() {
         List<UserDto> repositoryUser = new ArrayList<>();
         for (UserDto user: this.users) {
-            repositoryUser.add(userMapper.modelToDto(this.userRepository.save(userMapper.dtoToModel(user))));
-        }
-
-        assertEquals(users.size(), repositoryUser.size());
-        for (int i= 0; i< users.size(); i++) {
-            assertEquals(users.get(i).getEmail(), repositoryUser.get(i).getEmail());
-            assertEquals(users.get(i).getPassword(), repositoryUser.get(i).getPassword());
-            assertEquals(users.get(i).getFirstName(), repositoryUser.get(i).getFirstName());
-            assertEquals(users.get(i).getLastName(), repositoryUser.get(i).getLastName());
-            assertEquals(users.get(i).getRole(), repositoryUser.get(i).getRole());
+            repositoryUser.add(databaseManipulator.addUser(user));
         }
 
         this.users = repositoryUser;
     }
 
-    private void deleteFromDataBase() {
+    @Test
+    public void login() throws Exception {
+        Faker faker = new Faker(new Locale("de"));
+        UserDto userDto = EntityGenerator.createNewUser(faker);
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                .content(super.mapToJson(userDto))
+        ).andReturn();
 
-        for (UserDto user: users) {
-            if (user.getId() != null) {
-                this.userRepository.deleteById(user.getId());
-            }
-        }
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
+        String content = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
 
-        users.clear();
+        UserDto repoDto = super.mapFromJson(content, UserDto.class);
+        MvcResult mvcResultLogin = mvc.perform(MockMvcRequestBuilders.post(BASE_URL + "/login")
+                .param("email", repoDto.getEmail()).param("password", userDto.getPassword())
+        ).andReturn();
+        int statusLogin = mvcResultLogin.getResponse().getStatus();
+        assertEquals(200, statusLogin);
+        String contentLogin = mvcResultLogin.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+        UserDto contentDto = super.mapFromJson(contentLogin, UserDto.class);
+
+        assertNotNull(contentDto.getToken());
+    }
+
+    @Test
+    public void getNewToken() throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL + "/token")
+                .header("Authorization", "Bearer " + mainUserDto.getToken())
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
+        String content = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+        UserDto repoDto = super.mapFromJson(content, UserDto.class);
+
+        assertNotEquals(mainUserDto.getToken(), repoDto.getToken());
+        assertEquals(mainUserDto.getEmail(), repoDto.getEmail());
+        repoDto.setPassword(repoDto.getPassword().substring(8));
+        assertTrue(new BCryptPasswordEncoder().matches(mainUserDto.getPassword(), repoDto.getPassword()));
+        assertEquals(mainUserDto.getFirstName(), repoDto.getFirstName());
+        assertEquals(mainUserDto.getLastName(), repoDto.getLastName());
+        assertEquals(mainUserDto.getRole(), repoDto.getRole());
+    }
+
+    @Test
+    public void wrongUsernameLogin() throws Exception {
+        Faker faker = new Faker(new Locale("de"));
+        UserDto userDto = EntityGenerator.createNewUser(faker);
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                .content(super.mapToJson(userDto))
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
+
+        MvcResult mvcResultLogin = mvc.perform(MockMvcRequestBuilders.post(BASE_URL + "/login")
+                .param("email", "123@kit.edu").param("password", userDto.getPassword())
+        ).andReturn();
+        int statusLogin = mvcResultLogin.getResponse().getStatus();
+        String content = mvcResultLogin.getResponse().getErrorMessage();
+        System.out.println(content);
+        assertEquals(401, statusLogin);
+
     }
 
     @Test
@@ -97,7 +148,8 @@ public class UserControllerTest extends AbstractTest {
 
         for (int i = 0; i< users.size(); i++) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
-                            .content(super.mapToJson(users.get(i)))
+                    .content(super.mapToJson(users.get(i)))
+                    .header("Authorization", "Bearer " + mainUserDto.getToken())
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -107,44 +159,63 @@ public class UserControllerTest extends AbstractTest {
             UserDto userdto = super.mapFromJson(content, UserDto.class);
 
             assertEquals(users.get(i).getEmail(), userdto.getEmail());
-            assertEquals(users.get(i).getPassword(), userdto.getPassword());
+            userdto.setPassword(userdto.getPassword().substring(8));
+            assertTrue(new BCryptPasswordEncoder().matches(users.get(i).getPassword(), userdto.getPassword()));
             assertEquals(users.get(i).getFirstName(), userdto.getFirstName());
             assertEquals(users.get(i).getLastName(), userdto.getLastName());
             assertEquals(users.get(i).getRole(), userdto.getRole());
             users.set(i, userdto);
         }
-        deleteFromDataBase();
+    }
+
+    @Test
+    public void addUsersWithExistingEmail() throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                .content(super.mapToJson(mainUserDto))
+                .header("Authorization", "Bearer " + mainUserDto.getToken())
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(400, status);
+
+        String content = mvcResult.getResponse().getErrorMessage();
+        assertEquals(EMAIL_ALREADY_EXITS, content);
     }
 
     @Test
     public void updateUser() throws Exception {
-        addUserToDatabase();
+        addUsersToDatabase();
 
-        List<UserDto> newUsers = new ArrayList<>();
-
-        for (int i = 0; i < users.size(); i++) {
-            newUsers.add(getNewUser(new Faker()));
-        }
+        List<UserDto> newUsers = getNewUsers();
 
         for (int i = 0; i < users.size(); i++) {
+            users.set(i, super.login(users.get(i)));
+
             users.get(i).setFirstName(newUsers.get(i).getFirstName());
             users.get(i).setLastName(newUsers.get(i).getLastName());
-            users.get(i).setRole(newUsers.get(i).getRole());
+            users.get(i).setRole(RoleDto.ADMIN);
             users.get(i).setPassword(newUsers.get(i).getPassword());
-            users.get(i).setAuth(newUsers.get(i).isAuth());
+            users.get(i).setAuth(false);
         }
 
         for (UserDto userDto: users) {
 
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(BASE_URL).contentType(MediaType.APPLICATION_JSON)
-                            .content(super.mapToJson(userDto))
+                        .content(super.mapToJson(userDto))
+                    .header("Authorization", "Bearer " + userDto.getToken())
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
             assertEquals(200, status);
         }
 
-        List<UserDto> userFromDataBase = getUserFromDataBase();
+        List<UserDto> userFromDataBase = databaseManipulator.getUsers();
+        for (UserDto userDto: userFromDataBase) {
+            if (Objects.equals(userDto.getId(), mainUserDto.getId())) {
+                userFromDataBase.remove(userDto);
+                break;
+            }
+        }
 
         userFromDataBase.sort(Comparator.naturalOrder());
         users.sort(Comparator.naturalOrder());
@@ -152,18 +223,68 @@ public class UserControllerTest extends AbstractTest {
         assertEquals(userFromDataBase.size(), users.size());
 
         for (int i = 0; i < users.size(); i++) {
-            assertEquals(users.get(i), userFromDataBase.get(i));
+            assertEquals(users.get(i).getFirstName(), userFromDataBase.get(i).getFirstName());
+            assertEquals(users.get(i).getLastName(), userFromDataBase.get(i).getLastName());
+            assertEquals(users.get(i).getPassword(), userFromDataBase.get(i).getPassword());
+            assertNotEquals(users.get(i).getRole(), userFromDataBase.get(i).getRole());
+            assertNotEquals(users.get(i).isAuth(), userFromDataBase.get(i).isAuth());
+        }
+    }
+
+    @Test
+    public void adminUpdateUser() throws Exception {
+        addUsersToDatabase();
+
+        List<UserDto> newUsers = getNewUsers();
+
+        for (int i = 0; i < users.size(); i++) {
+            users.get(i).setFirstName(newUsers.get(i).getFirstName());
+            users.get(i).setLastName(newUsers.get(i).getLastName());
+            users.get(i).setRole(RoleDto.ADMIN);
+            users.get(i).setPassword(newUsers.get(i).getPassword());
+            users.get(i).setAuth(false);
         }
 
-        deleteFromDataBase();
+        for (UserDto userDto: users) {
+
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(BASE_URL + "/admin").contentType(MediaType.APPLICATION_JSON)
+                    .content(super.mapToJson(userDto))
+                    .header("Authorization", "Bearer " + mainUserDto.getToken())
+            ).andReturn();
+
+            int status = mvcResult.getResponse().getStatus();
+            assertEquals(200, status);
+        }
+
+        List<UserDto> userFromDataBase = databaseManipulator.getUsers();
+        for (UserDto userDto: userFromDataBase) {
+            if (Objects.equals(userDto.getId(), mainUserDto.getId())) {
+                userFromDataBase.remove(userDto);
+                break;
+            }
+        }
+
+        userFromDataBase.sort(Comparator.naturalOrder());
+        users.sort(Comparator.naturalOrder());
+
+        assertEquals(userFromDataBase.size(), users.size());
+
+        for (int i = 0; i < users.size(); i++) {
+            assertNotEquals(users.get(i).getFirstName(), userFromDataBase.get(i).getFirstName());
+            assertNotEquals(users.get(i).getLastName(), userFromDataBase.get(i).getLastName());
+            assertNotEquals(users.get(i).getPassword(), userFromDataBase.get(i).getPassword());
+            assertEquals(users.get(i).getRole(), userFromDataBase.get(i).getRole());
+            assertEquals(users.get(i).isAuth(), userFromDataBase.get(i).isAuth());
+        }
     }
 
     @Test
     public void getOneUser() throws Exception {
-        addUserToDatabase();
+        addUsersToDatabase();
 
         for (UserDto user: users) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + user.getId())
+                    .header("Authorization", "Bearer " + mainUserDto.getToken())
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -173,17 +294,22 @@ public class UserControllerTest extends AbstractTest {
             UserDto userdto = super.mapFromJson(content, UserDto.class);
 
 
-            assertEquals(user, userdto);
+            assertEquals(user.getEmail(), userdto.getEmail());
+            userdto.setPassword(userdto.getPassword().substring(8));
+            assertTrue(new BCryptPasswordEncoder().matches(user.getPassword(), userdto.getPassword()));
+            assertEquals(user.getFirstName(), userdto.getFirstName());
+            assertEquals(user.getLastName(), userdto.getLastName());
+            assertEquals(user.getRole(), userdto.getRole());
         }
 
-        deleteFromDataBase();
     }
 
     @Test
     public void getAllUser() throws Exception {
-        addUserToDatabase();
+        addUsersToDatabase();
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/admin")
+                .header("Authorization", "Bearer " + mainUserDto.getToken())
         ).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
@@ -191,31 +317,39 @@ public class UserControllerTest extends AbstractTest {
         String content = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
 
         List<UserDto> userDtos = Arrays.asList(super.mapFromJson(content, UserDto[].class));
+        users.add(this.mainUserDto);
 
         userDtos.sort(Comparator.naturalOrder());
         users.sort(Comparator.naturalOrder());
 
 
+
         for (int i= 0; i < users.size(); i++) {
-            assertEquals(users.get(i), userDtos.get(i));
+            assertEquals(users.get(i).getEmail(), userDtos.get(i).getEmail());
+            userDtos.get(i).setPassword(userDtos.get(i).getPassword().substring(8));
+            assertTrue(new BCryptPasswordEncoder().matches(users.get(i).getPassword(), userDtos.get(i).getPassword()));
+            assertEquals(users.get(i).getFirstName(), userDtos.get(i).getFirstName());
+            assertEquals(users.get(i).getLastName(), userDtos.get(i).getLastName());
+            assertEquals(users.get(i).getRole(), userDtos.get(i).getRole());
         }
 
-        deleteFromDataBase();
     }
 
     @Test
     public void delete() throws Exception {
-        List<UserDto> before = getUserFromDataBase();
-        addUserToDatabase();
+        List<UserDto> before = databaseManipulator.getUsers();
+        addUsersToDatabase();
 
         for (UserDto user: users) {
-            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL).content(user.getId()).param("id", user.getId())
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL)
+                    .param("id", user.getId())
+                    .header("Authorization", "Bearer " + mainUserDto.getToken())
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
             assertEquals(200, status);
         }
-        List<UserDto> after = getUserFromDataBase();
+        List<UserDto> after = databaseManipulator.getUsers();
 
         assertEquals(before.size(), after.size());
 
@@ -225,25 +359,17 @@ public class UserControllerTest extends AbstractTest {
 
     }
 
-    private List<UserDto> getUserFromDataBase() {
-        return userMapper.modelToDto(this.userRepository.findAll());
-    }
+    @Test
+    public void adminUpdateWithNotExistingUser() throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(BASE_URL + "/admin").contentType(MediaType.APPLICATION_JSON)
+                .content(super.mapToJson(users.get(0)))
+                .header("Authorization", "Bearer " + mainUserDto.getToken())
+        ).andReturn();
 
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getErrorMessage();
 
-
-    private UserDto getNewUser(Faker faker) {
-        UserDto userDto = new UserDto();
-        userDto.setRole(RoleDto.USER);
-
-        String firstName = faker.name().firstName();
-        String lastName = faker.name().lastName();
-
-        userDto.setEmail(firstName + "." + lastName +  "@kit.edu");
-        userDto.setFirstName(firstName);
-        userDto.setLastName(lastName);
-        userDto.setPassword(faker.crypto().md5());
-        userDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
-
-        return userDto;
+        assertEquals(404, status);
+        assertEquals("Entity of class 'User' with id: '" + users.get(0).getId() + "' not found", content);
     }
 }

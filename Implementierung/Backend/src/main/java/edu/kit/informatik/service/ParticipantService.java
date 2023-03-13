@@ -76,9 +76,11 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
     @Override
     public ParticipantDto getById(String id, Authentication authentication) {
         Optional<Participant> participantOptional = this.participantRepository.findParticipantById(id);
+        Participant participant = participantOptional.orElseThrow(() ->
+                                        new EntityNotFoundException(Participant.class, id));
+        super.checkAuthorization(authentication, participant.getUser().getId());
 
-        return participantOptional.map(this.mapper::modelToDto).orElseThrow(() ->
-                                                                    new EntityNotFoundException(Participant.class, id));
+        return this.mapper.modelToDto(participant);
     }
 
     @Override
@@ -101,5 +103,9 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
         participant.setVisible(false);
 
         return id;
+    }
+
+    protected void delete(Participant participant) {
+        participantRepository.deleteById(participant.getId());
     }
 }

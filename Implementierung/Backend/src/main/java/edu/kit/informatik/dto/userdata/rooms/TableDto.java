@@ -1,5 +1,6 @@
 package edu.kit.informatik.dto.userdata.rooms;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.rooms.Table;
 import lombok.Getter;
@@ -18,6 +19,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Getter
 @Setter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TableDto extends RoomObjectDto {
 
     private double length;
