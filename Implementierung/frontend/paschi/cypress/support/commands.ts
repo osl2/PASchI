@@ -30,12 +30,81 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface Chainable<Subject> {
+      navBarTo(destination: "dashboard"|"students"|"courses"|"rooms"|"settings"): void;
+      navDropDownTo(destination: "dashboard"|"students"|"courses"|"settings"): void;
+      adminLogin(eMail: string, password: string): void;
       adminLogin(eMail: string, password: string): void;
       userLogin(eMail: string, password: string): void;
       logOut(): void;
     }
   }
 }
+
+Cypress.Commands.add('navDropDownTo', (destination: "dashboard"|"students"|"courses"|"settings")=> {
+  cy.get(".v-toolbar").within(() => {
+    cy.get(".mdi-menu").parents("button").click()
+  })
+  switch (destination) {
+    case "dashboard":
+      cy.get(".v-overlay__content").within(() => {
+        cy.get(".v-list-item").filter(':contains("Dashboard")').click()
+      })
+      cy.url().should("include", "/dashboard");
+      break;
+    case "students":
+      cy.get(".v-overlay__content").within(() => {
+        cy.get(".v-list-item").filter(':contains("Schüler")').click()
+      })
+      cy.url().should("include", "/view-students");
+      break;
+    case "courses":
+      cy.get(".v-overlay__content").within(() => {
+        cy.get(".v-list-item").filter(':contains("Kurse")').click()
+      })
+      cy.url().should("include", "/view-courses");
+      break;
+    case "settings":
+      cy.get(".v-overlay__content").within(() => {
+        cy.get(".v-list-item").filter(':contains("Benutzereinstellungen")').click()
+      })
+      cy.url().should("include", "/edit-account");
+      break;
+  }
+})
+Cypress.Commands.add('navBarTo', (destination: "dashboard"|"students"|"courses"|"rooms"|"settings")=>{
+  switch (destination) {
+    case "dashboard":
+      cy.get(".v-navigation-drawer").within(() => {
+        cy.get(".v-list-item").filter(':contains("Dashboard")').click()
+      })
+      cy.url().should("include", "/dashboard");
+      break;
+    case "students":
+      cy.get(".v-navigation-drawer").within(() => {
+        cy.get(".v-list-item").filter(':contains("Schüler")').click()
+      })
+      cy.url().should("include", "/view-students");
+      break;
+    case "courses":
+      cy.get(".v-navigation-drawer").within(() => {
+        cy.get(".v-list-item").filter(':contains("Kurse")').click()
+      })
+      cy.url().should("include", "/view-courses");
+      break;
+    case "rooms":
+      cy.get(".v-navigation-drawer").within(() => {
+        cy.get(".v-list-item").filter(':contains("Räume")').click()
+      })
+      cy.url().should("include", "/view-rooms");
+      break;
+    case "settings":
+      cy.get(".v-navigation-drawer").within(() => {
+        cy.get(".v-list-item").filter(':contains("Benutzereinstellungen")').click()
+      })
+      cy.url().should("include", "/edit-account");
+      break;
+  }
+})
 
 Cypress.Commands.add('adminLogin', (email, password) => {
   cy.url().should("include", "/login");
