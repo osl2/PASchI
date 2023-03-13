@@ -66,11 +66,11 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
      * @param courseService          {@link CourseService}
      * @param roomService            {@link RoomService}
      * @param categoryService        {@link CategoryService}
-     * @param participantService
-     * @param courseRepository
-     * @param roomRepository
-     * @param categoryBaseRepository
-     * @param participantRepository
+     * @param participantService     {@link ParticipantService}
+     * @param courseRepository       {@link CourseRepository}
+     * @param roomRepository         {@link RoomRepository}
+     * @param categoryBaseRepository {@link CategoryBaseRepository}
+     * @param participantRepository  {@link ParticipantRepository}
      * @param tokenService           {@link TokenService}
      * @param authenticationManager  {@link AuthenticationManager}
      */
@@ -78,8 +78,9 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
     public UserService(UserRepository userRepository, UserMapper userMapper,
                        CourseService courseService, RoomService roomService, CategoryService categoryService,
                        ParticipantService participantService, CourseRepository courseRepository,
-                       RoomRepository roomRepository, CategoryBaseRepository<Category> categoryBaseRepository, ParticipantRepository participantRepository,
-                       TokenService tokenService, AuthenticationManager authenticationManager) {
+                       RoomRepository roomRepository, CategoryBaseRepository<Category> categoryBaseRepository,
+                       ParticipantRepository participantRepository, TokenService tokenService,
+                       AuthenticationManager authenticationManager) {
         super(userMapper);
         this.userRepository = userRepository;
         this.courseService = courseService;
@@ -156,9 +157,7 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
         repositoryUserOptional.orElseThrow(() -> new EntityNotFoundException(User.class, id));
 
         List<Course> courses = courseRepository.findCoursesByUserId(id);
-        System.out.println(courses.size());
         for (Course course: courses) {
-            System.out.println(course.getSessions().size());
             courseService.delete(course);
         }
 

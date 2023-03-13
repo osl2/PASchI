@@ -120,11 +120,19 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
         return delete(session);
     }
 
+    /**
+     * Methode zum Löschen einer {@link Session}
+     * ->Löscht auch die {@link Interaction} aus den {@link Participant}
+     * ->Löscht auch die {@link Session} aus dem {@link Course}
+     * @param session {@link Session}
+     * @return Id des {@link Session}
+     */
     @Transactional
     protected String delete(Session session) {
         List<Interaction> interactions = interactionRepository.findInteractionsBySession(session);
         Set<Participant> participants = new HashSet<>();
 
+        //Teilnehemer anhand der Interaktionen auslesen
         for (Interaction interaction : interactions) {
             participants.add(participantRepository.findParticipantById(interaction.getFrom().getId())
                     .orElseThrow(() -> new EntityNotFoundException(Participant.class, interaction.getFrom().getId())));
@@ -146,15 +154,9 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
         Course course = courseRepository.findCourseBySessions(session);
 
         if (course != null) {
-            System.out.println("removed from course");
-            System.out.println(course.getSessions().size());
             course.getSessions().remove(session);
-            System.out.println(course.getSessions().size());
         }
-        Course course2 = courseRepository.findCourseBySessions(session);
-        System.out.println(course2.getSessions().size());
 
-        System.out.println(session.getId());
         this.sessionRepository.deleteById(session.getId());
 
         return session.getId();

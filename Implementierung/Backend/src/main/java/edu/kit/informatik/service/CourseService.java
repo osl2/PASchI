@@ -51,7 +51,8 @@ public class CourseService extends BaseService<Course, CourseDto, CourseDto> {
      */
     public CourseService(CourseRepository courseRepository, CourseMapper courseMapper,
                          SessionRepository sessionRepository, ParticipantRepository participantRepository,
-                         SeatArrangementRepository seatArrangementRepository, SessionService sessionService, SeatArrangementService seatArrangementService) {
+                         SeatArrangementRepository seatArrangementRepository, SessionService sessionService,
+                         SeatArrangementService seatArrangementService) {
         super(courseMapper);
         this.courseRepository = courseRepository;
         this.sessionRepository = sessionRepository;
@@ -123,10 +124,16 @@ public class CourseService extends BaseService<Course, CourseDto, CourseDto> {
         return delete(course);
     }
 
+    /**
+     * Methode zum Löschen eines {@link Course}
+     * ->Löscht auch die {@link Session} des Kurses
+     * ->Löscht auch die {@link SeatArrangement} des Kurses
+     * -> Löscht in den {@link Participant} aud den Kurs
+     * @param course {@link Course}
+     * @return Id des {@link Course}
+     */
     protected String delete(Course course) {
         List<Session> sessions = sessionRepository.findSessionsByCourse(course);
-        System.out.println("course" + sessions.size());
-        System.out.println(course.getSessions().size());
 
         for (Session session: sessions) {
             sessionService.delete(session);
