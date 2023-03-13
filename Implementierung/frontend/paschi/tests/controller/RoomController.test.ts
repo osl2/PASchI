@@ -90,8 +90,7 @@ test("Get and delete all room objects", async () => {
   await roomController.removeRoomObject(roomId, chairId!);
   await roomController.removeRoomObject(roomId, tableId!);
 
-  // TODO: Backend löscht Raumobjekte nicht
-  // expect(objects?.length).toBe(0);
+  expect(objects?.length).toBe(0);
 });
 
 test("Get all rooms", () => {

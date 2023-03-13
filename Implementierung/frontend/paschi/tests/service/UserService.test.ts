@@ -91,4 +91,3 @@ test("Delete user", async () => {
 
   expect(_user).toBeUndefined();
 });
-
