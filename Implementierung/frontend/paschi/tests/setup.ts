@@ -1,11 +1,14 @@
 import {UserController} from "@/controller/UserController";
 import {AdminController} from "@/controller/AdminController";
 import {createPinia, setActivePinia} from "pinia";
+import {UserService} from "@/service/UserService";
+import {useUserStore} from "@/store/UserStore";
 
 setActivePinia(createPinia());
 
 const admin = {email: "admin@kit.edu", password: "admin"};
 const user = {firstName: "Unit", lastName: "Test", email: "unit@test.jest", password: "test"};
+let userId: string;
 
 const userController = UserController.getUserController();
 const adminController = AdminController.getAdminController();
@@ -27,9 +30,12 @@ export async function beforeEachTest() {
 
   setActivePinia(createPinia());
 
-  await userController.login(user.email, user.password);
+  userId = (await userController.login(user.email, user.password))!;
 }
 
 export async function afterEachTest() {
-  await userController.delete();
+  setActivePinia(createPinia());
+  let _user = await UserService.getService().login(admin.email, admin.password);
+  useUserStore().setUser(_user!);
+  await UserService.getService().delete(userId);
 }
