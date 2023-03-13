@@ -134,7 +134,3 @@ test("Get session stats", () => {
   expect(map.get(disturbance.name)).toBe(4);
   expect(participationRate).toBe(33);
 });
-
-
-
-
