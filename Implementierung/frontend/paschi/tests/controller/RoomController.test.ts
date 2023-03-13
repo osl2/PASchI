@@ -83,12 +83,13 @@ test("Add table", async () => {
 });
 
 test("Get and delete all room objects", async () => {
-  const objects = roomController.getRoomObjects(roomId);
+  let objects = roomController.getRoomObjects(roomId);
 
   expect(objects?.length).toBe(2);
 
   await roomController.removeRoomObject(roomId, chairId!);
   await roomController.removeRoomObject(roomId, tableId!);
+  objects = roomController.getRoomObjects(roomId);
 
   expect(objects?.length).toBe(0);
 });
