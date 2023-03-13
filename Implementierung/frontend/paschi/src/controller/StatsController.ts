@@ -180,7 +180,10 @@ export class StatsController {
       const from = interaction.fromParticipant;
       const to = interaction.toParticipant;
       let valueArray = students.get(from.getId);
-      let valueArrayTo = students.get(to.getId);
+      let valueArrayTo;
+      if (!to.isTeacher()) {
+        valueArrayTo = students.get(to.getId);
+      }
       let quality = interaction.category.getQuality();
       let disturbance = interaction.category.name.toLowerCase() === CATEGORY_NAME;
 
@@ -190,7 +193,7 @@ export class StatsController {
           ++valueArray[3];
           if (valueArrayTo) {
             ++valueArrayTo[3];
-          } else {
+          } else if (!to.isTeacher()) {
             students.set(to.getId, [0, 0, 0, 1]);
           }
         } else {
@@ -208,7 +211,7 @@ export class StatsController {
           students.set(from.getId, [0, 0, 0, 1]);
           if (valueArrayTo) {
             ++valueArrayTo[3];
-          } else {
+          } else if (!to.isTeacher()) {
             students.set(to.getId, [0, 0, 0, 1]);
           }
         } else {
