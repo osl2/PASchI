@@ -1,9 +1,7 @@
-import {createPinia, setActivePinia} from "pinia";
-import {UserController} from "@/controller/UserController";
-import {AdminController} from "@/controller/AdminController";
 import {CategoryController, NAME_ERROR} from "@/controller/CategoryController";
 import {Category} from "@/model/userdata/interactions/Category";
 import {Quality} from "@/model/userdata/interactions/Quality";
+import {afterEachTest, beforeEachTest} from "../setup";
 
 const categoryController = CategoryController.getCategoryController();
 const categoryData = {name: "Kategorie", qName: "Bewertete Kategorie"};
@@ -13,35 +11,11 @@ let qCategoryId: string;
 let qCategory: Category | undefined;
 
 beforeAll(async () => {
-  // await beforeEachTest();
-  // TODO: Entfernen, wenn das Backend richtig läuft @ugqbo
-  setActivePinia(createPinia());
-  const admin = {email: "admin@kit.edu", password: "admin"};
-  const user = {firstName: "Test", lastName: "6", email: "test6@test.jest", password: "test"};
-  const userController = UserController.getUserController();
-  const adminController = AdminController.getAdminController();
-
-  await userController.register(
-    user.firstName,
-    user.lastName,
-    user.email,
-    user.password,
-    user.password
-  );
-
-  await userController.login(admin.email, admin.password);
-  const users = await adminController.getUsersNotAuthenticated();
-  for (const user of users) {
-    await adminController.authUser(user.getId);
-  }
-
-  setActivePinia(createPinia());
-
-  await userController.login(user.email, user.password);
+  await beforeEachTest();
 });
 
 afterAll(async () => {
-  // await afterEachTest();
+  await afterEachTest();
 });
 
 test("Create category", async () => {

@@ -1,44 +1,28 @@
 import {SessionService} from "@/service/SessionService";
 import {Session} from "@/model/userdata/courses/Session";
-import {createPinia, setActivePinia} from "pinia";
 import {UserController} from "@/controller/UserController";
-import {AdminController} from "@/controller/AdminController";
 import {Course} from "@/model/userdata/courses/Course";
 import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {CourseService} from "@/service/CourseService";
 import {Room} from "@/model/userdata/rooms/Room";
 import {RoomService} from "@/service/RoomService";
 import {SeatArrangementService} from "@/service/SeatArrangementService";
+import {afterEachTest, beforeEachTest} from "../setup";
 
 const service = SessionService.getService();
 let session: Session;
 
 beforeAll(async () => {
-  // await beforeEachTest();
-  // TODO: Entfernen, wenn das Backend richtig läuft @ugqbo
-  setActivePinia(createPinia());
-  const admin = {email: "admin@kit.edu", password: "admin"};
-  const user = {firstName: "Service", lastName: "Test", email: "service6@test.jest", password: "test"};
+  await beforeEachTest();
   const userController = UserController.getUserController();
-  const adminController = AdminController.getAdminController();
 
-  await userController.register(
-    user.firstName,
-    user.lastName,
-    user.email,
-    user.password,
-    user.password
+  const room = new Room(
+    undefined,
+    0,
+    userController.getUser(),
+    "Raum"
   );
-
-  await userController.login(admin.email, admin.password);
-  const users = await adminController.getUsersNotAuthenticated();
-  for (const user of users) {
-    await adminController.authUser(user.getId);
-  }
-
-  setActivePinia(createPinia());
-
-  await userController.login(user.email, user.password);
+  await RoomService.getService().add(room);
 
   const course = new Course(
     undefined,
@@ -48,14 +32,6 @@ beforeAll(async () => {
     "Fach"
   );
   await CourseService.getService().add(course);
-
-  const room = new Room(
-    undefined,
-    0,
-    userController.getUser(),
-    "Raum"
-  );
-  await RoomService.getService().add(room);
 
   const arrangement = new SeatArrangement(
     undefined,
@@ -76,6 +52,10 @@ beforeAll(async () => {
     course,
     arrangement
   );
+});
+
+afterAll(async () => {
+  await afterEachTest();
 });
 
 test("Add and get session", async () => {

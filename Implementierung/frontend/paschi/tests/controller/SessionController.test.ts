@@ -1,7 +1,4 @@
 import {SessionController} from "@/controller/SessionController";
-import {createPinia, setActivePinia} from "pinia";
-import {UserController} from "@/controller/UserController";
-import {AdminController} from "@/controller/AdminController";
 import {Session} from "@/model/userdata/courses/Session";
 import {CourseController} from "@/controller/CourseController";
 import {StudentController} from "@/controller/StudentController";
@@ -10,6 +7,7 @@ import {useInteractionStore} from "@/store/InteractionStore";
 import {SessionService} from "@/service/SessionService";
 import {useCourseStore} from "@/store/CourseStore";
 import {ParticipantService} from "@/service/ParticipantService";
+import {afterEachTest, beforeEachTest} from "../setup";
 
 const sessionController = SessionController.getSessionController();
 const sessionData = {name: "Kolloquium 1"};
@@ -20,35 +18,11 @@ const interactionParticipants = {fromId: "", toId: ""};
 let interactionId: string | undefined;
 
 beforeAll(async () => {
-  // await beforeEachTest();
-  // TODO: Entfernen, wenn das Backend richtig läuft @ugqbo
-  setActivePinia(createPinia());
-  const admin = {email: "admin@kit.edu", password: "admin"};
-  const user = {firstName: "Test", lastName: "4", email: "test4@test.jest", password: "test"};
-  const userController = UserController.getUserController();
-  const adminController = AdminController.getAdminController();
-
-  await userController.register(
-    user.firstName,
-    user.lastName,
-    user.email,
-    user.password,
-    user.password
-  );
-
-  await userController.login(admin.email, admin.password);
-  const users = await adminController.getUsersNotAuthenticated();
-  for (const user of users) {
-    await adminController.authUser(user.getId);
-  }
-
-  setActivePinia(createPinia());
-
-  await userController.login(user.email, user.password);
+  await beforeEachTest();
 });
 
 afterAll(async () => {
-  // await afterEachTest();
+  await afterEachTest();
 });
 
 test("Create session", async () => {

@@ -89,16 +89,3 @@ test("Logout", async () => {
 
   expect(userController.isLoggedIn()).toBeFalsy();
 });
-
-// test("Delete account", async () => {
-//   await userController.login(userData.email, userData.password);
-//   user = userController.getUser();
-//
-//   expect(user).toBeDefined();
-//
-//   await userController.delete();
-//   const userId = await userController.login(userData.email, userData.password);
-//
-//   // TODO: Backend löscht nicht
-//   // expect(userId).toBeUndefined();
-// });

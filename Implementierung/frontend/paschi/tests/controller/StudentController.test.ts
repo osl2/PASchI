@@ -1,8 +1,6 @@
 import {StudentController} from "@/controller/StudentController";
 import {Student} from "@/model/userdata/interactions/Student";
-import {UserController} from "@/controller/UserController";
-import {AdminController} from "@/controller/AdminController";
-import {createPinia, setActivePinia} from "pinia";
+import {afterEachTest, beforeEachTest} from "../setup";
 
 const studentController = StudentController.getStudentConroller();
 const studentData = {firstName: "Gregor", lastName: "Snelting"};
@@ -10,35 +8,11 @@ let student: Student | undefined;
 let studentId: string;
 
 beforeAll(async () => {
-  // await beforeEachTest();
-  // TODO: Entfernen, wenn das Backend richtig läuft @ugqbo
-  setActivePinia(createPinia());
-  const admin = {email: "admin@kit.edu", password: "admin"};
-  const user = {firstName: "Test", lastName: "3", email: "test3@test.jest", password: "test"};
-  const userController = UserController.getUserController();
-  const adminController = AdminController.getAdminController();
-
-  await userController.register(
-    user.firstName,
-    user.lastName,
-    user.email,
-    user.password,
-    user.password
-  );
-
-  await userController.login(admin.email, admin.password);
-  const users = await adminController.getUsersNotAuthenticated();
-  for (const user of users) {
-    await adminController.authUser(user.getId);
-  }
-
-  setActivePinia(createPinia());
-
-  await userController.login(user.email, user.password);
+  await beforeEachTest();
 });
 
 afterAll(async () => {
-  // await afterEachTest();
+  await afterEachTest();
 });
 
 test("Create student", async () => {

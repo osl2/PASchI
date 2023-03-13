@@ -1,47 +1,26 @@
 import {RoomService} from "@/service/RoomService";
 import {Room} from "@/model/userdata/rooms/Room";
-import {createPinia, setActivePinia} from "pinia";
 import {UserController} from "@/controller/UserController";
-import {AdminController} from "@/controller/AdminController";
 import {Chair} from "@/model/userdata/rooms/Chair";
 import {Position} from "@/model/userdata/rooms/Position";
+import {afterEachTest, beforeEachTest} from "../setup";
 
 const service = RoomService.getService();
 let room: Room;
 
 beforeAll(async () => {
-  // await beforeEachTest();
-  // TODO: Entfernen, wenn das Backend richtig läuft @ugqbo
-  setActivePinia(createPinia());
-  const admin = {email: "admin@kit.edu", password: "admin"};
-  const user = {firstName: "Service", lastName: "Test", email: "service4@test.jest", password: "test"};
-  const userController = UserController.getUserController();
-  const adminController = AdminController.getAdminController();
-
-  await userController.register(
-    user.firstName,
-    user.lastName,
-    user.email,
-    user.password,
-    user.password
-  );
-
-  await userController.login(admin.email, admin.password);
-  const users = await adminController.getUsersNotAuthenticated();
-  for (const user of users) {
-    await adminController.authUser(user.getId);
-  }
-
-  setActivePinia(createPinia());
-
-  await userController.login(user.email, user.password);
+  await beforeEachTest();
 
   room = new Room(
     undefined,
     0,
-    userController.getUser(),
+    UserController.getUserController().getUser(),
     "Raum"
   );
+});
+
+afterAll(async () => {
+  await afterEachTest();
 });
 
 test("Add and get room", async () => {
