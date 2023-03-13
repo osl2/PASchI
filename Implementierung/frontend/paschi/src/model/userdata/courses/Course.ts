@@ -168,6 +168,10 @@ export class Course extends DataObject {
     return false;
   }
 
+  hasArrangement(arrangementId: string): boolean {
+    return this._seatArrangements.find(arr => arr.getId === arrangementId) !== undefined;
+  }
+
   /**
    * Gibt den Benutzer zurück.
    */
