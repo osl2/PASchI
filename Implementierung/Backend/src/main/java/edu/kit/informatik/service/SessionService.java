@@ -117,6 +117,11 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
 
         super.checkAuthorization(authentication, session.getUser().getId());
 
+        return delete(session);
+    }
+
+    @Transactional
+    protected String delete(Session session) {
         List<Interaction> interactions = interactionRepository.findInteractionsBySession(session);
         Set<Participant> participants = new HashSet<>();
 
@@ -134,18 +139,25 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
         }
 
         for (Interaction interaction: interactions) {
+            session.removeInteraction(interaction);
             interactionRepository.deleteById(interaction.getId());
         }
 
         Course course = courseRepository.findCourseBySessions(session);
+
         if (course != null) {
+            System.out.println("removed from course");
+            System.out.println(course.getSessions().size());
             course.getSessions().remove(session);
+            System.out.println(course.getSessions().size());
         }
+        Course course2 = courseRepository.findCourseBySessions(session);
+        System.out.println(course2.getSessions().size());
 
+        System.out.println(session.getId());
+        this.sessionRepository.deleteById(session.getId());
 
-        this.sessionRepository.deleteById(id);
-
-        return id;
+        return session.getId();
     }
 
     private List<Interaction> updateInteractions(Session repositorySession , Session newSession) {
