@@ -126,7 +126,9 @@ export class SessionController {
           await arrangementController.deleteSeatArrangement(arrangement.getId);
         }
       } else {
-        await arrangementController.deleteSeatArrangement(arrangement.getId);
+        if (!arrangementController.isUsed(arrangement.getId)) {
+          await arrangementController.deleteSeatArrangement(arrangement.getId);
+        }
       }
     }
   }

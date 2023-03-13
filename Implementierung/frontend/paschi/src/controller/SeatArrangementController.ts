@@ -12,6 +12,7 @@ import {RoomObjectUtilities} from "@/components/room/RoomObjectUtilities";
 import {Chair} from "@/model/userdata/rooms/Chair";
 import {CourseController} from "@/controller/CourseController";
 import {SessionService} from "@/service/SessionService";
+import {useSessionStore} from "@/store/SessionStore";
 
 /**
  * Steuert den Kontrollfluss für die Sitzordnungsveraltung
@@ -199,6 +200,10 @@ export class SeatArrangementController {
         await this.arrangementService.update(arrangement);
       }
     }
+  }
+
+  isUsed(id: string): boolean {
+    return useSessionStore().getAllSessions().filter(session => session.seatArrangement.getId === id).length != 0;
   }
 
   private async replaceSeatArrangement(arr: SeatArrangement) {
