@@ -159,15 +159,31 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
             }
         }
 
+        if (returnTables.size() < repositoryRoom.getTables().size()) {
+            for (Table repositoryTable: repositoryRoom.getTables()) {
+                boolean found = false;
+                for (Table returnTable: returnTables)  {
+                    // Tische werden als gleich befunden, wenn der Erstell-Timestamp gleich ist
+                    if (repositoryTable.getCreatedAt().equals(returnTable.getCreatedAt())) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    returnTables.remove(repositoryTable);
+                }
+            }
+        }
+
         return returnTables;
     }
 
-    private List<Chair> updateChair(Room reposioryRoom, Room newRoom) {
+    private List<Chair> updateChair(Room repositoryRoom, Room newRoom) {
         List<Chair> returnChairs = new ArrayList<>();
 
         for (Chair newChair: newRoom.getChairs()) {
             boolean found = false;
-            for (Chair repositoryChair: reposioryRoom.getChairs())  {
+            for (Chair repositoryChair: repositoryRoom.getChairs())  {
                 // Stühle werden als gleich befunden, wenn der Erstell-Timestamp gleich ist
                 if (repositoryChair.getCreatedAt().equals(newChair.getCreatedAt())) {
                     Position oldPosition = repositoryChair.getPosition();
@@ -184,6 +200,22 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
             }
             if (!found) {
                 returnChairs.add(newChair);
+            }
+        }
+
+        if (returnChairs.size() < repositoryRoom.getChairs().size()) {
+            for (Chair repositoryChair: repositoryRoom.getChairs()) {
+                boolean found = false;
+                for (Chair returnChair: returnChairs)  {
+                    // Tische werden als gleich befunden, wenn der Erstell-Timestamp gleich ist
+                    if (repositoryChair.getCreatedAt().equals(returnChair.getCreatedAt())) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    returnChairs.remove(repositoryChair);
+                }
             }
         }
 
