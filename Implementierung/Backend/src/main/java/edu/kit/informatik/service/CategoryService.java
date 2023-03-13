@@ -103,7 +103,11 @@ public class CategoryService extends BaseService<Category, RatedCategoryDto, Cat
         Category category = categoryOptional.orElseThrow(() -> new EntityNotFoundException(Category.class, id));
         super.checkAuthorization(authentication, category.getUser().getId());
 
-        this.categoryBaseRepository.deleteById(id);
-        return id;
+        return delete(category);
+    }
+
+    protected String delete(Category category) {
+        this.categoryBaseRepository.deleteById(category.getId());
+        return category.getId();
     }
 }

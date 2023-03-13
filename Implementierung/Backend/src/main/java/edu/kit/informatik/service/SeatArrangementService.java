@@ -99,13 +99,17 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
                                                             new EntityNotFoundException(SeatArrangement.class, id));
         super.checkAuthorization(authentication, seatArrangement.getUser().getId());
 
+        return delete(seatArrangement);
+    }
+
+    protected String delete(SeatArrangement seatArrangement) {
         Course course = courseRepository.findCourseBySeatArrangements(seatArrangement);
         if (course != null) {
             course.getSeatArrangements().remove(seatArrangement);
         }
 
-        this.seatArrangementRepository.deleteById(id);
-        
-        return id;
+        this.seatArrangementRepository.deleteById(seatArrangement.getId());
+
+        return seatArrangement.getId();
     }
 }
