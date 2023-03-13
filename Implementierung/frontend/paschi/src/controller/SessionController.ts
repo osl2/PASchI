@@ -126,7 +126,7 @@ export class SessionController {
           await arrangementController.deleteSeatArrangement(arrangement.getId);
         }
       } else {
-        if (!arrangementController.isUsed(arrangement.getId)) {
+        if (!session.course.hasArrangement(arrangement.getId) && !arrangementController.isUsed(arrangement.getId)) {
           await arrangementController.deleteSeatArrangement(arrangement.getId);
         }
       }
