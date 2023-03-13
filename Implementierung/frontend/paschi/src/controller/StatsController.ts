@@ -3,6 +3,7 @@ import {SessionController} from "@/controller/SessionController";
 import {CourseController} from "@/controller/CourseController";
 import {Session} from "@/model/userdata/courses/Session";
 import {Quality} from "@/model/userdata/interactions/Quality";
+import {useStudentStore} from "@/store/ParticipantStore";
 
 const CATEGORY_NAME = "störung";
 
@@ -164,7 +165,7 @@ export class StatsController {
 
     for (const interaction of session.interactions) {
       // Anzahl und absolute Häufigkeit der Kategorien zählen.
-      if (interaction.fromParticipant.isTeacher() || !interaction.fromParticipant.visible) {
+      if (interaction.fromParticipant.isTeacher()) {
         continue;
       }
       let category = interaction.category;
@@ -227,12 +228,15 @@ export class StatsController {
     let studentStats: any[] = [];
 
     students.forEach((value: [number, number, number, number], id: string) => {
-      let numInteractions = value[0];
-      let numQualities = value[1];
-      let qualitySum = value[2];
-      let disturbance = value[3];
+      const student = useStudentStore().getStudent(id);
+      if (student?.visible) {
+        let numInteractions = value[0];
+        let numQualities = value[1];
+        let qualitySum = value[2];
+        let disturbance = value[3];
 
-      studentStats.push([id, numInteractions, qualitySum / numQualities, disturbance]);
+        studentStats.push([id, numInteractions, qualitySum / numQualities, disturbance]);
+      }
     });
 
     let topInteractions: any[] = [];
