@@ -7,7 +7,6 @@ import edu.kit.informatik.model.userdata.rooms.Chair;
 import edu.kit.informatik.model.userdata.rooms.Room;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -43,7 +42,7 @@ public class SeatArrangement extends DataObject {
     private Course course;
 
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH,
-        CascadeType.PERSIST}, fetch = FetchType.EAGER)
+        CascadeType.PERSIST})
     @JoinTable(name = "chair_participant_mapping",
             joinColumns = @JoinColumn(name = "seatarrangementId"),
             inverseJoinColumns  = @JoinColumn(name = "participantId"))
