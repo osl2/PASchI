@@ -19,22 +19,15 @@ export const useSeatArrangementStore = defineStore('seatArrangements', {
       });
     },
     getSeatArrangement(id: string): SeatArrangement | undefined {
-      let arrangement: SeatArrangement;
-      this.seatArrangements.forEach((element) => {
-        if (element.getId === id) {
-          // @ts-ignore
-          arrangement = element;
+      for (const arrangement of this.seatArrangements) {
+        if (arrangement.getId === id) {
+          return <SeatArrangement>arrangement;
         }
-      });
-      // @ts-ignore
-      if (arrangement !== undefined) {
-        return arrangement;
       }
       return undefined;
     },
     getAllSeatArrangements(): SeatArrangement[] {
-      // @ts-ignore
-      return this.seatArrangements;
+      return <SeatArrangement[]>this.seatArrangements;
     },
     getNextId(): number {
       return this.nextId++;

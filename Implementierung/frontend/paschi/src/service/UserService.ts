@@ -56,11 +56,7 @@ export class UserService extends BaseService<User, UserDto> {
         console.log(error);
       });
 
-    if (user != undefined) {
-      return user;
-    } else {
-      return undefined;
-    }
+    return user;
   }
 
   async getAll(): Promise<User[]> {
@@ -119,19 +115,15 @@ export class UserService extends BaseService<User, UserDto> {
         console.log(error);
       });
 
-    if (user != undefined) {
-      return user;
-    } else {
-      return undefined;
-    }
+    return user;
   }
 
-  async getToken(): Promise<User | undefined> {
+  async getToken(token: string): Promise<User | undefined> {
     let user;
     await axios
       .post(USER_BASE_URL + "/token", null, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${token}`,
         },
       })
       .then(async (response: AxiosResponse<UserDto>) => {
@@ -144,11 +136,7 @@ export class UserService extends BaseService<User, UserDto> {
         console.log(error);
       });
 
-    if (user != undefined) {
-      return user;
-    } else {
-      return undefined;
-    }
+    return user;
   }
 
   async adminUpdate(user: User) {

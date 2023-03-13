@@ -7,7 +7,7 @@ import {useInteractionStore} from "@/store/InteractionStore";
 import {useCourseStore} from "@/store/CourseStore";
 import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 import {useCategoryStore} from "@/store/CategoryStore";
-import {useStudentStore} from "@/store/StudentStore";
+import {useStudentStore} from "@/store/ParticipantStore";
 import {SessionService} from "@/service/SessionService";
 import {CourseService} from "@/service/CourseService";
 import {ParticipantService} from "@/service/ParticipantService";
@@ -126,7 +126,9 @@ export class SessionController {
           await arrangementController.deleteSeatArrangement(arrangement.getId);
         }
       } else {
-        await arrangementController.deleteSeatArrangement(arrangement.getId);
+        if (!session.course.hasArrangement(arrangement.getId) && !arrangementController.isUsed(arrangement.getId)) {
+          await arrangementController.deleteSeatArrangement(arrangement.getId);
+        }
       }
     }
   }
@@ -219,8 +221,8 @@ export class SessionController {
 
     fromParticipant.addInteraction(interaction);
     toParticipant.addInteraction(interaction);
-    ParticipantService.getService().update(toParticipant).then();
-    ParticipantService.getService().update(fromParticipant).then();
+    await ParticipantService.getService().update(toParticipant);
+    await ParticipantService.getService().update(fromParticipant);
     return interaction.getId;
   }
 
@@ -229,16 +231,16 @@ export class SessionController {
    *
    * @param sessionId ID der Sitzung.
    */
-  undoInteraction(sessionId: string) {
+  async undoInteraction(sessionId: string) {
     const session = useSessionStore().getSession(sessionId);
     if (session) {
       const interaction = session.undoInteraction();
-      this.sessionService.update(session).then();
+      await this.sessionService.update(session);
       if (interaction) {
         interaction.fromParticipant.removeInteraction(interaction.getId);
         interaction.toParticipant.removeInteraction(interaction.getId);
-        ParticipantService.getService().update(interaction.toParticipant).then();
-        ParticipantService.getService().update(interaction.fromParticipant).then();
+        await ParticipantService.getService().update(interaction.toParticipant);
+        await ParticipantService.getService().update(interaction.fromParticipant);
         useInteractionStore().deleteInteraction(interaction.getId);
       }
     }
@@ -249,21 +251,21 @@ export class SessionController {
    *
    * @param sessionId ID der Interaktion
    */
-  redoInteraction(sessionId: string): string | undefined {
+  async redoInteraction(sessionId: string): Promise<string | undefined> {
     const session = useSessionStore().getSession(sessionId);
     if (session == undefined) {
       return undefined;
     }
     const interaction = session.redoInteraction();
-    this.sessionService.update(session).then();
+    await this.sessionService.update(session);
     if (interaction == undefined) {
       return undefined;
     }
     useInteractionStore().addInteraction(interaction);
     interaction.fromParticipant.addInteraction(interaction);
     interaction.toParticipant.addInteraction(interaction);
-    ParticipantService.getService().update(interaction.toParticipant).then();
-    ParticipantService.getService().update(interaction.fromParticipant).then();
+    await ParticipantService.getService().update(interaction.toParticipant);
+    await ParticipantService.getService().update(interaction.fromParticipant);
     return interaction.getId;
   }
 

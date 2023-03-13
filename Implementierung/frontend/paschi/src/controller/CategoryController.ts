@@ -5,13 +5,12 @@ import {RatedCategory} from "@/model/userdata/interactions/RatedCategory";
 import {Quality} from "@/model/userdata/interactions/Quality";
 import {CategoryService} from "@/service/CategoryService";
 
-const NAME_ERROR = "Name schon vergeben";
-const DEFAULT_CATEGORIES = ["Störung", "Antwort", "Frage"];
+export const NAME_ERROR = "Name schon vergeben";
+export const DEFAULT_CATEGORIES = ["Störung", "Antwort", "Frage"];
 
 export class CategoryController {
 
   private static controller: CategoryController = new CategoryController();
-  private categoryService = CategoryService.getService();
 
   private constructor() {
   }
@@ -24,13 +23,15 @@ export class CategoryController {
     if (useCategoryStore().hasName(name)) {
       return NAME_ERROR;
     }
-    let category = new Category(undefined, useCategoryStore().getNextId(),
+    const category = new Category(undefined, useCategoryStore().getNextId(),
       UserController.getUserController().getUser(), name);
-    await this.categoryService.add(category);
+
+    await CategoryService.getService().add(category);
     return useCategoryStore().addCategory(category);
   }
 
   async createRatedCategory(name: string): Promise<string> {
+    const categoryService = CategoryService.getService();
     if (useCategoryStore().hasName(name)) {
       return NAME_ERROR;
     }
@@ -38,53 +39,53 @@ export class CategoryController {
     let category = new RatedCategory(undefined, useCategoryStore().getNextId(),
       UserController.getUserController().getUser(),
       name, Quality.ONE_STAR);
+
     useCategoryStore().addRatedCategory(category)
-    await this.categoryService.add(category);
+    await categoryService.add(category);
     useCategoryStore().addCategory(category);
     categoryId = category.getId;
 
     category = new RatedCategory(undefined, useCategoryStore().getNextId(),
       UserController.getUserController().getUser(),
       name, Quality.TWO_STAR);
+
     useCategoryStore().addRatedCategory(category)
-    await this.categoryService.add(category);
+    await categoryService.add(category);
 
     category = new RatedCategory(undefined, useCategoryStore().getNextId(),
       UserController.getUserController().getUser(),
       name, Quality.THREE_STAR);
+
     useCategoryStore().addRatedCategory(category)
-    await this.categoryService.add(category);
+    await categoryService.add(category);
 
     category = new RatedCategory(undefined, useCategoryStore().getNextId(),
       UserController.getUserController().getUser(),
       name, Quality.FOUR_STAR);
+
     useCategoryStore().addRatedCategory(category)
-    await this.categoryService.add(category);
+    await categoryService.add(category);
 
     category = new RatedCategory(undefined, useCategoryStore().getNextId(),
       UserController.getUserController().getUser(),
       name, Quality.FIVE_STAR);
+
     useCategoryStore().addRatedCategory(category)
-    await this.categoryService.add(category);
+    await categoryService.add(category);
 
     return categoryId;
   }
 
   async deleteCategory(id: string) {
     const category = useCategoryStore().getCategory(id);
-    if (category !== undefined) {
+    if (category) {
+      await CategoryService.getService().delete(id);
       useCategoryStore().deleteCategory(category.name);
-      await this.categoryService.delete(id);
     }
   }
 
   getCategory(id: string): Category | undefined {
-    let category = useCategoryStore().getCategory(id);
-    if (category == undefined) {
-      return undefined;
-    }
-
-    return category;
+    return useCategoryStore().getCategory(id);
   }
 
   getCategoryWithQuality(name: string, quality: Quality): RatedCategory | undefined {
@@ -92,20 +93,10 @@ export class CategoryController {
     if (categories.length == 0) {
       return undefined;
     }
-    let category;
-    categories.forEach((element: RatedCategory) => {
-      if (element.quality === quality) {
-        category = element;
-      }
-    });
-
-    if (category == undefined) {
-      return undefined;
-    }
-    return category;
+    return categories.find(category => category.getQuality() === quality);
   }
 
-  getCategories(): Category[] {
+  getAllCategories(): Category[] {
     return useCategoryStore().getAllCategories();
   }
 
@@ -113,8 +104,8 @@ export class CategoryController {
     return useCategoryStore().getRatedCategories(name);
   }
 
-  async getAllCategories() {
-    await this.categoryService.getAll();
+  async fetchCategories() {
+    await CategoryService.getService().getAll();
     if (useCategoryStore().getAllCategories().length == 0) {
       await this.createCategory(DEFAULT_CATEGORIES[0]);
       await this.createRatedCategory(DEFAULT_CATEGORIES[1]);

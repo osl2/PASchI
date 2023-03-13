@@ -45,21 +45,14 @@ export class SeatArrangement extends DataObject {
   }
 
   getStudentsNotAssigned(): Participant[] {
-    const students: Participant[] = [];
-    this.getAllStudents().forEach((participant: Participant) => {
-      let isAssigned = false;
-      this.seatMap.forEach((student: Participant) => {
-        if (participant.getId === student.getId) {
-          isAssigned = true;
+    return this.getAllStudents().filter(student => {
+      for (const value of this._seatMap) {
+        if (value[1].getId === student.getId) {
+          return false;
         }
-      });
-
-      if (!isAssigned) {
-        students.push(participant);
       }
+      return true;
     });
-
-    return students;
   }
 
   get user(): User {

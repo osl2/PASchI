@@ -20,7 +20,7 @@ export const usePositionStore = defineStore('positions', {
     getPosition(id: string): Position | undefined {
       for (const position of this.positions) {
         if (position.getId === id) {
-          return <Position> position;
+          return <Position>position;
         }
       }
       return undefined;

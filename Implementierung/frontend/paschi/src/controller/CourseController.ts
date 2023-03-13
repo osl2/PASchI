@@ -4,7 +4,7 @@ import {Session} from "@/model/userdata/courses/Session";
 import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {useCourseStore} from "@/store/CourseStore";
 import {UserController} from "@/controller/UserController";
-import {useStudentStore} from "@/store/StudentStore";
+import {useStudentStore} from "@/store/ParticipantStore";
 import {SessionController} from "@/controller/SessionController";
 import {SeatArrangementController} from "@/controller/SeatArrangementController";
 import {CourseService} from "@/service/CourseService";
@@ -148,14 +148,14 @@ export class CourseController {
    * @param courseId Die Id des Kurses zurück.
    * @param studentId Die Id des Schülers.
    */
-  addStudentToCourse(courseId: string, studentId: string) {
+  async addStudentToCourse(courseId: string, studentId: string) {
     const course = useCourseStore().getCourse(courseId);
     const student = useStudentStore().getStudent(studentId);
     if (course && student) {
       course.addParticipant(student);
       student.addCourse(course);
-      ParticipantService.getService().update(student).then();
-      this.courseService.update(course).then();
+      await ParticipantService.getService().update(student);
+      await this.courseService.update(course);
     }
   }
 

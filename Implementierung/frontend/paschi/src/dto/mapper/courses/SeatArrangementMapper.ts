@@ -9,7 +9,7 @@ import {useCourseStore} from "@/store/CourseStore";
 import {RoomService} from "@/service/RoomService";
 import {CourseService} from "@/service/CourseService";
 import {useRoomStore} from "@/store/RoomStore";
-import {useStudentStore} from "@/store/StudentStore";
+import {useStudentStore} from "@/store/ParticipantStore";
 import {useRoomObjectStore} from "@/store/RoomObjectStore";
 import {ParticipantService} from "@/service/ParticipantService";
 
@@ -88,6 +88,7 @@ export class SeatArrangementMapper implements IModelDtoMapper<SeatArrangement, S
       seatMap.set(roomObject, participant!);
     }
 
+    arrangement.name = arrangementDto.name;
     arrangement.seatMap = seatMap;
     return arrangement;
   }

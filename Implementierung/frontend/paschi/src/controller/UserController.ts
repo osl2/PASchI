@@ -3,7 +3,7 @@ import {useUserStore} from "@/store/UserStore";
 import {Role} from "@/model/Role";
 import {UserService} from "@/service/UserService";
 import {CategoryController} from "@/controller/CategoryController";
-import {useStudentStore} from "@/store/StudentStore";
+import {useStudentStore} from "@/store/ParticipantStore";
 import {useCourseStore} from "@/store/CourseStore";
 import {useSessionStore} from "@/store/SessionStore";
 import {useCategoryStore} from "@/store/CategoryStore";
@@ -48,15 +48,20 @@ export class UserController {
 
     useUserStore().setUser(user);
     await this.getData();
-    await CategoryController.getCategoryController().getAllCategories();
     return user.getId;
   }
 
   /**
    * Einloggen mit gültigem Token.
    */
-  async loginWithToken(): Promise<string | undefined> {
-    const user = await this.userService.getToken();
+  async loginWithToken(token: string | null): Promise<string | undefined> {
+    if (token == null) {
+      token = localStorage.getItem("token");
+    }
+    if (token == null) {
+      return undefined;
+    }
+    const user = await this.userService.getToken(token);
 
     if (user == undefined) {
       return undefined;
@@ -64,7 +69,6 @@ export class UserController {
 
     useUserStore().setUser(user);
     await this.getData();
-    await CategoryController.getCategoryController().getAllCategories();
     return user.getId;
   }
 
@@ -97,7 +101,7 @@ export class UserController {
       password,
       false,
       Role.USER,
-      undefined
+      ""
     );
     await this.userService.add(user);
     user.deletePassword();
@@ -141,19 +145,20 @@ export class UserController {
   /**
    * Löscht den Benutzeraccount.
    */
-  async delete() {
-    const user = useUserStore().getUser();
-    if (user) {
-      await this.userService.delete(user.getId);
-      this.clearStores();
-    }
-  }
+  // async delete() {
+  //   const user = useUserStore().getUser();
+  //   if (user) {
+  //     await this.userService.delete(user.getId);
+  //     this.clearStores();
+  //   }
+  // }
 
   private async getData() {
     await this.getTeacher();
     await CourseService.getService().getAll();
     await SessionService.getService().getAll();
     await RoomService.getService().getAll();
+    await CategoryController.getCategoryController().fetchCategories();
   }
 
   private clearStores() {

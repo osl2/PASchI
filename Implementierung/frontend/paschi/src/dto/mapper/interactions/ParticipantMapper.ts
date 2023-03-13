@@ -7,7 +7,7 @@ import {UserController} from "@/controller/UserController";
 import {ParticipantTypeDto} from "@/dto/userdata/interactions/ParticipantTypeDto";
 import {useCourseStore} from "@/store/CourseStore";
 import {useInteractionStore} from "@/store/InteractionStore";
-import {useStudentStore} from "@/store/StudentStore";
+import {useStudentStore} from "@/store/ParticipantStore";
 import {Student} from "@/model/userdata/interactions/Student";
 import {CourseService} from "@/service/CourseService";
 import {Teacher} from "@/model/userdata/interactions/Teacher";

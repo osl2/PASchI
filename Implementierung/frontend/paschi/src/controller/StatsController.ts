@@ -36,7 +36,7 @@ export class StatsController {
     let qualitySum = 0;
 
     const interactions = student.interactions.filter(interaction =>
-      (interaction.fromParticipant.getId === studentId || interaction.category.name.toLowerCase() === CATEGORY_NAME));
+      (interaction.category.name.toLowerCase() === CATEGORY_NAME) || interaction.fromParticipant.getId === studentId);
 
     for (const interaction of interactions) {
       // Anzahl und absolute Häufigkeit der Kategorien zählen.
@@ -77,7 +77,7 @@ export class StatsController {
    7. Map(datum, Beteiligunsquote)
    ]
    */
-  getCourseStats(courseId: string): (Map<string, number> | any[])[] | undefined {
+  getCourseStats(courseId: string): any[] | undefined {
     const course = CourseController.getCourseController().getCourse(courseId);
     if (course == undefined) {
       return undefined;
@@ -88,10 +88,10 @@ export class StatsController {
     let participation: Map<string, number> = new Map<string, number>();
     let numCategories = 0;
 
-    course.sessions.forEach((session: Session) => {
+    for (const session of course.sessions) {
       // Anzahl und absolute Häufigkeit der Kategorien zählen.
       // Statistiken der Teilnehmer sammeln.
-      let interactionStats = this.getInteractionStats(session.getId, categories, students, numCategories);
+      let interactionStats = this.getInteractionStats(session, categories, students, numCategories);
       if (interactionStats != undefined) {
         categories = interactionStats[0];
         numCategories = interactionStats[1];
@@ -103,12 +103,7 @@ export class StatsController {
       if (sessionStats != undefined) {
         participation.set(session.date, sessionStats[6]);
       }
-    });
-
-    /*// Relative Häufigkeit der Kategorien berechnen.
-    categories.forEach((value: number, category: string) => {
-      categories.set(category, (value / numCategories) * 100);
-    });*/
+    }
 
     const statsArray = this.getTopStudents(students);
     statsArray.push(categories);
@@ -140,7 +135,7 @@ export class StatsController {
 
     // Anzahl und absolute Häufigkeit der Kategorien zählen.
     // Statistiken der Teilnehmer sammeln.
-    let sessionStats = this.getInteractionStats(sessionId, categories, students, numCategories);
+    let sessionStats = this.getInteractionStats(session, categories, students, numCategories);
     if (sessionStats) {
       categories = sessionStats[0];
       //numCategories = sessionStats[1];
@@ -163,13 +158,9 @@ export class StatsController {
   }
 
 
-  private getInteractionStats(sessionId: string, categories: Map<string, number>,
+  private getInteractionStats(session: Session, categories: Map<string, number>,
                               students: Map<string, [number, number, number, number]>,
-                              numCategories: number): any[] | undefined {
-    let session = SessionController.getSessionController().getSession(sessionId);
-    if (session == undefined) {
-      return undefined;
-    }
+                              numCategories: number): any[] {
 
     for (const interaction of session.interactions) {
       // Anzahl und absolute Häufigkeit der Kategorien zählen.
@@ -262,7 +253,9 @@ export class StatsController {
       return (a[2] >= b[2]) ? 1 : -1;
     });
     studentStats.forEach((value: [string, number, number, number]) => {
-      topQuality.push([value[0], value[2]]);
+      if (value[2] != 0) {
+        topQuality.push([value[0], value[2]]);
+      }
     });
 
     // Schüler nach Anzahl der Interaktionen aufsteigend sortieren.
@@ -280,7 +273,9 @@ export class StatsController {
       return (a[2] <= b[2]) ? 1 : -1;
     });
     studentStats.forEach((value: [string, number, number, number]) => {
-      bottomQuality.push([value[0], value[2]]);
+      if (value[2] != 0) {
+        bottomQuality.push([value[0], value[2]]);
+      }
     });
 
     // Schüler nach Anzahl der Störungen absteigend sortieren.

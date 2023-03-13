@@ -3,7 +3,7 @@ import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 import {UserController} from "@/controller/UserController";
 import {useRoomStore} from "@/store/RoomStore";
 import {useCourseStore} from "@/store/CourseStore";
-import {useStudentStore} from "@/store/StudentStore";
+import {useStudentStore} from "@/store/ParticipantStore";
 import {Participant} from "@/model/userdata/interactions/Participant";
 import {SeatArrangementService} from "@/service/SeatArrangementService";
 import {CourseService} from "@/service/CourseService";
@@ -12,6 +12,7 @@ import {RoomObjectUtilities} from "@/components/room/RoomObjectUtilities";
 import {Chair} from "@/model/userdata/rooms/Chair";
 import {CourseController} from "@/controller/CourseController";
 import {SessionService} from "@/service/SessionService";
+import {useSessionStore} from "@/store/SessionStore";
 
 /**
  * Steuert den Kontrollfluss für die Sitzordnungsveraltung
@@ -36,13 +37,13 @@ export class SeatArrangementController {
    * @param courseId ID des Kurses
    */
   async createSeatArrangement(name: string, roomId: string, courseId: string): Promise<string | undefined> {
-    let room = useRoomStore().getRoom(roomId);
-    let course = useCourseStore().getCourse(courseId);
+    const room = useRoomStore().getRoom(roomId);
+    const course = useCourseStore().getCourse(courseId);
     if (room == undefined || course == undefined) {
       return undefined;
     }
 
-    let arrangement = new SeatArrangement(
+    const arrangement = new SeatArrangement(
       undefined,
       useSeatArrangementStore().getNextId(),
       UserController.getUserController().getUser(),
@@ -52,7 +53,7 @@ export class SeatArrangementController {
     );
     await this.arrangementService.add(arrangement);
     course.addSeatArrangement(arrangement);
-    CourseService.getService().update(course).then();
+    await CourseService.getService().update(course);
 
     return useSeatArrangementStore().addSeatArrangement(arrangement);
   }
@@ -95,8 +96,6 @@ export class SeatArrangementController {
       course,
       room
     );
-    course.addSeatArrangement(arrangement);
-    await CourseService.getService().update(course);
 
     const chairs = roomController.getRoomObjects(roomId)?.filter((roomObject) => roomObject instanceof Chair);
     for (let i = 0; i < students.length; i++) {
@@ -105,6 +104,8 @@ export class SeatArrangementController {
     arrangement.setSeat(chairs![students.length], CourseController.getCourseController().getTeacher());
 
     await this.arrangementService.add(arrangement);
+    course.addSeatArrangement(arrangement);
+    await CourseService.getService().update(course);
     return useSeatArrangementStore().addSeatArrangement(arrangement);
   }
 
@@ -114,8 +115,8 @@ export class SeatArrangementController {
    * @param id ID der Sitzordnung
    */
   async deleteSeatArrangement(id: string) {
-    let arrangement = useSeatArrangementStore().getSeatArrangement(id);
-    if (arrangement !== undefined) {
+    const arrangement = useSeatArrangementStore().getSeatArrangement(id);
+    if (arrangement) {
       arrangement.course.removeSeatArrangement(id);
       await CourseService.getService().update(arrangement.course);
       await this.arrangementService.delete(id);
@@ -148,11 +149,7 @@ export class SeatArrangementController {
    * @param arrangementId ID der Sitzordnung
    */
   getAllStudents(arrangementId: string): Participant[] | undefined {
-    const arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
-    if (arrangement == undefined) {
-      return undefined;
-    }
-    return arrangement.getAllStudents();
+    return useSeatArrangementStore().getSeatArrangement(arrangementId)?.getAllStudents();
   }
 
   /**
@@ -161,11 +158,7 @@ export class SeatArrangementController {
    * @param arrangementId ID der Sitzordnung
    */
   getStudentsNotAssigned(arrangementId: string): Participant[] | undefined {
-    const arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
-    if (arrangement == undefined) {
-      return undefined;
-    }
-    return arrangement.getStudentsNotAssigned();
+    return useSeatArrangementStore().getSeatArrangement(arrangementId)?.getStudentsNotAssigned();
   }
 
   teacherAssigned(arrangementId: string): boolean | undefined {
@@ -189,19 +182,19 @@ export class SeatArrangementController {
    * @param participantId ID des Teilnehmers
    */
   async addMapping(arrangementId: string, chairId: string, participantId: string) {
-    let arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
-    let participant = useStudentStore().getParticipant(participantId);
+    const arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
+    const participant = useStudentStore().getParticipant(participantId);
     if (arrangement == undefined || participant == undefined) {
       return undefined;
     }
-    let chair = arrangement.room.getRoomObject(chairId);
+    const chair = arrangement.room.getRoomObject(chairId);
     if (chair == undefined) {
       return undefined;
     }
 
     await this.replaceSeatArrangement(arrangement);
     arrangement.setSeat(chair, participant);
-    this.arrangementService.update(arrangement).then();
+    await this.arrangementService.update(arrangement);
   }
 
   /**
@@ -212,14 +205,18 @@ export class SeatArrangementController {
    */
   async deleteMapping(arrangementId: string, chairId: string) {
     const arrangement = useSeatArrangementStore().getSeatArrangement(arrangementId);
-    if (arrangement !== undefined) {
+    if (arrangement) {
       const chair = arrangement.room.getRoomObject(chairId);
-      if (chair !== undefined) {
+      if (chair) {
         await this.replaceSeatArrangement(arrangement);
         arrangement.removeSeat(chair);
         await this.arrangementService.update(arrangement);
       }
     }
+  }
+
+  isUsed(id: string): boolean {
+    return useSessionStore().getAllSessions().filter(session => session.seatArrangement.getId === id).length != 0;
   }
 
   private async replaceSeatArrangement(arr: SeatArrangement) {

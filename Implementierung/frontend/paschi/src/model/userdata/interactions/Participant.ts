@@ -40,12 +40,11 @@ export abstract class Participant extends DataObject {
   }
 
   getCourse(courseId: string): Course | undefined {
-    for (let i = 0; i < this._courses.length; i++) {
-      if (this._courses.at(i)?.getId === courseId) {
-        return this._courses.at(i);
+    for (const course of this._courses) {
+      if (course.getId === courseId) {
+        return course;
       }
     }
-
     return undefined;
   }
 
@@ -66,12 +65,11 @@ export abstract class Participant extends DataObject {
   }
 
   getInteraction(interactionId: string): Interaction | undefined {
-    for (let i = 0; i < this._interactions.length; i++) {
-      if (this._interactions.at(i)?.getId === interactionId) {
-        return this._interactions.at(i);
+    for (const interaction of this._interactions) {
+      if (interaction.getId === interactionId) {
+        return interaction;
       }
     }
-
     return undefined;
   }
 

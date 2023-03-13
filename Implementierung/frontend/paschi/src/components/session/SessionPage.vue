@@ -332,7 +332,7 @@ export default defineComponent({
     const categoryController = CategoryController.getCategoryController();
 
     const categories: Ref<Category[]> = ref(
-      categoryController.getCategories()
+      categoryController.getAllCategories()
     ) as Ref<Category[]>;
     const starDialog = ref(false);
     const sessionName = sessionController.getSession(props.sessionId)?.name;

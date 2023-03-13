@@ -18,30 +18,21 @@ export const useInteractionStore = defineStore('interactions', {
       });
     },
     getInteraction(id: string): Interaction | undefined {
-      let interaction: Interaction;
-      this.interactions.forEach((element) => {
-        if (element.getId === id) {
-          // @ts-ignore
-          interaction = element;
-        }
-      });
-      // @ts-ignore
-      if (interaction !== undefined) {
-        return interaction;
-      }
-      return undefined;
-    },
-    getInteractionByTimeStampAndSession(time: string, sessionId: string): Interaction | undefined {
       for (const interaction of this.interactions) {
-        if (interaction.session.getId === sessionId && interaction.timeStamp === time) {
-          return <Interaction> interaction;
+        if (interaction.getId === id) {
+          return <Interaction>interaction;
         }
       }
       return undefined;
     },
-    getAllInteractions(): Interaction[] {
-      // @ts-ignore
-      return this.interactions;
+    getInteractionByTimeCreatedAndSession(time: string, sessionId: string): Interaction | undefined {
+      for (const interaction of this.interactions) {
+        if (interaction.session.getId === sessionId
+          && interaction.createdAt.substring(0, 23) === time.substring(0, 23)) {
+          return <Interaction>interaction;
+        }
+      }
+      return undefined;
     },
     getNextId(): number {
       return this.nextId++;

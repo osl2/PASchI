@@ -6,7 +6,7 @@ import {UserController} from "@/controller/UserController";
 import {SessionService} from "@/service/SessionService";
 import {ParticipantService} from "@/service/ParticipantService";
 import {useSessionStore} from "@/store/SessionStore";
-import {useStudentStore} from "@/store/StudentStore";
+import {useStudentStore} from "@/store/ParticipantStore";
 import {useCategoryStore} from "@/store/CategoryStore";
 import {CategoryService} from "@/service/CategoryService";
 
@@ -64,7 +64,7 @@ export class InteractionMapper implements IModelDtoMapper<Interaction, Interacti
       category = await categoryService.getById(interactionDto.categoryId);
     }
 
-    let interaction = useInteractionStore().getInteractionByTimeStampAndSession(interactionDto.timeStamp,
+    let interaction = useInteractionStore().getInteractionByTimeCreatedAndSession(interactionDto.createdAt,
       interactionDto.sessionId);
     if (interaction == undefined) {
       interaction = new Interaction(

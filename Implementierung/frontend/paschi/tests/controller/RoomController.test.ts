@@ -54,9 +54,10 @@ test("Create room", async () => {
 test("Add chair", async () => {
   const position = {x: 0, y: 0, angle: 0};
   roomController.addChair("24", position.x, position.y, position.angle);
-  chairId = roomController.addChair(roomId, position.x, position.y, position.angle);
-  const chair = roomController.getRoomObject(roomId, chairId!);
+  roomController.addChair(roomId, position.x, position.y, position.angle);
   await roomController.saveRoom(roomId);
+  chairId = roomController.getRoomObjects(roomId)![0].getId;
+  const chair = roomController.getRoomObject(roomId, chairId!);
 
   expect(chair?.position.xCoordinate).toBe(position.x);
   expect(chair?.position.yCoordinate).toBe(position.y);
@@ -70,8 +71,9 @@ test("Add table", async () => {
     dimension.width);
   tableId = roomController.addTable(roomId, position.x, position.y, position.angle, dimension.length,
     dimension.width);
-  const table = roomController.getRoomObject(roomId, tableId!);
   await roomController.saveRoom(roomId);
+  tableId = roomController.getRoomObjects(roomId)?.filter(object => object.isTable())[0].getId;
+  const table = roomController.getRoomObject(roomId, tableId!);
 
   expect(table?.position.xCoordinate).toBe(position.x);
   expect(table?.position.yCoordinate).toBe(position.y);
@@ -81,15 +83,15 @@ test("Add table", async () => {
 });
 
 test("Get and delete all room objects", async () => {
-  const objects = roomController.getRoomObjects(roomId);
+  let objects = roomController.getRoomObjects(roomId);
 
   expect(objects?.length).toBe(2);
 
   await roomController.removeRoomObject(roomId, chairId!);
   await roomController.removeRoomObject(roomId, tableId!);
+  objects = roomController.getRoomObjects(roomId);
 
-  // TODO: Backend löscht Raumobjekte nicht
-  // expect(objects?.length).toBe(0);
+  expect(objects?.length).toBe(0);
 });
 
 test("Get all rooms", () => {

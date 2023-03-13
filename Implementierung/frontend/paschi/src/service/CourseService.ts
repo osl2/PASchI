@@ -66,11 +66,7 @@ export class CourseService extends BaseService<Course, CourseDto> {
         console.log(error);
       });
 
-    if (course != undefined) {
-      return course;
-    } else {
-      return undefined;
-    }
+    return course;
   }
 
   async getAll(): Promise<Course[]> {
