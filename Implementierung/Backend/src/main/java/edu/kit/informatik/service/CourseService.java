@@ -4,7 +4,9 @@ import edu.kit.informatik.dto.mapper.courses.CourseMapper;
 import edu.kit.informatik.dto.userdata.courses.CourseDto;
 import edu.kit.informatik.exceptions.EntityNotFoundException;
 import edu.kit.informatik.model.userdata.courses.Course;
+import edu.kit.informatik.model.userdata.interactions.Participant;
 import edu.kit.informatik.repositories.CourseRepository;
+import edu.kit.informatik.repositories.ParticipantRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -26,15 +28,20 @@ public class CourseService extends BaseService<Course, CourseDto, CourseDto> {
     private static final String ID_ATTRIBUTE = "userId";
 
     private final CourseRepository courseRepository;
+    private final ParticipantRepository participantRepository;
 
     /**
      * Konstruktor zum Erstellen eines Objektes
-     * @param courseRepository {@link CourseRepository}
-     * @param courseMapper {@link CourseMapper}
+     *
+     * @param courseRepository      {@link CourseRepository}
+     * @param courseMapper          {@link CourseMapper}
+     * @param participantRepository {@link ParticipantRepository}
      */
-    public CourseService(CourseRepository courseRepository, CourseMapper courseMapper) {
+    public CourseService(CourseRepository courseRepository, CourseMapper courseMapper,
+                                                                    ParticipantRepository participantRepository) {
         super(courseMapper);
         this.courseRepository = courseRepository;
+        this.participantRepository = participantRepository;
     }
 
     @Override
@@ -96,6 +103,14 @@ public class CourseService extends BaseService<Course, CourseDto, CourseDto> {
         Optional<Course> courseOptional = this.courseRepository.findCourseById(id);
         Course course = courseOptional.orElseThrow(() -> new EntityNotFoundException(Course.class, id));
         super.checkAuthorization(authentication, course.getUser().getId());
+
+        List<Participant> participants = participantRepository.findParticipantsByCourses(course);
+
+        for (Participant participant: participants) {
+            participant.getCourses().remove(course);
+        }
+
+
 
         this.courseRepository.deleteById(id);
         return id;

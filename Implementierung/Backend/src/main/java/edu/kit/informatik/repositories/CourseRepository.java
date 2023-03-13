@@ -2,6 +2,8 @@ package edu.kit.informatik.repositories;
 
 import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.courses.Course;
+import edu.kit.informatik.model.userdata.courses.SeatArrangement;
+import edu.kit.informatik.model.userdata.courses.Session;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -30,4 +32,8 @@ public interface CourseRepository extends JpaRepository<Course, String> {
      * @return {@link Optional} von {@link Course}
      */
     List<Course> findCoursesByUserId(String userId);
+
+    Course findCourseBySessions(Session session);
+
+    Course findCourseBySeatArrangements(SeatArrangement seatArrangement);
 }

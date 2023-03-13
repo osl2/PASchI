@@ -3,7 +3,9 @@ package edu.kit.informatik.service;
 import edu.kit.informatik.dto.mapper.courses.SeatArrangementMapper;
 import edu.kit.informatik.dto.userdata.courses.SeatArrangementDto;
 import edu.kit.informatik.exceptions.EntityNotFoundException;
+import edu.kit.informatik.model.userdata.courses.Course;
 import edu.kit.informatik.model.userdata.courses.SeatArrangement;
+import edu.kit.informatik.repositories.CourseRepository;
 import edu.kit.informatik.repositories.SeatArrangementRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.Authentication;
@@ -26,16 +28,20 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
     private static final String ID_ATTRIBUTE = "userId";
 
     private final SeatArrangementRepository seatArrangementRepository;
+    private final CourseRepository courseRepository;
 
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
+     *
      * @param seatArrangementRepository {@link SeatArrangementRepository}
-     * @param seatArrangementMapper {@link SeatArrangementMapper}
+     * @param seatArrangementMapper     {@link SeatArrangementMapper}
+     * @param courseRepository          {@link CourseRepository}
      */
     public SeatArrangementService(SeatArrangementRepository seatArrangementRepository,
-                                  SeatArrangementMapper seatArrangementMapper) {
+                                  SeatArrangementMapper seatArrangementMapper, CourseRepository courseRepository) {
         super(seatArrangementMapper);
         this.seatArrangementRepository = seatArrangementRepository;
+        this.courseRepository = courseRepository;
     }
 
     @Override
@@ -92,6 +98,11 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
         SeatArrangement seatArrangement = seatArrangementOptional.orElseThrow(() ->
                                                             new EntityNotFoundException(SeatArrangement.class, id));
         super.checkAuthorization(authentication, seatArrangement.getUser().getId());
+
+        Course course = courseRepository.findCourseBySeatArrangements(seatArrangement);
+        if (course != null) {
+            course.getSeatArrangements().remove(seatArrangement);
+        }
 
         this.seatArrangementRepository.deleteById(id);
         
