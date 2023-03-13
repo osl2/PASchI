@@ -9,6 +9,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ public class Session extends DataObject {
     @OneToMany
     private List<Interaction> interactions;
 
+    @Cascade(CascadeType.SAVE_UPDATE)
     @ManyToOne
     private SeatArrangement seatArrangement;
 

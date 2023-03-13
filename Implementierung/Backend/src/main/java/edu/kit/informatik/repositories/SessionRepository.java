@@ -26,11 +26,11 @@ public interface SessionRepository extends JpaRepository<Session, String> {
     Optional<Session> findSessionById(String id);
 
     /**
-     * Rückgabe von {@link Optional} von {@link Session}
+     * Rückgabe einer {@link List} von {@link Session}
      * @param course {@link Course}
-     * @return {@link Optional} von {@link Session}
+     * @return {@link List} von {@link Session}
      */
-    Optional<List<Session>> findSessionsByCourse(Course course);
+    List<Session> findSessionsByCourse(Course course);
 
     /**
      * Rückgabe von {@link Optional} von {@link Session}

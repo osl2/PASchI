@@ -3,9 +3,13 @@ package edu.kit.informatik.service;
 import edu.kit.informatik.dto.mapper.courses.SessionMapper;
 import edu.kit.informatik.dto.userdata.courses.SessionDto;
 import edu.kit.informatik.exceptions.EntityNotFoundException;
+import edu.kit.informatik.model.userdata.courses.Course;
 import edu.kit.informatik.model.userdata.courses.Session;
 import edu.kit.informatik.model.userdata.interactions.Interaction;
+import edu.kit.informatik.model.userdata.interactions.Participant;
+import edu.kit.informatik.repositories.CourseRepository;
 import edu.kit.informatik.repositories.InteractionRepository;
+import edu.kit.informatik.repositories.ParticipantRepository;
 import edu.kit.informatik.repositories.SessionRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.Authentication;
@@ -13,8 +17,10 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Service für {@link Session Sitzungen}
@@ -29,20 +35,28 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
     private static final String ID_ATTRIBUTE = "userId";
 
     private final SessionRepository sessionRepository;
+    private final CourseRepository courseRepository;
     private final InteractionRepository interactionRepository;
+
+    private final ParticipantRepository participantRepository;
 
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
      *
      * @param sessionRepository     {@link SessionRepository}
      * @param sessionMapper         {@link SessionMapper}
+     * @param courseRepository      {@link CourseRepository}
      * @param interactionRepository {@link InteractionRepository}
+     * @param participantRepository {@link ParticipantRepository}
      */
     public SessionService(SessionRepository sessionRepository, SessionMapper sessionMapper,
-                          InteractionRepository interactionRepository) {
+                          CourseRepository courseRepository, InteractionRepository interactionRepository,
+                          ParticipantRepository participantRepository) {
         super(sessionMapper);
         this.sessionRepository = sessionRepository;
+        this.courseRepository = courseRepository;
         this.interactionRepository = interactionRepository;
+        this.participantRepository = participantRepository;
     }
 
     @Override
@@ -93,12 +107,38 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
                                                                 jAT.getTokenAttributes().get(ID_ATTRIBUTE).toString()));
     }
 
+    @Transactional
     @Override
     public String delete(String id, Authentication authentication) {
         Optional<Session> sessionOptional = sessionRepository.findById(id);
-        if (sessionOptional.isEmpty()) {
-            throw new EntityNotFoundException(Session.class, id);
+
+        Session session = sessionOptional.orElseThrow(() -> new EntityNotFoundException(Session.class, id));
+
+        List<Interaction> interactions = interactionRepository.findInteractionsBySession(session);
+        Set<Participant> participants = new HashSet<>();
+
+        for (Interaction interaction : interactions) {
+            participants.add(participantRepository.findParticipantById(interaction.getFrom().getId())
+                    .orElseThrow(() -> new EntityNotFoundException(Participant.class, interaction.getFrom().getId())));
+            participants.add(participantRepository.findParticipantById(interaction.getTo().getId())
+                    .orElseThrow(() -> new EntityNotFoundException(Participant.class, interaction.getTo().getId())));
         }
+
+        for (Participant participant: participants) {
+            for (Interaction interaction: interactions) {
+                participant.getInteractions().remove(interaction);
+            }
+        }
+
+        for (Interaction interaction: interactions) {
+            interactionRepository.deleteById(interaction.getId());
+        }
+
+        Course course = courseRepository.findCourseBySessions(session);
+        if (course != null) {
+            course.getSessions().remove(session);
+        }
+
 
         this.sessionRepository.deleteById(id);
 
