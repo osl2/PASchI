@@ -17,6 +17,12 @@ module.exports = {
   // clearMocks: false,
 
   // Indicates whether the coverage information should be collected while executing the test
+  collectCoverage: true,
+  "transform": {
+    "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
+  },
+
+  // An array of glob patterns indicating a set of files for which coverage information should be collected
   collectCoverageFrom: [
     "src/**/*.ts",
     "!src/main.ts",
@@ -24,13 +30,6 @@ module.exports = {
     "!src/dto/mapper/IModelDtoMapper.ts",
     "!src/components/**"
   ],
-  collectCoverage: true,
-  "transform": {
-    "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
-  },
-
-  // An array of glob patterns indicating a set of files for which coverage information should be collected
-  // collectCoverageFrom: undefined,
 
   // The directory where Jest should output its coverage files
   coverageDirectory: "coverage",
