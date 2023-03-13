@@ -201,6 +201,7 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
                 }
                 if (!found) {
                     returnTables.remove(repositoryTable);
+                    tableRepository.deleteById(repositoryTable.getId());
                 }
             }
         }
@@ -245,6 +246,7 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
                 }
                 if (!found) {
                     returnChairs.remove(repositoryChair);
+                    chairRepository.deleteById(repositoryChair.getId());
                 }
             }
         }
