@@ -4,8 +4,6 @@ import {createPinia, setActivePinia} from "pinia";
 import {UserService} from "@/service/UserService";
 import {useUserStore} from "@/store/UserStore";
 
-setActivePinia(createPinia());
-
 const admin = {email: "admin@kit.edu", password: "admin"};
 const user = {firstName: "Unit", lastName: "Test", email: "unit@test.jest", password: "test"};
 let userId: string;
@@ -22,6 +20,7 @@ export async function beforeEachTest() {
     user.password
   );
 
+  setActivePinia(createPinia());
   await userController.login(admin.email, admin.password);
   const users = await adminController.getUsersNotAuthenticated();
   for (const user of users) {

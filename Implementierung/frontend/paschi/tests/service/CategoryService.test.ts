@@ -1,45 +1,24 @@
 import {CategoryService} from "@/service/CategoryService";
-import {createPinia, setActivePinia} from "pinia";
 import {UserController} from "@/controller/UserController";
-import {AdminController} from "@/controller/AdminController";
 import {Category} from "@/model/userdata/interactions/Category";
+import {afterEachTest, beforeEachTest} from "../setup";
 
 const service = CategoryService.getService();
 let category: Category;
 
 beforeAll(async () => {
-  // await beforeEachTest();
-  // TODO: Entfernen, wenn das Backend richtig läuft @ugqbo
-  setActivePinia(createPinia());
-  const admin = {email: "admin@kit.edu", password: "admin"};
-  const user = {firstName: "Service", lastName: "Test", email: "service7@test.jest", password: "test"};
-  const userController = UserController.getUserController();
-  const adminController = AdminController.getAdminController();
-
-  await userController.register(
-    user.firstName,
-    user.lastName,
-    user.email,
-    user.password,
-    user.password
-  );
-
-  await userController.login(admin.email, admin.password);
-  const users = await adminController.getUsersNotAuthenticated();
-  for (const user of users) {
-    await adminController.authUser(user.getId);
-  }
-
-  setActivePinia(createPinia());
-
-  await userController.login(user.email, user.password);
+  await beforeEachTest();
 
   category = new Category(
     undefined,
     0,
-    userController.getUser(),
+    UserController.getUserController().getUser(),
     "Kategorie"
   );
+});
+
+afterAll(async () => {
+  await afterEachTest();
 });
 
 test("Add and get category", async () => {

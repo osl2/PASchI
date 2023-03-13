@@ -1,6 +1,3 @@
-import {createPinia, setActivePinia} from "pinia";
-import {UserController} from "@/controller/UserController";
-import {AdminController} from "@/controller/AdminController";
 import {StatsController} from "@/controller/StatsController";
 import {CourseController} from "@/controller/CourseController";
 import {StudentController} from "@/controller/StudentController";
@@ -10,6 +7,7 @@ import {Category} from "@/model/userdata/interactions/Category";
 import {Quality} from "@/model/userdata/interactions/Quality";
 import {Student} from "@/model/userdata/interactions/Student";
 import {Session} from "@/model/userdata/courses/Session";
+import {afterEachTest, beforeEachTest} from "../setup";
 
 const statsController = StatsController.getStatsController();
 const studentIds: string[] = []
@@ -22,31 +20,7 @@ let ratedCategoryThree: Category;
 let ratedCategoryFour: Category;
 
 beforeAll(async () => {
-  // await beforeEachTest();
-  // TODO: Entfernen, wenn das Backend richtig läuft @ugqbo
-  setActivePinia(createPinia());
-  const admin = {email: "admin@kit.edu", password: "admin"};
-  const user = {firstName: "Test", lastName: "8", email: "test8@test.jest", password: "test"};
-  const userController = UserController.getUserController();
-  const adminController = AdminController.getAdminController();
-
-  await userController.register(
-    user.firstName,
-    user.lastName,
-    user.email,
-    user.password,
-    user.password
-  );
-
-  await userController.login(admin.email, admin.password);
-  const users = await adminController.getUsersNotAuthenticated();
-  for (const user of users) {
-    await adminController.authUser(user.getId);
-  }
-
-  setActivePinia(createPinia());
-
-  await userController.login(user.email, user.password);
+  await beforeEachTest();
 
   const studentController = StudentController.getStudentConroller();
   const sessionController = SessionController.getSessionController();
@@ -80,7 +54,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  // await afterEachTest();
+  await afterEachTest();
 });
 
 test("Get student stats", () => {
@@ -134,7 +108,3 @@ test("Get session stats", () => {
   expect(map.get(disturbance.name)).toBe(4);
   expect(participationRate).toBe(33);
 });
-
-
-
-

@@ -1,42 +1,18 @@
 import {SeatArrangementService} from "@/service/SeatArrangementService";
 import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
-import {createPinia, setActivePinia} from "pinia";
 import {UserController} from "@/controller/UserController";
-import {AdminController} from "@/controller/AdminController";
 import {Course} from "@/model/userdata/courses/Course";
 import {Room} from "@/model/userdata/rooms/Room";
 import {RoomService} from "@/service/RoomService";
 import {CourseService} from "@/service/CourseService";
+import {afterEachTest, beforeEachTest} from "../setup";
 
 const service = SeatArrangementService.getService();
 let arrangement: SeatArrangement;
 
 beforeAll(async () => {
-  // await beforeEachTest();
-  // TODO: Entfernen, wenn das Backend richtig läuft @ugqbo
-  setActivePinia(createPinia());
-  const admin = {email: "admin@kit.edu", password: "admin"};
-  const user = {firstName: "Service", lastName: "Test", email: "service5@test.jest", password: "test"};
+  await beforeEachTest();
   const userController = UserController.getUserController();
-  const adminController = AdminController.getAdminController();
-
-  await userController.register(
-    user.firstName,
-    user.lastName,
-    user.email,
-    user.password,
-    user.password
-  );
-
-  await userController.login(admin.email, admin.password);
-  const users = await adminController.getUsersNotAuthenticated();
-  for (const user of users) {
-    await adminController.authUser(user.getId);
-  }
-
-  setActivePinia(createPinia());
-
-  await userController.login(user.email, user.password);
 
   const course = new Course(
     undefined,
@@ -63,6 +39,10 @@ beforeAll(async () => {
     course,
     room
   );
+});
+
+afterAll(async () => {
+  await afterEachTest();
 });
 
 test("Add and get seat arrangement", async () => {
