@@ -1,6 +1,10 @@
 import {RoomController} from "@/controller/RoomController";
 import {Room} from "@/model/userdata/rooms/Room";
 import {afterEachTest, beforeEachTest} from "../setup";
+import {CourseController} from "@/controller/CourseController";
+import {SessionController} from "@/controller/SessionController";
+import {SeatArrangementController} from "@/controller/SeatArrangementController";
+import {StudentController} from "@/controller/StudentController";
 
 const roomController = RoomController.getRoomController();
 const roomName = "room";
@@ -57,7 +61,25 @@ test("Add table", async () => {
 });
 
 test("Get and delete all room objects", async () => {
+  const studentController = StudentController.getStudentConroller();
+  const courseController = CourseController.getCourseController();
+  const sessionController = SessionController.getSessionController();
+  const arrangementController = SeatArrangementController.getSeatArrangementController();
+
+  const student = studentController.getStudent(await studentController.createStudent("Luka", "Kosak"))!;
+  const course = courseController.getCourse(await courseController.createCourse("Kurs", "Fach"))!;
+  await courseController.addStudentToCourse(course.getId, student.getId);
+
+  const arrangement = arrangementController.getSeatArrangement(
+    (await arrangementController.createSeatArrangement("Sitzordnung", roomId, course.getId))!)!;
+
   let objects = roomController.getRoomObjects(roomId);
+  const chair = objects!.find(chair => !chair.isTable())!;
+  await arrangementController.addMapping(arrangement.getId, chair.getId, student.getId);
+
+  const session = sessionController.getSession(
+    (await sessionController.createSession(course.getId, arrangement.getId, "Sitzung"))!)!;
+  course.removeSeatArrangement(arrangement.getId);
 
   expect(objects?.length).toBe(2);
 
@@ -66,6 +88,8 @@ test("Get and delete all room objects", async () => {
   objects = roomController.getRoomObjects(roomId);
 
   expect(objects?.length).toBe(0);
+  expect(session.seatArrangement.room.getId === roomId).toBeFalsy();
+  expect(session.seatArrangement.room.roomObjects.length).toBe(2);
 });
 
 test("Get all rooms", () => {

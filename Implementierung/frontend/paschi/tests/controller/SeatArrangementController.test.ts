@@ -80,6 +80,7 @@ test("Add mapping", async () => {
   }
 
   expect(arrangement?.seatMap.size).toBe(6);
+  expect(arrangementController.teacherAssigned(arrangementId!)).toBeTruthy();
 });
 
 test("Get all students", () => {
@@ -94,6 +95,7 @@ test("Delete mapping", async () => {
 
   expect(arrangement?.seatMap.size).toBe(5);
   expect(arrangement?.seatMap.has(chair!)).toBeFalsy();
+  expect(arrangementController.isUsed(arrangement!.getId)).toBeFalsy();
 });
 
 test("Get students not assigned", () => {
