@@ -87,11 +87,12 @@ test("Delete user", async () => {
   let _user = await userService.login(admin.email, admin.password);
   useUserStore().setUser(_user!);
   await userService.delete(user.getId);
+  let deletedUser;
   try {
-    _user = await userService.login(user.email, user.password);
+    deletedUser = await userService.login(user.email, user.password);
   } catch (message) {
     console.log(message);
   }
 
-  expect(_user).toBeDefined();
+  expect(deletedUser).toBeUndefined();
 });
