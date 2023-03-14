@@ -31,6 +31,7 @@ declare global {
   namespace Cypress {
     interface Chainable<Subject> {
       addStudent(firstName: string, lastName: string): void;
+      addCourse(name: string, subject: string): void;
       sideMenuTo(
         destination: "dashboard" | "students" | "courses" | "rooms" | "settings"
       ): void;
@@ -44,6 +45,16 @@ declare global {
     }
   }
 }
+
+Cypress.Commands.add("addCourse", (name, subject) => {
+  cy.get(".v-toolbar").within(() => {
+    cy.get("button[name=createCourse]").click();
+  });
+  cy.get("input[name=name]").type(name);
+  cy.get("input[name=subject]").type(subject);
+  cy.get("button[name=confirmNewCourse]").click();
+  cy.url().should("include", "/course-details")
+});
 
 Cypress.Commands.add("addStudent", (firstName, lastName) => {
   cy.get(".v-toolbar").within(() => {

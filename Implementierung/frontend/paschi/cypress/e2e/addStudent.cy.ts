@@ -30,6 +30,8 @@ describe("add student test", () => {
     });
     cy.get("input[name=firstName]").type(student.firstName);
     cy.get("input[name=lastName]").type(student.lastName);
-    cy.get("button[cancelNewStudent]").click();
+    cy.get("button[name=cancelNewStudent]").click();
+    cy.sideMenuTo("dashboard");
+    cy.logOut();
   });
 });
