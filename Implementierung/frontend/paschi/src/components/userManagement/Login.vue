@@ -76,7 +76,7 @@
 <script lang="ts">
 import AppBar from "@/components/navigation/NavigationBar.vue";
 import router from "@/plugins/router";
-import { UserController } from "@/controller/UserController";
+import {LOGIN_SUCCESS, UserController} from "@/controller/UserController";
 import { defineComponent, onMounted, ref } from "vue";
 export default defineComponent({
   name: "Login",
@@ -90,7 +90,7 @@ export default defineComponent({
 
     onMounted(() => {
       userController.loginWithToken(null).then((res) => {
-        if (res) {
+        if (res === LOGIN_SUCCESS) {
           if (userController.getUser().isAdmin()) {
             router.push("/admin");
           } else router.push("/dashboard");
@@ -103,7 +103,7 @@ export default defineComponent({
      */
     function login() {
       userController.login(email.value, password.value).then((res) => {
-        if (res) {
+        if (res === LOGIN_SUCCESS) {
           if (userController.getUser().isAdmin()) {
             router.push("/admin");
           } else router.push("/dashboard");

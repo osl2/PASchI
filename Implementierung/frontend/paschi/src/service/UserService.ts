@@ -24,6 +24,7 @@ export class UserService extends BaseService<User, UserDto> {
     await axios
       .post(USER_BASE_URL, userDto).catch((error) => {
         console.log(error);
+        throw error.message;
       });
   }
 
@@ -96,8 +97,8 @@ export class UserService extends BaseService<User, UserDto> {
       });
   }
 
-  async login(email: string, password: string): Promise<User | undefined> {
-    let user;
+  async login(email: string, password: string): Promise<User> {
+    let user: User;
     await axios
       .post(USER_BASE_URL + "/login", null, {
         params: {
@@ -113,13 +114,16 @@ export class UserService extends BaseService<User, UserDto> {
       })
       .catch((error) => {
         console.log(error);
+        if (error.message !== "localStorage is not defined") {
+          throw error.message;
+        }
       });
 
-    return user;
+    return user!;
   }
 
-  async getToken(token: string): Promise<User | undefined> {
-    let user;
+  async getToken(token: string): Promise<User> {
+    let user: User;
     await axios
       .post(USER_BASE_URL + "/token", null, {
         headers: {
@@ -134,9 +138,12 @@ export class UserService extends BaseService<User, UserDto> {
       })
       .catch((error) => {
         console.log(error);
+        if (error.message !== "localStorage is not defined") {
+          throw error.message;
+        }
       });
 
-    return user;
+    return user!;
   }
 
   async adminUpdate(user: User) {

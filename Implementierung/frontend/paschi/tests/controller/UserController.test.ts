@@ -1,4 +1,4 @@
-import {UserController} from "@/controller/UserController";
+import {LOGIN_SUCCESS, UserController} from "@/controller/UserController";
 import {AdminController} from "@/controller/AdminController";
 import {createPinia, setActivePinia} from "pinia";
 import {User} from "@/model/User";
@@ -39,13 +39,14 @@ afterAll(async () => {
 });
 
 test("Login", async () => {
-  const userId = await userController.login("24", "24");
+  let response = await userController.login("24", "24");
 
-  expect(userId).toBeUndefined();
+  expect(response === LOGIN_SUCCESS).toBeFalsy();
 
-  await userController.login(userData.email, userData.password);
+  const repsonse = await userController.login(userData.email, userData.password);
   user = userController.getUser();
 
+  expect(repsonse).toBe(LOGIN_SUCCESS);
   expect(user).toBeDefined();
   expect(user.email).toBe(userData.email);
   expect(user.firstName).toBe(userData.firstName);
@@ -73,9 +74,10 @@ test("Login with token", async () => {
 
   expect(userController.isLoggedIn()).toBeFalsy();
 
-  await userController.loginWithToken(user.token);
+  const response = await userController.loginWithToken(user.token);
   user = userController.getUser();
 
+  expect(response).toBe(LOGIN_SUCCESS);
   expect(user).toBeDefined();
   expect(userController.isLoggedIn()).toBeTruthy();
 });
