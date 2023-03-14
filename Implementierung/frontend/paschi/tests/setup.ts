@@ -29,7 +29,8 @@ export async function beforeEachTest() {
 
   setActivePinia(createPinia());
 
-  userId = (await userController.login(user.email, user.password))!;
+  await userController.login(user.email, user.password);
+  userId = userController.getUser().getId;
 }
 
 export async function afterEachTest() {
