@@ -29,7 +29,7 @@ export const useRoomObjectStore = defineStore('roomObjects', {
     getChairByTimeCreatedAndPosition(time: string, pos: Position): Chair | undefined {
       for (const chair of this.chairs) {
         if (chair.createdAt.substring(0, 23) === time.substring(0, 23)
-          && chair.position.xCoordinate === pos.xCoordinate && chair.position.yCoordinate === pos.yCoordinate) {
+          && chair.position.xCoordinate == pos.xCoordinate && chair.position.yCoordinate == pos.yCoordinate) {
           return <Chair>chair;
         }
       }
