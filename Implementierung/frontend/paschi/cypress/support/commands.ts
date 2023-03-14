@@ -31,8 +31,12 @@ declare global {
   namespace Cypress {
     interface Chainable<Subject> {
       addStudent(firstName: string, lastName: string): void;
-      sideMenuTo(destination: "dashboard"|"students"|"courses"|"rooms"|"settings"): void;
-      navDropDownTo(destination: "dashboard"|"students"|"courses"|"settings"): void;
+      sideMenuTo(
+        destination: "dashboard" | "students" | "courses" | "rooms" | "settings"
+      ): void;
+      navDropDownTo(
+        destination: "dashboard" | "students" | "courses" | "settings"
+      ): void;
       adminLogin(eMail: string, password: string): void;
       adminLogin(eMail: string, password: string): void;
       userLogin(eMail: string, password: string): void;
@@ -41,79 +45,90 @@ declare global {
   }
 }
 
-Cypress.Commands.add('addStudent', (firstName, lastName) => {
+Cypress.Commands.add("addStudent", (firstName, lastName) => {
   cy.get(".v-toolbar").within(() => {
-    cy.get("button").filter(":contains(Schüler erstellen)").click()
-  })})
+    cy.get("button[name=createStudent]").click();
+  });
+  cy.get("input[name=firstName]").type(firstName);
+  cy.get("input[name=lastName]").type(lastName);
+  cy.get("button[name=confirmNewStudent]").click();
+});
 
-
-Cypress.Commands.add('navDropDownTo', (destination: "dashboard"|"students"|"courses"|"settings")=> {
-  cy.get(".v-toolbar").within(() => {
-    cy.get(".mdi-menu").parents("button").click()
-  })
-  switch (destination) {
-    case "dashboard":
-      cy.get(".v-overlay__content").within(() => {
-        cy.get(".v-list-item[name=dashboard]").click()
-      })
-      cy.url().should("include", "/dashboard");
-      break;
-    case "students":
-      cy.get(".v-overlay__content").within(() => {
-        cy.get(".v-list-item[name=viewStudents]").click()
-      })
-      cy.url().should("include", "/view-students");
-      break;
-    case "courses":
-      cy.get(".v-overlay__content").within(() => {
-        cy.get(".v-list-item[name=viewCourses]").click()
-      })
-      cy.url().should("include", "/view-courses");
-      break;
-    case "settings":
-      cy.get(".v-overlay__content").within(() => {
-        cy.get(".v-list-item[name=editAccount]").click()
-      })
-      cy.url().should("include", "/edit-account");
-      break;
+Cypress.Commands.add(
+  "navDropDownTo",
+  (destination: "dashboard" | "students" | "courses" | "settings") => {
+    cy.get(".v-toolbar").within(() => {
+      cy.get(".mdi-menu").parents("button").click();
+    });
+    switch (destination) {
+      case "dashboard":
+        cy.get(".v-overlay__content").within(() => {
+          cy.get(".v-list-item[name=dashboard]").click();
+        });
+        cy.url().should("include", "/dashboard");
+        break;
+      case "students":
+        cy.get(".v-overlay__content").within(() => {
+          cy.get(".v-list-item[name=viewStudents]").click();
+        });
+        cy.url().should("include", "/view-students");
+        break;
+      case "courses":
+        cy.get(".v-overlay__content").within(() => {
+          cy.get(".v-list-item[name=viewCourses]").click();
+        });
+        cy.url().should("include", "/view-courses");
+        break;
+      case "settings":
+        cy.get(".v-overlay__content").within(() => {
+          cy.get(".v-list-item[name=editAccount]").click();
+        });
+        cy.url().should("include", "/edit-account");
+        break;
+    }
   }
-})
-Cypress.Commands.add('sideMenuTo', (destination: "dashboard"|"students"|"courses"|"rooms"|"settings")=>{
-  switch (destination) {
-    case "dashboard":
-      cy.get(".v-navigation-drawer").within(() => {
-        cy.get(".v-list-item[name=dashboard]").click()
-      })
-      cy.url().should("include", "/dashboard");
-      break;
-    case "students":
-      cy.get(".v-navigation-drawer").within(() => {
-        cy.get(".v-list-item[name=viewStudents]").click()
-      })
-      cy.url().should("include", "/view-students");
-      break;
-    case "courses":
-      cy.get(".v-navigation-drawer").within(() => {
-        cy.get(".v-list-item[name=viewCourses]").click()
-      })
-      cy.url().should("include", "/view-courses");
-      break;
-    case "rooms":
-      cy.get(".v-navigation-drawer").within(() => {
-        cy.get(".v-list-item[name=viewRooms]").click()
-      })
-      cy.url().should("include", "/view-rooms");
-      break;
-    case "settings":
-      cy.get(".v-navigation-drawer").within(() => {
-        cy.get(".v-list-item[name=editAccount]").click()
-      })
-      cy.url().should("include", "/edit-account");
-      break;
+);
+Cypress.Commands.add(
+  "sideMenuTo",
+  (
+    destination: "dashboard" | "students" | "courses" | "rooms" | "settings"
+  ) => {
+    switch (destination) {
+      case "dashboard":
+        cy.get(".v-navigation-drawer").within(() => {
+          cy.get(".v-list-item[name=dashboard]").click();
+        });
+        cy.url().should("include", "/dashboard");
+        break;
+      case "students":
+        cy.get(".v-navigation-drawer").within(() => {
+          cy.get(".v-list-item[name=viewStudents]").click();
+        });
+        cy.url().should("include", "/view-students");
+        break;
+      case "courses":
+        cy.get(".v-navigation-drawer").within(() => {
+          cy.get(".v-list-item[name=viewCourses]").click();
+        });
+        cy.url().should("include", "/view-courses");
+        break;
+      case "rooms":
+        cy.get(".v-navigation-drawer").within(() => {
+          cy.get(".v-list-item[name=viewRooms]").click();
+        });
+        cy.url().should("include", "/view-rooms");
+        break;
+      case "settings":
+        cy.get(".v-navigation-drawer").within(() => {
+          cy.get(".v-list-item[name=editAccount]").click();
+        });
+        cy.url().should("include", "/edit-account");
+        break;
+    }
   }
-})
+);
 
-Cypress.Commands.add('adminLogin', (email, password) => {
+Cypress.Commands.add("adminLogin", (email, password) => {
   cy.url().should("include", "/login");
   cy.get("input[name='email']").type(email);
   cy.get("input[name='password']").type(password);
@@ -124,7 +139,7 @@ Cypress.Commands.add('adminLogin', (email, password) => {
   cy.contains("Administratorseite");
   cy.contains("Abmelden");
 });
-Cypress.Commands.add('userLogin', (email, password) => {
+Cypress.Commands.add("userLogin", (email, password) => {
   cy.url().should("include", "/login");
   cy.get("input[name='email']").type(email);
   cy.get("input[name='password']").type(password);
@@ -136,13 +151,11 @@ Cypress.Commands.add('userLogin', (email, password) => {
   cy.contains("Alle anzeigen");
 });
 
-Cypress.Commands.add('logOut', () => {
+Cypress.Commands.add("logOut", () => {
   cy.contains("Abmelden");
   cy.get("button").contains("Abmelden").click();
   cy.url().should("include", "/login");
 });
 
-
-
 // Convert this to a module instead of script (allows import/export)
-export {}
+export {};
