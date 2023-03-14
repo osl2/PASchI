@@ -160,6 +160,9 @@ export class RoomController {
               const arrangementController = SeatArrangementController.getSeatArrangementController();
               await arrangementController.deleteMapping(arrangement.getId, object.getId);
             }
+            if (object.isTable()) {
+              await this.replaceRoom(room);
+            }
           }
         }
         room.removeRoomObject(objectId);
@@ -230,11 +233,11 @@ export class RoomController {
           object.dimensions.length, object.dimensions.width);
 
         useRoomObjectStore().addTable(_object);
+        newRoom.addRoomObject(_object);
       } else {
         _object = new Chair(undefined, useRoomObjectStore().getNextId(), room.user, _position);
         useRoomObjectStore().addChair(_object);
         newRoom.addRoomObject(_object);
-        await this.roomService.update(newRoom);
         map.set(object, _object);
       }
     }
