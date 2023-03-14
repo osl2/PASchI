@@ -233,7 +233,7 @@ export class SeatArrangementController {
     }
   }
 
-  private async copySeatArrangement(arr: SeatArrangement): Promise<SeatArrangement> {
+  async copySeatArrangement(arr: SeatArrangement): Promise<SeatArrangement> {
     const newArrangement = new SeatArrangement(
       undefined,
       useSeatArrangementStore().getNextId(),
