@@ -414,13 +414,13 @@ export default defineComponent({
     /**
      * Es wird eine neue Kategorie mit den eingegebenen Parametern erstellt.
      */
-    function confirmAddCategory() {
+    async function confirmAddCategory() {
       if (newCategoryIsRated.value) {
-        categoryController.createRatedCategory(newCategoryName.value);
+        await categoryController.createRatedCategory(newCategoryName.value);
       } else {
-        categoryController.createCategory(newCategoryName.value);
+        await categoryController.createCategory(newCategoryName.value);
       }
-      interactions.value =  getAllInteractions();
+      interactions.value = getAllInteractions();
       newCategoryDialog.value = false;
     }
 
