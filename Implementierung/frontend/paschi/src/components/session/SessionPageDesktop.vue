@@ -165,7 +165,7 @@
         <v-row
           class="ma-2"
           key="interaction.getId"
-          v-for="interaction in interactions.reverse()"
+          v-for="interaction in interactions"
         >
           <v-col
           ><div>

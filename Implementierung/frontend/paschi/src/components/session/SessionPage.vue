@@ -200,7 +200,7 @@
           <v-row
             class="ma-2"
             :key="interaction.getId"
-            v-for="interaction in studentInteractionsBuffer.reverse()"
+            v-for="interaction in studentInteractionsBuffer"
           >
             <v-col
               ><div>
@@ -262,7 +262,7 @@
           <v-row
             class="ma-2"
             key="interaction.getId"
-            v-for="interaction in interactions.reverse()"
+            v-for="interaction in interactions"
           >
             <v-col
               ><div>
