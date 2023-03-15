@@ -262,7 +262,10 @@ export default defineComponent({
     ) as Ref<Category[]>;
     const starDialog = ref(false);
     const sessionName = sessionController.getSession(props.sessionId)?.name;
-    const interactions = computed<Interaction[]>(() => {
+    const interactions = ref(getAllInteractions);
+
+
+    function getAllInteractions() {
       let interactions = sessionController.getInteractionsOfSession(
         props.sessionId
       );
@@ -270,7 +273,7 @@ export default defineComponent({
         return [];
       }
       return interactions;
-    });
+    }
 
     /**
      * Gibt Schüler der auf einem Stuhl zurück
