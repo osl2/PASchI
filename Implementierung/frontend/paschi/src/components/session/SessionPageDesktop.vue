@@ -262,7 +262,10 @@ export default defineComponent({
     ) as Ref<Category[]>;
     const starDialog = ref(false);
     const sessionName = sessionController.getSession(props.sessionId)?.name;
-    const interactions = computed<Interaction[]>(() => {
+    const interactions = ref(getAllInteractions());
+
+
+    function getAllInteractions() {
       let interactions = sessionController.getInteractionsOfSession(
         props.sessionId
       );
@@ -411,11 +414,11 @@ export default defineComponent({
     /**
      * Es wird eine neue Kategorie mit den eingegebenen Parametern erstellt.
      */
-    function confirmAddCategory() {
+    async function confirmAddCategory() {
       if (newCategoryIsRated.value) {
-        categoryController.createRatedCategory(newCategoryName.value);
+        await categoryController.createRatedCategory(newCategoryName.value);
       } else {
-        categoryController.createCategory(newCategoryName.value);
+        await categoryController.createCategory(newCategoryName.value);
       }
       newCategoryDialog.value = false;
     }
@@ -492,7 +495,7 @@ export default defineComponent({
           selectedCategory.value!.getId
         );
       }
-
+      interactions.value = getAllInteractions();
       selectedStudent = undefined;
       targetStudent = undefined;
       selectedCategory.value = undefined;

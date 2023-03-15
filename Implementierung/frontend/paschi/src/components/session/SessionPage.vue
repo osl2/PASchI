@@ -361,15 +361,7 @@ export default defineComponent({
     const interactionListStudentBuffer: Ref<Participant | undefined> = ref<
       Participant | undefined
     >(undefined) as Ref<Participant | undefined>;
-    const interactions = computed<Interaction[]>(() => {
-      let interactions = sessionController.getInteractionsOfSession(
-        props.sessionId
-      );
-      if (typeof interactions === "undefined") {
-        return [];
-      }
-      return interactions;
-    });
+    const interactions = ref(getAllInteractions());
     const studentInteractionsBuffer = computed<Interaction[]>(() => {
       let interactions = sessionController.getInteractionsOfParticipant(
         props.sessionId, interactionListStudentBuffer.value!.getId
@@ -379,6 +371,16 @@ export default defineComponent({
       }
       return interactions;
     });
+
+    function getAllInteractions() {
+      let interactions = sessionController.getInteractionsOfSession(
+        props.sessionId
+      );
+      if (typeof interactions === "undefined") {
+        return [];
+      }
+      return interactions;
+    }
 
     /**
      * Methode, die die Schüler ausfiltern, deren Name nicht mit der Eingabe im Textfeld übereinstimmt.
@@ -573,7 +575,7 @@ export default defineComponent({
           selectedCategory.value!.getId
         );
       }
-
+      interactions.value = getAllInteractions();
       firstParticipant.value = undefined;
       secondParticipant.value = undefined;
       selectedCategory.value = undefined;
