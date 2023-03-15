@@ -5,6 +5,7 @@ import axios, {AxiosResponse} from "axios";
 import {UserMapper} from "@/dto/mapper/UserMapper";
 import {useUserStore} from "@/store/UserStore";
 
+const LOCAL_STORAGE_UNDEFINED = "localStorage is not defined";
 const USER_BASE_URL: string = BASE_URL + "/api/user";
 
 export class UserService extends BaseService<User, UserDto> {
@@ -114,7 +115,7 @@ export class UserService extends BaseService<User, UserDto> {
       })
       .catch((error) => {
         console.log(error);
-        if (error.message !== "localStorage is not defined") {
+        if (error.message !== LOCAL_STORAGE_UNDEFINED) {
           throw error.message;
         }
       });
@@ -138,7 +139,7 @@ export class UserService extends BaseService<User, UserDto> {
       })
       .catch((error) => {
         console.log(error);
-        if (error.message !== "localStorage is not defined") {
+        if (error.message !== LOCAL_STORAGE_UNDEFINED) {
           throw error.message;
         }
       });
