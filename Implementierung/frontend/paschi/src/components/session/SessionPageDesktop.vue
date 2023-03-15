@@ -262,7 +262,7 @@ export default defineComponent({
     ) as Ref<Category[]>;
     const starDialog = ref(false);
     const sessionName = sessionController.getSession(props.sessionId)?.name;
-    const interactions = ref(getAllInteractions);
+    const interactions = ref(getAllInteractions());
 
 
     function getAllInteractions() {

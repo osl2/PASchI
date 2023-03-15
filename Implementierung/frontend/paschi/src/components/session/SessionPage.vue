@@ -361,7 +361,7 @@ export default defineComponent({
     const interactionListStudentBuffer: Ref<Participant | undefined> = ref<
       Participant | undefined
     >(undefined) as Ref<Participant | undefined>;
-    const interactions = ref(getAllInteractions);
+    const interactions = ref(getAllInteractions());
     const studentInteractionsBuffer = ref(getStudentInteractions())
 
     function getAllInteractions() {
