@@ -171,7 +171,6 @@ export default defineComponent({
       ) as HTMLCanvasElement;
 
       if (stats == undefined) {
-        console.log("stats could not be loaded");
         return;
       }
 
