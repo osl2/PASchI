@@ -7,7 +7,7 @@ export class Room extends DataObject {
   private readonly _user: User;
   private _name: string;
   private _roomObjects: RoomObject[];
-  private _visible: boolean = true;
+  private _visible = true;
 
   constructor(id: string | undefined, localId: number, user: User, name: string) {
     super(id, localId);

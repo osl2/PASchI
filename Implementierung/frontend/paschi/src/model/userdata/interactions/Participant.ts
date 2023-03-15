@@ -10,7 +10,7 @@ export abstract class Participant extends DataObject {
   private _lastName: string;
   private _courses: Course[];
   private _interactions: Interaction[];
-  private _visible: boolean = true;
+  private _visible = true;
 
   protected constructor(id: string | undefined, localId: number, user: User, firstName: string, lastName: string) {
     super(id, localId);

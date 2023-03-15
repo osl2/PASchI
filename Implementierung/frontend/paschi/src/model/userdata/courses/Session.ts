@@ -44,7 +44,7 @@ export class Session extends DataObject {
   }
 
   undoInteraction(): Interaction | undefined {
-    let interaction = this.interactions.pop();
+    const interaction = this.interactions.pop();
     if (interaction) {
       this._undoInteractions.push(interaction);
       this.update();
@@ -55,7 +55,7 @@ export class Session extends DataObject {
   }
 
   redoInteraction(): Interaction | undefined {
-    let interaction = this._undoInteractions.pop();
+    const interaction = this._undoInteractions.pop();
     if (interaction) {
       this.interactions.push(interaction);
       this.update();
