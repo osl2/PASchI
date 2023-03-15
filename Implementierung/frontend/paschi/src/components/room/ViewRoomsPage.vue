@@ -3,6 +3,7 @@
     <v-app-bar-title> Räume ansehen </v-app-bar-title>
     <template v-slot:append>
       <v-btn
+        name="createRoom"
         variant="flat"
         color="green"
         rounded
@@ -55,6 +56,7 @@
         <v-form validate-on="submit" @submit.prevent>
           <v-card-item>
             <v-text-field
+              name="name"
               class="mt-2"
               v-model="newRoomName"
               hint="Dieses Feld darf nicht leer sein"
@@ -66,6 +68,7 @@
           </v-card-item>
           <v-card-actions class="row justify-center">
             <v-btn
+              name="cancelNewRoom"
               height="50"
               width="150"
               variant="tonal"
@@ -73,6 +76,7 @@
               >Abbrechen</v-btn
             >
             <v-btn
+              name="confirmNewRoom"
               type="submit"
               :disabled="isDisabled"
               height="50"

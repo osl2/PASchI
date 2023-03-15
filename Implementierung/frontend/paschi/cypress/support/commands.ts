@@ -30,6 +30,7 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface Chainable<Subject> {
+      addRoom(name: string): void;
       addStudent(firstName: string, lastName: string): void;
       addCourse(name: string, subject: string): void;
       sideMenuTo(
@@ -45,6 +46,15 @@ declare global {
     }
   }
 }
+
+Cypress.Commands.add("addRoom", (name) => {
+  cy.get(".v-toolbar").within(() => {
+    cy.get("button[name=createRoom]").click();
+  });
+  cy.get("input[name=name]").type(name);
+  cy.get("button[name=confirmNewRoom]").click();
+  cy.url().should("include", "/room-editor")
+});
 
 Cypress.Commands.add("addCourse", (name, subject) => {
   cy.get(".v-toolbar").within(() => {

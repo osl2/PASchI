@@ -7,9 +7,8 @@
       </v-app-bar-title>
     </template>
     <template v-slot:append>
-      <v-btn color="green" variant="flat" rounded @click="saveClick()"
-      >speichern
-      </v-btn
+      <v-btn name="save" color="green" variant="flat" rounded @click="saveClick()"
+        >speichern</v-btn
       >
     </template>
   </NavigationBar>
