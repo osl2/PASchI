@@ -218,8 +218,6 @@ import router from "@/plugins/router";
 import {CategoryController} from "@/controller/CategoryController";
 import {Category} from "@/model/userdata/interactions/Category";
 import {Quality} from "@/model/userdata/interactions/Quality";
-import {Interaction} from "@/model/userdata/interactions/Interaction";
-
 export default defineComponent({
   name: "SessionPageDesktop",
   components: { NavigationBar, LineOverlay, SeatLabel, RoomDisplay },
@@ -273,7 +271,7 @@ export default defineComponent({
         return [];
       }
       return interactions;
-    });
+    }
 
     /**
      * Gibt Schüler der auf einem Stuhl zurück
