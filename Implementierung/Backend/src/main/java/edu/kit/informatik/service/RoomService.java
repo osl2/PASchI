@@ -126,7 +126,7 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
     protected String delete(Room room) {
         List<SeatArrangement> seatArrangements = seatArrangementRepository.findSeatArrangementByRoom(room);
         if (seatArrangements.size() != 0) {
-            throw new IllegalArgumentException("Es müssen zuvor alle Kurse mit den zu dem Raum gehörenden"
+            throw new IllegalArgumentException("Es müssen zuvor alle Sessions mit den zu dem Raum gehörenden"
                     + "Sitzordnungen gelöscht werden");
         }
 
