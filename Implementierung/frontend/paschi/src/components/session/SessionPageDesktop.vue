@@ -273,7 +273,7 @@ export default defineComponent({
         return [];
       }
       return interactions;
-    }
+    });
 
     /**
      * Gibt Schüler der auf einem Stuhl zurück
