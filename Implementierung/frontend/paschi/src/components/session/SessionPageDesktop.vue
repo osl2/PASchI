@@ -420,7 +420,6 @@ export default defineComponent({
       } else {
         await categoryController.createCategory(newCategoryName.value);
       }
-      interactions.value = getAllInteractions();
       newCategoryDialog.value = false;
     }
 
@@ -496,7 +495,7 @@ export default defineComponent({
           selectedCategory.value!.getId
         );
       }
-
+      interactions.value = getAllInteractions();
       selectedStudent = undefined;
       targetStudent = undefined;
       selectedCategory.value = undefined;
