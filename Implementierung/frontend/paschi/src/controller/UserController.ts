@@ -53,7 +53,9 @@ export class UserController {
     }
 
     useUserStore().setUser(user);
-    await this.getData();
+    if (!user.isAdmin()) {
+      await this.getData();
+    }
     return LOGIN_SUCCESS;
   }
 
@@ -75,7 +77,9 @@ export class UserController {
     }
 
     useUserStore().setUser(user);
-    await this.getData();
+    if (!user.isAdmin()) {
+      await this.getData();
+    }
     return LOGIN_SUCCESS;
   }
 
