@@ -26,26 +26,73 @@
 
 // Must be declared global to be detected by typescript (allows import/export)
 // eslint-disable @typescript/interface-name
+import Chainable = Cypress.Chainable;
+
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
-    interface Chainable<Subject> {
+    interface Chainable {
+      addChair(): void;
+
+      addTable(): void;
+
       addRoom(name: string): void;
+
       addStudent(firstName: string, lastName: string): void;
+
       addCourse(name: string, subject: string): void;
+
       sideMenuTo(
         destination: "dashboard" | "students" | "courses" | "rooms" | "settings"
       ): void;
+
       navDropDownTo(
         destination: "dashboard" | "students" | "courses" | "settings"
       ): void;
+
       adminLogin(eMail: string, password: string): void;
+
       adminLogin(eMail: string, password: string): void;
+
       userLogin(eMail: string, password: string): void;
+
       logOut(): void;
+      typeRandomWords(
+        x: number,
+        y: number,
+      ): Chainable<JQuery<HTMLElement>>;
+      drag(
+        x: number,
+        y: number,
+        ): Chainable<JQuery<HTMLElement>>;
+
     }
   }
 }
+
+Cypress.Commands.add(
+  'typeRandomWords',
+  { prevSubject: 'element' },
+  (subject /* :JQuery<HTMLElement> */, x, y) => {
+    return cy.wrap(subject).trigger("mousedown").trigger('mousemove', { clientX: 110, clientY: 200 }).trigger('mouseup')
+  }
+)
+
+Cypress.Commands.add(
+  'drag',
+  { prevSubject: 'element' },
+  (subject /* :JQuery<HTMLElement> */, x: number, y: number) => {
+    return cy.wrap(subject).trigger("mousedown").trigger('mousemove', { clientX: x, clientY: y }).trigger('mouseup');
+  }
+)
+
+Cypress.Commands.add("addChair", () => {
+  cy.get("button[name=addChair]").click();
+});
+
+Cypress.Commands.add("addTable", () => {
+  cy.get("button[name=addTable]").click();
+});
 
 Cypress.Commands.add("addRoom", (name) => {
   cy.get(".v-toolbar").within(() => {
@@ -53,7 +100,7 @@ Cypress.Commands.add("addRoom", (name) => {
   });
   cy.get("input[name=name]").type(name);
   cy.get("button[name=confirmNewRoom]").click();
-  cy.url().should("include", "/room-editor")
+  cy.url().should("include", "/room-editor");
 });
 
 Cypress.Commands.add("addCourse", (name, subject) => {
@@ -63,7 +110,7 @@ Cypress.Commands.add("addCourse", (name, subject) => {
   cy.get("input[name=name]").type(name);
   cy.get("input[name=subject]").type(subject);
   cy.get("button[name=confirmNewCourse]").click();
-  cy.url().should("include", "/course-details")
+  cy.url().should("include", "/course-details");
 });
 
 Cypress.Commands.add("addStudent", (firstName, lastName) => {
