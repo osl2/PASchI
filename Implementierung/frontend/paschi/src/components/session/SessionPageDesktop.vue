@@ -420,6 +420,7 @@ export default defineComponent({
       } else {
         categoryController.createCategory(newCategoryName.value);
       }
+      interactions.value =  getAllInteractions();
       newCategoryDialog.value = false;
     }
 
