@@ -62,7 +62,7 @@ export class UserService extends BaseService<User, UserDto> {
 
   async getAll(): Promise<User[]> {
     const token = useUserStore().getUser()?.token;
-    let users: User[] = [];
+    const users: User[] = [];
     await axios
       .get(USER_BASE_URL + "/admin", {
         headers: {

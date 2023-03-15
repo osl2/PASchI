@@ -45,7 +45,7 @@ test("Update session", async () => {
 
 test("Get recent sessions", async () => {
   const id = await sessionController.createSession(courseId, undefined, "Kolloquium 2");
-  let sessions = sessionController.getRecentSessions();
+  const sessions = sessionController.getRecentSessions();
 
   expect(sessions.length).toBe(2);
   // expect(sessions[0].name).toBe("Kolloquium 2");

@@ -9,7 +9,7 @@
 import App from './App.vue'
 
 // Composables
-import {computed, createApp, ref} from 'vue'
+import {createApp, ref} from 'vue'
 
 // Plugins
 import { registerPlugins } from '@/plugins'

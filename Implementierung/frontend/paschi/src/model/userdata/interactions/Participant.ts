@@ -81,25 +81,13 @@ export abstract class Participant extends DataObject {
     return this._firstName;
   }
 
-  get lastName(): string {
-    return this._lastName;
-  }
-
-  get courses(): Course[] {
-    return this._courses;
-  }
-
-  get interactions(): Interaction[] {
-    return this._interactions;
-  }
-
-  get visible(): boolean {
-    return this._visible;
-  }
-
   set firstName(value: string) {
     this._firstName = value;
     this.update();
+  }
+
+  get lastName(): string {
+    return this._lastName;
   }
 
   set lastName(value: string) {
@@ -107,9 +95,17 @@ export abstract class Participant extends DataObject {
     this.update();
   }
 
+  get courses(): Course[] {
+    return this._courses;
+  }
+
   set courses(value: Course[]) {
     this._courses = value;
     this.update();
+  }
+
+  get interactions(): Interaction[] {
+    return this._interactions;
   }
 
   set interactions(value: Interaction[]) {
@@ -117,7 +113,12 @@ export abstract class Participant extends DataObject {
     this.update();
   }
 
+  get visible(): boolean {
+    return this._visible;
+  }
+
   set visible(value: boolean) {
     this._visible = value;
+    this.update();
   }
 }

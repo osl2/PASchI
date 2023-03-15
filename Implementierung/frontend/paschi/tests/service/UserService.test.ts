@@ -9,7 +9,7 @@ setActivePinia(createPinia());
 const userService = UserService.getService();
 const admin = {email: "admin@kit.edu", password: "admin"};
 
-let user = new User(
+const user = new User(
   undefined,
   "Service",
   "Test",
@@ -84,7 +84,7 @@ test("Get token", async () => {
 
 test("Delete user", async () => {
   setActivePinia(createPinia());
-  let _user = await userService.login(admin.email, admin.password);
+  const _user = await userService.login(admin.email, admin.password);
   useUserStore().setUser(_user!);
   await userService.delete(user.getId);
   let deletedUser;

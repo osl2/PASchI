@@ -59,14 +59,6 @@ export class SeatArrangement extends DataObject {
     return this._user;
   }
 
-  get name(): string {
-    return this._name;
-  }
-
-  get seatMap(): Map<RoomObject, Participant> {
-    return this._seatMap;
-  }
-
   get course(): Course {
     return this._course;
   }
@@ -75,12 +67,21 @@ export class SeatArrangement extends DataObject {
     return this._room;
   }
 
+  get name(): string {
+    return this._name;
+  }
+
   set name(value: string) {
     this._name = value;
     this.update();
   }
 
+  get seatMap(): Map<RoomObject, Participant> {
+    return this._seatMap;
+  }
+
   set seatMap(value: Map<RoomObject, Participant>) {
     this._seatMap = value;
+    this.update();
   }
 }

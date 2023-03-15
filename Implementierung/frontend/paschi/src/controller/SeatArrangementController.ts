@@ -9,7 +9,6 @@ import {SeatArrangementService} from "@/service/SeatArrangementService";
 import {CourseService} from "@/service/CourseService";
 import {RoomController} from "@/controller/RoomController";
 import {RoomObjectUtilities} from "@/components/room/RoomObjectUtilities";
-import {Chair} from "@/model/userdata/rooms/Chair";
 import {CourseController} from "@/controller/CourseController";
 import {SessionService} from "@/service/SessionService";
 import {useSessionStore} from "@/store/SessionStore";
@@ -88,7 +87,7 @@ export class SeatArrangementController {
     }
     await roomController.saveRoom(roomId);
 
-    let arrangement = new SeatArrangement(
+    const arrangement = new SeatArrangement(
       undefined,
       useSeatArrangementStore().getNextId(),
       UserController.getUserController().getUser(),
@@ -97,7 +96,7 @@ export class SeatArrangementController {
       room
     );
 
-    const chairs = roomController.getRoomObjects(roomId)?.filter((roomObject) => roomObject instanceof Chair);
+    const chairs = roomController.getRoomObjects(roomId)?.filter((roomObject) => !roomObject.isTable());
     for (let i = 0; i < students.length; i++) {
       arrangement.setSeat(chairs![i], students[i]);
     }

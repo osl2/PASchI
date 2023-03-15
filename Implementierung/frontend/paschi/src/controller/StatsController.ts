@@ -31,9 +31,7 @@ export class StatsController {
     }
 
     const categories: Map<string, number> = new Map<string, number>();
-    let avgQuality: number;
     let numInteractions = 0;
-    let numCategories = 0;
     let qualitySum = 0;
 
     const interactions = student.interactions.filter(interaction =>
@@ -48,7 +46,6 @@ export class StatsController {
       } else {
         categories.set(category.name, 1);
       }
-      ++numCategories;
 
       // Summe der Qualitäten aller Interaktionen.
       const quality = interaction.category.getQuality();
@@ -58,7 +55,7 @@ export class StatsController {
       }
     }
 
-    avgQuality = +(qualitySum / numInteractions).toFixed(1);
+    const avgQuality = +(qualitySum / numInteractions).toFixed(1);
 
     const statsArray = [];
     statsArray.push(categories);
@@ -86,13 +83,13 @@ export class StatsController {
 
     let categories: Map<string, number> = new Map<string, number>();
     let students: Map<string, [number, number, number, number]> = new Map<string, [number, number, number, number]>();
-    let participation: Map<string, number> = new Map<string, number>();
+    const participation: Map<string, number> = new Map<string, number>();
     let numCategories = 0;
 
     for (const session of course.sessions) {
       // Anzahl und absolute Häufigkeit der Kategorien zählen.
       // Statistiken der Teilnehmer sammeln.
-      let interactionStats = this.getInteractionStats(session, categories, students, numCategories);
+      const interactionStats = this.getInteractionStats(session, categories, students, numCategories);
       if (interactionStats != undefined) {
         categories = interactionStats[0];
         numCategories = interactionStats[1];
@@ -100,7 +97,7 @@ export class StatsController {
       }
 
       // Beteiligunsquote der Sitzung.
-      let sessionStats = this.getSessionStats(session.getId);
+      const sessionStats = this.getSessionStats(session.getId);
       if (sessionStats != undefined) {
         participation.set(session.date, sessionStats[6]);
       }
@@ -132,11 +129,10 @@ export class StatsController {
 
     let categories: Map<string, number> = new Map<string, number>();
     let students: Map<string, [number, number, number, number]> = new Map<string, [number, number, number, number]>();
-    let numCategories = 0;
 
     // Anzahl und absolute Häufigkeit der Kategorien zählen.
     // Statistiken der Teilnehmer sammeln.
-    let sessionStats = this.getInteractionStats(session, categories, students, numCategories);
+    const sessionStats = this.getInteractionStats(session, categories, students, 0);
     if (sessionStats) {
       categories = sessionStats[0];
       //numCategories = sessionStats[1];
@@ -168,8 +164,8 @@ export class StatsController {
       if (interaction.fromParticipant.isTeacher()) {
         continue;
       }
-      let category = interaction.category;
-      let value = categories.get(category.name);
+      const category = interaction.category;
+      const value = categories.get(category.name);
 
       if (value != undefined) {
         categories.set(category.name, value + 1);
@@ -180,13 +176,13 @@ export class StatsController {
 
       const from = interaction.fromParticipant;
       const to = interaction.toParticipant;
-      let valueArray = students.get(from.getId);
+      const valueArray = students.get(from.getId);
       let valueArrayTo;
       if (!to.isTeacher()) {
         valueArrayTo = students.get(to.getId);
       }
-      let quality = interaction.category.getQuality();
-      let disturbance = interaction.category.name.toLowerCase() === CATEGORY_NAME;
+      const quality = interaction.category.getQuality();
+      const disturbance = interaction.category.name.toLowerCase() === CATEGORY_NAME;
 
       // Schülerstatistiken berechnen.
       if (valueArray != undefined) {
@@ -230,20 +226,20 @@ export class StatsController {
     students.forEach((value: [number, number, number, number], id: string) => {
       const student = useStudentStore().getStudent(id);
       if (student?.visible) {
-        let numInteractions = value[0];
-        let numQualities = value[1];
-        let qualitySum = value[2];
-        let disturbance = value[3];
+        const numInteractions = value[0];
+        const numQualities = value[1];
+        const qualitySum = value[2];
+        const disturbance = value[3];
 
         studentStats.push([id, numInteractions, qualitySum / numQualities, disturbance]);
       }
     });
 
-    let topInteractions: any[] = [];
-    let topQuality: any[] = [];
-    let bottomInteractions: any[] = [];
-    let bottomQuality: any[] = [];
-    let topDisturbance: any[] = [];
+    const topInteractions: any[] = [];
+    const topQuality: any[] = [];
+    const bottomInteractions: any[] = [];
+    const bottomQuality: any[] = [];
+    const topDisturbance: any[] = [];
 
     // Schüler nach Anzahl der Interaktionen absteigend sortieren.
     studentStats = studentStats.sort((a, b) => {

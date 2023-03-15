@@ -39,7 +39,7 @@ export class RoomController {
   }
 
   async createInvisibleRoom(name: string): Promise<string> {
-    let room = new Room(
+    const room = new Room(
       undefined,
       useRoomStore().getNextId(),
       UserController.getUserController().getUser(),

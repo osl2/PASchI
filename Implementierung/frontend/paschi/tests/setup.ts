@@ -35,7 +35,7 @@ export async function beforeEachTest() {
 
 export async function afterEachTest() {
   setActivePinia(createPinia());
-  let _user = await UserService.getService().login(admin.email, admin.password);
+  const _user = await UserService.getService().login(admin.email, admin.password);
   useUserStore().setUser(_user!);
   await UserService.getService().delete(userId);
 }

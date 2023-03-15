@@ -20,7 +20,7 @@ export class CategoryMapper implements IModelDtoMapper<Category, CategoryDto> {
   }
 
   modelToDto(category: Category): CategoryDto {
-    if (category instanceof RatedCategory) {
+    if (category.hasQuality()) {
       return this.ratedCategoryMapper.modelToDto(<RatedCategory> category);
     }
 

@@ -85,24 +85,12 @@ export class Session extends DataObject {
     return this._user;
   }
 
-  get name(): string {
-    return this._name;
-  }
-
-  get date(): string {
-    return this._date;
-  }
-
-  get interactions(): Interaction[] {
-    return this._interactions;
-  }
-
   get course(): Course {
     return this._course;
   }
 
-  get seatArrangement(): SeatArrangement {
-    return this._seatArrangement;
+  get name(): string {
+    return this._name;
   }
 
   set name(value: string) {
@@ -110,18 +98,30 @@ export class Session extends DataObject {
     this.update();
   }
 
+  get date(): string {
+    return this._date;
+  }
+
   set date(value: string) {
     this._date = value;
     this.update();
   }
 
-  set seatArrangement(value: SeatArrangement) {
-    this._seatArrangement = value;
-    this.update();
+  get interactions(): Interaction[] {
+    return this._interactions;
   }
 
   set interactions(value: Interaction[]) {
     this._interactions = value;
+    this.update();
+  }
+
+  get seatArrangement(): SeatArrangement {
+    return this._seatArrangement;
+  }
+
+  set seatArrangement(value: SeatArrangement) {
+    this._seatArrangement = value;
     this.update();
   }
 }

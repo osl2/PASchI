@@ -33,13 +33,13 @@ beforeAll(async () => {
 
 afterAll(async () => {
   setActivePinia(createPinia());
-  let _user = await UserService.getService().login(admin.email, admin.password);
+  const _user = await UserService.getService().login(admin.email, admin.password);
   useUserStore().setUser(_user!);
   await UserService.getService().delete(user.getId);
 });
 
 test("Login", async () => {
-  let response = await userController.login("24", "24");
+  const response = await userController.login("24", "24");
 
   expect(response === LOGIN_SUCCESS).toBeFalsy();
 
