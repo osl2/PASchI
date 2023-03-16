@@ -41,7 +41,7 @@ public class UserMapper implements IModelDtoMapper<User, UserDto> {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail(),
-                user.getPassword(),
+                "",
                 user.isAuth(),
                 null,
                 roleDto,
