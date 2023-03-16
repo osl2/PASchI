@@ -62,17 +62,24 @@
                   <v-spacer/>
                 </v-row>
               </v-card-title>
-              <v-card-item v-if="stats[0].length !== 0">
-                <v-list>
-                  <v-list-item v-for="studentId in top5InteractionArray">
-                    <v-list-item-title>
-                      {{
-                        studentController.getStudent(studentId[0])?.firstName +
-                        " " +
-                        studentController.getStudent(studentId[0])?.lastName
-                      }}: {{ studentId[1] }} Interaktionen
-                    </v-list-item-title>
-                  </v-list-item>
+              <v-card-item v-if="stats !== undefined && stats[4].length !== 0">
+                <v-list max-height="500">
+                  <v-row class="ma-2" v-for="studentId in top5InteractionArray"
+                  >{{
+                      studentController.getStudent(studentId[0])?.firstName +
+                      " " +
+                      studentController.getStudent(studentId[0])?.lastName +
+                      ": " + studentId[1]}}
+                    <v-spacer />
+                    <v-btn
+                      class="ml-2"
+                      variant="tonal"
+                      color="primary"
+                      @click="showStatisticsClick(studentId[0])"
+                    >
+                      <v-icon> fas fa-chart-line </v-icon>
+                    </v-btn>
+                  </v-row>
                 </v-list>
               </v-card-item>
               <v-card-item v-else> Keine Daten verfügbar.</v-card-item>
@@ -86,18 +93,24 @@
                   <v-spacer/>
                 </v-row>
               </v-card-title>
-              <v-card-item v-if="stats[4].length !== 0">
-                <v-list>
-                  <v-list-item v-for="studentId in top5DisturberArray">
-                    <v-list-item-title>
-                      {{
-                        studentController.getStudent(studentId[0])?.firstName +
-                        " " +
-                        studentController.getStudent(studentId[0])?.lastName
-                      }}
-                      : {{ studentId[1] }} Störungen
-                    </v-list-item-title>
-                  </v-list-item>
+              <v-card-item v-if="stats !== undefined && stats[4].length !== 0">
+                <v-list max-height="500">
+                  <v-row class="ma-2" v-for="studentId in top5DisturberArray"
+                  >{{
+                      studentController.getStudent(studentId[0])?.firstName +
+                      " " +
+                      studentController.getStudent(studentId[0])?.lastName +
+                      ": " + studentId[1]}}
+                    <v-spacer />
+                    <v-btn
+                      class="ml-2"
+                      variant="tonal"
+                      color="primary"
+                      @click="showStatisticsClick(studentId[0])"
+                    >
+                      <v-icon> fas fa-chart-line </v-icon>
+                    </v-btn>
+                  </v-row>
                 </v-list>
               </v-card-item>
               <v-card-item v-else> Keine Daten verfügbar.</v-card-item>
@@ -117,6 +130,7 @@ import Chart from "chart.js/auto";
 import {StatsController} from "@/controller/StatsController";
 import {StudentController} from "@/controller/StudentController";
 import {SessionController} from "@/controller/SessionController";
+import router from "@/plugins/router";
 
 export default defineComponent({
   name: "SessionStatisticPage",
@@ -159,6 +173,13 @@ export default defineComponent({
 
     function saveStatisticClick() {
       downloadElementCategoryChart.click();
+    }
+
+    function showStatisticsClick(studentId: number) {
+      router.push({
+        name: "StudentStatisticPage",
+        params: { studentId: studentId },
+      });
     }
 
     onMounted(() => {
@@ -225,6 +246,7 @@ export default defineComponent({
       sessionDate,
       sessionName,
       keys,
+      showStatisticsClick,
     };
   },
 });
