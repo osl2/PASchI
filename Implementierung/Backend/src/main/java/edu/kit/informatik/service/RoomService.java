@@ -83,12 +83,15 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
 
         if (!newRoom.getName().equals(repositoryRoom.getName())) {
             repositoryRoom.setName(newRoom.getName());
+            repositoryRoom.setUpdatedAt(newRoom.getUpdatedAt());
         }
         if (!newRoom.getTables().equals(repositoryRoom.getTables())) {
             repositoryRoom.setTables(updateTables(repositoryRoom, newRoom));
+            repositoryRoom.setUpdatedAt(newRoom.getUpdatedAt());
         }
         if (!newRoom.getChairs().equals(repositoryRoom.getChairs())) {
             repositoryRoom.setChairs(updateChair(repositoryRoom, newRoom));
+            repositoryRoom.setUpdatedAt(newRoom.getUpdatedAt());
         }
 
         Optional<Room> newrepositoryRoomOptional = this.roomRepository.findRoomById(roomDto.getId());
@@ -126,7 +129,7 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
     protected String delete(Room room) {
         List<SeatArrangement> seatArrangements = seatArrangementRepository.findSeatArrangementByRoom(room);
         if (seatArrangements.size() != 0) {
-            throw new IllegalArgumentException("Es müssen zuvor alle Kurse mit den zu dem Raum gehörenden"
+            throw new IllegalArgumentException("Es müssen zuvor alle Sessions mit den zu dem Raum gehörenden"
                     + "Sitzordnungen gelöscht werden");
         }
 
