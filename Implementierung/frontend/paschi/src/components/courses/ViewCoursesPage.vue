@@ -70,7 +70,7 @@
             <v-text-field
               class="mt-2"
               v-model="courseName"
-              hint="Dieses Feld muss ausgefüllt werden"
+              hint="Dieses Feld darf nicht leer sein"
               variant="outlined"
               label="Kursname"
               type="input"

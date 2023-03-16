@@ -57,6 +57,7 @@
             <v-text-field
               class="mt-2"
               v-model="newRoomName"
+              hint="Dieses Feld darf nicht leer sein."
               variant="outlined"
               label="Raumname"
               type="input"
@@ -73,6 +74,7 @@
             >
             <v-btn
               type="submit"
+              :disabled="isDisabled"
               height="50"
               width="150"
               variant="tonal"
@@ -97,6 +99,13 @@ import { useRouter } from "vue-router";
 export default defineComponent({
   name: "ViewRoomsPage",
   components: { SideMenu, NavigationBar },
+
+  computed:{
+    isDisabled(){
+      return !(this.newRoomName);
+    }
+  },
+
   setup() {
     const router = useRouter();
 

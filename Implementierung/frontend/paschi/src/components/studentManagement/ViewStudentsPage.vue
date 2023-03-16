@@ -69,7 +69,7 @@
           <v-card-item>
             <v-text-field
               v-model="studentFirstName"
-              hint="Dieses Feld muss ausgefüllt werden"
+              hint="Dieses Feld darf nicht leer sein"
               variant="outlined"
               rules=""
               class="mt-2"
