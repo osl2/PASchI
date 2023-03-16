@@ -56,10 +56,30 @@ export class User extends DataObject {
   }
 
   /**
+   * Setzt den Vornamen.
+   *
+   * @param value Vorname
+   */
+  set firstName(value: string) {
+    this._firstName = value;
+    this.update();
+  }
+
+  /**
    * Gibt den Nachnamen zurück.
    */
   get lastName(): string {
     return this._lastName;
+  }
+
+  /**
+   * Setzt den Nachnamen.
+   *
+   * @param value Nachname
+   */
+  set lastName(value: string) {
+    this._lastName = value;
+    this.update();
   }
 
   /**
@@ -84,6 +104,16 @@ export class User extends DataObject {
   }
 
   /**
+   * Setzt den Wahrheitswert, ob der Nutzer freigeschalten ist
+   *
+   * @param value Wahrheitswert, ob der Nutzer freigeschalten ist
+   */
+  set auth(value: boolean) {
+    this._auth = value;
+    this.update();
+  }
+
+  /**
    * Gibt die Rolle zurück.
    */
   get role(): Role {
@@ -95,36 +125,6 @@ export class User extends DataObject {
    */
   get token(): string {
     return this._token;
-  }
-
-  /**
-   * Setzt den Vornamen.
-   *
-   * @param value Vorname
-   */
-  set firstName(value: string) {
-    this._firstName = value;
-    this.update();
-  }
-
-  /**
-   * Setzt den Nachnamen.
-   *
-   * @param value Nachname
-   */
-  set lastName(value: string) {
-    this._lastName = value;
-    this.update();
-  }
-
-  /**
-   * Setzt den Wahrheitswert, ob der Nutzer freigeschalten ist
-   *
-   * @param value Wahrheitswert, ob der Nutzer freigeschalten ist
-   */
-  set auth(value: boolean) {
-    this._auth = value;
-    this.update();
   }
 
   /**

@@ -70,7 +70,6 @@ test("Delete category", async () => {
   qCategory = categoryController.getCategory(qCategoryId);
   categories = categoryController.getAllCategories();
   const ratedCategories = categoryController.getRatedCategoriesByName(categoryData.qName);
-  console.log(ratedCategories);
 
   expect(qCategory).toBeUndefined();
   expect(categories.length).toBe(3);

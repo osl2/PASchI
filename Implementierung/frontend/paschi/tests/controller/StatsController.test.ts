@@ -5,7 +5,6 @@ import {SessionController} from "@/controller/SessionController";
 import {CategoryController} from "@/controller/CategoryController";
 import {Category} from "@/model/userdata/interactions/Category";
 import {Quality} from "@/model/userdata/interactions/Quality";
-import {Student} from "@/model/userdata/interactions/Student";
 import {Session} from "@/model/userdata/courses/Session";
 import {afterEachTest, beforeEachTest} from "../setup";
 

@@ -24,22 +24,22 @@ export class Position extends DataObject {
     return this._xCoordinate;
   }
 
-  get yCoordinate(): number {
-    return this._yCoordinate;
-  }
-
-  get orientation(): number {
-    return this._orientation;
-  }
-
   set xCoordinate(value: number) {
     this._xCoordinate = value;
     this.update();
   }
 
+  get yCoordinate(): number {
+    return this._yCoordinate;
+  }
+
   set yCoordinate(value: number) {
     this._yCoordinate = value;
     this.update();
+  }
+
+  get orientation(): number {
+    return this._orientation;
   }
 
   set orientation(value: number) {

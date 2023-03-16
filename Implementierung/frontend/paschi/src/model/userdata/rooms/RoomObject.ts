@@ -27,13 +27,13 @@ export abstract class RoomObject extends DataObject {
     return this._position;
   }
 
-  get dimensions(): Dimensions {
-    return this._dimensions;
-  }
-
   set position(value: Position) {
     this._position = value;
     this.update();
+  }
+
+  get dimensions(): Dimensions {
+    return this._dimensions;
   }
 
   set dimensions(value: Dimensions) {

@@ -104,7 +104,6 @@ public class CourseService extends BaseService<Course, CourseDto, CourseDto> {
         Optional<Course> courseOptional = this.courseRepository.findCourseById(id);
         Course course = courseOptional.orElseThrow(() -> new EntityNotFoundException(Course.class, id));
         super.checkAuthorization(authentication, course.getUser().getId());
-        System.out.println(course.getSessions().size());
         return this.mapper.modelToDto(course);
     }
 

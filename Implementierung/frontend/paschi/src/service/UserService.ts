@@ -5,6 +5,7 @@ import axios, {AxiosResponse} from "axios";
 import {UserMapper} from "@/dto/mapper/UserMapper";
 import {useUserStore} from "@/store/UserStore";
 
+const LOCAL_STORAGE_UNDEFINED = "localStorage is not defined";
 const USER_BASE_URL: string = BASE_URL + "/api/user";
 
 export class UserService extends BaseService<User, UserDto> {
@@ -24,6 +25,7 @@ export class UserService extends BaseService<User, UserDto> {
     await axios
       .post(USER_BASE_URL, userDto).catch((error) => {
         console.log(error);
+        throw error.message;
       });
   }
 
@@ -61,7 +63,7 @@ export class UserService extends BaseService<User, UserDto> {
 
   async getAll(): Promise<User[]> {
     const token = useUserStore().getUser()?.token;
-    let users: User[] = [];
+    const users: User[] = [];
     await axios
       .get(USER_BASE_URL + "/admin", {
         headers: {
@@ -96,8 +98,8 @@ export class UserService extends BaseService<User, UserDto> {
       });
   }
 
-  async login(email: string, password: string): Promise<User | undefined> {
-    let user;
+  async login(email: string, password: string): Promise<User> {
+    let user: User;
     await axios
       .post(USER_BASE_URL + "/login", null, {
         params: {
@@ -113,13 +115,16 @@ export class UserService extends BaseService<User, UserDto> {
       })
       .catch((error) => {
         console.log(error);
+        if (error.message !== LOCAL_STORAGE_UNDEFINED) {
+          throw error.message;
+        }
       });
 
-    return user;
+    return user!;
   }
 
-  async getToken(token: string): Promise<User | undefined> {
-    let user;
+  async getToken(token: string): Promise<User> {
+    let user: User;
     await axios
       .post(USER_BASE_URL + "/token", null, {
         headers: {
@@ -134,9 +139,12 @@ export class UserService extends BaseService<User, UserDto> {
       })
       .catch((error) => {
         console.log(error);
+        if (error.message !== LOCAL_STORAGE_UNDEFINED) {
+          throw error.message;
+        }
       });
 
-    return user;
+    return user!;
   }
 
   async adminUpdate(user: User) {

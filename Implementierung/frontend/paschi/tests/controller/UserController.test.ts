@@ -1,4 +1,4 @@
-import {UserController} from "@/controller/UserController";
+import {LOGIN_SUCCESS, UserController} from "@/controller/UserController";
 import {AdminController} from "@/controller/AdminController";
 import {createPinia, setActivePinia} from "pinia";
 import {User} from "@/model/User";
@@ -33,19 +33,20 @@ beforeAll(async () => {
 
 afterAll(async () => {
   setActivePinia(createPinia());
-  let _user = await UserService.getService().login(admin.email, admin.password);
+  const _user = await UserService.getService().login(admin.email, admin.password);
   useUserStore().setUser(_user!);
   await UserService.getService().delete(user.getId);
 });
 
 test("Login", async () => {
-  const userId = await userController.login("24", "24");
+  const response = await userController.login("24", "24");
 
-  expect(userId).toBeUndefined();
+  expect(response === LOGIN_SUCCESS).toBeFalsy();
 
-  await userController.login(userData.email, userData.password);
+  const repsonse = await userController.login(userData.email, userData.password);
   user = userController.getUser();
 
+  expect(repsonse).toBe(LOGIN_SUCCESS);
   expect(user).toBeDefined();
   expect(user.email).toBe(userData.email);
   expect(user.firstName).toBe(userData.firstName);
@@ -73,9 +74,10 @@ test("Login with token", async () => {
 
   expect(userController.isLoggedIn()).toBeFalsy();
 
-  await userController.loginWithToken(user.token);
+  const response = await userController.loginWithToken(user.token);
   user = userController.getUser();
 
+  expect(response).toBe(LOGIN_SUCCESS);
   expect(user).toBeDefined();
   expect(userController.isLoggedIn()).toBeTruthy();
 });

@@ -160,27 +160,11 @@ export class Course extends DataObject {
   }
 
   defaultArrangementIsUsed(id: string): boolean {
-    for (const session of this._sessions) {
-      if (session.seatArrangement.getId === id) {
-        return true;
-      }
-    }
-    return false;
+    return this._sessions.find(session => session.seatArrangement.getId === id) !== undefined;
   }
 
   hasArrangement(arrangementId: string): boolean {
     return this._seatArrangements.find(arr => arr.getId === arrangementId) !== undefined;
-  }
-
-  /**
-   * Gibt den Benutzer zurück.
-   */
-  get user(): User {
-    return this._user;
-  }
-
-  get name(): string {
-    return this._name;
   }
 
   /**
@@ -198,30 +182,12 @@ export class Course extends DataObject {
     return undefined;
   }
 
-  /**
-   * Gibt die aktuelle Standardsitzordnung des Kurses zurück, falls vorhanden.
-   */
-  get defaultArrangement(): SeatArrangement | undefined {
-    return this._defaultArrangement;
+  get user(): User {
+    return this._user;
   }
 
-  /**
-   * Gibt das Fach zurück.
-   */
-  get subject(): string {
-    return this._subject;
-  }
-
-  get participants(): Participant[] {
-    return this._participants;
-  }
-
-  get sessions(): Session[] {
-    return this._sessions;
-  }
-
-  get seatArrangements(): SeatArrangement[] {
-    return this._seatArrangements;
+  get name(): string {
+    return this._name;
   }
 
   set name(value: string) {
@@ -229,9 +195,17 @@ export class Course extends DataObject {
     this.update();
   }
 
+  get subject(): string {
+    return this._subject;
+  }
+
   set subject(value: string) {
     this._subject = value;
     this.update();
+  }
+
+  get participants(): Participant[] {
+    return this._participants;
   }
 
   set participants(value: Participant[]) {
@@ -239,9 +213,17 @@ export class Course extends DataObject {
     this.update();
   }
 
+  get sessions(): Session[] {
+    return this._sessions;
+  }
+
   set sessions(value: Session[]) {
     this._sessions = value;
     this.update();
+  }
+
+  get seatArrangements(): SeatArrangement[] {
+    return this._seatArrangements;
   }
 
   set seatArrangements(value: SeatArrangement[]) {
@@ -249,7 +231,12 @@ export class Course extends DataObject {
     this.update();
   }
 
+  get defaultArrangement(): SeatArrangement | undefined {
+    return this._defaultArrangement;
+  }
+
   set defaultArrangement(value: SeatArrangement | undefined) {
     this._defaultArrangement = value;
+    this.update();
   }
 }

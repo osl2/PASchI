@@ -73,10 +73,12 @@ export class CourseController {
         participant.removeCourse(id);
         await ParticipantService.getService().update(participant);
       }
-      for (const session of course.sessions) {
+      const sessions = Array.from(course.sessions);
+      for (const session of sessions) {
         await SessionController.getSessionController().deleteSession(session.getId);
       }
-      for (const arrangement of course.seatArrangements) {
+      const arrangements = Array.from(course.seatArrangements);
+      for (const arrangement of arrangements) {
         await SeatArrangementController.getSeatArrangementController().deleteSeatArrangement(arrangement.getId);
       }
       await this.courseService.delete(id);

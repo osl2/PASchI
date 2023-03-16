@@ -35,7 +35,6 @@ export class CategoryController {
     if (useCategoryStore().hasName(name)) {
       return NAME_ERROR;
     }
-    let categoryId;
     let category = new RatedCategory(undefined, useCategoryStore().getNextId(),
       UserController.getUserController().getUser(),
       name, Quality.ONE_STAR);
@@ -43,7 +42,7 @@ export class CategoryController {
     useCategoryStore().addRatedCategory(category)
     await categoryService.add(category);
     useCategoryStore().addCategory(category);
-    categoryId = category.getId;
+    const categoryId = category.getId;
 
     category = new RatedCategory(undefined, useCategoryStore().getNextId(),
       UserController.getUserController().getUser(),
