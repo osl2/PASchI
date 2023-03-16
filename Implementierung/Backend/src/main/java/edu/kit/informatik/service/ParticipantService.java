@@ -59,15 +59,19 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
 
         if (!newParticipant.getFirstName().equals(repositoryParticipant.getFirstName())) {
             repositoryParticipant.setFirstName(newParticipant.getFirstName());
+            repositoryParticipant.setUpdatedAt(newParticipant.getUpdatedAt());
         }
         if (!newParticipant.getLastName().equals(repositoryParticipant.getLastName())) {
             repositoryParticipant.setLastName(newParticipant.getLastName());
+            repositoryParticipant.setUpdatedAt(newParticipant.getUpdatedAt());
         }
         if (!newParticipant.getCourses().equals(repositoryParticipant.getCourses())) {
             repositoryParticipant.setCourses(newParticipant.getCourses());
+            repositoryParticipant.setUpdatedAt(newParticipant.getUpdatedAt());
         }
         if (!newParticipant.getInteractions().equals(repositoryParticipant.getInteractions())) {
             repositoryParticipant.setInteractions(newParticipant.getInteractions());
+            repositoryParticipant.setUpdatedAt(newParticipant.getUpdatedAt());
         }
 
         return mapper.modelToDto(repositoryParticipant);
@@ -76,9 +80,11 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
     @Override
     public ParticipantDto getById(String id, Authentication authentication) {
         Optional<Participant> participantOptional = this.participantRepository.findParticipantById(id);
+        Participant participant = participantOptional.orElseThrow(() ->
+                                        new EntityNotFoundException(Participant.class, id));
+        super.checkAuthorization(authentication, participant.getUser().getId());
 
-        return participantOptional.map(this.mapper::modelToDto).orElseThrow(() ->
-                                                                    new EntityNotFoundException(Participant.class, id));
+        return this.mapper.modelToDto(participant);
     }
 
     @Override
@@ -101,5 +107,9 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
         participant.setVisible(false);
 
         return id;
+    }
+
+    protected void delete(Participant participant) {
+        participantRepository.deleteById(participant.getId());
     }
 }

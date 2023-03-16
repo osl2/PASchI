@@ -5,6 +5,7 @@ import edu.kit.informatik.model.User;
 import edu.kit.informatik.model.userdata.courses.Course;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -29,13 +30,13 @@ public class Participant extends DataObject {
 
     private String firstName;
     private String lastName;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Course> courses;
 
     @Enumerated
     private ParticipantType participantType;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Interaction> interactions;
 
     private boolean visible;
