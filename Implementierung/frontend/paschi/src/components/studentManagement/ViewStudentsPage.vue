@@ -58,52 +58,27 @@
         </v-card-item>
       </v-card>
     </v-container>
-    <v-dialog max-width="700" v-model="enterStudentNameDialog">
-      <v-card variant="flat" class="pa-2 rounded-lg">
-        <v-card-title
-          class="text-h5 text-center text-indigo-darken-4 text-wrap"
-        >
-          Neuen Schüler erstellen
-        </v-card-title>
-        <v-form validate-on="submit" @submit.prevent>
-          <v-card-item>
-            <v-text-field
-              v-model="studentFirstName"
-              variant="outlined"
-              class="mt-2"
-              label="Vorname"
-              type="input"
-              autofocus
-            ></v-text-field>
-            <v-text-field
-              v-model="studentLastName"
-              variant="outlined"
-              class="mt-1"
-              label="Nachname"
-              type="input"
-            ></v-text-field>
-          </v-card-item>
-          <v-card-actions class="row justify-center">
-            <v-btn
-              height="50"
-              width="150"
-              @click="abortNewStudentClick"
-              variant="tonal"
-              >Abbrechen</v-btn
-            >
-            <v-btn
-              type="submit"
-              height="50"
-              width="150"
-              @click="confirmNewStudentClick"
-              variant="tonal"
-              color="primary"
-              >Bestätigen</v-btn
-            >
-          </v-card-actions>
-        </v-form>
-      </v-card>
-    </v-dialog>
+    <PDialog
+      v-model="enterStudentNameDialog"
+      title="Neuen Schüler erstellen"
+      :buttons="[
+        { name: 'Abbrechen', click: abortNewStudentClick },
+        {
+          name: 'Bestätigen',
+          click: confirmNewStudentClick,
+          color: 'primary',
+          submit: true,
+        },
+      ]"
+    >
+      <PInput
+        v-model="studentFirstName"
+        label="Vorname"
+        type="input"
+        autofocus
+      ></PInput>
+      <PInput v-model="studentLastName" label="Nachname"></PInput>
+    </PDialog>
   </v-main>
 </template>
 
@@ -112,12 +87,14 @@ import { StudentController } from "@/controller/StudentController";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import { Student } from "@/model/userdata/interactions/Student";
-import { defineComponent, Ref, ref} from "vue";
+import { defineComponent, Ref, ref } from "vue";
 import { useRouter } from "vue-router";
+import PDialog from "@/components/base/PDialog.vue";
+import PInput from "@/components/base/PInput.vue";
 
 export default defineComponent({
   name: "ViewStudentsPage",
-  components: { SideMenu, NavigationBar },
+  components: { PInput, PDialog, SideMenu, NavigationBar },
 
   setup() {
     const router = useRouter();

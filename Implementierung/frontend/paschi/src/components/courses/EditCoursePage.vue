@@ -76,30 +76,23 @@
         </v-card>
       </v-dialog>
     </v-form>
-    <v-dialog max-width="700" v-model="deleteCourseDialog">
-      <v-card variant="flat" class="pa-2 rounded-lg">
-        <v-card-title class="text-h5 text-center text-indigo-darken-4">
-          Kurs unwiderruflich löschen?
-        </v-card-title>
-        <v-card-actions class="row justify-center">
-          <v-btn
-            height="50"
-            width="150"
-            variant="tonal"
-            @click="cancelDeleteClick"
-            >Abbrechen</v-btn
-          >
-          <v-btn
-            height="50"
-            width="150"
-            variant="tonal"
-            @click="deleteCourseClick"
-            color="error"
-            >Bestätigen</v-btn
-          >
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <PDialog
+      v-model="deleteCourseDialog"
+      title="Kurs unwiderruflich löschen?"
+      buttons-centered
+      :buttons="[
+        {
+          name: 'Abbrechen',
+          click: cancelDeleteClick,
+        },
+        {
+          name: 'Bestätigen',
+          color: 'error',
+          click: deleteCourseClick,
+        },
+      ]"
+    >
+    </PDialog>
     <v-dialog max-width="700" v-model="newSeatArrangementNameDialog" persistent>
       <v-card variant="flat" class="pa-2 rounded-lg">
         <v-card-title class="text-h5 text-center text-indigo-darken-4">
@@ -145,10 +138,11 @@ import SideMenu from "@/components/navigation/SideMenu.vue";
 import { Course } from "@/model/userdata/courses/Course";
 import { SeatArrangementController } from "@/controller/SeatArrangementController";
 import { useRouter } from "vue-router";
+import PDialog from "@/components/base/PDialog.vue";
 
 export default defineComponent({
   name: "editCoursePage",
-  components: { SideMenu, NavigationBar },
+  components: { PDialog, SideMenu, NavigationBar },
   props: {
     courseId: {
       type: String,

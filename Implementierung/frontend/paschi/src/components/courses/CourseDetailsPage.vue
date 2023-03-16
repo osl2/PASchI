@@ -187,31 +187,7 @@
         </v-list>
       </v-card>
     </v-dialog>
-    <!---<v-dialog max-width="700" v-model="deleteSessionDialog">
-      <v-card variant="flat" class="pa-2 rounded-lg">
-        <v-card-title class="text-h5 text-center text-indigo-darken-4">
-          Sitzung unwiderruflich löschen?
-        </v-card-title>
-        <v-card-actions class="row justify-center">
-          <v-btn
-            height="50"
-            width="150"
-            variant="tonal"
-            @click="cancelDeleteSessionClick"
-            >Abbrechen
-          </v-btn>
-          <v-btn
-            height="50"
-            width="150"
-            variant="tonal"
-            @click="confirmDeleteSessionClick"
-            color="primary"
-            >Bestätigen</v-btn
-          >
-        </v-card-actions>
-      </v-card>
-    </v-dialog>--->
-    <Dialog
+    <PDialog
       v-model="deleteSessionDialog"
       title="Sitzung unwiderruflich löschen?"
       :buttons="[
@@ -226,7 +202,7 @@
         },
       ]"
     >
-    </Dialog>
+    </PDialog>
   </v-main>
 </template>
 
@@ -240,10 +216,11 @@ import { computed, defineComponent, inject, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
 import { SessionController } from "@/controller/SessionController";
 import { useRouter } from "vue-router";
-import Dialog from "@/components/base/Dialog.vue";
+import Dialog from "@/components/base/PDialog.vue";
+import PDialog from "@/components/base/PDialog.vue";
 export default defineComponent({
   name: "CourseDetailsPage",
-  components: { Dialog, SideMenu, NavigationBar },
+  components: {PDialog, SideMenu, NavigationBar },
   props: {
     courseId: {
       type: String,

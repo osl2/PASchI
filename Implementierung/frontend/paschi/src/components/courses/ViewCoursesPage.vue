@@ -60,50 +60,25 @@
         </v-card-item>
       </v-card>
     </v-container>
-    <v-dialog max-width="700" v-model="enterCourseNameDialog">
-      <v-card variant="flat" class="pa-2 rounded-lg">
-        <v-card-title class="text-h5 text-center text-indigo-darken-4">
-          Neuen Kurs erstellen
-        </v-card-title>
-        <v-form validate-on="submit" @submit.prevent>
-          <v-card-item>
-            <v-text-field
-              class="mt-2"
-              v-model="courseName"
-              variant="outlined"
-              label="Kursname"
-              type="input"
-              autofocus
-            ></v-text-field>
-            <v-text-field
-              class="mt-1"
-              v-model="courseSubject"
-              variant="outlined"
-              label="Kursfach"
-              type="input"
-            ></v-text-field>
-          </v-card-item>
-          <v-card-actions class="row justify-center">
-            <v-btn
-              height="50"
-              width="150"
-              variant="tonal"
-              @click="abortNewCourseClick"
-              >Abbrechen</v-btn
-            >
-            <v-btn
-              type="submit"
-              height="50"
-              width="150"
-              variant="tonal"
-              @click="confirmNewCourseClick"
-              color="primary"
-              >Bestätigen</v-btn
-            >
-          </v-card-actions>
-        </v-form>
-      </v-card>
-    </v-dialog>
+    <PDialog
+      v-model="enterCourseNameDialog"
+      title="Neuen Kurs erstellen"
+      :buttons="[
+        {
+          name: 'Abbrechen',
+          click: abortNewCourseClick,
+        },
+        {
+          name: 'Bestätigen',
+          click: confirmNewCourseClick,
+          color: 'primary',
+          submit: true,
+        },
+      ]"
+    >
+      <PInput v-model="courseName" label="Kursname" autofocus></PInput>
+      <PInput v-model="courseSubject" label="Kursfach"></PInput>
+    </PDialog>
   </v-main>
 </template>
 
@@ -114,10 +89,12 @@ import { defineComponent, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
 import { Course } from "@/model/userdata/courses/Course";
 import { useRouter } from "vue-router";
+import PDialog from "@/components/base/PDialog.vue";
+import PInput from "@/components/base/PInput.vue";
 
 export default defineComponent({
   name: "ViewCoursesPage",
-  components: { SideMenu, NavigationBar },
+  components: { PInput, PDialog, SideMenu, NavigationBar },
 
   setup() {
     const router = useRouter();

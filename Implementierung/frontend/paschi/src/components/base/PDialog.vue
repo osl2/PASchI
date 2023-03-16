@@ -4,7 +4,7 @@
     :model-value="modelValue"
     @update:model-value="updateDialog"
   >
-    <v-card class="pa-2 rounded-lg">
+    <v-card class="pa-4 rounded-lg">
       <v-card-title class="text-h5 text-center text-indigo-darken-4 text-wrap">
         {{ title }}
       </v-card-title>
@@ -20,42 +20,33 @@
           <v-list-item-title>{{ element.name }}</v-list-item-title>
         </v-list-item>
       </v-list>
-
-      <v-list v-if="inputs">
-        <v-list-item v-for="(input, index) in inputs" :key="index">
-          <v-text-field
-            class="mt-2"
-            v-model="input.name"
-            variant="outlined"
-            :label="input.name"
-            type="input"
-            autofocus
-          ></v-text-field>
-        </v-list-item>
-      </v-list>
-
-      <v-row justify="space-around" class="ma-2">
-        <v-btn
-          v-for="(button, index) in buttons"
-          :key="index"
-          variant="tonal"
-          height="50"
-          :color="button.color ?? undefined"
-          :prepend-icon="button.icon ?? undefined"
-          @click="button.click() ?? undefined"
-        >
-          {{ button.name }}
-        </v-btn>
-      </v-row>
+      <v-form validate-on="submit" @submit.prevent>
+        <slot />
+        <v-row :justify="buttonsCentered ? 'center' : 'end'" class="mt-4 ma-0">
+          <v-btn
+            v-for="(button, index) in buttons"
+            :type="button.submit ? 'submit' : 'button'"
+            :key="index"
+            variant="tonal"
+            height="50"
+            :color="button.color ?? undefined"
+            :prepend-icon="button.icon ?? undefined"
+            @click="button.click() ?? undefined"
+            class="ml-2"
+          >
+            {{ button.name }}
+          </v-btn>
+        </v-row>
+      </v-form>
     </v-card>
   </v-dialog>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from "vue";
+import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "Dialog",
+  name: "PDialog",
   props: {
     title: {
       type: String,
@@ -74,13 +65,6 @@ export default defineComponent({
       )[],
       required: false,
     },
-    inputs: {
-      type: Array as () => (
-        | String
-        | { id?: String; name?: String; icon?: String; color?: String }
-      )[],
-      required: false,
-    },
     buttons: {
       type: Array as () => (
         | String
@@ -90,8 +74,13 @@ export default defineComponent({
             icon?: String;
             color?: String;
             click?: Function;
+            submit?: Boolean;
           }
       )[],
+      required: false,
+    },
+    buttonsCentered: {
+      type: Boolean,
       required: false,
     },
     modelValue: {
@@ -105,11 +94,6 @@ export default defineComponent({
       emit("update:modelValue", value);
     }
 
-    const inputs = ref(props.inputs);
-    watch(inputs, (value) => {
-      emit("update:inputs", value);
-    });
-
     function click(name: String | undefined) {
       emit("click", name);
     }
@@ -119,7 +103,6 @@ export default defineComponent({
       click,
       title: props.title,
       elements: props.elements,
-      inputs: props.inputs,
       buttons: props.buttons,
     };
   },

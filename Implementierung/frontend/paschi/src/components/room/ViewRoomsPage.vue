@@ -47,43 +47,32 @@
         </v-card-item>
       </v-card>
     </v-container>
-    <v-dialog max-width="700" v-model="enterRoomNameDialog">
-      <v-card variant="flat" class="pa-2 rounded-lg">
-        <v-card-title class="text-h5 text-center text-indigo-darken-4">
-          Neuen Raum erstellen
-        </v-card-title>
-        <v-form validate-on="submit" @submit.prevent>
-          <v-card-item>
-            <v-text-field
-              class="mt-2"
-              v-model="newRoomName"
-              variant="outlined"
-              label="Raumname"
-              type="input"
-              autofocus
-            ></v-text-field>
-          </v-card-item>
-          <v-card-actions class="row justify-center">
-            <v-btn
-              height="50"
-              width="150"
-              variant="tonal"
-              @click="abortNewRoomClick"
-              >Abbrechen</v-btn
-            >
-            <v-btn
-              type="submit"
-              height="50"
-              width="150"
-              variant="tonal"
-              @click="confirmNewRoomClick"
-              color="primary"
-              >Bestätigen</v-btn
-            >
-          </v-card-actions>
-        </v-form>
-      </v-card>
-    </v-dialog>
+    <PDialog
+      v-model="enterRoomNameDialog"
+      title="Neuen Raum erstellen"
+      :buttons="[
+        {
+          name: 'Abbrechen',
+          color: 'primary',
+          click: abortNewRoomClick,
+        },
+        {
+          name: 'Bestätigen',
+          color: 'primary',
+          click: confirmNewRoomClick,
+          submit: true,
+        },
+      ]"
+    >
+      <PInput
+        class="mt-2"
+        v-model="newRoomName"
+        variant="outlined"
+        label="Raumname"
+        type="input"
+        autofocus
+      ></PInput>
+    </PDialog>
   </v-main>
 </template>
 
@@ -94,9 +83,11 @@ import SideMenu from "@/components/navigation/SideMenu.vue";
 import { Room } from "@/model/userdata/rooms/Room";
 import { RoomController } from "@/controller/RoomController";
 import { useRouter } from "vue-router";
+import PDialog from "@/components/base/PDialog.vue";
+import PInput from "@/components/base/PInput.vue";
 export default defineComponent({
   name: "ViewRoomsPage",
-  components: { SideMenu, NavigationBar },
+  components: { PInput, PDialog, SideMenu, NavigationBar },
   setup() {
     const router = useRouter();
 
@@ -109,12 +100,12 @@ export default defineComponent({
       enterRoomNameDialog.value = false;
     }
     async function confirmNewRoomClick() {
-        await roomController.createRoom(newRoomName.value).then((res) => {
-          router.push({
-            name: "RoomEditor",
-            params: { roomId: res },
-          });
-        })
+      await roomController.createRoom(newRoomName.value).then((res) => {
+        router.push({
+          name: "RoomEditor",
+          params: { roomId: res },
+        });
+      });
     }
     function newRoomClick() {
       newRoomName.value = "";
