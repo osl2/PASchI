@@ -57,7 +57,7 @@
             <v-text-field
               class="mt-2"
               v-model="newRoomName"
-              hint="Dieses Feld darf nicht leer sein."
+              hint="Dieses Feld darf nicht leer sein"
               variant="outlined"
               label="Raumname"
               type="input"
