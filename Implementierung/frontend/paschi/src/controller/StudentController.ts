@@ -61,7 +61,8 @@ export class StudentController {
   async deleteStudent(id: string) {
     const student = useStudentStore().getStudent(id);
     if (student) {
-      for (const course of student.courses) {
+      const courses = Array.from(student.courses);
+      for (const course of courses) {
         await CourseController.getCourseController().removeStudentFromCourse(course.getId, id);
       }
       await this.studentService.delete(id);
