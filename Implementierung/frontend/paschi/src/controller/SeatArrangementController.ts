@@ -116,8 +116,10 @@ export class SeatArrangementController {
   async deleteSeatArrangement(id: string) {
     const arrangement = useSeatArrangementStore().getSeatArrangement(id);
     if (arrangement) {
-      arrangement.course.removeSeatArrangement(id);
-      await CourseService.getService().update(arrangement.course);
+      if (arrangement.course.hasArrangement(id)) {
+        arrangement.course.removeSeatArrangement(id);
+        await CourseService.getService().update(arrangement.course);
+      }
       await this.arrangementService.delete(id);
       useSeatArrangementStore().deleteSeatArrangement(id);
       if (!arrangement.isVisible()) {

@@ -160,12 +160,7 @@ export class Course extends DataObject {
   }
 
   defaultArrangementIsUsed(id: string): boolean {
-    for (const session of this._sessions) {
-      if (session.seatArrangement.getId === id) {
-        return true;
-      }
-    }
-    return false;
+    return this._sessions.find(session => session.seatArrangement.getId === id) !== undefined;
   }
 
   hasArrangement(arrangementId: string): boolean {
