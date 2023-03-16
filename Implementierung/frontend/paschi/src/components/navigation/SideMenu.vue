@@ -50,6 +50,11 @@
         >
           <v-list-item-title> Benutzereinstellungen </v-list-item-title>
         </v-list-item>
+        <v-list-item
+          prepend-icon="fa-solid fa-arrow-right-from-bracket"
+          title="Abmelden"
+          @click="logOut">
+        </v-list-item>
       </v-list>
     </template>
   </v-navigation-drawer>
@@ -59,11 +64,17 @@
 import {defineComponent, inject, Ref} from "vue";
 import router from "@/plugins/router";
 import { useRoute } from "vue-router";
+import {UserController} from "@/controller/UserController";
 
 export default defineComponent({
   name: "SideMenu",
+
+
+
   setup() {
-    const isMobile: Ref<boolean> = inject('isMobile') as Ref<boolean>
+    const isMobile: Ref<boolean> = inject('isMobile') as Ref<boolean>;
+    const userController = UserController.getUserController();
+
 
     /**
      * Methode, die bestimmt, ob die aktuelle Rute eine Unterroute der angegebenen Seite ist.
@@ -74,10 +85,16 @@ export default defineComponent({
       return useRoute().matched.some(({ name }) => name === route);
     }
 
+    function logOut() {
+      userController.logout();
+      router.push("/login");
+    }
+
     return {
       router,
       isMobile,
       subRouteOf,
+      logOut,
     };
   },
 });

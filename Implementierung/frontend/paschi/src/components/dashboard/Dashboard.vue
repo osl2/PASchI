@@ -2,12 +2,8 @@
   <NavigationBar>
     <template #default>
       <v-app-bar-title>
+       Dashboard
       </v-app-bar-title>
-    </template>
-    <template #append>
-      <v-btn variant="tonal" @click="logOut" color="white" rounded="pill">
-        Abmelden
-      </v-btn>
     </template>
   </NavigationBar>
 
@@ -32,7 +28,6 @@ import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import RecentSessionsCard from "@/components/dashboard/RecentSessionsCard.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import { UserController } from "@/controller/UserController";
-import router from "@/plugins/router";
 import { defineComponent } from "vue";
 
 export default defineComponent( {
@@ -48,17 +43,9 @@ export default defineComponent( {
     const firstName = userController.getUser()?.firstName;
     const lastName = userController.getUser()?.lastName;
 
-    /**
-     * Methode zum Ausloggen.
-     */
-    function logOut() {
-      userController.logout();
-      router.push("/login");
-    }
     return {
       firstName,
       lastName,
-      logOut,
     };
   },
 });
