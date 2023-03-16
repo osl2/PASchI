@@ -65,9 +65,11 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
 
         if (!newSeatArrangement.getName().equals(repositorySeatArrangement.getName())) {
             repositorySeatArrangement.setName(newSeatArrangement.getName());
+            repositorySeatArrangement.setUpdatedAt(newSeatArrangement.getUpdatedAt());
         }
         if (!newSeatArrangement.getSeatMap().equals(repositorySeatArrangement.getSeatMap())) {
             repositorySeatArrangement.setSeatMap(newSeatArrangement.getSeatMap());
+            repositorySeatArrangement.setUpdatedAt(newSeatArrangement.getUpdatedAt());
         }
         
         return mapper.modelToDto(repositorySeatArrangement);

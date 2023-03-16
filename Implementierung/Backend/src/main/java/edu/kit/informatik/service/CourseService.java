@@ -82,18 +82,23 @@ public class CourseService extends BaseService<Course, CourseDto, CourseDto> {
 
         if (!newCourse.getName().equals(repositoryCourse.getName())) {
             repositoryCourse.setName(newCourse.getName());
+            repositoryCourse.setUpdatedAt(newCourse.getUpdatedAt());
         }
         if (!newCourse.getSubject().equals(repositoryCourse.getSubject())) {
             repositoryCourse.setSubject(newCourse.getSubject());
+            repositoryCourse.setUpdatedAt(newCourse.getUpdatedAt());
         }
         if (!newCourse.getParticipants().equals(repositoryCourse.getParticipants())) {
             repositoryCourse.setParticipants(newCourse.getParticipants());
+            repositoryCourse.setUpdatedAt(newCourse.getUpdatedAt());
         }
         if (!newCourse.getSessions().equals(repositoryCourse.getSessions())) {
             repositoryCourse.setSessions(newCourse.getSessions());
+            repositoryCourse.setUpdatedAt(newCourse.getUpdatedAt());
         }
         if (!newCourse.getSeatArrangements().equals(repositoryCourse.getSeatArrangements())) {
             repositoryCourse.setSeatArrangements(newCourse.getSeatArrangements());
+            repositoryCourse.setUpdatedAt(newCourse.getUpdatedAt());
         }
 
         return mapper.modelToDto(repositoryCourse);

@@ -83,12 +83,15 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
 
         if (!newRoom.getName().equals(repositoryRoom.getName())) {
             repositoryRoom.setName(newRoom.getName());
+            repositoryRoom.setUpdatedAt(newRoom.getUpdatedAt());
         }
         if (!newRoom.getTables().equals(repositoryRoom.getTables())) {
             repositoryRoom.setTables(updateTables(repositoryRoom, newRoom));
+            repositoryRoom.setUpdatedAt(newRoom.getUpdatedAt());
         }
         if (!newRoom.getChairs().equals(repositoryRoom.getChairs())) {
             repositoryRoom.setChairs(updateChair(repositoryRoom, newRoom));
+            repositoryRoom.setUpdatedAt(newRoom.getUpdatedAt());
         }
 
         Optional<Room> newrepositoryRoomOptional = this.roomRepository.findRoomById(roomDto.getId());

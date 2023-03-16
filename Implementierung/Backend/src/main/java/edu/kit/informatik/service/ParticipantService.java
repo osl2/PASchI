@@ -59,15 +59,19 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
 
         if (!newParticipant.getFirstName().equals(repositoryParticipant.getFirstName())) {
             repositoryParticipant.setFirstName(newParticipant.getFirstName());
+            repositoryParticipant.setUpdatedAt(newParticipant.getUpdatedAt());
         }
         if (!newParticipant.getLastName().equals(repositoryParticipant.getLastName())) {
             repositoryParticipant.setLastName(newParticipant.getLastName());
+            repositoryParticipant.setUpdatedAt(newParticipant.getUpdatedAt());
         }
         if (!newParticipant.getCourses().equals(repositoryParticipant.getCourses())) {
             repositoryParticipant.setCourses(newParticipant.getCourses());
+            repositoryParticipant.setUpdatedAt(newParticipant.getUpdatedAt());
         }
         if (!newParticipant.getInteractions().equals(repositoryParticipant.getInteractions())) {
             repositoryParticipant.setInteractions(newParticipant.getInteractions());
+            repositoryParticipant.setUpdatedAt(newParticipant.getUpdatedAt());
         }
 
         return mapper.modelToDto(repositoryParticipant);
