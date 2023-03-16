@@ -291,7 +291,8 @@ export class StatsController {
       }
     });
 
-    return [topInteractions, topQuality, bottomInteractions, bottomQuality, topDisturbance];
+    return [topInteractions.slice(0, 5), topQuality.slice(0, 5), bottomInteractions.slice(0, 5),
+      bottomQuality.slice(0, 5), topDisturbance.slice(0, 5)];
   }
 
   private getQualityAsNumber(quality: Quality): number {

@@ -121,12 +121,10 @@ export class SessionController {
       useSessionStore().deleteSession(id);
       const arrangementController = SeatArrangementController.getSeatArrangementController();
       const arrangement = session.seatArrangement;
-      if (!arrangement.isVisible()) {
-        if (!session.course.defaultArrangementIsUsed(arrangement.getId)) {
+      if (!arrangementController.isUsed(arrangement.getId)) {
+        if (!arrangement.isVisible()) {
           await arrangementController.deleteSeatArrangement(arrangement.getId);
-        }
-      } else {
-        if (!session.course.hasArrangement(arrangement.getId) && !arrangementController.isUsed(arrangement.getId)) {
+        } else if (!session.course.hasArrangement(arrangement.getId)) {
           await arrangementController.deleteSeatArrangement(arrangement.getId);
         }
       }

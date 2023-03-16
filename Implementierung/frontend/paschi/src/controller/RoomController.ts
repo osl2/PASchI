@@ -62,11 +62,10 @@ export class RoomController {
     const arrangementController = SeatArrangementController.getSeatArrangementController();
     const room = useRoomStore().getRoom(id);
     if (room) {
-      const arrangements = Array.from(useSeatArrangementStore().getAllSeatArrangements());
+      await this.replaceRoom(room);
+      const arrangements = useSeatArrangementStore().getAllSeatArrangements().filter(arr => arr.room.getId === id);
       for (const arrangement of arrangements) {
-        if (arrangement.room.getId === id) {
-          await arrangementController.deleteSeatArrangement(arrangement.getId);
-        }
+        await arrangementController.deleteSeatArrangement(arrangement.getId);
       }
       await this.roomService.delete(id);
       useRoomStore().deleteRoom(id);
@@ -154,16 +153,16 @@ export class RoomController {
     if (room) {
       const object = room.getRoomObject(objectId);
       if (object) {
-        for (const arrangement of useSeatArrangementStore().getAllSeatArrangements()) {
-          if (arrangement.room.getId === roomId) {
-            if (arrangement.seatMap.has(object)) {
-              await this.replaceRoom(room);
-              const arrangementController = SeatArrangementController.getSeatArrangementController();
-              await arrangementController.deleteMapping(arrangement.getId, object.getId);
-            }
-            if (object.isTable()) {
-              await this.replaceRoom(room);
-            }
+        await this.replaceRoom(room);
+        const arrangements = useSeatArrangementStore().getAllSeatArrangements().filter(arr =>
+          arr.room.getId === roomId);
+        for (const arrangement of arrangements) {
+          if (arrangement.seatMap.has(object)) {
+            const arrangementController = SeatArrangementController.getSeatArrangementController();
+            await arrangementController.deleteMapping(arrangement.getId, object.getId);
+          }
+          if (object.isTable()) {
+            await this.replaceRoom(room);
           }
         }
         room.removeRoomObject(objectId);
@@ -175,38 +174,41 @@ export class RoomController {
   }
 
   private async replaceRoom(room: Room) {
+    const arrangementController = SeatArrangementController.getSeatArrangementController();
     let newRoom: Room | undefined;
     let map: Map<Chair, Chair>;
-    let newArrangement: SeatArrangement | undefined;
-    let oldArrangement: SeatArrangement | undefined;
+    const arrangementMap = new Map<SeatArrangement, SeatArrangement>();
     const sessions = useSessionStore().getAllSessions().filter(session =>
       session.seatArrangement.room.getId === room.getId);
+
     for (const session of sessions) {
-      oldArrangement = session.seatArrangement;
       if (newRoom == undefined) {
         [newRoom, map] = (await this.copyRoom(room));
       }
-      if (newArrangement == undefined) {
-        newArrangement = new SeatArrangement(
+      const oldArrangement = session.seatArrangement;
+      if (!arrangementMap.has(oldArrangement)) {
+        arrangementMap.set(oldArrangement, new SeatArrangement(
           undefined,
           useSeatArrangementStore().getNextId(),
           oldArrangement.user,
           oldArrangement.name,
           oldArrangement.course,
           newRoom
-        );
-        for (const mapping of map!) {
-          newArrangement.seatMap.set(mapping[1], oldArrangement.seatMap.get(mapping[0])!);
+        ));
+      }
+      const newArrangement = arrangementMap.get(oldArrangement)!;
+      for (const mapping of map!) {
+        const participant = oldArrangement.seatMap.get(mapping[0]);
+        if (participant) {
+          newArrangement.seatMap.set(mapping[1], participant);
         }
-        await SeatArrangementService.getService().add(newArrangement);
       }
-      if (newArrangement) {
-        session.seatArrangement = newArrangement;
-        await SessionService.getService().update(session);
+      await SeatArrangementService.getService().add(newArrangement);
+      session.seatArrangement = newArrangement;
+      await SessionService.getService().update(session);
+      if (!oldArrangement.course.hasArrangement(oldArrangement.getId)) {
+        await arrangementController.deleteSeatArrangement(oldArrangement.getId);
       }
-    }
-    if (oldArrangement && !oldArrangement.course.hasArrangement(oldArrangement.getId)) {
-      await SeatArrangementController.getSeatArrangementController().deleteSeatArrangement(oldArrangement.getId);
     }
   }
 

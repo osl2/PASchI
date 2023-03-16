@@ -104,6 +104,7 @@ export class SeatArrangementController {
 
     await this.arrangementService.add(arrangement);
     course.addSeatArrangement(arrangement);
+    course.defaultArrangement = arrangement;
     await CourseService.getService().update(course);
     return useSeatArrangementStore().addSeatArrangement(arrangement);
   }
@@ -120,6 +121,7 @@ export class SeatArrangementController {
         arrangement.course.removeSeatArrangement(id);
         await CourseService.getService().update(arrangement.course);
       }
+      await this.replaceSeatArrangement(arrangement);
       await this.arrangementService.delete(id);
       useSeatArrangementStore().deleteSeatArrangement(id);
       if (!arrangement.isVisible()) {
@@ -217,7 +219,7 @@ export class SeatArrangementController {
   }
 
   isUsed(id: string): boolean {
-    return useSessionStore().getAllSessions().filter(session => session.seatArrangement.getId === id).length != 0;
+    return useSessionStore().getAllSessions().find(session => session.seatArrangement.getId === id) !== undefined;
   }
 
   private async replaceSeatArrangement(arr: SeatArrangement) {
@@ -234,7 +236,7 @@ export class SeatArrangementController {
     }
   }
 
-  async copySeatArrangement(arr: SeatArrangement): Promise<SeatArrangement> {
+  private async copySeatArrangement(arr: SeatArrangement): Promise<SeatArrangement> {
     const newArrangement = new SeatArrangement(
       undefined,
       useSeatArrangementStore().getNextId(),
