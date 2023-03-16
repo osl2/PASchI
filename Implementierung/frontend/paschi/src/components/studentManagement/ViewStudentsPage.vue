@@ -69,14 +69,18 @@
           <v-card-item>
             <v-text-field
               v-model="studentFirstName"
+              hint="Dieses Feld muss ausgefüllt werden"
               variant="outlined"
+              rules=""
               class="mt-2"
               label="Vorname"
               type="input"
               autofocus
+              required
             ></v-text-field>
             <v-text-field
               v-model="studentLastName"
+              hint="Dieses Feld ist optional"
               variant="outlined"
               class="mt-1"
               label="Nachname"
@@ -93,6 +97,7 @@
             >
             <v-btn
               type="submit"
+              :disabled="isDisabled"
               height="50"
               width="150"
               @click="confirmNewStudentClick"
@@ -118,6 +123,13 @@ import { useRouter } from "vue-router";
 export default defineComponent({
   name: "ViewStudentsPage",
   components: { SideMenu, NavigationBar },
+
+  computed:{
+    isDisabled(){
+      return !(this.studentFirstName)
+    }
+  },
+
 
   setup() {
     const router = useRouter();
