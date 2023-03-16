@@ -62,7 +62,8 @@ export class RoomController {
     const arrangementController = SeatArrangementController.getSeatArrangementController();
     const room = useRoomStore().getRoom(id);
     if (room) {
-      for (const arrangement of useSeatArrangementStore().getAllSeatArrangements()) {
+      const arrangements = Array.from(useSeatArrangementStore().getAllSeatArrangements());
+      for (const arrangement of arrangements) {
         if (arrangement.room.getId === id) {
           await arrangementController.deleteSeatArrangement(arrangement.getId);
         }
