@@ -2,8 +2,20 @@
   <navigation-bar>
     <v-app-bar-title> Kursdetails</v-app-bar-title>
     <template v-slot:append>
-      <v-btn class="ma-2" rounded variant="tonal" @click="showCourseStatisticsClick">Kursstatistiken ansehen</v-btn>
-      <v-btn class="ma-2" rounded variant="tonal" @click="editCourseDetailsClick">Kurs bearbeiten</v-btn>
+      <v-btn
+        class="ma-2"
+        rounded
+        variant="tonal"
+        @click="showCourseStatisticsClick"
+        >Kursstatistiken ansehen</v-btn
+      >
+      <v-btn
+        class="ma-2"
+        rounded
+        variant="tonal"
+        @click="editCourseDetailsClick"
+        >Kurs bearbeiten</v-btn
+      >
     </template>
   </navigation-bar>
   <side-menu></side-menu>
@@ -50,7 +62,7 @@
                   variant="tonal"
                   color="primary"
                   @click="interactionMapClick(session)"
-                  >
+                >
                   <v-icon>mdi mdi-map</v-icon>
                 </v-btn>
                 <v-btn
@@ -77,7 +89,7 @@
       <v-card max-width="800" min-width="570" rounded class="ma-1 v-col-5">
         <v-row class="v-col-12">
           <h2 class="ma-2">Schülerliste</h2>
-          <v-spacer/>
+          <v-spacer />
           <v-btn
             class="ml-15 ma-2"
             variant="flat"
@@ -86,9 +98,8 @@
             prepend-icon="mdi mdi-plus"
             min-width="228"
             @click="activateStudentCard"
-          >Schüler hinzufügen
-          </v-btn
-          >
+            >Schüler hinzufügen
+          </v-btn>
           <v-icon
             v-if="studentListCollapsed"
             icon="mdi mdi-arrow-up-drop-circle"
@@ -110,16 +121,15 @@
           <v-card class="v-col-12" max-height="1000">
             <v-list max-height="500">
               <v-row class="ma-2" v-for="student in studentsInCourse"
-              >{{ student.firstName }} {{ student.lastName }}
-                <v-spacer/>
+                >{{ student.firstName }} {{ student.lastName }}
+                <v-spacer />
                 <v-btn
                   variant="tonal"
                   color="primary"
                   @click="editStudentClick(student)"
                 >
                   <v-icon>fas fa-pencil</v-icon>
-                </v-btn
-                >
+                </v-btn>
                 <v-btn
                   class="ml-2"
                   variant="tonal"
@@ -142,23 +152,30 @@
         </v-row>
       </v-card>
     </v-container>
-    <v-dialog max-width="700" v-model="addStudentSelectionDialog">
-      <v-card>
-        <v-list>
-          <v-list-item
-            v-for="student in studentsNotInCourse"
-            @click="addStudent(student)"
-          >
-            {{ student.firstName }} {{ student.lastName }}
-          </v-list-item>
-        </v-list>
-      </v-card>
-    </v-dialog>
+    <Dialog
+      v-model="addStudentSelectionDialog"
+      title="Schüler hinzufügen"
+      :elements="studentsNotInCourseElements"
+    >
+    </Dialog>
     <v-dialog max-width="700" v-model="seatArrangementSelectionDialog">
       <v-card min-height="50">
         <v-card-item style="height: 100px" class="v-row justify-end">
-          <v-btn class="ma-2" prepend-icon="mdi mdi-plus" variant="tonal" @click="newStandardSeatArrangement">Neue Standardsitzordnung</v-btn>
-          <v-btn class="ma-2" prepend-icon="mdi mdi-pencil" variant="tonal" color="primary" @click="editCourseDetailsClick">Sitzordnungen bearbeiten</v-btn>
+          <v-btn
+            class="ma-2"
+            prepend-icon="mdi mdi-plus"
+            variant="tonal"
+            @click="newStandardSeatArrangement"
+            >Neue Standardsitzordnung</v-btn
+          >
+          <v-btn
+            class="ma-2"
+            prepend-icon="mdi mdi-pencil"
+            variant="tonal"
+            color="primary"
+            @click="editCourseDetailsClick"
+            >Sitzordnungen bearbeiten</v-btn
+          >
         </v-card-item>
         <v-list>
           <v-list-item
@@ -170,7 +187,7 @@
         </v-list>
       </v-card>
     </v-dialog>
-    <v-dialog max-width="700" v-model="deleteSessionDialog">
+    <!---<v-dialog max-width="700" v-model="deleteSessionDialog">
       <v-card variant="flat" class="pa-2 rounded-lg">
         <v-card-title class="text-h5 text-center text-indigo-darken-4">
           Sitzung unwiderruflich löschen?
@@ -181,9 +198,8 @@
             width="150"
             variant="tonal"
             @click="cancelDeleteSessionClick"
-          >Abbrechen
-          </v-btn
-          >
+            >Abbrechen
+          </v-btn>
           <v-btn
             height="50"
             width="150"
@@ -194,7 +210,23 @@
           >
         </v-card-actions>
       </v-card>
-    </v-dialog>
+    </v-dialog>--->
+    <Dialog
+      v-model="deleteSessionDialog"
+      title="Sitzung unwiderruflich löschen?"
+      :buttons="[
+        {
+          name: 'Abbrechen',
+          click: cancelDeleteSessionClick,
+        },
+        {
+          name: 'Bestätigen',
+          color: 'error',
+          click: confirmDeleteSessionClick,
+        },
+      ]"
+    >
+    </Dialog>
   </v-main>
 </template>
 
@@ -208,9 +240,10 @@ import { computed, defineComponent, inject, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
 import { SessionController } from "@/controller/SessionController";
 import { useRouter } from "vue-router";
+import Dialog from "@/components/base/Dialog.vue";
 export default defineComponent({
   name: "CourseDetailsPage",
-  components: {SideMenu, NavigationBar},
+  components: { Dialog, SideMenu, NavigationBar },
   props: {
     courseId: {
       type: String,
@@ -218,7 +251,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const isMobile: Ref<boolean> = inject('isMobile') as Ref<boolean>
+    const isMobile: Ref<boolean> = inject("isMobile") as Ref<boolean>;
 
     const router = useRouter();
 
@@ -244,6 +277,20 @@ export default defineComponent({
     >;
 
     const studentsNotInCourse = computed(() => getStudentsNotInCourse());
+
+    const studentsNotInCourseElements = computed(() => {
+      const elements = computed(() =>
+        studentsNotInCourse.value.map((student) => {
+          return {
+            id: student.getId,
+            name: student.firstName + " " + student.lastName,
+            icon: "mdi mdi-account",
+            click: () => addStudent(student),
+          };
+        })
+      );
+      return elements;
+    });
 
     const studentsInCourse: Ref<Student[]> = ref<Student[]>(
       getStudentsOfCourse()
@@ -348,7 +395,7 @@ export default defineComponent({
     function showCourseStatisticsClick() {
       router.push({
         name: "CourseStatisticPage",
-        params: {courseId: props.courseId},
+        params: { courseId: props.courseId },
       });
     }
 
@@ -358,7 +405,7 @@ export default defineComponent({
     function editCourseDetailsClick() {
       router.push({
         name: "EditCoursePage",
-        params: {courseId: props.courseId},
+        params: { courseId: props.courseId },
       });
     }
 
@@ -370,7 +417,7 @@ export default defineComponent({
     function editStudentClick(student: Student) {
       router.push({
         name: "EditStudentPage",
-        params: {studentId: student.getId},
+        params: { studentId: student.getId },
       });
     }
 
@@ -382,7 +429,7 @@ export default defineComponent({
     function sessionStatisticClick(session: Session) {
       router.push({
         name: "SessionStatisticPage",
-        params: {sessionId: session.getId},
+        params: { sessionId: session.getId },
       });
     }
 
@@ -394,7 +441,7 @@ export default defineComponent({
     function interactionMapClick(session: Session) {
       router.push({
         name: "ShowInteractionMapPage",
-        params: {sessionId: session.getId},
+        params: { sessionId: session.getId },
       });
     }
 
@@ -465,19 +512,22 @@ export default defineComponent({
     function studentStatisticClick(student: Student) {
       router.push({
         name: "StudentStatisticPage",
-        params: {studentId: student.getId},
+        params: { studentId: student.getId },
       });
     }
 
     async function newStandardSeatArrangement() {
-      const sessionId = await sessionController.createSession(props.courseId, undefined, "");
+      const sessionId = await sessionController.createSession(
+        props.courseId,
+        undefined,
+        ""
+      );
       await router.push({
         name: "SessionPageDesktop",
         params: {
-          sessionId: sessionId
+          sessionId: sessionId,
         },
       });
-
     }
 
     return {
@@ -502,7 +552,7 @@ export default defineComponent({
       interactionMapSelectionDialog,
       addStudentSelectionDialog,
       seatArrangementSelectionDialog,
-      studentsNotInCourse,
+      studentsNotInCourseElements,
       studentsInCourse,
       sessions,
       seatArrangements,
