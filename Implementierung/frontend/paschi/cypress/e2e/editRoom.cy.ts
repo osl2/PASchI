@@ -33,7 +33,7 @@ describe("add and then edit course test", () => {
     cy.sideMenuTo("dashboard");
     cy.logOut();
   });*/
-  it("tests drag chairs and tables", () => {
+  it("tests drag chairs", () => {
     const room = { name: "123" };
     cy.visit("/login");
     cy.userLogin(user.email, user.password);
@@ -41,8 +41,62 @@ describe("add and then edit course test", () => {
     cy.addRoom(room.name);
     const roomCard = cy.get(".v-card[name=room]");
     cy.addChair();
-    const chair = cy.get(".v-card[name=room]").get(".v-card[name=chair]");
-    chair.drag(200,200);
+    cy.get(".v-card[name=room]")
+      .get(".v-card[name=chair]")
+      .dragAssertSuccess(100, 100)
+      .dragAssertSuccess(300, 300)
+      .dragAssertSuccess(100, 200)
+      .dragAssertSuccess(200, 100)
+      .dragAssertSuccess(200, 200);
+    cy.addChair();
+    cy.get(".v-card[name=room]")
+      .get(".v-card[name=chair]")
+      .last()
+      .dragAssertSuccess(100, 200);
+    cy.addChair();
+    cy.get(".v-card[name=room]")
+      .get(".v-card[name=chair]")
+      .last()
+      .dragAssertSuccess(100, 100);
+    cy.addChair();
+    cy.get(".v-card[name=room]")
+      .get(".v-card[name=chair]")
+      .last()
+      .dragAssertCollision(100, 100);
+    cy.get("button[name=save]").click();
+    cy.sideMenuTo("dashboard");
+    cy.logOut();
+  });
+  it("tests drag tables", () => {
+    const room = { name: "123" };
+    cy.visit("/login");
+    cy.userLogin(user.email, user.password);
+    cy.sideMenuTo("rooms");
+    cy.addRoom(room.name);
+    const roomCard = cy.get(".v-card[name=room]");
+    cy.addTable();
+    cy.get(".v-card[name=room]")
+      .get(".v-card[name=table]")
+      .dragAssertSuccess(100, 100)
+      .dragAssertSuccess(300, 300)
+      .dragAssertSuccess(100, 250)
+      .dragAssertSuccess(250, 100)
+      .dragAssertSuccess(250, 250);
+    cy.addTable();
+    cy.get(".v-card[name=room]")
+      .get(".v-card[name=table]")
+      .last()
+      .dragAssertSuccess(100, 250);
+    cy.addTable();
+    cy.get(".v-card[name=room]")
+      .get(".v-card[name=table]")
+      .last()
+      .dragAssertSuccess(100, 100);
+    cy.addTable();
+    cy.get(".v-card[name=room]")
+      .get(".v-card[name=table]")
+      .last()
+      .dragAssertCollision(100, 100);
     cy.get("button[name=save]").click();
     cy.sideMenuTo("dashboard");
     cy.logOut();

@@ -27,6 +27,8 @@
 // Must be declared global to be detected by typescript (allows import/export)
 // eslint-disable @typescript/interface-name
 import Chainable = Cypress.Chainable;
+import _default from "chart.js/dist/plugins/plugin.tooltip";
+import numbers = _default.defaults.animations.numbers;
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -57,32 +59,41 @@ declare global {
       userLogin(eMail: string, password: string): void;
 
       logOut(): void;
-      typeRandomWords(
-        x: number,
-        y: number,
-      ): Chainable<JQuery<HTMLElement>>;
-      drag(
-        x: number,
-        y: number,
-        ): Chainable<JQuery<HTMLElement>>;
-
+      drag(x: number, y: number,): Chainable<JQuery<HTMLElement>>;
+      dragAssertSuccess(x: number, y: number,): Chainable<JQuery<HTMLElement>>;
+      dragAssertCollision(x: number, y: number,): Chainable<JQuery<HTMLElement>>;
     }
   }
 }
 
 Cypress.Commands.add(
-  'typeRandomWords',
+  'drag',
   { prevSubject: 'element' },
-  (subject /* :JQuery<HTMLElement> */, x, y) => {
-    return cy.wrap(subject).trigger("mousedown").trigger('mousemove', { clientX: 110, clientY: 200 }).trigger('mouseup')
+  (subject /* :JQuery<HTMLElement> */, x: number, y: number) => {
+    let wrap = cy.wrap(subject).trigger("mouseenter").trigger("mousedown");
+    cy.get(".v-card[name=room]").trigger('mousemove', x, y ).trigger('mouseup');
+    return cy.wrap(subject)
   }
 )
 
 Cypress.Commands.add(
-  'drag',
+  'dragAssertSuccess',
   { prevSubject: 'element' },
   (subject /* :JQuery<HTMLElement> */, x: number, y: number) => {
-    return cy.wrap(subject).trigger("mousedown").trigger('mousemove', { clientX: x, clientY: y }).trigger('mouseup');
+    let wrap = cy.wrap(subject).trigger("mouseenter").trigger("mousedown");
+    cy.get(".v-card[name=room]").trigger('mousemove', x, y ).get(".error").should("have.length", 0).get(".v-card[name=room]").trigger('mouseup', {force: true});
+
+    return cy.wrap(subject)
+  }
+)
+
+Cypress.Commands.add(
+  'dragAssertCollision',
+  { prevSubject: 'element' },
+  (subject /* :JQuery<HTMLElement> */, x: number, y: number) => {
+    let wrap = cy.wrap(subject).trigger("mouseenter").trigger("mousedown");
+    cy.get(".v-card[name=room]").trigger('mousemove', x, y ).get(".error").should("have.length", 1).get(".v-card[name=room]").trigger('mouseup', {force: true});
+    return cy.wrap(subject)
   }
 )
 
