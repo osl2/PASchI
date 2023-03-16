@@ -195,7 +195,7 @@ export default defineComponent({
           involvementKeys,
         datasets: [
           {
-            label: "Anzahl",
+            label: "Beteiligung in %",
             data:
               involvementValues,
             fill: false,
