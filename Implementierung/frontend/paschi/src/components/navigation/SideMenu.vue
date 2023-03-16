@@ -1,5 +1,20 @@
 <template>
-  <v-navigation-drawer style="border-bottom-right-radius: 10px; border-top-right-radius: 10px; height: 300px; top: 50%; transform: translate(0, -50%)" v-if="!isMobile" permanent absolute elevation="10" floating expand-on-hover rail>
+  <v-navigation-drawer
+    style="
+      border-bottom-right-radius: 10px;
+      border-top-right-radius: 10px;
+      height: 300px;
+      position: fixed;
+      top: 50%;
+      transform: translate(0, -50%);
+    "
+    v-if="!isMobile"
+    permanent
+    elevation="10"
+    floating
+    expand-on-hover
+    rail
+  >
     <v-list
       nav
       density="compact"
@@ -56,14 +71,14 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, inject, Ref} from "vue";
+import { defineComponent, inject, Ref } from "vue";
 import router from "@/plugins/router";
 import { useRoute } from "vue-router";
 
 export default defineComponent({
   name: "SideMenu",
   setup() {
-    const isMobile: Ref<boolean> = inject('isMobile') as Ref<boolean>
+    const isMobile: Ref<boolean> = inject("isMobile") as Ref<boolean>;
 
     /**
      * Methode, die bestimmt, ob die aktuelle Rute eine Unterroute der angegebenen Seite ist.

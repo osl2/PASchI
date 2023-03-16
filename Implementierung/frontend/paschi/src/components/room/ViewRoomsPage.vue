@@ -53,7 +53,6 @@
       :buttons="[
         {
           name: 'Abbrechen',
-          color: 'primary',
           click: abortNewRoomClick,
         },
         {
