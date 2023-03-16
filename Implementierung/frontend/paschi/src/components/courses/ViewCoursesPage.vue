@@ -70,6 +70,7 @@
             <v-text-field
               class="mt-2"
               v-model="courseName"
+              hint="Dieses Feld muss ausgefüllt werden"
               variant="outlined"
               label="Kursname"
               type="input"
@@ -78,6 +79,7 @@
             <v-text-field
               class="mt-1"
               v-model="courseSubject"
+              hint="Dieses Feld ist optional"
               variant="outlined"
               label="Kursfach"
               type="input"
@@ -93,6 +95,7 @@
             >
             <v-btn
               type="submit"
+              :disabled="isDisabled"
               height="50"
               width="150"
               variant="tonal"
@@ -118,6 +121,12 @@ import { useRouter } from "vue-router";
 export default defineComponent({
   name: "ViewCoursesPage",
   components: { SideMenu, NavigationBar },
+
+  computed:{
+    isDisabled(){
+      return !(this.courseName);
+    }
+  },
 
   setup() {
     const router = useRouter();
