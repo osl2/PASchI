@@ -135,9 +135,6 @@ export class Course extends DataObject {
   addSeatArrangement(seatArrangement: SeatArrangement) {
     if (this.getSeatArrangement(seatArrangement.getId) == undefined) {
       this._seatArrangements.push(seatArrangement);
-      if (!seatArrangement.isVisible()) {
-        this._defaultArrangement = seatArrangement;
-      }
     }
     this.update();
   }
@@ -151,16 +148,12 @@ export class Course extends DataObject {
     this.seatArrangements.forEach((element: SeatArrangement, index: number) => {
       if (element.getId === arrangementId) {
         this._seatArrangements.splice(index, 1);
-        if (!element.isVisible()) {
+        if (element.getId === this._defaultArrangement?.getId) {
           this._defaultArrangement = undefined;
         }
       }
     });
     this.update();
-  }
-
-  defaultArrangementIsUsed(id: string): boolean {
-    return this._sessions.find(session => session.seatArrangement.getId === id) !== undefined;
   }
 
   hasArrangement(arrangementId: string): boolean {
