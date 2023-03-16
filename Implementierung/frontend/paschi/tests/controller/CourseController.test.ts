@@ -49,10 +49,10 @@ test("Get recent courses", async () => {
   expect(courses[1].name).toBe("Algo");
 
   await courseController.updateCourse(courseId, courseData.name, courseData.subject);
-  // courses = courseController.getRecentCourses();
-  //
-  // expect(courses[1].name).toBe("name");
-  // expect(courses[0].name).toBe(courseData.name);
+  courses = courseController.getRecentCourses();
+
+  expect(courses[1].name).toBe("name");
+  expect(courses[0].name).toBe(courseData.name);
 
   await courseController.deleteCourse(id);
 });

@@ -45,17 +45,16 @@ test("Update session", async () => {
 
 test("Get recent sessions", async () => {
   const id = await sessionController.createSession(courseId, undefined, "Kolloquium 2");
-  const sessions = sessionController.getRecentSessions();
+  let sessions = sessionController.getRecentSessions();
 
   expect(sessions.length).toBe(2);
-  // expect(sessions[0].name).toBe("Kolloquium 2");
-  // expect(sessions[1].name).toBe("Abschlusspräsentation");
+  expect(sessions[0].name).toBe("Kolloquium 2");
+  expect(sessions[1].name).toBe("Abschlusspräsentation");
 
-  // TODO: Backend setzt updatedAt nicht
-  // await sessionController.updateSession(sessionId!, sessionData.name);
-  // sessions = sessionController.getRecentSessions();
-  // expect(sessions[1].name).toBe("Kolloquium 2");
-  // expect(sessions[0].name).toBe(sessionData.name);
+  await sessionController.updateSession(sessionId!, sessionData.name);
+  sessions = sessionController.getRecentSessions();
+  expect(sessions[1].name).toBe("Kolloquium 2");
+  expect(sessions[0].name).toBe(sessionData.name);
 
   await sessionController.deleteSession(id!);
 });
