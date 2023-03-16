@@ -75,6 +75,7 @@ public class CategoryService extends BaseService<Category, RatedCategoryDto, Cat
 
         if (!newCategory.getName().equals(repositoryCategory.getName())) {
             repositoryCategory.setName(newCategory.getName());
+            repositoryCategory.setUpdatedAt(newCategory.getUpdatedAt());
         }
 
         return mapper.modelToDto(repositoryCategory);
