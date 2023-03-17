@@ -54,30 +54,9 @@
           >Sitzordung hinzufügen</v-btn
         >
       </v-row>
-      <v-dialog max-width="700" v-model="seatArrangementDialog">
-        <v-card>
-          <v-list>
-            <v-list-item
-              v-for="seatArrangement in seatArrangements"
-              @click="editSeatArrangement(seatArrangement)"
-            >
-              {{ seatArrangement.name }}
-            </v-list-item>
-          </v-list>
-        </v-card>
-      </v-dialog>
-      <v-dialog max-width="700" v-model="roomSelectionDialog">
-        <v-card>
-          <v-list>
-            <v-list-item
-              v-for="room in rooms"
-              @click="addSeatArrangement(room)"
-            >
-              {{ room.name }}
-            </v-list-item>
-          </v-list>
-        </v-card>
-      </v-dialog>
+      <PDialog v-model="seatArrangementDialog" title="Sitzordnung auswählen" :elements="seatArrangementElements">
+      </PDialog>
+      <NewSeatArrangementDialog :course-id="courseId" v-model="roomSelectionDialog" />
     </v-form>
     <PDialog
       v-model="deleteCourseDialog"
@@ -142,11 +121,13 @@ import { Course } from "@/model/userdata/courses/Course";
 import { SeatArrangementController } from "@/controller/SeatArrangementController";
 import { useRouter } from "vue-router";
 import PDialog from "@/components/base/PDialog.vue";
+import NewSeatArrangementDialog from "@/components/room/NewSeatArrangementDialog.vue";
 import BottomBar from "@/components/navigation/BottomBar.vue";
 
 export default defineComponent({
   name: "editCoursePage",
   components: {BottomBar, PDialog, SideMenu, NavigationBar },
+  components: {NewSeatArrangementDialog, PDialog, SideMenu, NavigationBar },
   props: {
     courseId: {
       type: String,
@@ -181,6 +162,17 @@ export default defineComponent({
     const newSeatArrangementRoom: Ref<Room | undefined> = ref<Room | undefined>(
       undefined
     ) as Ref<Room | undefined>;
+
+    const seatArrangementElements = seatArrangements.value.map((seatArrangement) => {
+      return {
+        name: seatArrangement.name,
+        icon: "mdi mdi-seat",
+        click: () => {
+          editSeatArrangement(seatArrangement);
+        },
+      };
+    });
+
     //Hilfsmethoden
     function getCourseName(): string {
       if (course.value instanceof Course) {
@@ -320,6 +312,7 @@ export default defineComponent({
       seatArrangements,
       rooms,
       courseName,
+      seatArrangementElements,
       courseSubject,
       newSeatArrangementNameDialog,
       newSetArrangementName,

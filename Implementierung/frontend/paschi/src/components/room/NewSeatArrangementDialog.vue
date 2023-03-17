@@ -6,6 +6,16 @@
     :elements="roomElements"
     :buttons="buttonElements"
   >
+    <v-card v-if="noRooms" variant="text">
+      <v-card-text class="d-flex justify-center mb-0">
+        Keine Räume vorhanden.
+      </v-card-text>
+      <v-card-text class="d-flex justify-center mt-0">
+        <v-btn color="primary" variant="tonal" height="50" @click="viewRoomsClick">
+          Gehe zu Räume
+        </v-btn>
+      </v-card-text>
+    </v-card>
     <PInput
       v-if="namingStage"
       v-model="seatArrangementName"
@@ -49,6 +59,7 @@ export default defineComponent({
     const rooms = ref<Room[]>(roomController.getAllRooms());
     const title = ref("Raum auswählen");
     const namingStage = ref(false);
+    const noRooms = ref(rooms.value.length === 0);
 
     const buttonElements = ref([
       {
@@ -116,6 +127,10 @@ export default defineComponent({
       }
     }
 
+    function viewRoomsClick() {
+      router.push({ name: "RoomsPage" });
+    }
+
     return {
       seatArrangementName,
       showRoomSelectionDialog,
@@ -123,6 +138,8 @@ export default defineComponent({
       title,
       namingStage,
       buttonElements,
+      noRooms,
+      viewRoomsClick,
       closeRoomSelectionDialogClick,
     };
   },
