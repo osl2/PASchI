@@ -86,78 +86,10 @@
           </v-card>
         </v-row>
       </v-card>
-      <v-card max-width="800" min-width="570" rounded class="ma-1 v-col-5">
-        <v-row class="v-col-12">
-          <h2 class="ma-2">Schülerliste</h2>
-          <v-spacer />
-          <v-btn
-            class="ml-15 ma-2"
-            variant="flat"
-            color="green"
-            rounded
-            prepend-icon="mdi mdi-plus"
-            min-width="228"
-            @click="activateStudentCard"
-            >Schüler hinzufügen
-          </v-btn>
-          <v-icon
-            v-if="studentListCollapsed"
-            icon="mdi mdi-arrow-up-drop-circle"
-            size="40"
-            @click="toggleStudentListCollapsed"
-            class="ma-2"
-            color="primary"
-          />
-          <v-icon
-            v-if="!studentListCollapsed"
-            icon="mdi mdi-arrow-down-drop-circle"
-            size="40"
-            @click="toggleStudentListCollapsed"
-            class="ma-2"
-            color="primary"
-          />
-        </v-row>
-        <v-row class="v-card justify-center" v-if="!studentListCollapsed">
-          <v-card class="v-col-12" max-height="1000">
-            <v-list max-height="500">
-              <v-row class="ma-2" v-for="student in studentsInCourse"
-                >{{ student.firstName }} {{ student.lastName }}
-                <v-spacer />
-                <v-btn
-                  variant="tonal"
-                  color="primary"
-                  @click="editStudentClick(student)"
-                >
-                  <v-icon>fas fa-pencil</v-icon>
-                </v-btn>
-                <v-btn
-                  class="ml-2"
-                  variant="tonal"
-                  color="primary"
-                  @click="studentStatisticClick(student)"
-                >
-                  <v-icon> fas fa-chart-line</v-icon>
-                </v-btn>
-                <v-btn
-                  class="ml-2"
-                  variant="tonal"
-                  color="red"
-                  @click="removeStudentFromCourse(student)"
-                >
-                  <v-icon>mdi mdi-minus</v-icon>
-                </v-btn>
-              </v-row>
-            </v-list>
-          </v-card>
-        </v-row>
-      </v-card>
+      <v-container max-width="800" min-width="570" rounded class="ma-1 v-col-5">
+        <AddStudentsCard :course-id="courseId" />
+      </v-container>
     </v-container>
-    <Dialog
-      v-model="addStudentSelectionDialog"
-      title="Schüler hinzufügen"
-      :elements="studentsNotInCourseElements"
-    >
-    </Dialog>
     <v-dialog max-width="700" v-model="seatArrangementSelectionDialog">
       <v-card min-height="50">
         <v-card-item style="height: 100px" class="v-row justify-end">
@@ -216,11 +148,11 @@ import { computed, defineComponent, inject, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
 import { SessionController } from "@/controller/SessionController";
 import { useRouter } from "vue-router";
-import Dialog from "@/components/base/PDialog.vue";
 import PDialog from "@/components/base/PDialog.vue";
+import AddStudentsCard from "@/components/courses/AddStudentsCard.vue";
 export default defineComponent({
   name: "CourseDetailsPage",
-  components: {PDialog, SideMenu, NavigationBar },
+  components: { AddStudentsCard, PDialog, SideMenu, NavigationBar },
   props: {
     courseId: {
       type: String,
