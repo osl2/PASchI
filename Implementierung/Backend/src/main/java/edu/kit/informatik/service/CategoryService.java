@@ -50,7 +50,7 @@ public class CategoryService extends BaseService<Category, RatedCategoryDto, Cat
 
     @Override
     public CategoryDto add(RatedCategoryDto categoryDto, Authentication authentication) {
-
+        super.checkAuthorization(authentication, categoryDto.getUserId());
         if (categoryDto.getQuality() == null) {
             Category newCategory = this.categoryBaseRepository.save(this.mapper.dtoToModel(categoryDto));
             return this.mapper.modelToDto(newCategory);
@@ -65,6 +65,7 @@ public class CategoryService extends BaseService<Category, RatedCategoryDto, Cat
     @Transactional
     @Override
     public CategoryDto update(RatedCategoryDto categoryDto, Authentication authentication) {
+        super.checkAuthorization(authentication, categoryDto.getUserId());
         Optional<Category> repositoryCategoryOptional = this.categoryBaseRepository
                                                                 .findCategoryById(categoryDto.getId());
 
@@ -74,6 +75,7 @@ public class CategoryService extends BaseService<Category, RatedCategoryDto, Cat
 
         if (!newCategory.getName().equals(repositoryCategory.getName())) {
             repositoryCategory.setName(newCategory.getName());
+            repositoryCategory.setUpdatedAt(newCategory.getUpdatedAt());
         }
 
         return mapper.modelToDto(repositoryCategory);
@@ -82,9 +84,10 @@ public class CategoryService extends BaseService<Category, RatedCategoryDto, Cat
     @Override
     public CategoryDto getById(String id, Authentication authentication) {
         Optional<Category> categoryOptional = this.categoryBaseRepository.findCategoryById(id);
+        Category category = categoryOptional.orElseThrow(() -> new EntityNotFoundException(Category.class, id));
+        super.checkAuthorization(authentication, category.getUser().getId());
 
-        return categoryOptional.map(this.mapper::modelToDto).orElseThrow(() ->
-                                                                    new EntityNotFoundException(Category.class, id));
+        return this.mapper.modelToDto(category);
     }
 
     @Override
@@ -98,9 +101,14 @@ public class CategoryService extends BaseService<Category, RatedCategoryDto, Cat
     @Override
     public String delete(String id, Authentication authentication) {
         Optional<Category> categoryOptional = this.categoryBaseRepository.findCategoryById(id);
-        categoryOptional.orElseThrow(() -> new EntityNotFoundException(Category.class, id));
+        Category category = categoryOptional.orElseThrow(() -> new EntityNotFoundException(Category.class, id));
+        super.checkAuthorization(authentication, category.getUser().getId());
 
-        this.categoryBaseRepository.deleteById(id);
-        return id;
+        return delete(category);
+    }
+
+    protected String delete(Category category) {
+        this.categoryBaseRepository.deleteById(category.getId());
+        return category.getId();
     }
 }

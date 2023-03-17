@@ -3,6 +3,7 @@
     <v-app-bar-title> Kurse ansehen </v-app-bar-title>
     <template v-slot:append>
       <v-btn
+        name="createCourse"
         variant="flat"
         color="green"
         rounded
@@ -60,25 +61,57 @@
         </v-card-item>
       </v-card>
     </v-container>
-    <PDialog
-      v-model="enterCourseNameDialog"
-      title="Neuen Kurs erstellen"
-      :buttons="[
-        {
-          name: 'Abbrechen',
-          click: abortNewCourseClick,
-        },
-        {
-          name: 'Bestätigen',
-          click: confirmNewCourseClick,
-          color: 'primary',
-          submit: true,
-        },
-      ]"
-    >
-      <PInput v-model="courseName" label="Kursname" autofocus></PInput>
-      <PInput v-model="courseSubject" label="Kursfach"></PInput>
-    </PDialog>
+    <v-dialog max-width="700" v-model="enterCourseNameDialog">
+      <v-card variant="flat" class="pa-2 rounded-lg">
+        <v-card-title class="text-h5 text-center text-indigo-darken-4">
+          Neuen Kurs erstellen
+        </v-card-title>
+        <v-form validate-on="submit" @submit.prevent>
+          <v-card-item>
+            <v-text-field
+              name="name"
+              class="mt-2"
+              v-model="courseName"
+              hint="Dieses Feld darf nicht leer sein"
+              variant="outlined"
+              label="Kursname"
+              type="input"
+              autofocus
+            ></v-text-field>
+            <v-text-field
+              name="subject"
+              class="mt-1"
+              v-model="courseSubject"
+              hint="Dieses Feld ist optional"
+              variant="outlined"
+              label="Kursfach"
+              type="input"
+            ></v-text-field>
+          </v-card-item>
+          <v-card-actions class="row justify-center">
+            <v-btn
+              name="cancelNewCourse"
+              height="50"
+              width="150"
+              variant="tonal"
+              @click="abortNewCourseClick"
+              >Abbrechen</v-btn
+            >
+            <v-btn
+              name="confirmNewCourse"
+              type="submit"
+              :disabled="isDisabled"
+              height="50"
+              width="150"
+              variant="tonal"
+              @click="confirmNewCourseClick"
+              color="primary"
+              >Bestätigen</v-btn
+            >
+          </v-card-actions>
+        </v-form>
+      </v-card>
+    </v-dialog>
   </v-main>
 </template>
 
@@ -95,6 +128,12 @@ import PInput from "@/components/base/PInput.vue";
 export default defineComponent({
   name: "ViewCoursesPage",
   components: { PInput, PDialog, SideMenu, NavigationBar },
+
+  computed:{
+    isDisabled(){
+      return !(this.courseName);
+    }
+  },
 
   setup() {
     const router = useRouter();

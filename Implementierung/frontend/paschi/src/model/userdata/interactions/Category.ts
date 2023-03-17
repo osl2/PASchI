@@ -33,7 +33,4 @@ export class Category extends DataObject {
     this._name = value;
     this.update();
   }
-
-  set setQuality(quality: Quality) {
-  }
 }

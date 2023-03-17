@@ -11,11 +11,11 @@ export class User extends DataObject {
 
   private _firstName: string;
   private _lastName: string;
-  private _email: string;
+  private readonly _email: string;
   private _password: string;
   private _auth: boolean;
-  private _role: Role;
-  private _token: string | undefined;
+  private readonly _role: Role;
+  private _token: string;
 
   /**
    * Konstruktor
@@ -30,7 +30,7 @@ export class User extends DataObject {
    * @param token Token zur Authentifikation
    */
   constructor(id: string | undefined, firstName: string, lastName: string, email: string, password: string,
-              auth: boolean, role: Role, token: string | undefined) {
+              auth: boolean, role: Role, token: string) {
     super(id, 0);
     this._firstName = firstName;
     this._lastName = lastName;
@@ -56,10 +56,30 @@ export class User extends DataObject {
   }
 
   /**
+   * Setzt den Vornamen.
+   *
+   * @param value Vorname
+   */
+  set firstName(value: string) {
+    this._firstName = value;
+    this.update();
+  }
+
+  /**
    * Gibt den Nachnamen zurück.
    */
   get lastName(): string {
     return this._lastName;
+  }
+
+  /**
+   * Setzt den Nachnamen.
+   *
+   * @param value Nachname
+   */
+  set lastName(value: string) {
+    this._lastName = value;
+    this.update();
   }
 
   /**
@@ -84,50 +104,6 @@ export class User extends DataObject {
   }
 
   /**
-   * Gibt die Rolle zurück.
-   */
-  get role(): Role {
-    return this._role;
-  }
-
-  /**
-   * Gibt den Token zurück.
-   */
-  get token(): string | undefined {
-    return this._token;
-  }
-
-  /**
-   * Setzt den Vornamen.
-   *
-   * @param value Vorname
-   */
-  set firstName(value: string) {
-    this._firstName = value;
-    this.update();
-  }
-
-  /**
-   * Setzt den Nachnamen.
-   *
-   * @param value Nachname
-   */
-  set lastName(value: string) {
-    this._lastName = value;
-    this.update();
-  }
-
-  /**
-   * Setzt die E-Mail.
-   *
-   * @param value E-Mail
-   */
-  set email(value: string) {
-    this._email = value;
-    this.update();
-  }
-
-  /**
    * Setzt den Wahrheitswert, ob der Nutzer freigeschalten ist
    *
    * @param value Wahrheitswert, ob der Nutzer freigeschalten ist
@@ -138,13 +114,17 @@ export class User extends DataObject {
   }
 
   /**
-   * Setzt die Rolle.
-   *
-   * @param value Rolle
+   * Gibt die Rolle zurück.
    */
-  set role(value: Role) {
-    this._role = value;
-    this.update();
+  get role(): Role {
+    return this._role;
+  }
+
+  /**
+   * Gibt den Token zurück.
+   */
+  get token(): string {
+    return this._token;
   }
 
   /**
@@ -152,7 +132,7 @@ export class User extends DataObject {
    *
    * @param value Token
    */
-  set token(value: string | undefined) {
+  set token(value: string) {
     this._token = value;
     this.update();
   }

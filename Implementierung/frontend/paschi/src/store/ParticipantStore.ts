@@ -22,16 +22,10 @@ export const useStudentStore = defineStore('students', {
       });
     },
     getStudent(id: string): Student | undefined {
-      let student: Student
-      this.students.forEach((element) => {
-        if (element.getId === id) {
-          // @ts-ignore
-          student = element;
+      for (const student of this.students) {
+        if (student.getId === id) {
+          return <Student>student;
         }
-      });
-      // @ts-ignore
-      if (student !== undefined) {
-        return student
       }
       return undefined;
     },
@@ -43,12 +37,10 @@ export const useStudentStore = defineStore('students', {
       return this.getStudent(id);
     },
     getAllStudents(): Student[] {
-      // @ts-ignore
-      return this.students;
+      return <Student[]>this.students;
     },
     getTeacher(): Teacher | undefined {
-      // @ts-ignore
-      return this.teacher;
+      return <Teacher>this.teacher;
     },
     setTeacher(teacher: Teacher) {
       this.teacher = teacher;

@@ -10,6 +10,10 @@ import {useSeatArrangementStore} from "@/store/SeatArrangementStore";
 import {usePositionStore} from "@/store/PositionStore";
 import {SeatArrangementController} from "@/controller/SeatArrangementController";
 import {RoomService} from "@/service/RoomService";
+import {useSessionStore} from "@/store/SessionStore";
+import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
+import {SessionService} from "@/service/SessionService";
+import {SeatArrangementService} from "@/service/SeatArrangementService";
 
 export class RoomController {
   private static controller: RoomController = new RoomController();
@@ -35,7 +39,7 @@ export class RoomController {
   }
 
   async createInvisibleRoom(name: string): Promise<string> {
-    let room = new Room(
+    const room = new Room(
       undefined,
       useRoomStore().getNextId(),
       UserController.getUserController().getUser(),
@@ -58,10 +62,10 @@ export class RoomController {
     const arrangementController = SeatArrangementController.getSeatArrangementController();
     const room = useRoomStore().getRoom(id);
     if (room) {
-      for (const arrangement of useSeatArrangementStore().getAllSeatArrangements()) {
-        if (arrangement.room.getId === id) {
-          await arrangementController.deleteSeatArrangement(arrangement.getId);
-        }
+      await this.replaceRoom(room);
+      const arrangements = useSeatArrangementStore().getAllSeatArrangements().filter(arr => arr.room.getId === id);
+      for (const arrangement of arrangements) {
+        await arrangementController.deleteSeatArrangement(arrangement.getId);
       }
       await this.roomService.delete(id);
       useRoomStore().deleteRoom(id);
@@ -149,17 +153,99 @@ export class RoomController {
     if (room) {
       const object = room.getRoomObject(objectId);
       if (object) {
-        room.removeRoomObject(objectId);
-        usePositionStore().deletePosition(object.position.getId);
-        for (const arrangement of useSeatArrangementStore().getAllSeatArrangements()) {
-          if (arrangement.room.getId === roomId) {
+        await this.replaceRoom(room);
+        const arrangements = useSeatArrangementStore().getAllSeatArrangements().filter(arr =>
+          arr.room.getId === roomId);
+        for (const arrangement of arrangements) {
+          if (arrangement.seatMap.has(object)) {
             const arrangementController = SeatArrangementController.getSeatArrangementController();
             await arrangementController.deleteMapping(arrangement.getId, object.getId);
           }
+          if (object.isTable()) {
+            await this.replaceRoom(room);
+          }
         }
+        room.removeRoomObject(objectId);
+        usePositionStore().deletePosition(object.position.getId);
         useRoomObjectStore().deleteRoomObject(objectId);
         await this.roomService.update(room);
       }
     }
+  }
+
+  private async replaceRoom(room: Room) {
+    const arrangementController = SeatArrangementController.getSeatArrangementController();
+    let newRoom: Room | undefined;
+    let map: Map<Chair, Chair>;
+    const arrangementMap = new Map<SeatArrangement, SeatArrangement>();
+    const sessions = useSessionStore().getAllSessions().filter(session =>
+      session.seatArrangement.room.getId === room.getId);
+
+    for (const session of sessions) {
+      if (newRoom == undefined) {
+        [newRoom, map] = (await this.copyRoom(room));
+      }
+      const oldArrangement = session.seatArrangement;
+      if (!arrangementMap.has(oldArrangement)) {
+        arrangementMap.set(oldArrangement, new SeatArrangement(
+          undefined,
+          useSeatArrangementStore().getNextId(),
+          oldArrangement.user,
+          oldArrangement.name,
+          oldArrangement.course,
+          newRoom
+        ));
+      }
+      const newArrangement = arrangementMap.get(oldArrangement)!;
+      for (const mapping of map!) {
+        const participant = oldArrangement.seatMap.get(mapping[0]);
+        if (participant) {
+          newArrangement.seatMap.set(mapping[1], participant);
+        }
+      }
+      await SeatArrangementService.getService().add(newArrangement);
+      session.seatArrangement = newArrangement;
+      await SessionService.getService().update(session);
+      if (!oldArrangement.course.hasArrangement(oldArrangement.getId)) {
+        await arrangementController.deleteSeatArrangement(oldArrangement.getId);
+      }
+    }
+  }
+
+  private async copyRoom(room: Room): Promise<[Room, Map<Chair, Chair>]> {
+    const newRoom = new Room(
+      undefined,
+      useRoomStore().getNextId(),
+      room.user,
+      room.name
+    );
+    newRoom.visible = false;
+    await this.roomService.add(newRoom);
+    useRoomStore().addRoom(newRoom);
+
+    const map = new Map<Chair, Chair>();
+    for (const object of room.roomObjects) {
+      let _object: RoomObject;
+      const _position = new Position(undefined, usePositionStore().getNextId(), room.user,
+        object.position.xCoordinate, object.position.yCoordinate, object.position.orientation);
+
+      usePositionStore().addPosition(_position);
+
+      if (object.isTable()) {
+        _object = new Table(undefined, useRoomObjectStore().getNextId(), room.user, _position,
+          object.dimensions.length, object.dimensions.width);
+
+        useRoomObjectStore().addTable(_object);
+        newRoom.addRoomObject(_object);
+      } else {
+        _object = new Chair(undefined, useRoomObjectStore().getNextId(), room.user, _position);
+        useRoomObjectStore().addChair(_object);
+        newRoom.addRoomObject(_object);
+        map.set(object, _object);
+      }
+    }
+    await this.roomService.update(newRoom);
+
+    return [newRoom, map];
   }
 }

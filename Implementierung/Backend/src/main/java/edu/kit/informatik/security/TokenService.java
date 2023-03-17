@@ -43,7 +43,7 @@ public class TokenService {
     public String generateToken(Authentication authentication, User user) {
 
         Instant now = Instant.now();
-        String scope = authentication.getAuthorities().stream()
+        String scope = user.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
         JwtClaimsSet claims = JwtClaimsSet.builder()

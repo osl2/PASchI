@@ -63,17 +63,24 @@
                   <v-spacer />
                 </v-row>
               </v-card-title>
-              <v-card-item v-if="stats !== undefined && stats[0].length !== 0">
-                <v-list>
-                  <v-list-item v-for="studentId in top5InteractionArray">
-                    <v-list-item-title>
-                      {{
-                        studentController.getStudent(studentId[0])?.firstName +
-                        " " +
-                        studentController.getStudent(studentId[0])?.lastName
-                      }}: {{ studentId[1] }} Interaktionen
-                    </v-list-item-title>
-                  </v-list-item>
+              <v-card-item v-if="stats !== undefined && stats[4].length !== 0">
+                <v-list max-height="500">
+                  <v-row class="ma-2" v-for="studentId in top5InteractionArray"
+                  >{{
+                      studentController.getStudent(studentId[0])?.firstName +
+                      " " +
+                      studentController.getStudent(studentId[0])?.lastName +
+                      ": " + studentId[1]}}
+                    <v-spacer />
+                    <v-btn
+                      class="ml-2"
+                      variant="tonal"
+                      color="primary"
+                      @click="showStatisticsClick(studentId[0])"
+                    >
+                      <v-icon> fas fa-chart-line </v-icon>
+                    </v-btn>
+                  </v-row>
                 </v-list>
               </v-card-item>
               <v-card-item v-else> Keine Daten verfügbar. </v-card-item>
@@ -88,16 +95,23 @@
                 </v-row>
               </v-card-title>
               <v-card-item v-if="stats !== undefined && stats[4].length !== 0">
-                <v-list>
-                  <v-list-item v-for="studentId in top5DisturberArray">
-                    <v-list-item-title>
-                      {{
-                        studentController.getStudent(studentId[0])?.firstName +
-                        " " +
-                        studentController.getStudent(studentId[0])?.lastName
-                      }}: {{ studentId[1] }} Störungen
-                    </v-list-item-title>
-                  </v-list-item>
+                <v-list max-height="500">
+                  <v-row class="ma-2" v-for="studentId in top5DisturberArray"
+                  >{{
+                      studentController.getStudent(studentId[0])?.firstName +
+                      " " +
+                      studentController.getStudent(studentId[0])?.lastName +
+                        ": " + studentId[1]}}
+                    <v-spacer />
+                    <v-btn
+                      class="ml-2"
+                      variant="tonal"
+                      color="primary"
+                      @click="showStatisticsClick(studentId[0])"
+                    >
+                      <v-icon> fas fa-chart-line </v-icon>
+                    </v-btn>
+                  </v-row>
                 </v-list>
               </v-card-item>
               <v-card-item v-else> Keine Daten verfügbar. </v-card-item>
@@ -117,6 +131,7 @@ import Chart from "chart.js/auto";
 import { StatsController } from "@/controller/StatsController";
 import { StudentController } from "@/controller/StudentController";
 import { CourseController } from "@/controller/CourseController";
+import router from "@/plugins/router";
 
 export default defineComponent({
   name: "CourseStatisticPage",
@@ -172,6 +187,14 @@ export default defineComponent({
       downloadElementInvolvementChart.click();
       downloadElementCategoryChart.click();
     }
+
+    function showStatisticsClick(studentId: number) {
+      router.push({
+        name: "StudentStatisticPage",
+        params: { studentId: studentId },
+      });
+    }
+
     onMounted(() => {
       if (document.getElementById("categoryChart") == null) {
         return;
@@ -182,8 +205,6 @@ export default defineComponent({
       const involvementChartId = document.getElementById(
         "involvementChart"
       ) as HTMLCanvasElement;
-      // const top5InteractionChartId = document.getElementById('top5InteractionChart') as HTMLCanvasElement;
-      // const top5DisturberChartId = document.getElementById('top5DisturberChart') as HTMLCanvasElement;
 
       if (stats == undefined) {
         console.log("stats could not be loaded");
@@ -192,27 +213,24 @@ export default defineComponent({
 
       const involvementChartData = {
         labels:
-          //['5.12 dummy', '6.12 dummy', '9.12 dummy', '10.12 dummy', '11.12 dummy'],
           involvementKeys,
         datasets: [
           {
-            label: "Anzahl",
+            label: "Beteiligung in %",
             data:
-              //[5,3,2,1,4],
               involvementValues,
+            fill: false,
           },
         ],
       };
 
       const categoryChartData = {
         labels:
-          // ['Störungsdummy', 'Antwortdummy', 'Fragendummy'],
           categoryKeys,
         datasets: [
           {
             label: "Anzahl",
             data:
-              //[5,3,2],
               categoryValues,
           },
         ],
@@ -223,7 +241,6 @@ export default defineComponent({
         data: involvementChartData,
         options: {
           responsive: true,
-          maintainAspectRatio: false,
           plugins: {
             legend: {
               display: true,
@@ -231,6 +248,12 @@ export default defineComponent({
                 color: "rgb(0,0,0)",
               },
             },
+          },
+          scales: {
+            y: {
+              suggestedMin: 0,
+              suggestedMax: 100
+            }
           },
           animation: {
             onComplete: buildInvolvementChart,
@@ -255,6 +278,7 @@ export default defineComponent({
           animation: {
             onComplete: buildCategoryChart,
           },
+
         },
       });
 
@@ -281,6 +305,7 @@ export default defineComponent({
       top5DisturberArray,
       categoryKeys,
       involvementKeys,
+      showStatisticsClick,
     };
   },
 });

@@ -2,19 +2,11 @@ package edu.kit.informatik.unittests.controller;
 
 
 import com.github.javafaker.Faker;
-import edu.kit.informatik.dto.RoleDto;
 import edu.kit.informatik.dto.UserDto;
-import edu.kit.informatik.dto.mapper.UserMapper;
-import edu.kit.informatik.dto.mapper.courses.CourseMapper;
-import edu.kit.informatik.dto.mapper.interactions.ParticipantMapper;
 import edu.kit.informatik.dto.userdata.courses.CourseDto;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
-import edu.kit.informatik.dto.userdata.interactions.ParticipantTypeDto;
-import edu.kit.informatik.model.User;
-import edu.kit.informatik.model.userdata.interactions.Participant;
-import edu.kit.informatik.repositories.CourseRepository;
-import edu.kit.informatik.repositories.ParticipantRepository;
-import edu.kit.informatik.repositories.UserRepository;
+import edu.kit.informatik.unittests.DatabaseManipulator;
+import edu.kit.informatik.unittests.EntityGenerator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,9 +16,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -41,40 +30,28 @@ public class CourseControllerTest extends AbstractTest {
 
     private static final String BASE_URL = "/api/course";
 
-
     @Autowired
-    private CourseRepository courseRepository;
-
-    @Autowired
-    private CourseMapper courseMapper;
-
-    @Autowired
-    private ParticipantMapper participantMapper;
-
-    @Autowired
-    private ParticipantRepository participantRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private UserMapper userMapper;
+    DatabaseManipulator databaseManipulator;
 
     private List<CourseDto> courses;
 
+    private UserDto userDto;
+
     @Before
     @Override
-    public void setUp() {
+    public void setUp() throws Exception {
         super.setUp();
+        userDto = super.addAndLogin(EntityGenerator.createNewUser(new Faker(new Locale("de"))));
         this.courses = addSomeCourses();
     }
 
     @After
     @Override
     public void setDown() {
-        this.courseRepository.deleteAll();
-        this.participantRepository.deleteAll();
-        this.userRepository.deleteAll();
+        databaseManipulator.clearCourseRepository();
+        databaseManipulator.clearParticipantRepository();
+        databaseManipulator.clearUserRepository();
+        this.courses.clear();
     }
 
     private List<CourseDto> addSomeCourses() {
@@ -83,36 +60,17 @@ public class CourseControllerTest extends AbstractTest {
         Faker faker = new Faker(new Locale("de"));
 
         for (int i = 0; i < 10; i++) {
-            courseDtos.add(getNewCourse(faker));
+            courseDtos.add(EntityGenerator.createNewCourse(faker, userDto));
         }
 
         return courseDtos;
 
     }
 
-    private void deleteFromDataBase() {
-
-        for (CourseDto courseDto: courses) {
-            if (courseDto.getId() != null) {
-                this.courseRepository.deleteById(courseDto.getId());
-            }
-        }
-
-        courses.clear();
-    }
-
-    private void addCourseToDatabase() {
+    private void addCoursesToDatabase() {
         List<CourseDto> repositoryCourse = new ArrayList<>();
         for (CourseDto courseDto: this.courses) {
-            repositoryCourse.add(courseMapper.modelToDto(this.courseRepository.save(courseMapper.dtoToModel(courseDto))));
-        }
-
-        assertEquals(courses.size(), repositoryCourse.size());
-        for (int i= 0; i< courses.size(); i++) {
-            assertEquals(courses.get(i).getUserId(), repositoryCourse.get(i).getUserId());
-            assertEquals(courses.get(i).getName(), repositoryCourse.get(i).getName());
-            assertEquals(courses.get(i).getSubject(), repositoryCourse.get(i).getSubject());
-            assertNotNull(repositoryCourse.get(i).getId());
+            repositoryCourse.add(databaseManipulator.addCourse(courseDto));
         }
 
         this.courses = repositoryCourse;
@@ -122,7 +80,8 @@ public class CourseControllerTest extends AbstractTest {
     public void addCourses() throws Exception{
         for (CourseDto courseDto: courses) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
-                            .content(super.mapToJson(courseDto))
+                    .content(super.mapToJson(courseDto))
+                    .header("Authorization", "Bearer " + userDto.getToken())
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -136,16 +95,16 @@ public class CourseControllerTest extends AbstractTest {
             assertNotNull(courseDtoFromContent.getId());
             courses.set(courses.indexOf(courseDto), courseDtoFromContent);
         }
-        deleteFromDataBase();
     }
 
 
     @Test
     public void getOneCourse() throws Exception {
-        addCourseToDatabase();
+        addCoursesToDatabase();
 
         for (CourseDto courseDto: courses) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + courseDto.getId())
+                    .header("Authorization", "Bearer " + userDto.getToken())
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
@@ -157,15 +116,14 @@ public class CourseControllerTest extends AbstractTest {
 
             assertEquals(courseDto, courseDtoFromDatabase);
         }
-
-        deleteFromDataBase();
     }
 
     @Test
     public void getAllCourse() throws Exception {
-        addCourseToDatabase();
+        addCoursesToDatabase();
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL)
+                .header("Authorization", "Bearer " + userDto.getToken())
         ).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
@@ -181,23 +139,60 @@ public class CourseControllerTest extends AbstractTest {
         for (int i= 0; i < courses.size(); i++) {
             assertEquals(courses.get(i), courseDtos.get(i));
         }
-
-        deleteFromDataBase();
     }
 
     @Test
-    public void deleteCourses() throws Exception {
-        List<CourseDto> before = getCoursesFromDataBase();
-        addCourseToDatabase();
+    public void updateCourse() throws Exception {
+        addCoursesToDatabase();
+
+        List<CourseDto> courseDtos = addSomeCourses();
+
+        for (int i = 0; i < courses.size(); i++) {
+            courses.get(i).setName(courseDtos.get(i).getName());
+            courses.get(i).setSubject(courseDtos.get(i).getSubject());
+            //courses.get(i).setName(courseDtos.get(i).getName());
+            //courses.get(i).setName(courseDtos.get(i).getName());
+        }
 
         for (CourseDto courseDto: courses) {
-            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL).content(courseDto.getId()).param("id", courseDto.getId())
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                    .content(super.mapToJson(courseDto))
+                    .header("Authorization", "Bearer " + userDto.getToken())
             ).andReturn();
 
             int status = mvcResult.getResponse().getStatus();
             assertEquals(200, status);
         }
-        List<CourseDto> after = getCoursesFromDataBase();
+
+        List<CourseDto> courseDtosFromDB = databaseManipulator.getCourses();
+
+        courseDtosFromDB.sort(Comparator.naturalOrder());
+        courses.sort(Comparator.naturalOrder());
+
+        assertEquals(courseDtosFromDB.size(), courses.size());
+
+        for (int i = 0; i < courses.size(); i++) {
+            assertEquals(courseDtosFromDB.get(i).getName(), courses.get(i).getName());
+            assertEquals(courseDtosFromDB.get(i).getCreatedAt(), courses.get(i).getCreatedAt());
+            assertEquals(courseDtosFromDB.get(i).getSubject(), courses.get(i).getSubject());
+        }
+    }
+
+    @Test
+    public void deleteCourses() throws Exception {
+        List<CourseDto> before = databaseManipulator.getCourses();
+        addCoursesToDatabase();
+
+        for (CourseDto courseDto: courses) {
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL)
+                    .param("id", courseDto.getId())
+                    .header("Authorization", "Bearer " + userDto.getToken())
+            ).andReturn();
+
+            int status = mvcResult.getResponse().getStatus();
+            assertEquals(200, status);
+        }
+        List<CourseDto> after = databaseManipulator.getCourses();
 
         assertEquals(before.size(), after.size());
 
@@ -207,66 +202,56 @@ public class CourseControllerTest extends AbstractTest {
 
     }
 
-    private List<CourseDto> getCoursesFromDataBase() {
-        return courseMapper.modelToDto(this.courseRepository.findAll());
+    @Test
+    public void getNonExistingCourse() throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + courses.get(0).getId())
+                .header("Authorization", "Bearer " + userDto.getToken())
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getErrorMessage();
+
+        assertEquals(404, status);
+        assertEquals("Entity of class 'Course' with id: '" + courses.get(0).getId() +"' not found", content);
     }
 
+    @Test
+    public void updateNonExistingCourse() throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                .content(super.mapToJson(courses.get(0)))
+                .header("Authorization", "Bearer " + userDto.getToken())
+        ).andReturn();
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getErrorMessage();
 
-    private CourseDto getNewCourse(Faker faker) {
+        assertEquals(404, status);
+        assertEquals("Entity of class 'Course' with id: '" + courses.get(0).getId() +"' not found", content);
+    }
 
-        CourseDto courseDto = new CourseDto();
+    @Test
+    public void deleteNonExistingCourse() throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL)
+                .param("id", "0")
+                .header("Authorization", "Bearer " + userDto.getToken())
+        ).andReturn();
 
-        String name = faker.team().name();
 
-        courseDto.setName(name + " " + faker.number().randomDigit());
-        courseDto.setSubject(name);
-        User user = this.userRepository.save(userMapper.dtoToModel(getNewUser(faker)));
-        courseDto.setUserId(user.getId());
-        courseDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getErrorMessage();
 
+        assertEquals(404, status);
+        assertEquals("Entity of class 'Course' with id: '0' not found", content);
+    }
+
+    private void addParticipants(CourseDto courseDto, List<ParticipantDto> participantDtos) {
         List<String> participantIds = new ArrayList<>();
 
 
-        for (int i = 0; i < 10; i++) {
-            Participant participant = participantRepository.save(participantMapper.dtoToModel(
-                                                                    getNewParticipant(faker, user.getId())));
-
-            participantIds.add(participant.getId());
+        for (ParticipantDto participantDto : participantDtos) {
+            participantIds.add(participantDto.getId());
         }
 
         courseDto.setParticipantIds(participantIds);
-
-        return courseDto;
     }
 
-    private ParticipantDto getNewParticipant(Faker faker, String userId) {
-        ParticipantDto participantDto = new ParticipantDto();
-
-        participantDto.setParticipantType(ParticipantTypeDto.Student);
-
-        participantDto.setUserId(userId);
-        participantDto.setFirstName(faker.name().firstName());
-        participantDto.setLastName(faker.name().lastName());
-        participantDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
-        participantDto.setVisible(true);
-
-        return participantDto;
-    }
-
-    private UserDto getNewUser(Faker faker) {
-        UserDto userDto = new UserDto();
-        userDto.setRole(RoleDto.USER);
-
-        String firstName = faker.name().firstName();
-        String lastName = faker.name().lastName();
-
-        userDto.setEmail(firstName + "." + lastName +  "@kit.edu");
-        userDto.setFirstName(firstName);
-        userDto.setLastName(lastName);
-        userDto.setPassword(faker.crypto().md5());
-        userDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
-
-
-        return userDto;
-    }
 }

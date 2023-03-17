@@ -3,6 +3,7 @@
     <v-app-bar-title> Schüler ansehen </v-app-bar-title>
     <template v-slot:append>
       <v-btn
+        name="createStudent"
         variant="flat"
         color="green"
         rounded
@@ -58,27 +59,61 @@
         </v-card-item>
       </v-card>
     </v-container>
-    <PDialog
-      v-model="enterStudentNameDialog"
-      title="Neuen Schüler erstellen"
-      :buttons="[
-        { name: 'Abbrechen', click: abortNewStudentClick },
-        {
-          name: 'Bestätigen',
-          click: confirmNewStudentClick,
-          color: 'primary',
-          submit: true,
-        },
-      ]"
-    >
-      <PInput
-        v-model="studentFirstName"
-        label="Vorname"
-        type="input"
-        autofocus
-      ></PInput>
-      <PInput v-model="studentLastName" label="Nachname"></PInput>
-    </PDialog>
+    <v-dialog max-width="700" v-model="enterStudentNameDialog">
+      <v-card variant="flat" class="pa-2 rounded-lg">
+        <v-card-title
+          class="text-h5 text-center text-indigo-darken-4 text-wrap"
+        >
+          Neuen Schüler erstellen
+        </v-card-title>
+        <v-form validate-on="submit" @submit.prevent>
+          <v-card-item>
+            <v-text-field
+              name="firstName"
+              v-model="studentFirstName"
+              hint="Dieses Feld darf nicht leer sein"
+              variant="outlined"
+              rules=""
+              class="mt-2"
+              label="Vorname"
+              type="input"
+              autofocus
+              required
+            ></v-text-field>
+            <v-text-field
+              name="lastName"
+              v-model="studentLastName"
+              hint="Dieses Feld ist optional"
+              variant="outlined"
+              class="mt-1"
+              label="Nachname"
+              type="input"
+            ></v-text-field>
+          </v-card-item>
+          <v-card-actions class="row justify-center">
+            <v-btn
+              name="cancelNewStudent"
+              height="50"
+              width="150"
+              @click="abortNewStudentClick"
+              variant="tonal"
+              >Abbrechen</v-btn
+            >
+            <v-btn
+              name="confirmNewStudent"
+              type="submit"
+              :disabled="isDisabled"
+              height="50"
+              width="150"
+              @click="confirmNewStudentClick"
+              variant="tonal"
+              color="primary"
+              >Bestätigen</v-btn
+            >
+          </v-card-actions>
+        </v-form>
+      </v-card>
+    </v-dialog>
   </v-main>
 </template>
 
@@ -95,6 +130,13 @@ import PInput from "@/components/base/PInput.vue";
 export default defineComponent({
   name: "ViewStudentsPage",
   components: { PInput, PDialog, SideMenu, NavigationBar },
+
+  computed:{
+    isDisabled(){
+      return !(this.studentFirstName)
+    }
+  },
+
 
   setup() {
     const router = useRouter();

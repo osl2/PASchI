@@ -3,7 +3,9 @@ package edu.kit.informatik.service;
 import edu.kit.informatik.dto.mapper.courses.SeatArrangementMapper;
 import edu.kit.informatik.dto.userdata.courses.SeatArrangementDto;
 import edu.kit.informatik.exceptions.EntityNotFoundException;
+import edu.kit.informatik.model.userdata.courses.Course;
 import edu.kit.informatik.model.userdata.courses.SeatArrangement;
+import edu.kit.informatik.repositories.CourseRepository;
 import edu.kit.informatik.repositories.SeatArrangementRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.Authentication;
@@ -26,16 +28,20 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
     private static final String ID_ATTRIBUTE = "userId";
 
     private final SeatArrangementRepository seatArrangementRepository;
+    private final CourseRepository courseRepository;
 
     /**
      * Konstruktor zum Erstellen eines Objektes der Klasse
+     *
      * @param seatArrangementRepository {@link SeatArrangementRepository}
-     * @param seatArrangementMapper {@link SeatArrangementMapper}
+     * @param seatArrangementMapper     {@link SeatArrangementMapper}
+     * @param courseRepository          {@link CourseRepository}
      */
     public SeatArrangementService(SeatArrangementRepository seatArrangementRepository,
-                                  SeatArrangementMapper seatArrangementMapper) {
+                                  SeatArrangementMapper seatArrangementMapper, CourseRepository courseRepository) {
         super(seatArrangementMapper);
         this.seatArrangementRepository = seatArrangementRepository;
+        this.courseRepository = courseRepository;
     }
 
     @Override
@@ -54,14 +60,16 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
                                                                 .findSeatArrangementById(seatArrangementDto.getId());
         
         SeatArrangement repositorySeatArrangement = repositorySeatArrangementOptional.orElseThrow(
-                        () -> new EntityNotFoundException(SeatArrangementService.class, seatArrangementDto.getId()));
+                        () -> new EntityNotFoundException(SeatArrangement.class, seatArrangementDto.getId()));
         SeatArrangement newSeatArrangement = this.mapper.dtoToModel(seatArrangementDto);
 
         if (!newSeatArrangement.getName().equals(repositorySeatArrangement.getName())) {
-            repositorySeatArrangement.setName(repositorySeatArrangement.getName());
+            repositorySeatArrangement.setName(newSeatArrangement.getName());
+            repositorySeatArrangement.setUpdatedAt(newSeatArrangement.getUpdatedAt());
         }
         if (!newSeatArrangement.getSeatMap().equals(repositorySeatArrangement.getSeatMap())) {
             repositorySeatArrangement.setSeatMap(newSeatArrangement.getSeatMap());
+            repositorySeatArrangement.setUpdatedAt(newSeatArrangement.getUpdatedAt());
         }
         
         return mapper.modelToDto(repositorySeatArrangement);
@@ -70,9 +78,12 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
     @Override
     public SeatArrangementDto getById(String id, Authentication authentication) {
         Optional<SeatArrangement> seatArrangementOptional = this.seatArrangementRepository.findSeatArrangementById(id);
-        
-        return seatArrangementOptional.map(this.mapper::modelToDto).orElseThrow(() ->
-                                                                new EntityNotFoundException(SeatArrangement.class, id));
+        SeatArrangement seatArrangement = seatArrangementOptional.orElseThrow(() ->
+                                                        new EntityNotFoundException(SeatArrangement.class, id));
+        super.checkAuthorization(authentication, seatArrangement.getUser().getId());
+
+
+        return this.mapper.modelToDto(seatArrangement);
     }
 
     @Override
@@ -86,10 +97,21 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
     @Override
     public String delete(String id, Authentication authentication) {
         Optional<SeatArrangement> seatArrangementOptional = this.seatArrangementRepository.findSeatArrangementById(id);
+        SeatArrangement seatArrangement = seatArrangementOptional.orElseThrow(() ->
+                                                            new EntityNotFoundException(SeatArrangement.class, id));
+        super.checkAuthorization(authentication, seatArrangement.getUser().getId());
 
-        seatArrangementOptional.orElseThrow(() -> new EntityNotFoundException(SeatArrangement.class, id));
-        this.seatArrangementRepository.deleteById(id);
-        
-        return id;
+        return delete(seatArrangement);
+    }
+
+    protected String delete(SeatArrangement seatArrangement) {
+        Course course = courseRepository.findCourseBySeatArrangements(seatArrangement);
+        if (course != null) {
+            course.getSeatArrangements().remove(seatArrangement);
+        }
+
+        this.seatArrangementRepository.deleteById(seatArrangement.getId());
+
+        return seatArrangement.getId();
     }
 }

@@ -69,16 +69,12 @@ export class RoomService extends BaseService<Room, RoomDto> {
         console.log(error);
       });
 
-    if (room != undefined) {
-      return room;
-    } else {
-      return undefined;
-    }
+    return room;
   }
 
   async getAll(): Promise<Room[]> {
     const token = useUserStore().getUser()?.token;
-    let rooms: Room[] = [];
+    const rooms: Room[] = [];
     await axios
       .get(ROOM_BASE_URL, {
         headers: {

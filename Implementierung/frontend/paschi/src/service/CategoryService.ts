@@ -66,16 +66,12 @@ export class CategoryService extends BaseService<Category, CategoryDto> {
         console.log(error);
       });
 
-    if (category != undefined) {
-      return category;
-    } else {
-      return undefined;
-    }
+    return category;
   }
 
   async getAll(): Promise<Category[]> {
     const token = useUserStore().getUser()?.token;
-    let categories: Category[] = [];
+    const categories: Category[] = [];
     await axios
       .get(CATEGORY_BASE_URL, {
         headers: {

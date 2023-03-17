@@ -1,6 +1,7 @@
 package edu.kit.informatik.repositories;
 
 import edu.kit.informatik.model.User;
+import edu.kit.informatik.model.userdata.courses.Course;
 import edu.kit.informatik.model.userdata.interactions.Participant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -25,9 +26,16 @@ public interface ParticipantRepository extends JpaRepository<Participant, String
     Optional<Participant> findParticipantById(String id);
 
     /**
-     * Rückgabe eines {@link Optional} von {@link  Participant}
+     * Rückgabe einer {@link List} von {@link  Participant}
      * @param userId Id eines {@link User}
-     * @return {@link Optional} von {@link Participant}
+     * @return {@link List} von {@link Participant}
      */
     List<Participant> findParticipantsByUserId(String userId);
+
+    /**
+     * Rückgabe einer {@link List} von {@link  Participant}
+     * @param course {@link Course}
+     * @return {@link List} von {@link  Participant}
+     */
+    List<Participant> findParticipantsByCourses(Course course);
 }

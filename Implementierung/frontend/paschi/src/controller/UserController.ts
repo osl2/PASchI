@@ -3,7 +3,7 @@ import {useUserStore} from "@/store/UserStore";
 import {Role} from "@/model/Role";
 import {UserService} from "@/service/UserService";
 import {CategoryController} from "@/controller/CategoryController";
-import {useStudentStore} from "@/store/StudentStore";
+import {useStudentStore} from "@/store/ParticipantStore";
 import {useCourseStore} from "@/store/CourseStore";
 import {useSessionStore} from "@/store/SessionStore";
 import {useCategoryStore} from "@/store/CategoryStore";
@@ -17,6 +17,11 @@ import {Teacher} from "@/model/userdata/interactions/Teacher";
 import {CourseService} from "@/service/CourseService";
 import {RoomService} from "@/service/RoomService";
 import {SessionService} from "@/service/SessionService";
+
+export const LOGIN_SUCCESS = "Login succesful";
+export const REGISTER_SUCCES = "Register successful";
+export const NO_TOKEN_ERROR = "No token found";
+export const PASSWORD_ERROR = "Passwörter stimmen nicht überein";
 
 /**
  * Steuert den Kontrollfluss für die Benutzerverwaltung.
@@ -39,33 +44,39 @@ export class UserController {
    * @param email E-Mail
    * @param password Passwort
    */
-  async login(email: string, password: string): Promise<string | undefined> {
-    const user = await this.userService.login(email, password);
-
-    if (user == undefined) {
-      return undefined;
+  async login(email: string, password: string): Promise<string> {
+    let user: User;
+    try {
+      user = await this.userService.login(email, password);
+    } catch (message) {
+      return <string>message;
     }
 
     useUserStore().setUser(user);
     await this.getData();
-    await CategoryController.getCategoryController().getAllCategories();
-    return user.getId;
+    return LOGIN_SUCCESS;
   }
 
   /**
    * Einloggen mit gültigem Token.
    */
-  async loginWithToken(): Promise<string | undefined> {
-    const user = await this.userService.getToken();
-
-    if (user == undefined) {
-      return undefined;
+  async loginWithToken(token: string | null): Promise<string> {
+    if (token == null) {
+      token = localStorage.getItem("token");
+    }
+    if (token == null) {
+      return NO_TOKEN_ERROR;
+    }
+    let user: User;
+    try {
+      user = await this.userService.getToken(token);
+    } catch (message) {
+      return <string>message;
     }
 
     useUserStore().setUser(user);
     await this.getData();
-    await CategoryController.getCategoryController().getAllCategories();
-    return user.getId;
+    return LOGIN_SUCCESS;
   }
 
   /**
@@ -85,9 +96,11 @@ export class UserController {
    * @param password Passwort
    * @param repeatPassword Passwort
    */
-  async register(firstName: string, lastName: string, email: string, password: string, repeatPassword: string) {
+  async register(firstName: string, lastName: string, email: string, password: string, repeatPassword: string):
+    Promise<string> {
+
     if (password !== repeatPassword) {
-      return;
+      return PASSWORD_ERROR;
     }
     const user = new User(
       undefined,
@@ -97,10 +110,15 @@ export class UserController {
       password,
       false,
       Role.USER,
-      undefined
+      ""
     );
-    await this.userService.add(user);
+    try {
+      await this.userService.add(user);
+    } catch (message) {
+      return <string>message;
+    }
     user.deletePassword();
+    return REGISTER_SUCCES;
   }
 
   /**
@@ -138,22 +156,12 @@ export class UserController {
     return useUserStore().isLoggedIn();
   }
 
-  /**
-   * Löscht den Benutzeraccount.
-   */
-  async delete() {
-    const user = useUserStore().getUser();
-    if (user) {
-      await this.userService.delete(user.getId);
-      this.clearStores();
-    }
-  }
-
   private async getData() {
     await this.getTeacher();
     await CourseService.getService().getAll();
     await SessionService.getService().getAll();
     await RoomService.getService().getAll();
+    await CategoryController.getCategoryController().fetchCategories();
   }
 
   private clearStores() {

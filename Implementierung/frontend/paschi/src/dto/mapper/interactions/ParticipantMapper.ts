@@ -7,7 +7,7 @@ import {UserController} from "@/controller/UserController";
 import {ParticipantTypeDto} from "@/dto/userdata/interactions/ParticipantTypeDto";
 import {useCourseStore} from "@/store/CourseStore";
 import {useInteractionStore} from "@/store/InteractionStore";
-import {useStudentStore} from "@/store/StudentStore";
+import {useStudentStore} from "@/store/ParticipantStore";
 import {Student} from "@/model/userdata/interactions/Student";
 import {CourseService} from "@/service/CourseService";
 import {Teacher} from "@/model/userdata/interactions/Teacher";
@@ -26,7 +26,7 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
   modelToDto(participant: Participant): ParticipantDto {
     const courseIds: string[] = [];
     const interactionIds: string[] = [];
-    let particpantType = participant.isTeacher() ? ParticipantTypeDto.TEACHER : ParticipantTypeDto.STUDENT;
+    const particpantType = participant.isTeacher() ? ParticipantTypeDto.TEACHER : ParticipantTypeDto.STUDENT;
 
     participant.courses.forEach((course: Course) => {
       courseIds.push(course.getId)
@@ -71,7 +71,7 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
 
       const interactions: Interaction[] = [];
       for (const id of participantDto.interactionIds) {
-        let interaction = useInteractionStore().getInteraction(id);
+        const interaction = useInteractionStore().getInteraction(id);
         if (interaction !== undefined) {
           interactions.push(interaction);
         }
@@ -112,7 +112,7 @@ export class ParticipantMapper implements IModelDtoMapper<Participant, Participa
       }
 
       for (const id of participantDto.interactionIds) {
-        let interaction = useInteractionStore().getInteraction(id);
+        const interaction = useInteractionStore().getInteraction(id);
         if (interaction !== undefined) {
           interactions.push(interaction);
         }

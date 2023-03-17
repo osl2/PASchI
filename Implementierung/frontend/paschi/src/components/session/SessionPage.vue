@@ -192,7 +192,7 @@
           <v-row class="ma-2">
             <v-col><div>Von</div></v-col>
             <v-col><div>Nach</div></v-col>
-            <v-col><div>Katetegorie</div></v-col>
+            <v-col><div>Kategorie</div></v-col>
             <v-col><div>Qualität</div></v-col>
             <v-col><div>Zeit</div></v-col>
           </v-row>
@@ -200,7 +200,7 @@
           <v-row
             class="ma-2"
             :key="interaction.getId"
-            v-for="interaction in studentInteractionsBuffer.reverse()"
+            v-for="interaction in studentInteractionsBuffer"
           >
             <v-col
               ><div>
@@ -254,7 +254,7 @@
           <v-row class="ma-2">
             <v-col><div>Von</div></v-col>
             <v-col><div>Nach</div></v-col>
-            <v-col><div>Katetegorie</div></v-col>
+            <v-col><div>Kategorie</div></v-col>
             <v-col><div>Qualität</div></v-col>
             <v-col><div>Zeit</div></v-col>
           </v-row>
@@ -262,7 +262,7 @@
           <v-row
             class="ma-2"
             key="interaction.getId"
-            v-for="interaction in interactions.reverse()"
+            v-for="interaction in interactions"
           >
             <v-col
               ><div>
@@ -332,7 +332,7 @@ export default defineComponent({
     const categoryController = CategoryController.getCategoryController();
 
     const categories: Ref<Category[]> = ref(
-      categoryController.getCategories()
+      categoryController.getAllCategories()
     ) as Ref<Category[]>;
     const starDialog = ref(false);
     const sessionName = sessionController.getSession(props.sessionId)?.name;
@@ -361,15 +361,7 @@ export default defineComponent({
     const interactionListStudentBuffer: Ref<Participant | undefined> = ref<
       Participant | undefined
     >(undefined) as Ref<Participant | undefined>;
-    const interactions = computed<Interaction[]>(() => {
-      let interactions = sessionController.getInteractionsOfSession(
-        props.sessionId
-      );
-      if (typeof interactions === "undefined") {
-        return [];
-      }
-      return interactions;
-    });
+    const interactions = ref(getAllInteractions());
     const studentInteractionsBuffer = computed<Interaction[]>(() => {
       let interactions = sessionController.getInteractionsOfParticipant(
         props.sessionId, interactionListStudentBuffer.value!.getId
@@ -379,6 +371,16 @@ export default defineComponent({
       }
       return interactions;
     });
+
+    function getAllInteractions() {
+      let interactions = sessionController.getInteractionsOfSession(
+        props.sessionId
+      );
+      if (typeof interactions === "undefined") {
+        return [];
+      }
+      return interactions;
+    }
 
     /**
      * Methode, die die Schüler ausfiltern, deren Name nicht mit der Eingabe im Textfeld übereinstimmt.
@@ -573,7 +575,7 @@ export default defineComponent({
           selectedCategory.value!.getId
         );
       }
-
+      interactions.value = getAllInteractions();
       firstParticipant.value = undefined;
       secondParticipant.value = undefined;
       selectedCategory.value = undefined;

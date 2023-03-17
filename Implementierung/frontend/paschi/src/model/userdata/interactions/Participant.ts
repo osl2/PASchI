@@ -10,7 +10,7 @@ export abstract class Participant extends DataObject {
   private _lastName: string;
   private _courses: Course[];
   private _interactions: Interaction[];
-  private _visible: boolean = true;
+  private _visible = true;
 
   protected constructor(id: string | undefined, localId: number, user: User, firstName: string, lastName: string) {
     super(id, localId);
@@ -40,12 +40,11 @@ export abstract class Participant extends DataObject {
   }
 
   getCourse(courseId: string): Course | undefined {
-    for (let i = 0; i < this._courses.length; i++) {
-      if (this._courses.at(i)?.getId === courseId) {
-        return this._courses.at(i);
+    for (const course of this._courses) {
+      if (course.getId === courseId) {
+        return course;
       }
     }
-
     return undefined;
   }
 
@@ -66,12 +65,11 @@ export abstract class Participant extends DataObject {
   }
 
   getInteraction(interactionId: string): Interaction | undefined {
-    for (let i = 0; i < this._interactions.length; i++) {
-      if (this._interactions.at(i)?.getId === interactionId) {
-        return this._interactions.at(i);
+    for (const interaction of this._interactions) {
+      if (interaction.getId === interactionId) {
+        return interaction;
       }
     }
-
     return undefined;
   }
 
@@ -83,25 +81,13 @@ export abstract class Participant extends DataObject {
     return this._firstName;
   }
 
-  get lastName(): string {
-    return this._lastName;
-  }
-
-  get courses(): Course[] {
-    return this._courses;
-  }
-
-  get interactions(): Interaction[] {
-    return this._interactions;
-  }
-
-  get visible(): boolean {
-    return this._visible;
-  }
-
   set firstName(value: string) {
     this._firstName = value;
     this.update();
+  }
+
+  get lastName(): string {
+    return this._lastName;
   }
 
   set lastName(value: string) {
@@ -109,9 +95,17 @@ export abstract class Participant extends DataObject {
     this.update();
   }
 
+  get courses(): Course[] {
+    return this._courses;
+  }
+
   set courses(value: Course[]) {
     this._courses = value;
     this.update();
+  }
+
+  get interactions(): Interaction[] {
+    return this._interactions;
   }
 
   set interactions(value: Interaction[]) {
@@ -119,7 +113,12 @@ export abstract class Participant extends DataObject {
     this.update();
   }
 
+  get visible(): boolean {
+    return this._visible;
+  }
+
   set visible(value: boolean) {
     this._visible = value;
+    this.update();
   }
 }

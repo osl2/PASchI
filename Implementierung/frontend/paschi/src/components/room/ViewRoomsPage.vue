@@ -3,6 +3,7 @@
     <v-app-bar-title> Räume ansehen </v-app-bar-title>
     <template v-slot:append>
       <v-btn
+        name="createRoom"
         variant="flat"
         color="green"
         rounded
@@ -47,31 +48,48 @@
         </v-card-item>
       </v-card>
     </v-container>
-    <PDialog
-      v-model="enterRoomNameDialog"
-      title="Neuen Raum erstellen"
-      :buttons="[
-        {
-          name: 'Abbrechen',
-          click: abortNewRoomClick,
-        },
-        {
-          name: 'Bestätigen',
-          color: 'primary',
-          click: confirmNewRoomClick,
-          submit: true,
-        },
-      ]"
-    >
-      <PInput
-        class="mt-2"
-        v-model="newRoomName"
-        variant="outlined"
-        label="Raumname"
-        type="input"
-        autofocus
-      ></PInput>
-    </PDialog>
+    <v-dialog max-width="700" v-model="enterRoomNameDialog">
+      <v-card variant="flat" class="pa-2 rounded-lg">
+        <v-card-title class="text-h5 text-center text-indigo-darken-4">
+          Neuen Raum erstellen
+        </v-card-title>
+        <v-form validate-on="submit" @submit.prevent>
+          <v-card-item>
+            <v-text-field
+              name="name"
+              class="mt-2"
+              v-model="newRoomName"
+              hint="Dieses Feld darf nicht leer sein"
+              variant="outlined"
+              label="Raumname"
+              type="input"
+              autofocus
+            ></v-text-field>
+          </v-card-item>
+          <v-card-actions class="row justify-center">
+            <v-btn
+              name="cancelNewRoom"
+              height="50"
+              width="150"
+              variant="tonal"
+              @click="abortNewRoomClick"
+              >Abbrechen</v-btn
+            >
+            <v-btn
+              name="confirmNewRoom"
+              type="submit"
+              :disabled="isDisabled"
+              height="50"
+              width="150"
+              variant="tonal"
+              @click="confirmNewRoomClick"
+              color="primary"
+              >Bestätigen</v-btn
+            >
+          </v-card-actions>
+        </v-form>
+      </v-card>
+    </v-dialog>
   </v-main>
 </template>
 
@@ -86,7 +104,14 @@ import PDialog from "@/components/base/PDialog.vue";
 import PInput from "@/components/base/PInput.vue";
 export default defineComponent({
   name: "ViewRoomsPage",
-  components: { PInput, PDialog, SideMenu, NavigationBar },
+  components: { SideMenu, NavigationBar },
+
+  computed:{
+    isDisabled(){
+      return !(this.newRoomName);
+    }
+  },
+
   setup() {
     const router = useRouter();
 

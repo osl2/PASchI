@@ -19,22 +19,15 @@ export const useCourseStore = defineStore('courses', {
       });
     },
     getCourse(id: string): Course | undefined {
-      let course: Course;
-      this.courses.forEach((element) => {
-        if (element.getId === id) {
-          // @ts-ignore
-          course = element;
+      for (const course of this.courses) {
+        if (course.getId === id) {
+          return <Course>course;
         }
-      });
-      // @ts-ignore
-      if (course !== undefined) {
-        return course;
       }
       return undefined;
     },
     getAllCourses(): Course[] {
-      // @ts-ignore
-      return this.courses;
+      return <Course[]>this.courses;
     },
     getNextId(): number {
       return this.nextId++;

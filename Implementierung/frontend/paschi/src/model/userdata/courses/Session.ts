@@ -44,8 +44,8 @@ export class Session extends DataObject {
   }
 
   undoInteraction(): Interaction | undefined {
-    let interaction = this.interactions.pop();
-    if (interaction !== undefined) {
+    const interaction = this.interactions.pop();
+    if (interaction) {
       this._undoInteractions.push(interaction);
       this.update();
       return interaction;
@@ -55,8 +55,8 @@ export class Session extends DataObject {
   }
 
   redoInteraction(): Interaction | undefined {
-    let interaction = this._undoInteractions.pop();
-    if (interaction !== undefined) {
+    const interaction = this._undoInteractions.pop();
+    if (interaction) {
       this.interactions.push(interaction);
       this.update();
       return interaction;
@@ -73,12 +73,11 @@ export class Session extends DataObject {
   }
 
   getInteraction(interactionId: string): Interaction | undefined {
-    for (let i = 0; i < this._interactions.length; i++) {
-      if (this._interactions.at(i)?.getId === interactionId) {
-        return this._interactions.at(i);
+    for (const interaction of this._interactions) {
+      if (interaction.getId === interactionId) {
+        return interaction;
       }
     }
-
     return undefined;
   }
 
@@ -86,24 +85,12 @@ export class Session extends DataObject {
     return this._user;
   }
 
-  get name(): string {
-    return this._name;
-  }
-
-  get date(): string {
-    return this._date;
-  }
-
-  get interactions(): Interaction[] {
-    return this._interactions;
-  }
-
   get course(): Course {
     return this._course;
   }
 
-  get seatArrangement(): SeatArrangement {
-    return this._seatArrangement;
+  get name(): string {
+    return this._name;
   }
 
   set name(value: string) {
@@ -111,18 +98,30 @@ export class Session extends DataObject {
     this.update();
   }
 
+  get date(): string {
+    return this._date;
+  }
+
   set date(value: string) {
     this._date = value;
     this.update();
   }
 
-  set seatArrangement(value: SeatArrangement) {
-    this._seatArrangement = value;
-    this.update();
+  get interactions(): Interaction[] {
+    return this._interactions;
   }
 
   set interactions(value: Interaction[]) {
     this._interactions = value;
+    this.update();
+  }
+
+  get seatArrangement(): SeatArrangement {
+    return this._seatArrangement;
+  }
+
+  set seatArrangement(value: SeatArrangement) {
+    this._seatArrangement = value;
     this.update();
   }
 }

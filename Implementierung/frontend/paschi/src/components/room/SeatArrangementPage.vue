@@ -28,7 +28,7 @@
             </v-list>
             <v-divider />
             <v-list rounded>
-              <v-list-item @click="setSeat(chair.chair, teacher)" rounded v-if="getParticipant(chair.chair) !== teacher" color="secondary">
+              <v-list-item v-if="!teacherAssigned" @click="setSeat(chair.chair, teacher)" rounded color="secondary">
                 Lehrer
               </v-list-item>
               <v-list-subheader> Schüler auswählen </v-list-subheader>
@@ -77,6 +77,9 @@ export default defineComponent({
       SeatArrangementController.getSeatArrangementController();
 
     const teacher = CourseController.getCourseController().getTeacher();
+    const teacherAssigned = computed(() => {
+      return seatArrangementController.teacherAssigned(props.seatArrangementId)
+    });
 
     const seatArrangement = ref<SeatArrangement | undefined>(
       seatArrangementController.getSeatArrangement(props.seatArrangementId)
@@ -96,7 +99,7 @@ export default defineComponent({
     }
 
     const unseatedParticipants = computed(() => {
-      return seatArrangement.value?.getStudentsNotAssigned();
+      return seatArrangementController.getStudentsNotAssigned(props.seatArrangementId);
     });
 
     onMounted(() => {
@@ -104,7 +107,7 @@ export default defineComponent({
     });
 
 
-    return { teacher, unseatedParticipants, setSeat, emptySeat, seatArrangement, getParticipant };
+    return { teacherAssigned, teacher, unseatedParticipants, setSeat, emptySeat, seatArrangement, getParticipant };
   },
 });
 </script>

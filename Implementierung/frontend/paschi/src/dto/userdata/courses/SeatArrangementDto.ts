@@ -5,12 +5,12 @@ export class SeatArrangementDto {
   createdAt: string;
   updatedAt: string;
   name: string;
-  seatMap: Object;
+  seatMap: object;
   roomId: string;
   courseId: string;
 
   constructor(id: string, userId: string, createdAt: string, updatedAt: string, name: string,
-              seatMap: Object, roomId: string, courseId: string) {
+              seatMap: object, roomId: string, courseId: string) {
     this.id = id;
     this.userId = userId;
     this.createdAt = createdAt;

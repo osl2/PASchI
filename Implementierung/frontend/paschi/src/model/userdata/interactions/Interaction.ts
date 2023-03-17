@@ -40,22 +40,22 @@ export class Interaction extends DataObject {
     return this._fromParticipant;
   }
 
-  get toParticipant(): Participant {
-    return this._toParticipant;
-  }
-
-  get category(): Category {
-    return this._category;
-  }
-
   set fromParticipant(value: Participant) {
     this._fromParticipant = value;
     this.update();
   }
 
+  get toParticipant(): Participant {
+    return this._toParticipant;
+  }
+
   set toParticipant(value: Participant) {
     this._toParticipant = value;
     this.update();
+  }
+
+  get category(): Category {
+    return this._category;
   }
 
   set category(value: Category) {

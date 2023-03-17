@@ -1,5 +1,5 @@
 import {Student} from "@/model/userdata/interactions/Student";
-import {useStudentStore} from "@/store/StudentStore";
+import {useStudentStore} from "@/store/ParticipantStore";
 import {UserController} from "@/controller/UserController";
 import {CourseController} from "@/controller/CourseController";
 import {ParticipantService} from "@/service/ParticipantService";
@@ -49,7 +49,7 @@ export class StudentController {
     if (student) {
       student.firstName = firstName;
       student.lastName = lastName;
-      await this.studentService.update(student).then();
+      await this.studentService.update(student);
     }
   }
 
@@ -61,7 +61,8 @@ export class StudentController {
   async deleteStudent(id: string) {
     const student = useStudentStore().getStudent(id);
     if (student) {
-      for (const course of student.courses) {
+      const courses = Array.from(student.courses);
+      for (const course of courses) {
         await CourseController.getCourseController().removeStudentFromCourse(course.getId, id);
       }
       await this.studentService.delete(id);

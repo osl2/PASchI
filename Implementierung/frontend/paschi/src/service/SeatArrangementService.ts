@@ -66,16 +66,12 @@ export class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
         console.log(error);
       });
 
-    if (arrangement != undefined) {
-      return arrangement;
-    } else {
-      return undefined;
-    }
+    return arrangement;
   }
 
   async getAll(): Promise<SeatArrangement[]> {
     const token = useUserStore().getUser()?.token;
-    let arrangements: SeatArrangement[] = [];
+    const arrangements: SeatArrangement[] = [];
     await axios
       .get(SEAT_ARRANGEMENT_BASE_URL, {
         headers: {

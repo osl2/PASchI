@@ -19,22 +19,15 @@ export const useRoomStore = defineStore('rooms', {
       });
     },
     getRoom(id: string): Room | undefined {
-      let room: Room;
-      this.rooms.forEach((element) => {
-        if (element.getId === id) {
-          // @ts-ignore
-          room = element;
+      for (const room of this.rooms) {
+        if (room.getId === id) {
+          return <Room>room;
         }
-      });
-      // @ts-ignore
-      if (room !== undefined) {
-        return room;
       }
       return undefined;
     },
     getAllRooms(): Room[] {
-      // @ts-ignore
-      return this.rooms;
+      return <Room[]> this.rooms;
     },
     getNextId(): number {
       return this.nextId++;

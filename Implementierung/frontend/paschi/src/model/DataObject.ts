@@ -51,6 +51,14 @@ export abstract class DataObject {
    */
   set setId(id: string) {
     this._id = id;
+    this.update();
+  }
+
+  /**
+   * Gibt den createdAt Timestamp zurück.
+   */
+  get createdAt(): string {
+    return this._createdAt;
   }
 
   /**
@@ -63,25 +71,18 @@ export abstract class DataObject {
   }
 
   /**
+   * Gibt den updatedAtTimestamp zurück.
+   */
+  get updatedAt(): string {
+    return this._updatedAt;
+  }
+
+  /**
    * Setzt den updatedAt Timestamp.
    *
    * @param value Der updatedAt Timestamp.
    */
   set updatedAt(value: string) {
     this._updatedAt = value;
-  }
-
-  /**
-   * Gibt den createdAt Timestamp zurück.
-   */
-  get createdAt(): string {
-    return this._createdAt;
-  }
-
-  /**
-   * Gibt den updatedAtTimestamp zurück.
-   */
-  get updatedAt(): string {
-    return this._updatedAt;
   }
 }

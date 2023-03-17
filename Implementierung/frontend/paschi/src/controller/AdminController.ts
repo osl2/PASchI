@@ -1,5 +1,5 @@
-import { User } from "@/model/User";
-import { UserService } from "@/service/UserService";
+import {User} from "@/model/User";
+import {UserService} from "@/service/UserService";
 
 /**
  * Steuert den Kontrollfluss des Administrators
@@ -8,7 +8,8 @@ export class AdminController {
   private static controller: AdminController = new AdminController();
   private userService = UserService.getService();
 
-  private constructor() {}
+  private constructor() {
+  }
 
   static getAdminController(): AdminController {
     return this.controller;
@@ -36,13 +37,10 @@ export class AdminController {
    * @param userId ID des Benutzers
    */
   async authUser(userId: string) {
-    const users = await this.getUsersNotAuthenticated();
-    for (const user of users) {
-      if (user.getId === userId) {
-        user.auth = true;
-        await this.userService.adminUpdate(user);
-        return;
-      }
+    const user = (await this.getUsersNotAuthenticated()).find(user => user.getId === userId);
+    if (user) {
+      user.auth = true;
+      await this.userService.adminUpdate(user);
     }
   }
 

@@ -3,6 +3,7 @@ import {SessionController} from "@/controller/SessionController";
 import {CourseController} from "@/controller/CourseController";
 import {Session} from "@/model/userdata/courses/Session";
 import {Quality} from "@/model/userdata/interactions/Quality";
+import {useStudentStore} from "@/store/ParticipantStore";
 
 const CATEGORY_NAME = "störung";
 
@@ -30,13 +31,11 @@ export class StatsController {
     }
 
     const categories: Map<string, number> = new Map<string, number>();
-    let avgQuality: number;
     let numInteractions = 0;
-    let numCategories = 0;
     let qualitySum = 0;
 
     const interactions = student.interactions.filter(interaction =>
-      (interaction.fromParticipant.getId === studentId || interaction.category.name.toLowerCase() === CATEGORY_NAME));
+      (interaction.category.name.toLowerCase() === CATEGORY_NAME) || interaction.fromParticipant.getId === studentId);
 
     for (const interaction of interactions) {
       // Anzahl und absolute Häufigkeit der Kategorien zählen.
@@ -47,7 +46,6 @@ export class StatsController {
       } else {
         categories.set(category.name, 1);
       }
-      ++numCategories;
 
       // Summe der Qualitäten aller Interaktionen.
       const quality = interaction.category.getQuality();
@@ -57,7 +55,7 @@ export class StatsController {
       }
     }
 
-    avgQuality = +(qualitySum / numInteractions).toFixed(1);
+    const avgQuality = +(qualitySum / numInteractions).toFixed(1);
 
     const statsArray = [];
     statsArray.push(categories);
@@ -77,7 +75,7 @@ export class StatsController {
    7. Map(datum, Beteiligunsquote)
    ]
    */
-  getCourseStats(courseId: string): (Map<string, number> | any[])[] | undefined {
+  getCourseStats(courseId: string): any[] | undefined {
     const course = CourseController.getCourseController().getCourse(courseId);
     if (course == undefined) {
       return undefined;
@@ -85,13 +83,13 @@ export class StatsController {
 
     let categories: Map<string, number> = new Map<string, number>();
     let students: Map<string, [number, number, number, number]> = new Map<string, [number, number, number, number]>();
-    let participation: Map<string, number> = new Map<string, number>();
+    const participation: Map<string, number> = new Map<string, number>();
     let numCategories = 0;
 
-    course.sessions.forEach((session: Session) => {
+    for (const session of course.sessions) {
       // Anzahl und absolute Häufigkeit der Kategorien zählen.
       // Statistiken der Teilnehmer sammeln.
-      let interactionStats = this.getInteractionStats(session.getId, categories, students, numCategories);
+      const interactionStats = this.getInteractionStats(session, categories, students, numCategories);
       if (interactionStats != undefined) {
         categories = interactionStats[0];
         numCategories = interactionStats[1];
@@ -99,16 +97,11 @@ export class StatsController {
       }
 
       // Beteiligunsquote der Sitzung.
-      let sessionStats = this.getSessionStats(session.getId);
+      const sessionStats = this.getSessionStats(session.getId);
       if (sessionStats != undefined) {
         participation.set(session.date, sessionStats[6]);
       }
-    });
-
-    /*// Relative Häufigkeit der Kategorien berechnen.
-    categories.forEach((value: number, category: string) => {
-      categories.set(category, (value / numCategories) * 100);
-    });*/
+    }
 
     const statsArray = this.getTopStudents(students);
     statsArray.push(categories);
@@ -136,11 +129,10 @@ export class StatsController {
 
     let categories: Map<string, number> = new Map<string, number>();
     let students: Map<string, [number, number, number, number]> = new Map<string, [number, number, number, number]>();
-    let numCategories = 0;
 
     // Anzahl und absolute Häufigkeit der Kategorien zählen.
     // Statistiken der Teilnehmer sammeln.
-    let sessionStats = this.getInteractionStats(sessionId, categories, students, numCategories);
+    const sessionStats = this.getInteractionStats(session, categories, students, 0);
     if (sessionStats) {
       categories = sessionStats[0];
       //numCategories = sessionStats[1];
@@ -163,21 +155,17 @@ export class StatsController {
   }
 
 
-  private getInteractionStats(sessionId: string, categories: Map<string, number>,
+  private getInteractionStats(session: Session, categories: Map<string, number>,
                               students: Map<string, [number, number, number, number]>,
-                              numCategories: number): any[] | undefined {
-    let session = SessionController.getSessionController().getSession(sessionId);
-    if (session == undefined) {
-      return undefined;
-    }
+                              numCategories: number): any[] {
 
     for (const interaction of session.interactions) {
       // Anzahl und absolute Häufigkeit der Kategorien zählen.
-      if (interaction.fromParticipant.isTeacher() || !interaction.fromParticipant.visible) {
+      if (interaction.fromParticipant.isTeacher()) {
         continue;
       }
-      let category = interaction.category;
-      let value = categories.get(category.name);
+      const category = interaction.category;
+      const value = categories.get(category.name);
 
       if (value != undefined) {
         categories.set(category.name, value + 1);
@@ -188,10 +176,13 @@ export class StatsController {
 
       const from = interaction.fromParticipant;
       const to = interaction.toParticipant;
-      let valueArray = students.get(from.getId);
-      let valueArrayTo = students.get(to.getId);
-      let quality = interaction.category.getQuality();
-      let disturbance = interaction.category.name.toLowerCase() === CATEGORY_NAME;
+      const valueArray = students.get(from.getId);
+      let valueArrayTo;
+      if (!to.isTeacher()) {
+        valueArrayTo = students.get(to.getId);
+      }
+      const quality = interaction.category.getQuality();
+      const disturbance = interaction.category.name.toLowerCase() === CATEGORY_NAME;
 
       // Schülerstatistiken berechnen.
       if (valueArray != undefined) {
@@ -199,7 +190,7 @@ export class StatsController {
           ++valueArray[3];
           if (valueArrayTo) {
             ++valueArrayTo[3];
-          } else {
+          } else if (!to.isTeacher()) {
             students.set(to.getId, [0, 0, 0, 1]);
           }
         } else {
@@ -217,7 +208,7 @@ export class StatsController {
           students.set(from.getId, [0, 0, 0, 1]);
           if (valueArrayTo) {
             ++valueArrayTo[3];
-          } else {
+          } else if (!to.isTeacher()) {
             students.set(to.getId, [0, 0, 0, 1]);
           }
         } else {
@@ -233,19 +224,22 @@ export class StatsController {
     let studentStats: any[] = [];
 
     students.forEach((value: [number, number, number, number], id: string) => {
-      let numInteractions = value[0];
-      let numQualities = value[1];
-      let qualitySum = value[2];
-      let disturbance = value[3];
+      const student = useStudentStore().getStudent(id);
+      if (student?.visible) {
+        const numInteractions = value[0];
+        const numQualities = value[1];
+        const qualitySum = value[2];
+        const disturbance = value[3];
 
-      studentStats.push([id, numInteractions, qualitySum / numQualities, disturbance]);
+        studentStats.push([id, numInteractions, qualitySum / numQualities, disturbance]);
+      }
     });
 
-    let topInteractions: any[] = [];
-    let topQuality: any[] = [];
-    let bottomInteractions: any[] = [];
-    let bottomQuality: any[] = [];
-    let topDisturbance: any[] = [];
+    const topInteractions: any[] = [];
+    const topQuality: any[] = [];
+    const bottomInteractions: any[] = [];
+    const bottomQuality: any[] = [];
+    const topDisturbance: any[] = [];
 
     // Schüler nach Anzahl der Interaktionen absteigend sortieren.
     studentStats = studentStats.sort((a, b) => {
@@ -262,7 +256,9 @@ export class StatsController {
       return (a[2] >= b[2]) ? 1 : -1;
     });
     studentStats.forEach((value: [string, number, number, number]) => {
-      topQuality.push([value[0], value[2]]);
+      if (value[2] != 0) {
+        topQuality.push([value[0], value[2]]);
+      }
     });
 
     // Schüler nach Anzahl der Interaktionen aufsteigend sortieren.
@@ -280,7 +276,9 @@ export class StatsController {
       return (a[2] <= b[2]) ? 1 : -1;
     });
     studentStats.forEach((value: [string, number, number, number]) => {
-      bottomQuality.push([value[0], value[2]]);
+      if (value[2] != 0) {
+        bottomQuality.push([value[0], value[2]]);
+      }
     });
 
     // Schüler nach Anzahl der Störungen absteigend sortieren.
@@ -293,7 +291,8 @@ export class StatsController {
       }
     });
 
-    return [topInteractions, topQuality, bottomInteractions, bottomQuality, topDisturbance];
+    return [topInteractions.slice(0, 5), topQuality.slice(0, 5), bottomInteractions.slice(0, 5),
+      bottomQuality.slice(0, 5), topDisturbance.slice(0, 5)];
   }
 
   private getQualityAsNumber(quality: Quality): number {

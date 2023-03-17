@@ -3,46 +3,22 @@ import {StudentController} from "@/controller/StudentController";
 import {Course} from "@/model/userdata/courses/Course";
 import {SessionController} from "@/controller/SessionController";
 import {SeatArrangementController} from "@/controller/SeatArrangementController";
-import {createPinia, setActivePinia} from "pinia";
-import {UserController} from "@/controller/UserController";
-import {AdminController} from "@/controller/AdminController";
+import {RoomController} from "@/controller/RoomController";
+import {afterEachTest, beforeEachTest} from "../setup";
 
 const courseController = CourseController.getCourseController();
 const courseData = {name: "PSE", subject: "Informatik"};
 let courseId: string;
 let participantId: string;
+let arrangementId: string | undefined;
 let course: Course | undefined;
 
 beforeAll(async () => {
-  // await beforeEachTest();
-  // TODO: Entfernen, wenn das Backend richtig läuft @ugqbo
-  setActivePinia(createPinia());
-  const admin = {email: "admin@kit.edu", password: "admin"};
-  const user = {firstName: "Test", lastName: "1", email: "test1@test.jest", password: "test"};
-  const userController = UserController.getUserController();
-  const adminController = AdminController.getAdminController();
-
-  await userController.register(
-    user.firstName,
-    user.lastName,
-    user.email,
-    user.password,
-    user.password
-  );
-
-  await userController.login(admin.email, admin.password);
-  const users = await adminController.getUsersNotAuthenticated();
-  for (const user of users) {
-    await adminController.authUser(user.getId);
-  }
-
-  setActivePinia(createPinia());
-
-  await userController.login(user.email, user.password);
+  await beforeEachTest();
 });
 
 afterAll(async () => {
-  // await afterEachTest();
+  await afterEachTest();
 });
 
 test("Create course", async () => {
@@ -88,7 +64,7 @@ test("Add student to course and get student", async () => {
 
   expect(courseController.getStudentsOfCourse(courseId)?.length).toBe(0);
 
-  courseController.addStudentToCourse(courseId, participantId);
+  await courseController.addStudentToCourse(courseId, participantId);
   const student = courseController.getStudentsOfCourse(courseId);
 
   if (student != undefined) {
@@ -119,6 +95,15 @@ test("Remove student from course", async () => {
   expect(courseController.getStudentsNotInCourse(courseId)?.length).toBe(0);
   expect(course?.participants.length).toBe(1);
 
+  const roomController = RoomController.getRoomController();
+  const roomId = await roomController.createRoom("raum");
+  roomController.addChair(roomId, 0, 0, 0);
+  await roomController.saveRoom(roomId);
+  const chairId = roomController.getRoomObjects(roomId)![0].getId;
+  const arrangementController = SeatArrangementController.getSeatArrangementController();
+  arrangementId = await arrangementController.createSeatArrangement("arrangement", roomId, courseId);
+  await arrangementController.addMapping(arrangementId!, chairId!, participantId);
+
   await courseController.removeStudentFromCourse(courseId, participantId);
 
   expect(course?.participants.length).toBe(0);
@@ -144,17 +129,9 @@ test("Get sessions of course", async () => {
 
 test("Get seatArrangmenets of course", async () => {
   expect(courseController.getSeatArrangements("24")).toBeUndefined();
-  expect(courseController.getSeatArrangements(courseId)?.length).toBe(0);
+  expect(courseController.getSeatArrangements(courseId)?.length).toBe(1);
 
-  const arrangementController = SeatArrangementController.getSeatArrangementController();
-  const arrangementId = await arrangementController.createAutomaticSeatArrangement("arrangement", courseId);
-
-  const arrangements = courseController.getSeatArrangements(courseId);
-  if (arrangements && arrangements.length > 0) {
-    expect(arrangements[0].name).toBe("arrangement");
-  }
-
-  await arrangementController.deleteSeatArrangement(arrangementId!);
+  await SeatArrangementController.getSeatArrangementController().deleteSeatArrangement(arrangementId!);
   expect(courseController.getSeatArrangements(courseId)?.length).toBe(0);
 });
 
@@ -164,7 +141,18 @@ test("Get all courses", () => {
   expect(courses.length).toBeGreaterThan(0);
 });
 
+test("Get teacher", () => {
+  const teacher = courseController.getTeacher();
+
+  expect(teacher).toBeDefined();
+  expect(teacher.isTeacher()).toBeTruthy();
+});
+
 test("Delete course", async () => {
+  const sessionController = SessionController.getSessionController();
+  await sessionController.createSession(courseId, undefined, "session");
+  await courseController.addStudentToCourse(courseId, participantId);
+
   await courseController.deleteCourse(courseId);
   course = courseController.getCourse(courseId);
   const courses = courseController.getAllCourses();
