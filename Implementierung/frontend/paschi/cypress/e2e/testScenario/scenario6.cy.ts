@@ -75,7 +75,7 @@ describe("add course test", () => {
     cy.sideMenuTo("courses");
     cy.get(".v-list-item[name=course]").click();
     cy.get(".v-expansion-panel-title[name=studentListTitle]").click()
-    cy.get("[name=studentStatistic]").last()
+    cy.get("[name=studentStatistic]").last().click()
 
 
     cy.desktopLogOut();
