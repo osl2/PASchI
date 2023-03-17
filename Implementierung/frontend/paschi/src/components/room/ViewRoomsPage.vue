@@ -72,6 +72,7 @@
         },
         {
           name: 'Bestätigen',
+          disabled: newRoomName === '',
           color: 'primary',
           click: confirmNewRoomClick,
           submit: true,
