@@ -67,6 +67,7 @@
         { name: 'Abbrechen', click: abortNewStudentClick },
         {
           name: 'Bestätigen',
+          disabled: studentFirstName === '',
           click: confirmNewStudentClick,
           color: 'primary',
           submit: true,

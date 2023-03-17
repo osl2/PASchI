@@ -72,6 +72,7 @@
         },
         {
           name: 'Bestätigen',
+          disabled: newRoomName === '',
           color: 'primary',
           click: confirmNewRoomClick,
           submit: true,
@@ -92,7 +93,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from "vue";
+import {computed, defineComponent, ref, Ref} from "vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import { Room } from "@/model/userdata/rooms/Room";
@@ -138,8 +139,9 @@ export default defineComponent({
      * Funktion, die einen Raum löscht. Sendet die Anfrage an den Controller.
      * @param room der Raum der gelöscht werden soll.
      */
-    function deleteRoom(room: Room){
-      roomController.deleteRoom(room.getId);
+    async function deleteRoom(room: Room){
+      await roomController.deleteRoom(room.getId);
+      rooms.value = roomController.getAllRooms();
     }
 
     return {

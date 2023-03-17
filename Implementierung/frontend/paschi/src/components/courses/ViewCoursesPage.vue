@@ -75,6 +75,7 @@
         {
           name: 'Bestätigen',
           click: confirmNewCourseClick,
+          disabled: courseName === '',
           color: 'primary',
           submit: true,
         },
@@ -101,11 +102,6 @@ export default defineComponent({
   name: "ViewCoursesPage",
   components: {BottomBar, PInput, PDialog, SideMenu, NavigationBar },
 
-  computed:{
-    isDisabled(){
-      return !(this.courseName);
-    }
-  },
 
   setup() {
     const router = useRouter();
