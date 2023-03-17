@@ -1,7 +1,7 @@
 <template>
   <navigation-bar>
     <template v-slot:append>
-      <v-btn class="ma-2" variant="flat" color="green" rounded @click="saveChangesClick"
+      <v-btn class="ma-2" variant="flat" color="green" rounded @click="saveChangesClick" name="save"
         >speichern</v-btn
       >
       <v-btn
@@ -20,6 +20,7 @@
     <SideMenu />
     <v-form class="mt-5 v-col" style="max-width: 1000px">
       <v-text-field
+        name="name"
         v-model="courseName"
         class="mt-2 mr-0"
         variant="outlined"
@@ -27,6 +28,7 @@
         type="input"
       ></v-text-field>
       <v-text-field
+        name="subject"
         class="mt-2 mr-0"
         variant="outlined"
         v-model="courseSubject"

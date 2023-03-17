@@ -286,7 +286,6 @@ Cypress.Commands.add("userLogin", (email, password) => {
   cy.contains("Alle anzeigen");
 });
 Cypress.Commands.add("desktopLogOut", () => {
-  cy.contains("Abmelden");
   cy.get(".v-navigation-drawer").within(()=>{
     cy.get("[name=logOut]").click()
   });
