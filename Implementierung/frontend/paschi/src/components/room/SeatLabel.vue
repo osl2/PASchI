@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="participant"
+    v-if="participant && participant.visible"
     class="flex-column align-content-center justify-center"
   >
     <div class="d-flex align center justify-center" style="user-select: none; -webkit-user-select: none">
