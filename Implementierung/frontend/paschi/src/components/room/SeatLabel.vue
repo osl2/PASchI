@@ -1,5 +1,6 @@
 <template>
   <div
+    name="seatLabel"
     v-if="participant && participant.visible"
     class="flex-column align-content-center justify-center"
   >

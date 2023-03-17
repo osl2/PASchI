@@ -42,6 +42,7 @@
               </v-tooltip>
             </v-btn>
             <v-btn
+              name="studentStatistic"
               class="ml-2"
               variant="tonal"
               color="primary"
