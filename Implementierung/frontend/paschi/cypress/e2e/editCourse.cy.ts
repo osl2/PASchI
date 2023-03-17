@@ -19,7 +19,13 @@ describe("add course test", () => {
     cy.sideMenuTo("courses");
     cy.get(".v-list-item").should("contain", course.name).and("contain", course.subject).last().click();
     cy.get("button[name=addStudent]").click();
-    cy.get(".v-list-item").contains(students[0].firstName).and("contain", students[0].lastName).last().click()
+    students.forEach((student) => {
+      cy.get(".v-list-item").contains(student.firstName).and("contain", student.lastName).last().click()
+    })
+    //TODO
+/*    students.forEach((student) => {
+      cy.get(".v-list-item").contains(student.firstName).and("contain", student.lastName)
+    })*/
     cy.sideMenuTo("dashboard");
     cy.desktopLogOut();
   });

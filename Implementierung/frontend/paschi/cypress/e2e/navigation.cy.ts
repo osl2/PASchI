@@ -2,9 +2,6 @@
 import {user} from "../support/commands";
 
 describe("Navigation test", () => {
-  before(() => {
-    cy.resetTestAccount();
-  })
   it("tests navigation-bar in mobile version", () => {
     cy.viewport(500, 1000)
     cy.visit("/login");
