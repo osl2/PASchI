@@ -98,12 +98,19 @@ export default defineComponent({
     }
 
     async function createSeatArrangementClick() {
-      let seatArrangementId = await seatArrangementController
+      let seatArrangementId;
+      await seatArrangementController
         .createSeatArrangement(
           seatArrangementName.value,
           selectedRoom!,
           props.courseId
-        )
+        ).then((res) => {
+          seatArrangementId = res;
+          console.log(res)
+        })
+      console.log(seatArrangementName.value)
+      console.log(selectedRoom!)
+      console.log(props.courseId)
       console.log(seatArrangementId)
       if (seatArrangementId) {
         await router.push({
