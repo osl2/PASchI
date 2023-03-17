@@ -6,7 +6,6 @@
         variant="flat"
         color="red"
         rounded
-        prepend-icon="mdi mdi-trash-can"
         @click="deleteSeatArrangement"
       >Sitzordnung löschen</v-btn
       >
