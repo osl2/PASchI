@@ -75,7 +75,7 @@ import SideMenu from "@/components/navigation/SideMenu.vue";
 import {Student} from "@/model/userdata/interactions/Student";
 import {useRouter} from "vue-router";
 import {UserController} from "@/controller/UserController";
-import BottomBar from "@/components/navigation/BottomBar.vue";
+import BottomBar from "@//components/navigation/BottomBar.vue";
 
 export default defineComponent({
   name: "editStudentPage.vue",

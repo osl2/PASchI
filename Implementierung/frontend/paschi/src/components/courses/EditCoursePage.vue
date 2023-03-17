@@ -95,7 +95,7 @@ import BottomBar from "@//components/navigation/BottomBar.vue";
 
 export default defineComponent({
   name: "editCoursePage",
-  components: {BottomBar, PDialog, SideMenu, NavigationBar, NewSeatArrangementDialog, PDialog, SideMenu, NavigationBar },
+  components: {BottomBar, PDialog, SideMenu, NavigationBar, NewSeatArrangementDialog},
   props: {
     courseId: {
       type: String,
