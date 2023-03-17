@@ -160,7 +160,6 @@ Cypress.Commands.add("registerTestAccount", () => {
   cy.adminLogOut();
 })
 
-
 Cypress.Commands.add("resetTestAccount", () => {
   cy.deleteTestAccount();
   cy.registerTestAccount();

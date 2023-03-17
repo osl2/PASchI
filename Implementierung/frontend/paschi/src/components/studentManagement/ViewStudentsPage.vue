@@ -19,7 +19,7 @@
     <BottomBar />
     <v-container fluid class="v-col-11" style="max-width: 700px">
       <v-list rounded v-if="students.length > 0">
-        <v-list-item rounded v-for="student in students" :key="student.getId">
+        <v-list-item name="student" rounded v-for="student in students" :key="student.getId">
           <v-list-item-title>
             {{ student.firstName }} {{ student.lastName }}
           </v-list-item-title>

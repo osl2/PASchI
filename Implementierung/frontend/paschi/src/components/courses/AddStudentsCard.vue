@@ -43,6 +43,7 @@
               <v-icon> fas fa-chart-line</v-icon>
             </v-btn>
             <v-btn
+              name="remove"
               class="ml-2"
               variant="tonal"
               color="red"

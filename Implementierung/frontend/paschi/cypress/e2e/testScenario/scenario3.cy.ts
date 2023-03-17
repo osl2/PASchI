@@ -4,7 +4,7 @@ describe("add course test", () => {
   before(() => {
     cy.resetTestAccount();
   })
-  it("tests scenario 2", () => {
+  it("tests scenario 3", () => {
     const course = { name: "Klasse 10b", subject: "Informatik" };
     const students = Array.of(
       { firstName: "Anna", lastName: "Bolika" },
@@ -37,7 +37,14 @@ describe("add course test", () => {
     });
     cy.sideMenuTo("courses");
     cy.get(".v-list-item[name=course]").click();
-    cy.sideMenuTo("students");
+    cy.get("button[name=addStudent]").click();
+    students.forEach((student) => {
+      cy.get(".v-list-item").contains(student.firstName).and("contain", student.lastName).last().click()
+    })
+    cy.get(".v-expansion-panel-title[name=studentListTitle]").click()
+    students.forEach((student) => {
+      cy.get("[name=student]").contains(student.firstName).and("contain", student.lastName)
+    })
     cy.desktopLogOut();
   });
 });
