@@ -115,10 +115,6 @@ export default defineComponent({
           selectedRoom!,
           props.courseId
         );
-      console.log(seatArrangementName.value);
-      console.log(selectedRoom!);
-      console.log(props.courseId);
-      console.log(seatArrangementId);
       if (seatArrangementId) {
         await router.push({
           name: "SeatArrangementPage",
