@@ -34,6 +34,7 @@
             :prepend-icon="button.icon ?? undefined"
             @click="button.click() ?? undefined"
             class="ml-2"
+            :name="button.name"
           >
             {{ button.name }}
           </v-btn>

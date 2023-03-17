@@ -17,13 +17,14 @@
   </navigation-bar>
   <v-main>
     <SideMenu />
+    <BottomBar />
     <div id="content">
       <v-container fluid>
         <v-row justify="space-around" align-content="stretch">
           <v-col>
             <v-card color="primary-lighten-1">
               <v-card-title>
-                <v-row class="ma-2">
+                <v-row class="text-wrap ma-2">
                   Durchschnittliche Qualität der Beiträge
                   <v-spacer />
                 </v-row>
@@ -36,7 +37,7 @@
               >
                 <v-rating
                   v-model="statsController.getStudentStats(studentId)[1]"
-                  class="ma-2"
+                  class="text-wrap ma-2"
                   readonly
                   hover
                   half-increments
@@ -49,7 +50,7 @@
           <v-col>
             <v-card color="primary-lighten-1">
               <v-card-title>
-                <v-row class="ma-2">
+                <v-row class="text-wrap ma-2">
                   Aufschlüsselung der Interaktionen nach Kategorien
                   <v-spacer />
                 </v-row>
@@ -73,10 +74,11 @@ import SideMenu from "@/components/navigation/SideMenu.vue";
 import Chart from "chart.js/auto";
 import { StatsController } from "@/controller/StatsController";
 import { StudentController } from "@/controller/StudentController";
+import BottomBar from "@/components/navigation/BottomBar.vue";
 
 export default defineComponent({
   name: "StudentStatisticPage",
-  components: { SideMenu, NavigationBar },
+  components: {BottomBar, SideMenu, NavigationBar },
 
   props: {
     studentId: {

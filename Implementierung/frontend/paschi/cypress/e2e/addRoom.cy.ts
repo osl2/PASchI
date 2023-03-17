@@ -14,7 +14,7 @@ describe("add course test", () => {
       cy.get("button[name=createRoom]").click();
     });
     cy.get("input[name=name]").type(room.name);
-    cy.get("button[name=cancelNewRoom]").click();
+    cy.get("button[name=Abbrechen]").click();
     cy.get(".v-list-item").contains(room.name).should("have.length", 0);
     cy.sideMenuTo("dashboard");
     cy.desktopLogOut();

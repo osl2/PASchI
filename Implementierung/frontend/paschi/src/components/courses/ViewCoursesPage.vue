@@ -15,10 +15,12 @@
   </navigation-bar>
 
   <SideMenu />
+  <BottomBar />
   <v-main class="ma-0 v-row justify-center align-content-xl-space-around">
     <v-container fluid class="v-col-11" style="max-width: 700px">
       <v-list rounded v-if="courses.length > 0">
         <v-list-item
+          name="course"
           rounded
           v-for="course in courses"
           :key="course.getId"
@@ -64,6 +66,7 @@
     <PDialog
       v-model="enterCourseNameDialog"
       title="Neuen Kurs erstellen"
+      name=""
       :buttons="[
         {
           name: 'Abbrechen',
@@ -77,8 +80,8 @@
         },
       ]"
     >
-      <PInput v-model="courseName" label="Kursname" autofocus></PInput>
-      <PInput v-model="courseSubject" label="Kursfach"></PInput>
+      <PInput name="name" v-model="courseName" label="Kursname" autofocus></PInput>
+      <PInput name="subject" v-model="courseSubject" label="Kursfach"></PInput>
     </PDialog>
   </v-main>
 </template>
@@ -92,10 +95,11 @@ import { Course } from "@/model/userdata/courses/Course";
 import { useRouter } from "vue-router";
 import PDialog from "@/components/base/PDialog.vue";
 import PInput from "@/components/base/PInput.vue";
+import BottomBar from "@/components/navigation/BottomBar.vue";
 
 export default defineComponent({
   name: "ViewCoursesPage",
-  components: { PInput, PDialog, SideMenu, NavigationBar },
+  components: {BottomBar, PInput, PDialog, SideMenu, NavigationBar },
 
   computed:{
     isDisabled(){

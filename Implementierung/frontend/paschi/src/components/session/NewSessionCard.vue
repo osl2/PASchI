@@ -12,7 +12,7 @@
       v-model="errorDialog"
     />
     <NewSeatArrangementDialog
-      course-id="courseId"
+      :course-id="courseId"
       v-model="showNewSeatArrangementDialog"
     />
     <v-card-title class="v-expansion-panel-title">
@@ -93,7 +93,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import {defineComponent, inject, Ref, ref} from "vue";
 import { CourseController } from "@/controller/CourseController";
 import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
 import router from "@/plugins/router";
@@ -119,6 +119,8 @@ export default defineComponent({
     const lastSeatArrangement = lastSession?.seatArrangement ?? undefined;
     const showNewSeatArrangementDialog = ref(false);
     const errorDialog = ref(false);
+    const isMobile: Ref<boolean> = inject("isMobile") as Ref<boolean>;
+
 
     function editSeatArrangementClick(seatArrangement: SeatArrangement) {
       router.push({
@@ -140,7 +142,7 @@ export default defineComponent({
         return;
       }
       await router.push({
-        name: "SessionPage",
+        name: isMobile.value? "SessionPage" : "SessionPageDesktop",
         params: { sessionId: session },
       });
     }

@@ -18,12 +18,15 @@ import SeatArrangementPage from "@/components/room/SeatArrangementPage.vue";
 import ViewRoomsPage from "@/components/room/ViewRoomsPage.vue";
 import SessionPage from "@/components/session/SessionPage.vue";
 import SessionPageDesktop from "@/components/session/SessionPageDesktop.vue";
+import Imprint from "@/components/legal/Imprint.vue";
 import { UserController } from "@/controller/UserController";
-
+import DataProtection from "@/components/legal/DataProtection.vue";
 const routes = [
   { path: "/", redirect: "/login" },
   { path: "/login", name: "Login", component: Login },
   { path: "/register", name: "Register", component: Register },
+  { path: "/imprint", name: "Imprint", component: Imprint },
+  { path: "/data-protection", name: "DataProtection", component: DataProtection },
   {
     path: "/admin",
     name: "AdminPage",

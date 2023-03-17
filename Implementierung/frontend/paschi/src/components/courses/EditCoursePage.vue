@@ -1,7 +1,7 @@
 <template>
   <navigation-bar>
     <template v-slot:append>
-      <v-btn class="ma-2" variant="flat" color="green" rounded @click="saveChangesClick"
+      <v-btn class="ma-2" variant="flat" color="green" rounded @click="saveChangesClick" name="save"
         >speichern</v-btn
       >
       <v-btn
@@ -18,8 +18,10 @@
 
   <v-main class="v-row justify-center">
     <SideMenu />
+    <BottomBar />
     <v-form class="mt-5 v-col" style="max-width: 1000px">
       <v-text-field
+        name="name"
         v-model="courseName"
         class="mt-2 mr-0"
         variant="outlined"
@@ -27,6 +29,7 @@
         type="input"
       ></v-text-field>
       <v-text-field
+        name="subject"
         class="mt-2 mr-0"
         variant="outlined"
         v-model="courseSubject"
@@ -51,30 +54,9 @@
           >Sitzordung hinzufügen</v-btn
         >
       </v-row>
-      <v-dialog max-width="700" v-model="seatArrangementDialog">
-        <v-card>
-          <v-list>
-            <v-list-item
-              v-for="seatArrangement in seatArrangements"
-              @click="editSeatArrangement(seatArrangement)"
-            >
-              {{ seatArrangement.name }}
-            </v-list-item>
-          </v-list>
-        </v-card>
-      </v-dialog>
-      <v-dialog max-width="700" v-model="roomSelectionDialog">
-        <v-card>
-          <v-list>
-            <v-list-item
-              v-for="room in rooms"
-              @click="addSeatArrangement(room)"
-            >
-              {{ room.name }}
-            </v-list-item>
-          </v-list>
-        </v-card>
-      </v-dialog>
+      <PDialog v-model="seatArrangementDialog" title="Sitzordnung auswählen" :elements="seatArrangementElements">
+      </PDialog>
+      <NewSeatArrangementDialog :course-id="courseId" v-model="roomSelectionDialog" />
     </v-form>
     <PDialog
       v-model="deleteCourseDialog"
@@ -93,37 +75,6 @@
       ]"
     >
     </PDialog>
-    <v-dialog max-width="700" v-model="newSeatArrangementNameDialog" persistent>
-      <v-card variant="flat" class="pa-2 rounded-lg">
-        <v-card-title class="text-h5 text-center text-indigo-darken-4">
-          Sitzordnung benennen
-        </v-card-title>
-        <v-text-field
-          v-model="newSetArrangementName"
-          class="mt-2"
-          variant="outlined"
-          label="Name der Sitzordnung"
-          type="input"
-        ></v-text-field>
-        <v-card-actions class="row justify-center">
-          <v-btn
-            height="50"
-            width="150"
-            variant="tonal"
-            @click="cancelAddSeatArrangement"
-            >Abbrechen</v-btn
-          >
-          <v-btn
-            height="50"
-            width="150"
-            variant="tonal"
-            @click="confirmAddSeatArrangement"
-            color="primary"
-            >Bestätigen</v-btn
-          >
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </v-main>
 </template>
 
@@ -139,10 +90,13 @@ import { Course } from "@/model/userdata/courses/Course";
 import { SeatArrangementController } from "@/controller/SeatArrangementController";
 import { useRouter } from "vue-router";
 import PDialog from "@/components/base/PDialog.vue";
+import NewSeatArrangementDialog from "@/components/room/NewSeatArrangementDialog.vue";
+import BottomBar from "@/components/navigation/BottomBar.vue";
 
 export default defineComponent({
   name: "editCoursePage",
-  components: { PDialog, SideMenu, NavigationBar },
+  components: {BottomBar, PDialog, SideMenu, NavigationBar },
+  components: {NewSeatArrangementDialog, PDialog, SideMenu, NavigationBar },
   props: {
     courseId: {
       type: String,
@@ -177,6 +131,17 @@ export default defineComponent({
     const newSeatArrangementRoom: Ref<Room | undefined> = ref<Room | undefined>(
       undefined
     ) as Ref<Room | undefined>;
+
+    const seatArrangementElements = seatArrangements.value.map((seatArrangement) => {
+      return {
+        name: seatArrangement.name,
+        icon: "mdi mdi-seat",
+        click: () => {
+          editSeatArrangement(seatArrangement);
+        },
+      };
+    });
+
     //Hilfsmethoden
     function getCourseName(): string {
       if (course.value instanceof Course) {
@@ -316,9 +281,8 @@ export default defineComponent({
       seatArrangements,
       rooms,
       courseName,
+      seatArrangementElements,
       courseSubject,
-      newSeatArrangementNameDialog,
-      newSetArrangementName,
       isMobile,
     };
   },

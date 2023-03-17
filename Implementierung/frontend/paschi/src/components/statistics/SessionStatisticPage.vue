@@ -18,13 +18,14 @@
   </navigation-bar>
   <v-main>
     <SideMenu/>
+    <BottomBar />
     <div id="content">
       <v-container fluid>
         <v-row justify="space-around" align-content="stretch">
           <v-col>
             <v-card color="primary-lighten-1">
               <v-card-title>
-                <v-row class="ma-2">
+                <v-row class="text-wrap ma-2">
                   Aufschlüsselung der Interaktionen nach Kategorien
                   <v-spacer/>
                 </v-row>
@@ -38,7 +39,7 @@
           <v-col>
             <v-card color="primary-lighten-1">
               <v-card-title>
-                <v-row class="ma-2">
+                <v-row class="text-wrap ma-2">
                   Beteiligungsqoute
                   <v-spacer/>
                 </v-row>
@@ -57,14 +58,14 @@
           <v-col>
             <v-card color="primary-lighten-1">
               <v-card-title>
-                <v-row class="ma-2">
+                <v-row class="text-wrap ma-2">
                   Top 5 der Schüler nach Anzahl Interaktionen
                   <v-spacer/>
                 </v-row>
               </v-card-title>
               <v-card-item v-if="stats !== undefined && stats[4].length !== 0">
                 <v-list max-height="500">
-                  <v-row class="ma-2" v-for="studentId in top5InteractionArray"
+                  <v-row class="text-wrap ma-2" v-for="studentId in top5InteractionArray"
                   >{{
                       studentController.getStudent(studentId[0])?.firstName +
                       " " +
@@ -88,14 +89,14 @@
           <v-col>
             <v-card color="primary-lighten-1">
               <v-card-title>
-                <v-row class="ma-2">
+                <v-row class="text-wrap ma-2">
                   Top 5 Schüler nach Anzahl Störungen
                   <v-spacer/>
                 </v-row>
               </v-card-title>
               <v-card-item v-if="stats !== undefined && stats[4].length !== 0">
                 <v-list max-height="500">
-                  <v-row class="ma-2" v-for="studentId in top5DisturberArray"
+                  <v-row class="text-wrap ma-2" v-for="studentId in top5DisturberArray"
                   >{{
                       studentController.getStudent(studentId[0])?.firstName +
                       " " +
@@ -131,10 +132,11 @@ import {StatsController} from "@/controller/StatsController";
 import {StudentController} from "@/controller/StudentController";
 import {SessionController} from "@/controller/SessionController";
 import router from "@/plugins/router";
+import BottomBar from "@/components/navigation/BottomBar.vue";
 
 export default defineComponent({
   name: "SessionStatisticPage",
-  components: {SideMenu, NavigationBar},
+  components: {BottomBar, SideMenu, NavigationBar},
   props: {
     sessionId: {
       type: String,

@@ -10,6 +10,7 @@
         >Kursstatistiken ansehen</v-btn
       >
       <v-btn
+        name="editCourseDetails"
         class="ma-2"
         rounded
         variant="tonal"
@@ -18,7 +19,9 @@
       >
     </template>
   </navigation-bar>
-  <side-menu />
+  <side-menu></side-menu>
+  <BottomBar />
+
   <v-main>
     <v-container fluid class="v-row align-start justify-space-around">
       <v-container max-width="800" min-width="570" rounded class="ma-1 v-col-5">
@@ -41,9 +44,11 @@ import PDialog from "@/components/base/PDialog.vue";
 import AddStudentsCard from "@/components/courses/AddStudentsCard.vue";
 import SessionListCard from "@/components/session/SessionListCard.vue";
 import NewSessionCard from "@/components/session/NewSessionCard.vue";
+import BottomBar from "@/components/navigation/BottomBar.vue";
 export default defineComponent({
   name: "CourseDetailsPage",
   components: {
+    BottomBar,
     NewSessionCard,
     SessionListCard,
     AddStudentsCard,
