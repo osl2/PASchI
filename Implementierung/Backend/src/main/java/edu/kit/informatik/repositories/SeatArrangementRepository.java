@@ -34,12 +34,17 @@ public interface SeatArrangementRepository extends JpaRepository<SeatArrangement
     List<SeatArrangement> findSeatArrangementsByCourse(Course course);
 
     /**
-     * Rückgabe von {@link Optional} mit {@link SeatArrangement}
+     * Rückgabe einer {@link List} mit {@link SeatArrangement}
      * @param userId Id eines {@link User}
-     * @return {@link Optional} von {@link SeatArrangement}
+     * @return {@link List} von {@link SeatArrangement}
      */
     List<SeatArrangement> findSeatArrangementsByUserId(String userId);
 
+    /**
+     * Rückgabe einer {@link List} mit {@link SeatArrangement}
+     * @param room Id eines {@link Room}
+     * @return {@link List} von {@link SeatArrangement}
+     */
     List<SeatArrangement> findSeatArrangementByRoom(Room room);
 
 }
