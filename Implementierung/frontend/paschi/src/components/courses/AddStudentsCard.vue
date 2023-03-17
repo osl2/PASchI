@@ -15,11 +15,13 @@
           class="ma-2 mr-4"
           variant="tonal"
           color="green"
-          prepend-icon="mdi mdi-plus"
-          min-width="228"
+          :prepend-icon="isMobile? undefined : 'mdi mdi-plus'"
           v-on:click.stop
           @click="activateStudentCard"
-          >Schüler hinzufügen
+          >{{isMobile? "" : "Schüler hinzufügen" }}
+          <v-icon v-if="isMobile">
+            mdi mdi-plus
+          </v-icon>
         </v-btn>
       </v-expansion-panel-title>
       <v-expansion-panel-text class="justify-center">
@@ -58,7 +60,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, Ref } from "vue";
+import {computed, defineComponent, inject, ref, Ref} from "vue";
 import PDialog from "@/components/base/PDialog.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
@@ -86,6 +88,8 @@ export default defineComponent({
     const addStudentSelectionDialog: Ref<boolean> = ref<boolean>(false);
 
     const studentsNotInCourse = computed(() => getStudentsNotInCourse());
+
+    const isMobile: Ref<boolean> = inject("isMobile") as Ref<boolean>;
 
     const studentsNotInCourseElements = computed(() => {
       return computed(() =>
@@ -187,6 +191,7 @@ export default defineComponent({
       addStudentSelectionDialog,
       studentsNotInCourseElements,
       studentsInCourse,
+      isMobile,
     };
   },
 });

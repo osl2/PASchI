@@ -1,5 +1,5 @@
 <template>
-  <v-bottom-navigation style="position: fixed" active bg-color="primary" v-if="isMobile">
+  <v-bottom-navigation style="position: fixed" class="rounded-t-lg" active bg-color="primary" v-if="isMobile">
     <v-btn value="dashboard" :active="subRouteOf('Dashboard')"
            prepend-icon="fas fa-gauge"
            @click="router.push('/dashboard')">
