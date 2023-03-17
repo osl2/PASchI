@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
-import java.util.UUID;
 
 /**
  * Data-Transfer-Object zur Klasse {@link Interaction}
@@ -37,8 +36,8 @@ public class InteractionDto implements Comparable<InteractionDto> {
 
     @Override
     public int compareTo(InteractionDto o) {
-        UUID thisInteraction = UUID.fromString(this.id);
-        UUID oInteraction = UUID.fromString(o.getId());
+        Timestamp thisInteraction = this.createdAt;
+        Timestamp oInteraction = o.createdAt;
 
         return  thisInteraction.compareTo(oInteraction);
     }
