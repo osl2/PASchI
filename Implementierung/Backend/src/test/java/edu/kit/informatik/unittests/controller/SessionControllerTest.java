@@ -72,7 +72,7 @@ public class SessionControllerTest extends AbstractTest {
         Faker faker = new Faker(new Locale("de"));
 
         for (int i = 0; i < 10; i++) {
-            sessionDtos.add(EntityGenerator.createNewSession(faker, courseDto, userDto));
+            sessionDtos.add(EntityGenerator.createNewSession(faker, userDto, courseDto));
         }
 
         return sessionDtos;
