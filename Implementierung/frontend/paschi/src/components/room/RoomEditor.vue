@@ -48,6 +48,10 @@
           <v-badge icon="mdi mdi-plus" color="green">
             <v-icon size="30">mdi mdi-table-furniture</v-icon>
           </v-badge>
+          <v-tooltip
+            activator="parent"
+            location="end"
+          >Tisch hinzufügen</v-tooltip>
         </v-btn>
         <v-btn
           name="addChair"
@@ -61,6 +65,11 @@
           <v-badge icon="mdi mdi-plus" color="green">
             <v-icon size="30">mdi mdi-seat-outline</v-icon>
           </v-badge>
+          <v-tooltip
+            activator="parent"
+            location="end"
+          >Stuhl hinzufügen
+          </v-tooltip>
         </v-btn>
         <v-btn-toggle
           class="ma-1"
@@ -74,32 +83,56 @@
             width="70"
             height="70"
             variant="tonal"
-            icon="mdi mdi-cursor-move"
             value="translate"
-          />
+          >
+            <v-icon size="30">mdi mdi-cursor-move</v-icon>
+            <v-tooltip
+              activator="parent"
+              location="end"
+            >Objekt bewegen
+            </v-tooltip>
+          </v-btn>
           <v-btn
             width="70"
             height="70"
             variant="tonal"
-            icon="mdi mdi-rotate-left"
             value="rotate"
-          />
+          >
+            <v-icon size="30">mdi mdi-rotate-left</v-icon>
+            <v-tooltip
+              activator="parent"
+              location="end"
+            >Objekt drehen
+            </v-tooltip>
+          </v-btn>
           <v-btn
             width="70"
             height="70"
             variant="tonal"
-            icon="mdi mdi-resize"
             value="resize"
-          />
+          >
+            <v-icon size="30">mdi mdi-resize</v-icon>
+            <v-tooltip
+            activator="parent"
+            location="end"
+            >Größe des Objektes ändern
+            </v-tooltip>
+          </v-btn>
           <v-btn
             :style="toggleButton2Style"
             width="70"
             height="70"
             variant="tonal"
             color="red"
-            icon="mdi mdi-close"
             value="delete"
-          />
+          >
+            <v-icon size="30">mdi mdi-close</v-icon>
+            <v-tooltip
+              activator="parent"
+              location="end"
+            >Objekt löschen
+            </v-tooltip>
+          </v-btn>
         </v-btn-toggle>
       </v-card>
     </template>
