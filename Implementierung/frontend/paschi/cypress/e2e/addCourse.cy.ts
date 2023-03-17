@@ -15,7 +15,7 @@ describe("add course test", () => {
     });
     cy.get("input[name=name]").type(course.name);
     cy.get("input[name=subject]").type(course.subject);
-    cy.get("button[name=cancelNewCourse]").click();
+    cy.get("button[name=Abbrechen]").click();
     cy.get(".v-list-item").contains("contain", course.name).should("have.length", 0);
     cy.get(".v-list-item").contains("contain", course.subject).should("have.length", 0)
     cy.sideMenuTo("dashboard");

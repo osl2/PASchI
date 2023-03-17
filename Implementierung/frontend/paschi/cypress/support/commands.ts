@@ -107,6 +107,7 @@ Cypress.Commands.add(
 )
 
 Cypress.Commands.add("resetTestAccount", () => {
+  ///*
   cy.visit("/login");
   cy.adminLogin(admin.email, admin.password);
   cy.get(".v-card[name=userCard]").within(() => {
@@ -130,7 +131,7 @@ Cypress.Commands.add("resetTestAccount", () => {
       cy.get("button[name=deleteUser]").click();
     });
   cy.adminLogOut();
-
+//*/
   cy.visit("/register");
   cy.get("input[name='firstName']").type(user.firstName);
   cy.get("input[name='lastName']").type(user.lastName);
@@ -166,7 +167,7 @@ Cypress.Commands.add("addRoom", (name) => {
     cy.get("button[name=createRoom]").click();
   });
   cy.get("input[name=name]").type(name);
-  cy.get("button[name=confirmNewRoom]").click();
+  cy.get("button[name=Bestätigen]").click();
   cy.url().should("include", "/room-editor");
 });
 
@@ -176,7 +177,7 @@ Cypress.Commands.add("addCourse", (name, subject) => {
   });
   cy.get("input[name=name]").type(name);
   cy.get("input[name=subject]").type(subject);
-  cy.get("button[name=confirmNewCourse]").click();
+  cy.get("button[name=Bestätigen]").click();
   cy.url().should("include", "/course-details");
 });
 
@@ -186,7 +187,7 @@ Cypress.Commands.add("addStudent", (firstName, lastName) => {
   });
   cy.get("input[name=firstName]").type(firstName);
   cy.get("input[name=lastName]").type(lastName);
-  cy.get("button[name=confirmNewStudent]").click();
+  cy.get("button[name=Bestätigen]").click();
 });
 
 Cypress.Commands.add(
@@ -285,7 +286,6 @@ Cypress.Commands.add("userLogin", (email, password) => {
   cy.contains("Alle anzeigen");
 });
 Cypress.Commands.add("desktopLogOut", () => {
-  cy.contains("Abmelden");
   cy.get(".v-navigation-drawer").within(()=>{
     cy.get("[name=logOut]").click()
   });

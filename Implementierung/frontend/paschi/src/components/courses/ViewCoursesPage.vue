@@ -65,6 +65,7 @@
     <PDialog
       v-model="enterCourseNameDialog"
       title="Neuen Kurs erstellen"
+      name=""
       :buttons="[
         {
           name: 'Abbrechen',
@@ -78,8 +79,8 @@
         },
       ]"
     >
-      <PInput v-model="courseName" label="Kursname" autofocus></PInput>
-      <PInput v-model="courseSubject" label="Kursfach"></PInput>
+      <PInput name="name" v-model="courseName" label="Kursname" autofocus></PInput>
+      <PInput name="subject" v-model="courseSubject" label="Kursfach"></PInput>
     </PDialog>
   </v-main>
 </template>

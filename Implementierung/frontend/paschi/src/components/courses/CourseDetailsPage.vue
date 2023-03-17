@@ -10,6 +10,7 @@
         >Kursstatistiken ansehen</v-btn
       >
       <v-btn
+        name="editCourseDetails"
         class="ma-2"
         rounded
         variant="tonal"
