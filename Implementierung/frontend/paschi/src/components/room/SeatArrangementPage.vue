@@ -4,7 +4,7 @@
       <v-btn
         name="deleteSeatArrangement"
         variant="flat"
-        color="red"
+        color="error"
         rounded
         prepend-icon="mdi mdi-trash-can"
         @click="deleteSeatArrangement"
