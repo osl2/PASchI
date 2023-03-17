@@ -70,6 +70,11 @@ export default defineComponent({
     const overlayWidth = window.innerWidth;
     const overlayHeight = window.innerHeight;
 
+    /**
+     * Methode zum Zeichnen eines Bezierkurve
+     * @param ctx CanvasRenderingContext2D
+     * @param line zu zeichnende Linie
+     */
     function drawBezierCurve(ctx: CanvasRenderingContext2D, line: Line) {
       const vector = {
         x: line.x2 - line.x1,

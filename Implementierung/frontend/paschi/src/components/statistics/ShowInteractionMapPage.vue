@@ -108,6 +108,10 @@ export default defineComponent({
       }[]
     >([]);
 
+    /**
+     * Methode zur Rückgabe der Anzahl an Interaktionen
+     * @param id Id eines Teilnehmers
+     */
     function getInteractionCount(id: String): {
       total: number;
       breakDown: Map<String, number>;
@@ -144,10 +148,19 @@ export default defineComponent({
       return interactionCount;
     }
 
+    /**
+     * Methode zur Rückgabe des Teilnehmers, welcher auf dem übergebenen Stuhl sitzt
+     * @param chair Stuhl
+     */
     function getParticipant(chair: Chair) {
       return seatArrangement?.getParticipantForSeat(chair);
     }
 
+    /**
+     * Methode zum Setzen des SeatLabels
+     * @param seatLabelId Id des SeatLabels
+     * @param coordinate Koordinaten
+     */
     function setSeatLabelOrigin(seatLabelId: String, coordinate: Coordinate) {
       originSeatLabels.set(seatLabelId, coordinate);
     }
@@ -195,6 +208,10 @@ export default defineComponent({
       console.log("click");
     }
 
+    /**
+     * Methode zum Drehen
+     * @param angle Winkel des Drehens
+     */
     function rotateStyle(angle: number) {
       return {
         transform: "rotate(" + angle + "rad)",
