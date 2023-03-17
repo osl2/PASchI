@@ -4,7 +4,7 @@
       <v-btn
         name="deleteSeatArrangement"
         variant="flat"
-        color="red"
+        color="error"
         rounded
         @click="deleteSeatArrangement"
       >Sitzordnung löschen</v-btn
