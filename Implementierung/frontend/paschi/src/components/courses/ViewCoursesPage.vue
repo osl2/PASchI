@@ -47,6 +47,11 @@
               </v-tooltip>
             </v-btn>
           </template>
+          <v-tooltip
+            activator="parent"
+            location="start"
+          >Kurs anzeigen
+          </v-tooltip>
         </v-list-item>
       </v-list>
       <v-card v-else class="pa-2" variant="text">
