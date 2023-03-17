@@ -41,6 +41,11 @@
               <v-icon>mdi mdi-trash-can</v-icon>
             </v-btn>
           </template>
+          <v-tooltip
+            activator="parent"
+            location="start"
+          >Raum bearbeiten
+          </v-tooltip>
         </v-list-item>
       </v-list>
       <v-card v-else class="pa-2" variant="text">
