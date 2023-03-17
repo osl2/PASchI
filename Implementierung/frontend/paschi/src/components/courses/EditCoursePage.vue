@@ -18,7 +18,7 @@
 
   <v-main class="v-row justify-center">
     <SideMenu />
-    <ButtomBar />
+    <BottomBar />
     <v-form class="mt-5 v-col" style="max-width: 1000px">
       <v-text-field
         name="name"
@@ -142,10 +142,11 @@ import { Course } from "@/model/userdata/courses/Course";
 import { SeatArrangementController } from "@/controller/SeatArrangementController";
 import { useRouter } from "vue-router";
 import PDialog from "@/components/base/PDialog.vue";
+import BottomBar from "@/components/navigation/BottomBar.vue";
 
 export default defineComponent({
   name: "editCoursePage",
-  components: { PDialog, SideMenu, NavigationBar },
+  components: {BottomBar, PDialog, SideMenu, NavigationBar },
   props: {
     courseId: {
       type: String,

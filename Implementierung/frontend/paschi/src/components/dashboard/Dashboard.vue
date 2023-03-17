@@ -9,7 +9,7 @@
 
   <v-main>
     <SideMenu />
-    <ButtomBar />
+    <BottomBar />
     <v-container fluid>
       <v-row justify="space-around" align-content="stretch">
         <v-col>
@@ -30,12 +30,12 @@ import RecentSessionsCard from "@/components/dashboard/RecentSessionsCard.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import { UserController } from "@/controller/UserController";
 import { defineComponent } from "vue";
-import ButtomBar from "@/components/navigation/ButtomBar.vue";
+import BottomBar from "@/components/navigation/BottomBar.vue";
 
 export default defineComponent( {
   name: "Dashboard",
   components: {
-    ButtomBar,
+    BottomBar,
     SideMenu,
     RecentSessionsCard,
     NavigationBar,

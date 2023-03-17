@@ -17,7 +17,7 @@
   <SideMenu />
   <v-main class="ma-0 v-row justify-center align-content-xl-space-around">
     <SideMenu />
-    <ButtomBar />
+    <BottomBar />
     <v-container fluid class="v-col-11" style="max-width: 700px">
       <v-list rounded v-if="students.length > 0">
         <v-list-item rounded v-for="student in students" :key="student.getId">
@@ -95,10 +95,11 @@ import { defineComponent, Ref, ref } from "vue";
 import { useRouter } from "vue-router";
 import PDialog from "@/components/base/PDialog.vue";
 import PInput from "@/components/base/PInput.vue";
+import BottomBar from "@/components/navigation/BottomBar.vue";
 
 export default defineComponent({
   name: "ViewStudentsPage",
-  components: { PInput, PDialog, SideMenu, NavigationBar },
+  components: {BottomBar, PInput, PDialog, SideMenu, NavigationBar },
 
   computed:{
     isDisabled(){
