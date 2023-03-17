@@ -109,6 +109,11 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
         return id;
     }
 
+    /**
+     * Methode zum Löschen eines {@link Participant}
+     * --> dient zum Löschen fpr andere Services
+     * @param participant {@link Participant}
+     */
     protected void delete(Participant participant) {
         participantRepository.deleteById(participant.getId());
     }

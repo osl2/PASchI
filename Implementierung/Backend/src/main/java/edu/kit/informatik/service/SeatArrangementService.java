@@ -104,6 +104,11 @@ public class SeatArrangementService extends BaseService<SeatArrangement, SeatArr
         return delete(seatArrangement);
     }
 
+    /**
+     * Methode zum Löschen einer {@link SeatArrangement}
+     * @param seatArrangement {@link SeatArrangement}
+     * @return Id des {@link SeatArrangement}
+     */
     protected String delete(SeatArrangement seatArrangement) {
         Course course = courseRepository.findCourseBySeatArrangements(seatArrangement);
         if (course != null) {

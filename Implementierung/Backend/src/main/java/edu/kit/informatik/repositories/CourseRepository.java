@@ -33,7 +33,17 @@ public interface CourseRepository extends JpaRepository<Course, String> {
      */
     List<Course> findCoursesByUserId(String userId);
 
+    /**
+     * Rückgabe eines {@link Course} bei übergabe einer {@link Session}
+     * @param session {@link Session}
+     * @return {@link Course}
+     */
     Course findCourseBySessions(Session session);
 
+    /**
+     * Rückgabe eines {@link Course} bei übergabe einer {@link SeatArrangement}
+     * @param seatArrangement {@link SeatArrangement}
+     * @return {@link Course}
+     */
     Course findCourseBySeatArrangements(SeatArrangement seatArrangement);
 }

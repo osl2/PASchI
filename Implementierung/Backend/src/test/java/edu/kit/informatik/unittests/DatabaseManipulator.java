@@ -16,9 +16,11 @@ import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.dto.userdata.interactions.RatedCategoryDto;
 import edu.kit.informatik.dto.userdata.rooms.RoomDto;
+import edu.kit.informatik.model.userdata.interactions.Category;
 import edu.kit.informatik.model.userdata.interactions.RatedCategory;
 import edu.kit.informatik.repositories.CategoryBaseRepository;
 import edu.kit.informatik.repositories.CourseRepository;
+import edu.kit.informatik.repositories.InteractionRepository;
 import edu.kit.informatik.repositories.ParticipantRepository;
 import edu.kit.informatik.repositories.RoomRepository;
 import edu.kit.informatik.repositories.SeatArrangementRepository;
@@ -41,7 +43,9 @@ public final class DatabaseManipulator {
     @Autowired
     private ParticipantRepository participantRepository;
     @Autowired
-    private CategoryBaseRepository<RatedCategory> categoryRepository;
+    private CategoryBaseRepository<RatedCategory> ratedCategoryCategoryBaseRepository;
+    @Autowired
+    private CategoryBaseRepository<Category> categoryBaseRepository;
     @Autowired
     private CourseRepository courseRepository;
     @Autowired
@@ -50,6 +54,8 @@ public final class DatabaseManipulator {
     private RoomRepository roomRepository;
     @Autowired
     private SeatArrangementRepository seatArrangementRepository;
+    @Autowired
+    private InteractionRepository interactionRepository;
 
     @Autowired
     private UserMapper userMapper;
@@ -81,8 +87,12 @@ public final class DatabaseManipulator {
         return participantMapper.modelToDto(this.participantRepository.save(participantMapper.dtoToModel(participantDto)));
     }
 
-    public RatedCategoryDto addCategory(RatedCategoryDto ratedCategoryDto) {
-        return ratedCategoryMapper.modelToDto(this.categoryRepository.save(ratedCategoryMapper.dtoToModel(ratedCategoryDto)));
+    public RatedCategoryDto addRatedCategory(RatedCategoryDto ratedCategoryDto) {
+        return ratedCategoryMapper.modelToDto(this.ratedCategoryCategoryBaseRepository.save(ratedCategoryMapper.dtoToModel(ratedCategoryDto)));
+    }
+
+    public CategoryDto addCategory(CategoryDto categoryDto) {
+        return categoryMapper.modelToDto(this.categoryBaseRepository.save(categoryMapper.dtoToModel(categoryDto)));
     }
 
     public CourseDto addCourse(CourseDto courseDto) {
@@ -110,7 +120,7 @@ public final class DatabaseManipulator {
 
     public List<CategoryDto> getCategories() {
 
-        List<RatedCategory> categoryList = categoryRepository.findAll();
+        List<RatedCategory> categoryList = ratedCategoryCategoryBaseRepository.findAll();
         List<CategoryDto> categoryDtoList = new ArrayList<>();
 
         for (RatedCategory ratedCategory: categoryList) {
@@ -145,7 +155,7 @@ public final class DatabaseManipulator {
     }
 
     public void clearCategoryRepository() {
-        this.categoryRepository.deleteAll();
+        this.ratedCategoryCategoryBaseRepository.deleteAll();
     }
 
     public void clearCourseRepository() {
@@ -162,6 +172,9 @@ public final class DatabaseManipulator {
 
     public void clearSeatArrangementRepository() {
         this.seatArrangementRepository.deleteAll();
+    }
+    public void clearInteractionRepository() {
+        this.interactionRepository.deleteAll();
     }
 
 }
