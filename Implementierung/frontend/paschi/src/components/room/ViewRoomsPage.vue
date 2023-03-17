@@ -15,7 +15,7 @@
   </navigation-bar>
 
   <SideMenu />
-  <ButtomBar />
+  <BottomBar />
 
   <v-main class="ma-0 v-row justify-center align-content-xl-space-around">
     <v-container fluid class="v-col-11" style="max-width: 700px">
@@ -87,9 +87,10 @@ import { RoomController } from "@/controller/RoomController";
 import { useRouter } from "vue-router";
 import PDialog from "@/components/base/PDialog.vue";
 import PInput from "@/components/base/PInput.vue";
+import BottomBar from "@/components/navigation/BottomBar.vue";
 export default defineComponent({
   name: "ViewRoomsPage",
-  components: { PInput, PDialog, SideMenu, NavigationBar },
+  components: {BottomBar, PInput, PDialog, SideMenu, NavigationBar },
   setup() {
     const router = useRouter();
 

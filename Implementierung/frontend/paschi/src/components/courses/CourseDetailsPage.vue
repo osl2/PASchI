@@ -19,7 +19,7 @@
     </template>
   </navigation-bar>
   <side-menu></side-menu>
-  <ButtomBar />
+  <BottomBar />
 
   <v-main>
     <v-container fluid class="v-row align-start justify-space-around">
@@ -43,9 +43,11 @@ import PDialog from "@/components/base/PDialog.vue";
 import AddStudentsCard from "@/components/courses/AddStudentsCard.vue";
 import SessionListCard from "@/components/session/SessionListCard.vue";
 import NewSessionCard from "@/components/session/NewSessionCard.vue";
+import BottomBar from "@/components/navigation/BottomBar.vue";
 export default defineComponent({
   name: "CourseDetailsPage",
   components: {
+    BottomBar,
     NewSessionCard,
     SessionListCard,
     AddStudentsCard,

@@ -24,7 +24,7 @@
   </NavigationBar>
   <v-main class="v-row justify-center">
     <SideMenu/>
-    <ButtomBar/>
+    <BottomBar/>
     <v-form class="mt-5 v-col" style="max-width: 1000px">
       <v-text-field
         v-model="firstName"
@@ -76,11 +76,11 @@ import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import {UserController} from "@/controller/UserController";
 import {inject, Ref, ref} from "vue";
-import ButtomBar from "@/components/navigation/ButtomBar.vue";
+import BottomBar from "@/components/navigation/BottomBar.vue";
 
 export default {
   name: "EditAccountPage",
-  components: {ButtomBar, SideMenu, NavigationBar, AppBar},
+  components: {BottomBar, SideMenu, NavigationBar, AppBar},
   setup() {
     const userController = UserController.getUserController();
     const firstName = ref(userController.getUser().firstName);

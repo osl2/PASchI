@@ -17,7 +17,7 @@
   </navigation-bar>
   <v-main>
     <SideMenu />
-    <ButtomBar />
+    <BottomBar />
     <div id="content">
       <v-container fluid>
         <v-row justify="space-around" align-content="stretch">
@@ -133,11 +133,11 @@ import { StatsController } from "@/controller/StatsController";
 import { StudentController } from "@/controller/StudentController";
 import { CourseController } from "@/controller/CourseController";
 import router from "@/plugins/router";
-import ButtomBar from "@/components/navigation/ButtomBar.vue";
+import BottomBar from "@/components/navigation/BottomBar.vue";
 
 export default defineComponent({
   name: "CourseStatisticPage",
-  components: {ButtomBar, SideMenu, NavigationBar },
+  components: {BottomBar, SideMenu, NavigationBar },
   props: {
     courseId: {
       type: String,

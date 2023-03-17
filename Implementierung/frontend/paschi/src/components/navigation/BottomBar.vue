@@ -1,5 +1,5 @@
 <template>
-  <v-bottom-navigation active bg-color="primary" v-if="isMobile">
+  <v-bottom-navigation style="position: fixed" active bg-color="primary" v-if="isMobile">
     <v-btn value="dashboard" :active="subRouteOf('Dashboard')"
            prepend-icon="fas fa-gauge"
            @click="router.push('/dashboard')">
@@ -37,7 +37,7 @@ import { useRoute } from "vue-router";
 import {UserController} from "@/controller/UserController";
 
 export default defineComponent({
-  name: "ButtomBar",
+  name: "BottomBar",
 
 
 
