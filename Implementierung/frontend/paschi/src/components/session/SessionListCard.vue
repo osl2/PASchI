@@ -18,7 +18,7 @@
     >
     </PDialog>
     <v-expansion-panel eager elevation="0" class="rounded-lg">
-      <v-expansion-panel-title>
+      <v-expansion-panel-title name="sessionListTitle">
         <h2 class="ma-2">Sitzungsliste</h2>
         <v-spacer />
       </v-expansion-panel-title>
