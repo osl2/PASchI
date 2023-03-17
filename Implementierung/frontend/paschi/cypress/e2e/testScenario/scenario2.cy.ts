@@ -32,6 +32,9 @@ describe("add course test", () => {
     students.forEach((student)=>{
       cy.addStudent(student.firstName, student.lastName);
     });
+    students.forEach((student)=>{
+      cy.get("[name=student]").contains(student.firstName+" "+student.lastName);
+    });
     cy.sideMenuTo("courses");
     cy.get(".v-list-item[name=course]").click();
     cy.sideMenuTo("students");

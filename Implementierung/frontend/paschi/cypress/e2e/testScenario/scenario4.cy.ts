@@ -45,6 +45,17 @@ describe("add course test", () => {
     students.forEach((student) => {
       cy.get("[name=student]").contains(student.firstName).and("contain", student.lastName)
     })
+    for (let i = 0; i<5; i++) {
+      cy.get("[name=student]").contains(students[i].firstName+" "+students[i].lastName).within(()=>{
+        cy.get("button[name=remove]").click();
+      });
+    };
+    for (let i = 0; i<5; i++) {
+      cy.get("[name=student]").contains(students[i].firstName + " " + students[i].lastName).should("have.length", 0);
+    }
+    for (let i = 5; i<15; i++) {
+      cy.get("[name=student]").contains(students[i].firstName + " " + students[i].lastName).should("have.length", 1);
+    }
     cy.desktopLogOut();
   });
 });
