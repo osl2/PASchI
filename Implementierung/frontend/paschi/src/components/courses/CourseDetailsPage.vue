@@ -18,7 +18,9 @@
       >
     </template>
   </navigation-bar>
-  <side-menu />
+  <side-menu></side-menu>
+  <ButtomBar />
+
   <v-main>
     <v-container fluid class="v-row align-start justify-space-around">
       <v-container max-width="800" min-width="570" rounded class="ma-1 v-col-5">

@@ -1,24 +1,30 @@
 <template>
   <NavigationBar>
     <template v-slot:default>
-      <v-app-bar-title> Benutzerdaten bearbeiten </v-app-bar-title>
+      <v-app-bar-title> Benutzerdaten bearbeiten</v-app-bar-title>
     </template>
-    <template v-slot:append>
+    <template v-if="!isMobile" v-slot:append>
       <v-btn class="ma-2" variant="tonal" rounded="pill" @click="router.back()"
-        >Verwerfen</v-btn
-      >
+      >Verwerfen
+      </v-btn>
       <v-btn
         class="ma-2"
         variant="flat"
         rounded="pill"
         color="green"
         @click="updateAccount()"
-        >Speichern</v-btn
-      >
+      >Speichern
+      </v-btn>
+    </template>
+    <template v-if="isMobile" v-slot:append>
+      <v-btn class="ma-2" variant="tonal" rounded="pill" @click="logOut">
+        Abmelden
+      </v-btn>
     </template>
   </NavigationBar>
   <v-main class="v-row justify-center">
-    <SideMenu />
+    <SideMenu/>
+    <ButtomBar/>
     <v-form class="mt-5 v-col" style="max-width: 1000px">
       <v-text-field
         v-model="firstName"
@@ -33,7 +39,25 @@
         label="Nachname"
         :rules="[requiredRule, nameMaxLengthRule]"
       />
+      <v-container align="center">
+        <v-btn v-if="isMobile" class="ma-2" variant="tonal" rounded="pill" @click="router.back()"
+        >Verwerfen
+        </v-btn
+        >
+        <v-btn
+          v-if="isMobile"
+          class="ma-2"
+          variant="flat"
+          rounded="pill"
+          color="green"
+          @click="updateAccount()"
+        >
+          Speichern
+        </v-btn>
+      </v-container>
     </v-form>
+
+
     <v-snackbar v-model="errorSnackbar" :timeout="errorSnackbarTimeout">
       {{ errorSnackbarText }}
 
@@ -50,12 +74,13 @@ import AppBar from "@/components/navigation/NavigationBar.vue";
 import router from "@/plugins/router";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
-import { UserController } from "@/controller/UserController";
-import { ref } from "vue";
+import {UserController} from "@/controller/UserController";
+import {inject, Ref, ref} from "vue";
+import ButtomBar from "@/components/navigation/ButtomBar.vue";
 
 export default {
   name: "EditAccountPage",
-  components: { SideMenu, NavigationBar, AppBar },
+  components: {ButtomBar, SideMenu, NavigationBar, AppBar},
   setup() {
     const userController = UserController.getUserController();
     const firstName = ref(userController.getUser().firstName);
@@ -63,6 +88,15 @@ export default {
     const errorSnackbar = ref(false);
     const errorSnackbarText = "Alle Felder müssen ausgefüllt sein.";
     const errorSnackbarTimeout = 2000;
+    const isMobile: Ref<boolean> = inject("isMobile") as Ref<boolean>;
+
+    /**
+     * Loggt den Benutzer aus und leitet ihn auf die Login-Seite weiter.
+     */
+    function logOut() {
+      userController.logout();
+      router.push("/login");
+    }
 
     /**
      * Gibt Fehlermeldung zurück, falls der übergebene Wert leer ist, sonst true.
@@ -123,6 +157,7 @@ export default {
         errorSnackbar.value = true;
       }
     }
+
     return {
       firstName,
       lastName,
@@ -133,6 +168,8 @@ export default {
       requiredRule,
       nameMaxLengthRule,
       router,
+      isMobile,
+      logOut,
     };
   },
 };

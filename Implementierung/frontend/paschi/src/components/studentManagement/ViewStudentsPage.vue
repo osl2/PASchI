@@ -16,6 +16,8 @@
 
   <SideMenu />
   <v-main class="ma-0 v-row justify-center align-content-xl-space-around">
+    <SideMenu />
+    <ButtomBar />
     <v-container fluid class="v-col-11" style="max-width: 700px">
       <v-list rounded v-if="students.length > 0">
         <v-list-item rounded v-for="student in students" :key="student.getId">

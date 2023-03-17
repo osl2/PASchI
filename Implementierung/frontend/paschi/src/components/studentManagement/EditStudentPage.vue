@@ -16,6 +16,7 @@
   </navigation-bar>
   <v-main>
     <side-menu/>
+    <ButtomBar />
     <v-container class="v-row justify-center">
       <v-form class="mt-5 v-col" style="max-width: 1000px">
         <v-text-field
@@ -74,10 +75,12 @@ import SideMenu from "@/components/navigation/SideMenu.vue";
 import {Student} from "@/model/userdata/interactions/Student";
 import {useRouter} from "vue-router";
 import {UserController} from "@/controller/UserController";
+import ButtomBar from "@/components/navigation/ButtomBar.vue";
 
 export default defineComponent({
   name: "editStudentPage.vue",
   components: {
+    ButtomBar,
     SideMenu,
     NavigationBar,
   },

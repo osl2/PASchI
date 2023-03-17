@@ -18,6 +18,7 @@
 
   <v-main class="v-row justify-center">
     <SideMenu />
+    <ButtomBar />
     <v-form class="mt-5 v-col" style="max-width: 1000px">
       <v-text-field
         v-model="courseName"
