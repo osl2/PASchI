@@ -27,7 +27,7 @@
         transform: 'translate(-50%, -50%)',
       }"
   >
-    <slot name="lineMiddle" :id="slot.id" />
+    <slot name="lineMiddle" :id="slot.id" :angle="slot.angle" />
   </div>
 </template>
 
@@ -36,11 +36,9 @@ import {
   defineComponent,
   onBeforeUpdate,
   onMounted,
-  onUpdated,
   PropType,
   Ref,
   ref,
-  watch,
 } from "vue";
 interface Line {
   x1: number;
@@ -67,7 +65,7 @@ export default defineComponent({
   setup: function (props, context) {
     const canvas: Ref<HTMLCanvasElement | null> = ref(null);
 
-    const slots = ref<{ id: String; x: number; y: number }[]>([]);
+    const slots = ref<{ id: String; x: number; y: number, angle: number }[]>([]);
 
     const overlayWidth = window.innerWidth;
     const overlayHeight = window.innerHeight;
@@ -98,7 +96,9 @@ export default defineComponent({
           : line.y1 + vector.y / 2,
       };
 
-      slots.value.push({ id: line.id, x: middle.x, y: middle.y });
+      const angle = Math.atan2(vector.y, vector.x);
+
+      slots.value.push({ id: line.id, x: middle.x, y: middle.y, angle: angle });
 
       ctx.beginPath();
       ctx.moveTo(line.x1, line.y1);
