@@ -1,5 +1,5 @@
 <template>
-  <v-card color="primary" min-width="600">
+  <v-card name="requestCard" color="primary" min-width="600">
     <v-card-title>
       <v-row class="ma-2">
         Accountanträge
@@ -18,12 +18,14 @@
       <v-row>
         <v-col cols="3">
           <v-select
+            name="requestSearchParameters"
             label="suchen nach"
             :items="searchParameters"
             v-model="searchParameter"
         /></v-col>
         <v-col>
           <v-text-field
+            name="requestSearch"
             v-model="searchInput"
             label="Suche"
             type="input"
@@ -32,6 +34,7 @@
       </v-row>
     </v-card-item>
     <v-card-item
+      name="request"
       v-for="request in requests.sort((a, b) => a.email.localeCompare(b.email))"
       v-show="!collapsed && includesSearch(request)"
       :key="request.getId"
@@ -40,7 +43,7 @@
         <v-col v-show="showName">
           {{ request.firstName }} {{ request.lastName }}
         </v-col>
-        <v-col v-show="showEmail">
+        <v-col name="requestEmail" v-show="showEmail">
           {{ request.email }}
         </v-col>
         <v-col v-show="showId">
@@ -48,6 +51,7 @@
         </v-col>
         <v-col cols="3">
           <v-btn
+            name="authUser"
             :loading="loading.includes(request.getId)"
             color="#00ff00"
             @click="authUser(request)"

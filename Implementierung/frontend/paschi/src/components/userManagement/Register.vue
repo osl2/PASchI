@@ -25,6 +25,7 @@
           <form>
             <v-text-field
               v-model="firstName"
+              name="firstName"
               class="mt-2"
               variant="outlined"
               label="Vorname"
@@ -32,12 +33,14 @@
             />
             <v-text-field
               v-model="lastName"
+              name="lastName"
               variant="outlined"
               label="Nachname"
               :rules="[requiredRule, nameMaxLengthRule]"
             />
             <v-text-field
               v-model="mail"
+              name="mail"
               prepend-inner-icon="mdi mdi-email-outline"
               variant="outlined"
               label="Mailadresse"
@@ -45,6 +48,7 @@
             />
             <v-text-field
               v-model="password"
+              name="password"
               prepend-inner-icon="mdi mdi-lock-outline"
               type="Password"
               variant="outlined"
@@ -57,6 +61,7 @@
             />
             <v-text-field
               v-model="passwordRepeat"
+              name="passwordRepeat"
               prepend-inner-icon="mdi mdi-lock-outline"
               type="Password"
               variant="outlined"
@@ -67,6 +72,7 @@
         </v-card-item>
         <v-card-item>
           <v-btn
+            type="submit"
             block
             height="50"
             variant="flat"

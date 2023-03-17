@@ -10,6 +10,7 @@
     <slot name="left"></slot>
     <slot name="right"></slot>
     <v-card
+      name="room"
       key="background"
       variant="flat"
       color="white"
@@ -36,6 +37,7 @@
       >
         <slot name="chair" :chair="chair" :origin="getRoomObjectDisplayOrigin(chair)">
           <v-card
+            name="chair"
             class="ma-0 v-row align-center justify-center"
             color="secondary-lighten-2"
             elevation="0"
@@ -70,6 +72,7 @@
       >
         <slot name="table" :table="table" :origin="getRoomObjectDisplayOrigin(table)">
           <v-card
+            name="table"
             class="ma-0 v-row align-center justify-center"
             color="secondary-lighten-1"
             elevation="0"

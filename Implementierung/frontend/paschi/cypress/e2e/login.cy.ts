@@ -1,18 +1,30 @@
 ///<reference types="cypress" />
-const user = { email: "admin@kit.edu", password: "admin" };
+import {user} from "../support/commands";
+import {admin} from "../support/commands";
 
 describe("Login test", () => {
-  it("tests input of email and password and successful login", () => {
+  it("tests input of email and password and successful admin- login", () => {
+    cy.visit("/login");
+    cy.adminLogin(admin.email, admin.password);
+    cy.adminLogOut();
+  });
+  it("tests input of email and password and successful user- login", () => {
+    cy.visit("/login");
+    cy.userLogin(user.email, user.password);
+    cy.desktopLogOut();
+  });
+  it("tests input of email and password and unsuccessful admin- login", () => {
+    cy.visit("/login");
+    cy.get("input[name='email']").type(admin.email);
+    cy.get("input[name='password']").type("incorrect password");
+    cy.get("button[type=submit]").click();
+    cy.url().should("include", "/login");
+  });
+  it("tests input of email and password and unsuccessful user- login", () => {
     cy.visit("/login");
     cy.get("input[name='email']").type(user.email);
-    cy.get("input[name='password']").type(user.password);
+    cy.get("input[name='password']").type("incorrect password");
     cy.get("button[type=submit]").click();
-    cy.url().should("include", "/admin");
-    cy.contains("Akzeptierte Accounts");
-    cy.contains("Accountanträge");
-    cy.contains("Administratorseite");
-    cy.contains("Abmelden");
-    cy.get("button").contains("Abmelden").click();
     cy.url().should("include", "/login");
   });
 });

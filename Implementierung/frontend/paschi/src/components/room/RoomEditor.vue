@@ -7,9 +7,8 @@
       </v-app-bar-title>
     </template>
     <template v-slot:append>
-      <v-btn color="green" variant="flat" rounded @click="saveClick()"
-      >speichern
-      </v-btn
+      <v-btn name="save" color="green" variant="flat" rounded @click="saveClick()"
+        >speichern</v-btn
       >
     </template>
   </NavigationBar>
@@ -38,6 +37,7 @@
       </v-snackbar>
       <v-card :style="roomInventoryStyle" :class="roomInventoryClass">
         <v-btn
+          name="addTable"
           width="70"
           height="70"
           class="ma-1"
@@ -50,6 +50,7 @@
           </v-badge>
         </v-btn>
         <v-btn
+          name="addChair"
           width="70"
           height="70"
           class="ma-1"

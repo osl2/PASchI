@@ -7,6 +7,7 @@
       class="mt-12 text-white"
     >
       <v-list-item
+        name="dashboard"
         :active="subRouteOf('Dashboard')"
         prepend-icon="fas fa-gauge"
         @click="router.push('/dashboard')"
@@ -14,6 +15,7 @@
         <v-list-item-title> Dashboard </v-list-item-title>
       </v-list-item>
       <v-list-item
+        name="viewStudents"
         :active="subRouteOf('ViewStudentsPage')"
         prepend-icon="fas fa-users"
         @click="router.push('/view-students')"
@@ -21,6 +23,7 @@
         <v-list-item-title> Schüler </v-list-item-title>
       </v-list-item>
       <v-list-item
+        name="viewCourses"
         :active="subRouteOf('ViewCoursesPage')"
         prepend-icon="fas fa-people-group"
         @click="router.push('/view-courses')"
@@ -28,6 +31,7 @@
         <v-list-item-title> Kurse </v-list-item-title>
       </v-list-item>
       <v-list-item
+        name="viewRooms"
         :active="subRouteOf('ViewRoomsPage')"
         prepend-icon="fas fa-door-closed"
         @click="router.push('/view-rooms')"
@@ -44,6 +48,7 @@
         class="text-white"
       >
         <v-list-item
+          name="editAccount"
           :active="subRouteOf('EditAccountPage')"
           prepend-icon="fas fa-gear"
           @click="router.push('/edit-account')"
@@ -51,6 +56,7 @@
           <v-list-item-title> Benutzereinstellungen </v-list-item-title>
         </v-list-item>
         <v-list-item
+          name="logOut"
           prepend-icon="fa-solid fa-arrow-right-from-bracket"
           title="Abmelden"
           @click="logOut">

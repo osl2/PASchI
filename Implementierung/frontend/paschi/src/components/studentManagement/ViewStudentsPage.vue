@@ -3,6 +3,7 @@
     <v-app-bar-title> Schüler ansehen </v-app-bar-title>
     <template v-slot:append>
       <v-btn
+        name="createStudent"
         variant="flat"
         color="green"
         rounded
@@ -68,6 +69,7 @@
         <v-form validate-on="submit" @submit.prevent>
           <v-card-item>
             <v-text-field
+              name="firstName"
               v-model="studentFirstName"
               hint="Dieses Feld darf nicht leer sein"
               variant="outlined"
@@ -79,6 +81,7 @@
               required
             ></v-text-field>
             <v-text-field
+              name="lastName"
               v-model="studentLastName"
               hint="Dieses Feld ist optional"
               variant="outlined"
@@ -89,6 +92,7 @@
           </v-card-item>
           <v-card-actions class="row justify-center">
             <v-btn
+              name="cancelNewStudent"
               height="50"
               width="150"
               @click="abortNewStudentClick"
@@ -96,6 +100,7 @@
               >Abbrechen</v-btn
             >
             <v-btn
+              name="confirmNewStudent"
               type="submit"
               :disabled="isDisabled"
               height="50"
