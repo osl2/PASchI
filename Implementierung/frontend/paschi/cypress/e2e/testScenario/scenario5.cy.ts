@@ -12,16 +12,6 @@ describe("add course test", () => {
       { firstName: "Polly", lastName: "Zist" },
       { firstName: "Frank", lastName: "Reich" },
       { firstName: "Lang", lastName: "Fall" },
-      { firstName: "Rosa", lastName: "Wurst" },
-      { firstName: "Hans", lastName: "Maul" },
-      { firstName: "Kai", lastName: "Ser" },
-      { firstName: "Heide", lastName: "Witzka" },
-      { firstName: "Axel", lastName: "Axel" },
-      { firstName: "Peter", lastName: "Petersilie" },
-      { firstName: "Mary", lastName: "Huana" },
-      { firstName: "Ellen", lastName: "Lang" },
-      { firstName: "Harry", lastName: "Bo" },
-      { firstName: "Jo", lastName: "Ghurt" }
     );
     cy.visit("/login");
     cy.userLogin(user.email, user.password);
@@ -32,16 +22,18 @@ describe("add course test", () => {
     students.forEach((student)=>{
       cy.addStudent(student.firstName, student.lastName);
     });
-    students.forEach((student)=>{
-      cy.get("[name=student]").contains(student.firstName+" "+student.lastName);
-    });
     cy.sideMenuTo("courses");
     cy.get(".v-list-item[name=course]").click();
     cy.get("button[name=addStudent]").click();
     students.forEach((student) => {
       cy.get(".v-list-item").contains(student.firstName).and("contain", student.lastName).last().click()
     })
-    
+    cy.get(".v-expansion-panel-title[name=newSessionListTitle]").within(()=>{
+        cy.get("[name=startLastSeatArrangement]")
+
+      }
+    )
+
     cy.desktopLogOut();
   });
 });

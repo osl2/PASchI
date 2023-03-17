@@ -24,7 +24,7 @@
     <v-card-text>
       <v-expansion-panels>
         <v-expansion-panel elevation="5" class="rounded-lg">
-          <v-expansion-panel-title>
+          <v-expansion-panel-title name="newSessionListTitle">
             <v-card variant="text">
               <v-card-title>
                 {{
@@ -37,6 +37,7 @@
             </v-card>
             <v-spacer />
             <v-btn
+              name="startLastSeatArrangement"
               height="50"
               width="80"
               class="ma-2 rounded-lg"
