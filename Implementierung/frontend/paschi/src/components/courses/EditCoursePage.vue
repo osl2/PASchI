@@ -75,37 +75,6 @@
       ]"
     >
     </PDialog>
-    <v-dialog max-width="700" v-model="newSeatArrangementNameDialog" persistent>
-      <v-card variant="flat" class="pa-2 rounded-lg">
-        <v-card-title class="text-h5 text-center text-indigo-darken-4">
-          Sitzordnung benennen
-        </v-card-title>
-        <v-text-field
-          v-model="newSetArrangementName"
-          class="mt-2"
-          variant="outlined"
-          label="Name der Sitzordnung"
-          type="input"
-        ></v-text-field>
-        <v-card-actions class="row justify-center">
-          <v-btn
-            height="50"
-            width="150"
-            variant="tonal"
-            @click="cancelAddSeatArrangement"
-            >Abbrechen</v-btn
-          >
-          <v-btn
-            height="50"
-            width="150"
-            variant="tonal"
-            @click="confirmAddSeatArrangement"
-            color="primary"
-            >Bestätigen</v-btn
-          >
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </v-main>
 </template>
 
@@ -314,8 +283,6 @@ export default defineComponent({
       courseName,
       seatArrangementElements,
       courseSubject,
-      newSeatArrangementNameDialog,
-      newSetArrangementName,
       isMobile,
     };
   },
