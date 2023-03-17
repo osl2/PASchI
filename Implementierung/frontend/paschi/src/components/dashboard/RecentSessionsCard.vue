@@ -15,6 +15,11 @@
           @click="navigateToInteractionMap(session)"
         >
           <v-icon>mdi mdi-map</v-icon>
+          <v-tooltip
+            activator="parent"
+            location="end"
+          >Interaktionskarte
+          </v-tooltip>
         </v-btn>
         <v-btn
           name="statistics"
@@ -24,6 +29,11 @@
           @click="navigateToSessionStatistic(session)"
         >
           <v-icon> fas fa-chart-line </v-icon>
+          <v-tooltip
+            activator="parent"
+            location="end"
+          >Sitzungsstatistiken
+          </v-tooltip>
         </v-btn>
       </template>
     </v-list-item>

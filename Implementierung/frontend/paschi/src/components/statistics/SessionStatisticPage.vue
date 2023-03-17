@@ -132,7 +132,7 @@ import {StatsController} from "@/controller/StatsController";
 import {StudentController} from "@/controller/StudentController";
 import {SessionController} from "@/controller/SessionController";
 import router from "@/plugins/router";
-import BottomBar from "@/components/navigation/BottomBar.vue";
+import BottomBar from "@//components/navigation/BottomBar.vue";
 
 export default defineComponent({
   name: "SessionStatisticPage",

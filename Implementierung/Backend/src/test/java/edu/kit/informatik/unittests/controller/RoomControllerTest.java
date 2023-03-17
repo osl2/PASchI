@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
@@ -63,29 +65,31 @@ public class RoomControllerTest extends AbstractTest {
         return roomDtos;
     }
 
-    private List<ChairDto> getSomeChairs() {
+    private List<ChairDto> getSomeChairs() throws InterruptedException {
         List<ChairDto> chairDtos = new ArrayList<>();
         Faker faker = new Faker(new Locale("de"));
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 10; i++) {
             chairDtos.add(EntityGenerator.createNewChairDto(faker, userDto));
+            TimeUnit.MILLISECONDS.sleep(2);
         }
 
         return chairDtos;
     }
 
-    private List<TableDto> getSomeTables() {
+    private List<TableDto> getSomeTables() throws InterruptedException {
         List<TableDto> tableDtos = new ArrayList<>();
         Faker faker = new Faker(new Locale("de"));
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 10; i++) {
             tableDtos.add(EntityGenerator.createNewTableDto(faker, userDto));
+            TimeUnit.MILLISECONDS.sleep(2);
         }
         return tableDtos;
     }
 
 
-    private void addRoomToDatabase() {
+    private void addRoomsToDatabase() {
         List<RoomDto> repositoryUser = new ArrayList<>();
         for (RoomDto roomDto: this.rooms) {
             repositoryUser.add(databaseManipulator.addRoom(roomDto));
@@ -120,8 +124,6 @@ public class RoomControllerTest extends AbstractTest {
 
     @Test
     public void addRoomWithObjects() throws Exception{
-        addRoomToDatabase();
-
         RoomDto roomDto =  rooms.get(0);
 
         List<RoomObjectDto> objectDtos = new ArrayList<>();
@@ -147,7 +149,7 @@ public class RoomControllerTest extends AbstractTest {
 
     @Test
     public void getOneRoom() throws Exception {
-        addRoomToDatabase();
+        addRoomsToDatabase();
 
         for (RoomDto room: rooms) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + room.getId())
@@ -167,7 +169,7 @@ public class RoomControllerTest extends AbstractTest {
 
     @Test
     public void getAllRooms() throws Exception {
-        addRoomToDatabase();
+        addRoomsToDatabase();
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(BASE_URL)
                 .header("Authorization", "Bearer " + userDto.getToken())
@@ -191,7 +193,14 @@ public class RoomControllerTest extends AbstractTest {
     @Test
     public void deleteRooms() throws Exception {
         List<RoomDto> before = databaseManipulator.getRooms();
-        addRoomToDatabase();
+        for (RoomDto roomDto: this.rooms) {
+            List<RoomObjectDto> objectDtos = new ArrayList<>();
+            objectDtos.addAll(getSomeTables());
+            objectDtos.addAll(getSomeChairs());
+            roomDto.setRoomObjects(objectDtos);
+        }
+
+        addRoomsToDatabase();
 
         for (RoomDto roomDto: rooms) {
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL)
@@ -214,7 +223,7 @@ public class RoomControllerTest extends AbstractTest {
 
     @Test
     public void updateRoom() throws Exception {
-        addRoomToDatabase();
+        addRoomsToDatabase();
 
         RoomDto roomDto =  rooms.get(0);
         roomDto.setName(rooms.get(1).getName());
@@ -237,6 +246,50 @@ public class RoomControllerTest extends AbstractTest {
         checkEquals(roomDto, repoDto);
     }
 
+    @Test
+    public void updateRoomWithLessObjects() throws Exception {
+        this.rooms = addSomeRooms();
+
+        RoomDto roomDto =  rooms.get(0);
+
+        List<RoomObjectDto> objectDtos = new ArrayList<>();
+        objectDtos.addAll(getSomeTables());
+        objectDtos.addAll(getSomeChairs());
+        roomDto.setRoomObjects(objectDtos);
+
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                .content(super.mapToJson(roomDto))
+                .header("Authorization", "Bearer " + userDto.getToken())
+        ).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
+
+        String content = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+        RoomDto repoDto = super.mapFromJson(content, RoomDto.class);
+
+        int lessObjects = repoDto.getRoomObjects().size() / 2;
+        Random random = new Random();
+
+        while (lessObjects < repoDto.getRoomObjects().size()) {
+            int i = random.nextInt(repoDto.getRoomObjects().size());
+            repoDto.getRoomObjects().remove(i);
+        }
+
+        MvcResult mvcResult2 = mvc.perform(MockMvcRequestBuilders.put(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                .content(super.mapToJson(repoDto))
+                .header("Authorization", "Bearer " + userDto.getToken())
+        ).andReturn();
+
+        int status2 = mvcResult.getResponse().getStatus();
+        assertEquals(200, status2);
+
+        String content2 = mvcResult2.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+        RoomDto repoDto2 = super.mapFromJson(content2, RoomDto.class);
+        checkEquals(repoDto, repoDto2);
+    }
 
     @Test
     public void updateRoomWithObjects() throws Exception {
@@ -248,7 +301,7 @@ public class RoomControllerTest extends AbstractTest {
         roomDto.setRoomObjects(objectDtos);
 
         this.rooms.set(0, roomDto);
-        addRoomToDatabase();
+        addRoomsToDatabase();
 
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(BASE_URL).contentType(MediaType.APPLICATION_JSON)
@@ -313,7 +366,7 @@ public class RoomControllerTest extends AbstractTest {
             if (expectedDto.getRoomObjects().get(i) instanceof ChairDto chairDto) {
                 ChairDto repoChairDto = (ChairDto) actualDto.getRoomObjects().get(i);
                 assertEquals(chairDto.getUserId(), repoChairDto.getPosition().getUserId());
-                assertEquals(chairDto.getCreatedAt(), repoChairDto.getPosition().getCreatedAt());
+                assertEquals(1000 * (chairDto.getCreatedAt().getTime()/ 1000), repoChairDto.getPosition().getCreatedAt().getTime());
 
                 assertEquals(chairDto.getPosition().getXCoordinate(), repoChairDto.getPosition().getXCoordinate(), 0);
                 assertEquals(chairDto.getPosition().getYCoordinate(), repoChairDto.getPosition().getYCoordinate(), 0);
@@ -323,7 +376,7 @@ public class RoomControllerTest extends AbstractTest {
             } else if (expectedDto.getRoomObjects().get(i) instanceof TableDto tableDto) {
                 TableDto repoTableDto = (TableDto) actualDto.getRoomObjects().get(i);
                 assertEquals(tableDto.getUserId(), repoTableDto.getPosition().getUserId());
-                assertEquals(tableDto.getCreatedAt(), repoTableDto.getPosition().getCreatedAt());
+                assertEquals(1000 * (tableDto.getCreatedAt().getTime()/ 1000), repoTableDto.getPosition().getCreatedAt().getTime());
                 assertEquals(tableDto.getLength(), repoTableDto.getLength(), 0);
                 assertEquals(tableDto.getWidth(), repoTableDto.getWidth(), 0);
 

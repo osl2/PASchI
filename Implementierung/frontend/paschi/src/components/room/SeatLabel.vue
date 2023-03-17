@@ -1,11 +1,11 @@
 <template>
   <div
     name="seatLabel"
-    v-if="participant"
+    v-if="participant && participant.visible"
     class="flex-column align-content-center justify-center"
   >
     <div class="d-flex align center justify-center" style="user-select: none; -webkit-user-select: none">
-      <v-avatar class="font-weight-medium text-lg-button" color="primary">
+      <v-avatar class="font-weight-medium text-lg-button" :color="participant.isTeacher()? 'green' : 'primary'">
         {{ participant.firstName.charAt(0) + " " + participant.lastName.charAt(0) }}
         <slot />
       </v-avatar>

@@ -126,6 +126,12 @@ public class RoomService extends BaseService<Room, RoomDto, RoomDto> {
         return delete(room);
     }
 
+    /**
+     * Löschen eines {@link Room}
+     * -->dient zum Löschen fpr andere Services
+     * @param room {@link Room}
+     * @return Id des {@link Room}
+     */
     protected String delete(Room room) {
         List<SeatArrangement> seatArrangements = seatArrangementRepository.findSeatArrangementByRoom(room);
         if (seatArrangements.size() != 0) {

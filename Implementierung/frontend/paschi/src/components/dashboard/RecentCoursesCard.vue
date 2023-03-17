@@ -21,6 +21,11 @@
           @click="navigateToStatistic(course)"
         >
           <v-icon> fas fa-chart-line </v-icon>
+          <v-tooltip
+            activator="parent"
+            location="start"
+          >Kursstatistiken
+          </v-tooltip>
         </v-btn>
       </template>
     </v-list-item>

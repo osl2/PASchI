@@ -1,9 +1,9 @@
 <template>
   <NavigationBar extended>
-    <template v-slot:prepend> Sitzung </template>
+    <template v-slot:prepend> <div /> </template>
     <template v-slot:default class="row justify-center w-100">
       <v-app-bar-title class="v-col-auto">
-        {{ sessionName }}
+        Sitzung
       </v-app-bar-title>
     </template>
     <template v-slot:append>

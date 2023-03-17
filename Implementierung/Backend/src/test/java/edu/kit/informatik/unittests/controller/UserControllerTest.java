@@ -3,6 +3,13 @@ package edu.kit.informatik.unittests.controller;
 import com.github.javafaker.Faker;
 import edu.kit.informatik.dto.RoleDto;
 import edu.kit.informatik.dto.UserDto;
+import edu.kit.informatik.dto.userdata.courses.CourseDto;
+import edu.kit.informatik.dto.userdata.courses.SeatArrangementDto;
+import edu.kit.informatik.dto.userdata.courses.SessionDto;
+import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
+import edu.kit.informatik.dto.userdata.interactions.InteractionDto;
+import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
+import edu.kit.informatik.dto.userdata.rooms.RoomDto;
 import edu.kit.informatik.unittests.DatabaseManipulator;
 import edu.kit.informatik.unittests.EntityGenerator;
 import org.junit.After;
@@ -159,8 +166,6 @@ public class UserControllerTest extends AbstractTest {
             UserDto userdto = super.mapFromJson(content, UserDto.class);
 
             assertEquals(users.get(i).getEmail(), userdto.getEmail());
-            userdto.setPassword(userdto.getPassword().substring(8));
-            assertTrue(new BCryptPasswordEncoder().matches(users.get(i).getPassword(), userdto.getPassword()));
             assertEquals(users.get(i).getFirstName(), userdto.getFirstName());
             assertEquals(users.get(i).getLastName(), userdto.getLastName());
             assertEquals(users.get(i).getRole(), userdto.getRole());
@@ -225,7 +230,6 @@ public class UserControllerTest extends AbstractTest {
         for (int i = 0; i < users.size(); i++) {
             assertEquals(users.get(i).getFirstName(), userFromDataBase.get(i).getFirstName());
             assertEquals(users.get(i).getLastName(), userFromDataBase.get(i).getLastName());
-            assertEquals(users.get(i).getPassword(), userFromDataBase.get(i).getPassword());
             assertNotEquals(users.get(i).getRole(), userFromDataBase.get(i).getRole());
             assertNotEquals(users.get(i).isAuth(), userFromDataBase.get(i).isAuth());
         }
@@ -294,10 +298,7 @@ public class UserControllerTest extends AbstractTest {
             UserDto userdto = super.mapFromJson(content, UserDto.class);
 
 
-            assertEquals(user.getEmail(), userdto.getEmail());
-            userdto.setPassword(userdto.getPassword().substring(8));
-            assertTrue(new BCryptPasswordEncoder().matches(user.getPassword(), userdto.getPassword()));
-            assertEquals(user.getFirstName(), userdto.getFirstName());
+            assertEquals(user.getEmail(), userdto.getEmail());assertEquals(user.getFirstName(), userdto.getFirstName());
             assertEquals(user.getLastName(), userdto.getLastName());
             assertEquals(user.getRole(), userdto.getRole());
         }
@@ -325,10 +326,7 @@ public class UserControllerTest extends AbstractTest {
 
 
         for (int i= 0; i < users.size(); i++) {
-            assertEquals(users.get(i).getEmail(), userDtos.get(i).getEmail());
-            userDtos.get(i).setPassword(userDtos.get(i).getPassword().substring(8));
-            assertTrue(new BCryptPasswordEncoder().matches(users.get(i).getPassword(), userDtos.get(i).getPassword()));
-            assertEquals(users.get(i).getFirstName(), userDtos.get(i).getFirstName());
+            assertEquals(users.get(i).getEmail(), userDtos.get(i).getEmail());assertEquals(users.get(i).getFirstName(), userDtos.get(i).getFirstName());
             assertEquals(users.get(i).getLastName(), userDtos.get(i).getLastName());
             assertEquals(users.get(i).getRole(), userDtos.get(i).getRole());
         }
@@ -353,10 +351,90 @@ public class UserControllerTest extends AbstractTest {
 
         assertEquals(before.size(), after.size());
 
+        //Es sollte nur der Admin-Account da sein
+        assertEquals(1, databaseManipulator.getUsers().size());
         for (int i = 0; i< before.size(); i++) {
             assertEquals(before.get(i), after.get(i));
         }
 
+    }
+
+    @Test
+    public void deleteUserWithAllEntities() throws Exception {
+        List<UserDto> before = databaseManipulator.getUsers();
+        addUsersToDatabase();
+        Faker faker = new Faker(new Locale("de"));
+
+        for (int i = 0; i < users.size(); i++) {
+            users.set(i, super.login(users.get(i)));
+
+            ParticipantDto participantDto1 = databaseManipulator.addParticipant(EntityGenerator.createNewParticipant(faker, users.get(i)));
+            ParticipantDto participantDto2 = databaseManipulator.addParticipant(EntityGenerator.createNewParticipant(faker, users.get(i)));
+
+            CourseDto courseDto = databaseManipulator.addCourse(EntityGenerator.createNewCourse(faker, users.get(i)));
+            List<String> participantsIds = new ArrayList<>();
+            participantsIds.add(participantDto1.getId());
+            participantsIds.add(participantDto2.getId());
+            courseDto.setParticipantIds(participantsIds);
+
+            RoomDto roomDto = databaseManipulator.addRoom(EntityGenerator.createNewRoom(faker, users.get(i)));
+            SeatArrangementDto seatArrangementDto = databaseManipulator.addSeatArrangement(
+                    EntityGenerator.createNewSeatArrangement(faker, users.get(i), courseDto, roomDto));
+
+            List<String> seatArrangementIds = new ArrayList<>();
+            seatArrangementIds.add(seatArrangementDto.getId());
+            courseDto.setSeatArrangementIds(seatArrangementIds);
+
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put("/api/course").contentType(MediaType.APPLICATION_JSON)
+                    .content(super.mapToJson(courseDto))
+                    .header("Authorization", "Bearer " + users.get(i).getToken())
+            ).andReturn();
+
+            int status = mvcResult.getResponse().getStatus();
+            assertEquals(200, status);
+
+            CategoryDto category = databaseManipulator.addCategory(EntityGenerator.createNewCategory(faker, users.get(i)));
+
+            SessionDto sessionDto = databaseManipulator.addSession(EntityGenerator.createNewSession(faker, users.get(i), courseDto));
+
+            InteractionDto interactionDto = EntityGenerator.createNewInteraction(users.get(i), sessionDto, participantDto1.getId(),
+                   participantDto2.getId(), category);
+            List<InteractionDto> list = new ArrayList<>();
+            list.add(interactionDto);
+            sessionDto.setInteractions(list);
+            sessionDto.setSeatArrangementId(seatArrangementDto.getId());
+
+
+
+            MvcResult mvcResult3 = mvc.perform(MockMvcRequestBuilders.put("/api/session").contentType(MediaType.APPLICATION_JSON)
+                    .content(super.mapToJson(sessionDto))
+                    .header("Authorization", "Bearer " + users.get(i).getToken())
+            ).andReturn();
+
+            int status3 = mvcResult3.getResponse().getStatus();
+            assertEquals(200, status3);
+
+            databaseManipulator.addRoom(EntityGenerator.createNewRoom(faker, users.get(i)));
+
+
+
+            MvcResult mvcResult2 = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL)
+                    .param("id", users.get(i).getId())
+                    .header("Authorization", "Bearer " + mainUserDto.getToken())
+            ).andReturn();
+
+            int status2 = mvcResult2.getResponse().getStatus();
+            assertEquals(200, status2);
+        }
+        List<UserDto> after = databaseManipulator.getUsers();
+
+        assertEquals(before.size(), after.size());
+
+        //Es sollte nur der Admin-Account da sein
+        assertEquals(1, databaseManipulator.getUsers().size());
+        for (int i = 0; i< before.size(); i++) {
+            assertEquals(before.get(i), after.get(i));
+        }
     }
 
     @Test

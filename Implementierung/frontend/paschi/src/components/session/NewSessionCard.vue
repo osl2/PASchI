@@ -40,16 +40,23 @@
               name="startLastSeatArrangement"
               height="50"
               width="80"
+              variant="tonal"
               class="ma-2 rounded-lg"
               color="green"
               v-on:click.stop
               @click="newSessionClick(lastSeatArrangement)"
             >
               <v-icon> fas fa-arrow-right </v-icon>
+              <v-tooltip
+                activator="parent"
+                location="start"
+              >Sitzung starten
+              </v-tooltip>
             </v-btn>
           </v-expansion-panel-title>
           <v-expansion-panel-text class="pa-2">
             <v-btn
+              v-if="!isMobile"
               block
               height="60"
               variant="elevated"
@@ -68,21 +75,24 @@
                 {{ seatArrangement.name }}
                 <template v-slot:append>
                   <v-btn
+                    v-if="!isMobile"
                     variant="tonal"
-                    icon="fas fa-edit"
                     class="ma-2"
                     v-on:click.stop
                     @click="editSeatArrangementClick(seatArrangement)"
                   >
+                    <v-icon>fas fa-pencil</v-icon>
                   </v-btn>
                   <v-btn
-                    variant="elevated"
+                    variant="tonal"
                     color="green"
-                    icon="fas fa-arrow-right"
                     class="ma-2"
                     v-on:click.stop
                     @click="newSessionClick(seatArrangement)"
-                  ></v-btn>
+                  >
+                    <v-icon>fas fa-arrow-right</v-icon>
+                  </v-btn>
+
                 </template>
               </v-list-item>
             </v-list>
@@ -160,6 +170,8 @@ export default defineComponent({
       showNewSeatArrangementDialog.value = true;
     }
 
+
+
     return {
       showNewSeatArrangementDialog,
       lastSeatArrangement,
@@ -169,6 +181,7 @@ export default defineComponent({
       newSessionClick,
       closeErrorDialog,
       errorDialog,
+      isMobile
     };
   },
 });

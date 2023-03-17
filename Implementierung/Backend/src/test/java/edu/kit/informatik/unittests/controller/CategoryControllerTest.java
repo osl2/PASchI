@@ -80,7 +80,7 @@ public class CategoryControllerTest extends AbstractTest {
     private void addCategoriesToDatabase() {
         List<RatedCategoryDto> repositoryCategory = new ArrayList<>();
         for (RatedCategoryDto categoryDto: this.categories) {
-            repositoryCategory.add(databaseManipulator.addCategory(categoryDto));
+            repositoryCategory.add(databaseManipulator.addRatedCategory(categoryDto));
         }
 
         this.categories = repositoryCategory;

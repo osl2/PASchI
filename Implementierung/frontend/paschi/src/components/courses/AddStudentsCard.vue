@@ -15,11 +15,13 @@
           class="ma-2 mr-4"
           variant="tonal"
           color="green"
-          prepend-icon="mdi mdi-plus"
-          min-width="228"
+          :prepend-icon="isMobile? undefined : 'mdi mdi-plus'"
           v-on:click.stop
           @click="activateStudentCard"
-          >Schüler hinzufügen
+          >{{isMobile? "" : "Schüler hinzufügen" }}
+          <v-icon v-if="isMobile">
+            mdi mdi-plus
+          </v-icon>
         </v-btn>
       </v-expansion-panel-title>
       <v-expansion-panel-text class="justify-center">
@@ -33,6 +35,11 @@
               @click="editStudentClick(student)"
             >
               <v-icon>fas fa-pencil</v-icon>
+              <v-tooltip
+                activator="parent"
+                location="start"
+              >Schüler bearbeiten
+              </v-tooltip>
             </v-btn>
             <v-btn
               name="studentStatistic"
@@ -42,6 +49,11 @@
               @click="studentStatisticClick(student)"
             >
               <v-icon> fas fa-chart-line</v-icon>
+              <v-tooltip
+                activator="parent"
+                location="top"
+              >Schülerstatistiken
+              </v-tooltip>
             </v-btn>
             <v-btn
               name="remove"
@@ -51,6 +63,11 @@
               @click="removeStudentFromCourse(student)"
             >
               <v-icon>mdi mdi-minus</v-icon>
+              <v-tooltip
+                activator="parent"
+                location="end"
+              >Schüler löschen
+              </v-tooltip>
             </v-btn>
           </v-row>
         </v-list>
@@ -60,7 +77,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, Ref } from "vue";
+import {computed, defineComponent, inject, ref, Ref} from "vue";
 import PDialog from "@/components/base/PDialog.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
@@ -88,6 +105,8 @@ export default defineComponent({
     const addStudentSelectionDialog: Ref<boolean> = ref<boolean>(false);
 
     const studentsNotInCourse = computed(() => getStudentsNotInCourse());
+
+    const isMobile: Ref<boolean> = inject("isMobile") as Ref<boolean>;
 
     const studentsNotInCourseElements = computed(() => {
       return computed(() =>
@@ -189,6 +208,7 @@ export default defineComponent({
       addStudentSelectionDialog,
       studentsNotInCourseElements,
       studentsInCourse,
+      isMobile,
     };
   },
 });

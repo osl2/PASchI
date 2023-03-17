@@ -162,8 +162,8 @@ public class ParticipantControllerTest extends AbstractTest {
         assertEquals(before.size(), after.size());
 
         for (int i = 0; i< before.size(); i++) {
-            assertEquals("Deleted", after.get(i).getFirstName());
-            assertEquals("User", after.get(i).getLastName());
+            assertEquals("Gelöschter", after.get(i).getFirstName());
+            assertEquals("Teilnehmer", after.get(i).getLastName());
             before.get(i).setFirstName(after.get(i).getFirstName());
             before.get(i).setLastName(after.get(i).getLastName());
             before.get(i).setVisible(false);

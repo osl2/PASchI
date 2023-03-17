@@ -3,6 +3,7 @@ package edu.kit.informatik.dto.userdata.interactions;
 
 import edu.kit.informatik.model.userdata.interactions.Interaction;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,11 +17,12 @@ import java.sql.Timestamp;
  * @author ugqbo
  * @version 1.0
  */
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class InteractionDto {
+public class InteractionDto implements Comparable<InteractionDto> {
 
     private String id;
     private String userId;
@@ -31,4 +33,12 @@ public class InteractionDto {
     private String categoryId;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+
+    @Override
+    public int compareTo(InteractionDto o) {
+        Timestamp thisInteraction = this.createdAt;
+        Timestamp oInteraction = o.createdAt;
+
+        return  thisInteraction.compareTo(oInteraction);
+    }
 }
