@@ -33,27 +33,6 @@
         label="Nachname"
         :rules="[requiredRule, nameMaxLengthRule]"
       />
-      <v-text-field
-        v-model="password"
-        prepend-inner-icon="mdi mdi-lock-outline"
-        type="Password"
-        variant="outlined"
-        label="Passwort"
-        :rules="[requiredRule, passwordMinLengthRule, passwordMaxLengthRule]"
-      />
-      <v-text-field
-        v-model="passwordRepeat"
-        prepend-inner-icon="mdi mdi-lock-outline"
-        type="Password"
-        variant="outlined"
-        label="Passwort bestätigen"
-        :rules="[requiredRule, passwordsEqualRule]"
-      />
-      <v-row justify="end" class="ma-0">
-        <v-btn variant="tonal" color="primary" @click="changePassword"
-          >Passwort ändern</v-btn
-        >
-      </v-row>
     </v-form>
     <v-snackbar v-model="errorSnackbar" :timeout="errorSnackbarTimeout">
       {{ errorSnackbarText }}
@@ -81,8 +60,6 @@ export default {
     const userController = UserController.getUserController();
     const firstName = ref(userController.getUser().firstName);
     const lastName = ref(userController.getUser().lastName);
-    const password = ref();
-    const passwordRepeat = ref("");
     const errorSnackbar = ref(false);
     const errorSnackbarText = "Alle Felder müssen ausgefüllt sein.";
     const errorSnackbarTimeout = 2000;
@@ -95,36 +72,6 @@ export default {
     function requiredRule(value: string) {
       if (value === "") {
         return "Dieses Feld muss ausgefüllt sein.";
-      }
-      return true;
-    }
-
-    /**
-     * Gibt Fehlermeldung zurück, falls das Passwort kürzer als 8 ist, sonst true.
-     */
-    function passwordMinLengthRule() {
-      if (password.value.length < 8) {
-        return "Das Passwort muss mindestens 8 Zeichen lang sein.";
-      }
-      return true;
-    }
-
-    /**
-     * Gibt Fehlermeldung zurück, falls das Passwort länger als 32 ist, sonst true.
-     */
-    function passwordMaxLengthRule() {
-      if (password.value.length > 32) {
-        return "Das Passwort muss höchstens 32 Zeichen lang sein.";
-      }
-      return true;
-    }
-
-    /**
-     * Gibt Fehlermeldung zurück, falls die Passwörter nicht übereinstimmen, sonst true.
-     */
-    function passwordsEqualRule() {
-      if (password.value !== passwordRepeat.value) {
-        return "Passwörter müssen gleich sein.";
       }
       return true;
     }
@@ -161,13 +108,8 @@ export default {
         !error([
           requiredRule(firstName.value),
           requiredRule(lastName.value),
-          requiredRule(password.value),
-          requiredRule(passwordRepeat.value),
           nameMaxLengthRule(firstName.value),
           nameMaxLengthRule(lastName.value),
-          passwordMinLengthRule(),
-          passwordMaxLengthRule(),
-          passwordsEqualRule(),
         ])
       ) {
         userController.update(firstName.value, lastName.value);
@@ -176,8 +118,6 @@ export default {
         error([
           requiredRule(firstName.value),
           requiredRule(lastName.value),
-          requiredRule(password.value),
-          requiredRule(passwordRepeat.value),
         ])
       ) {
         errorSnackbar.value = true;
@@ -186,16 +126,11 @@ export default {
     return {
       firstName,
       lastName,
-      password,
-      passwordRepeat,
       errorSnackbar,
       errorSnackbarText,
       errorSnackbarTimeout,
       updateAccount,
       requiredRule,
-      passwordMinLengthRule,
-      passwordMaxLengthRule,
-      passwordsEqualRule,
       nameMaxLengthRule,
       router,
     };
