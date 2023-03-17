@@ -1,5 +1,18 @@
 <template>
-  <navigation-bar />
+  <navigation-bar>
+    <template v-slot:append>
+      <v-btn
+        name="deleteSeatArrangement"
+        variant="flat"
+        color="red"
+        rounded
+        prepend-icon="mdi mdi-trash-can"
+        @click="deleteSeatArrangement"
+      >Sitzordnung löschen</v-btn
+      >
+    </template>
+
+  </navigation-bar>
   <RoomDisplay :room-id="seatArrangement.room.getId">
     <template v-slot:chair="chair">
       <SeatLabel :participant="getParticipant(chair.chair)">
@@ -62,6 +75,7 @@ import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
 import {Chair} from "@/model/userdata/rooms/Chair";
 import {Participant} from "@/model/userdata/interactions/Participant";
 import {CourseController} from "@/controller/CourseController";
+import router from "@/plugins/router";
 
 export default defineComponent({
   name: "SeatArrangementPage",
@@ -93,9 +107,13 @@ export default defineComponent({
       seatArrangementController.deleteMapping(props.seatArrangementId, chair.getId);
     }
 
+    function deleteSeatArrangement() {
+      seatArrangementController.deleteSeatArrangement(props.seatArrangementId);
+      router.back();
+    }
+
     function setSeat(chair: Chair, participant: Participant) {
       seatArrangementController.addMapping(props.seatArrangementId, chair.getId, participant.getId);
-      console.log(seatArrangement.value?.getParticipantForSeat(chair));
     }
 
     const unseatedParticipants = computed(() => {
@@ -103,11 +121,10 @@ export default defineComponent({
     });
 
     onMounted(() => {
-      console.log(teacher);
     });
 
 
-    return { teacherAssigned, teacher, unseatedParticipants, setSeat, emptySeat, seatArrangement, getParticipant };
+    return { teacherAssigned, teacher, unseatedParticipants, setSeat, emptySeat, seatArrangement, getParticipant,deleteSeatArrangement };
   },
 });
 </script>
