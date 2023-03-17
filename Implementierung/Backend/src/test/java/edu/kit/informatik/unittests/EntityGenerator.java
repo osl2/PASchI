@@ -105,7 +105,7 @@ public final class EntityGenerator {
         return courseDto;
     }
 
-    public static SessionDto createNewSession(Faker faker, CourseDto courseDto, UserDto userDto) {
+    public static SessionDto createNewSession(Faker faker, UserDto userDto, CourseDto courseDto) {
         SessionDto sessionDto = new SessionDto();
 
         sessionDto.setName(faker.funnyName().name());
