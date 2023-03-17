@@ -40,9 +40,9 @@ public class CourseDto implements Comparable<CourseDto> {
 
     @Override
     public int compareTo(CourseDto o) {
-        UUID thisUser = UUID.fromString(this.id);
-        UUID oUser = UUID.fromString(o.getId());
+        UUID thisCourse = UUID.fromString(this.id);
+        UUID oCourse = UUID.fromString(o.getId());
 
-        return  thisUser.compareTo(oUser);
+        return  thisCourse.compareTo(oCourse);
     }
 }
