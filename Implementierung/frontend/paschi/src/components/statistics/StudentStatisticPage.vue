@@ -24,7 +24,7 @@
           <v-col>
             <v-card color="primary-lighten-1">
               <v-card-title>
-                <v-row class="ma-2">
+                <v-row class="text-wrap ma-2">
                   Durchschnittliche Qualität der Beiträge
                   <v-spacer />
                 </v-row>
@@ -37,7 +37,7 @@
               >
                 <v-rating
                   v-model="statsController.getStudentStats(studentId)[1]"
-                  class="ma-2"
+                  class="text-wrap ma-2"
                   readonly
                   hover
                   half-increments
@@ -50,7 +50,7 @@
           <v-col>
             <v-card color="primary-lighten-1">
               <v-card-title>
-                <v-row class="ma-2">
+                <v-row class="text-wrap ma-2">
                   Aufschlüsselung der Interaktionen nach Kategorien
                   <v-spacer />
                 </v-row>
