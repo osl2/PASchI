@@ -1,6 +1,9 @@
 ///<reference types="cypress" />
 import {user} from "../support/commands";
 describe("add course test", () => {
+  before(() => {
+    cy.resetTestAccount();
+  })
   it("tests adding a course", () => {
     const course = { name: "Klasse 10b", subject: "Informatik" };
     cy.visit("/login");

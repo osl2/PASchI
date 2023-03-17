@@ -2,6 +2,9 @@
 import {user} from "../support/commands";
 
 describe("Register test", () => {
+  before(() => {
+    cy.resetTestAccount();
+  })
   const emptyInputMessage = "Alle Felder müssen ausgefüllt sein.";
   it("tests empty first name", () => {
     cy.visit("/register");
