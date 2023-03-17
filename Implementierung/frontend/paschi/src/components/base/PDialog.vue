@@ -30,6 +30,7 @@
             variant="tonal"
             height="50"
             :color="button.color ?? undefined"
+            :disabled="button.disabled ?? false"
             :prepend-icon="button.icon ?? undefined"
             @click="button.click() ?? undefined"
             class="ml-2"
@@ -74,6 +75,7 @@ export default defineComponent({
             icon?: String;
             color?: String;
             click?: Function;
+            disabled?: Boolean;
             submit?: Boolean;
           }
       )[],
@@ -101,9 +103,6 @@ export default defineComponent({
     return {
       updateDialog,
       click,
-      title: props.title,
-      elements: props.elements,
-      buttons: props.buttons,
     };
   },
 });
