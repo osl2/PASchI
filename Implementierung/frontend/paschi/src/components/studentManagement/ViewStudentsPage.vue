@@ -14,8 +14,8 @@
     </template>
   </navigation-bar>
 
+  <SideMenu />
   <v-main class="ma-0 v-row justify-center align-content-xl-space-around">
-    <SideMenu />
     <v-container fluid class="v-col-11" style="max-width: 700px">
       <v-list rounded v-if="students.length > 0">
         <v-list-item rounded v-for="student in students" :key="student.getId">
@@ -122,12 +122,14 @@ import { StudentController } from "@/controller/StudentController";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import { Student } from "@/model/userdata/interactions/Student";
-import { defineComponent, Ref, ref} from "vue";
+import { defineComponent, Ref, ref } from "vue";
 import { useRouter } from "vue-router";
+import PDialog from "@/components/base/PDialog.vue";
+import PInput from "@/components/base/PInput.vue";
 
 export default defineComponent({
   name: "ViewStudentsPage",
-  components: { SideMenu, NavigationBar },
+  components: { PInput, PDialog, SideMenu, NavigationBar },
 
   computed:{
     isDisabled(){

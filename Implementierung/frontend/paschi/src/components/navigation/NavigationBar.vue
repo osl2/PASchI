@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar elevation="12" class="ml-0 text-blue-grey-lighten-5">
+  <v-app-bar elevation="0" color="primary-darken-1" class="position-fixed ml-0 text-blue-grey-lighten-5">
     <template v-slot:prepend>
       <slot v-if="!isMobile" name="prepend">
         <v-app-bar-nav-icon icon="fas fa-arrow-left" @click="router.back()" />

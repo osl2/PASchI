@@ -122,10 +122,12 @@ import { defineComponent, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
 import { Course } from "@/model/userdata/courses/Course";
 import { useRouter } from "vue-router";
+import PDialog from "@/components/base/PDialog.vue";
+import PInput from "@/components/base/PInput.vue";
 
 export default defineComponent({
   name: "ViewCoursesPage",
-  components: { SideMenu, NavigationBar },
+  components: { PInput, PDialog, SideMenu, NavigationBar },
 
   computed:{
     isDisabled(){

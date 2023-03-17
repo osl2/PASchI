@@ -100,6 +100,8 @@ import SideMenu from "@/components/navigation/SideMenu.vue";
 import { Room } from "@/model/userdata/rooms/Room";
 import { RoomController } from "@/controller/RoomController";
 import { useRouter } from "vue-router";
+import PDialog from "@/components/base/PDialog.vue";
+import PInput from "@/components/base/PInput.vue";
 export default defineComponent({
   name: "ViewRoomsPage",
   components: { SideMenu, NavigationBar },
@@ -122,12 +124,12 @@ export default defineComponent({
       enterRoomNameDialog.value = false;
     }
     async function confirmNewRoomClick() {
-        await roomController.createRoom(newRoomName.value).then((res) => {
-          router.push({
-            name: "RoomEditor",
-            params: { roomId: res },
-          });
-        })
+      await roomController.createRoom(newRoomName.value).then((res) => {
+        router.push({
+          name: "RoomEditor",
+          params: { roomId: res },
+        });
+      });
     }
     function newRoomClick() {
       newRoomName.value = "";
