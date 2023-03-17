@@ -12,7 +12,7 @@
       v-model="errorDialog"
     />
     <NewSeatArrangementDialog
-      course-id="courseId"
+      :course-id="courseId"
       v-model="showNewSeatArrangementDialog"
     />
     <v-card-title class="v-expansion-panel-title">
