@@ -55,6 +55,7 @@
           </v-expansion-panel-title>
           <v-expansion-panel-text class="pa-2">
             <v-btn
+              v-if="!isMobile"
               block
               height="60"
               variant="elevated"
@@ -73,6 +74,7 @@
                 {{ seatArrangement.name }}
                 <template v-slot:append>
                   <v-btn
+                    v-if="!isMobile"
                     variant="tonal"
                     class="ma-2"
                     v-on:click.stop
@@ -178,6 +180,7 @@ export default defineComponent({
       newSessionClick,
       closeErrorDialog,
       errorDialog,
+      isMobile
     };
   },
 });
