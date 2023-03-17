@@ -177,7 +177,7 @@ public final class EntityGenerator {
     }
 
     public static InteractionDto createNewInteraction(UserDto userDto, SessionDto sessionDto, String participantsFromId, String participantToId, CategoryDto categoryDto) {
-        Timestamp createdAt = Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS));
+        Timestamp createdAt = Timestamp.from(Instant.now().truncatedTo(ChronoUnit.MILLIS));
         return new InteractionDto("0", userDto.getId(), Long.toString(createdAt.getTime()), sessionDto.getId(), participantsFromId, participantToId, categoryDto.getId(), createdAt, createdAt);
     }
 }
