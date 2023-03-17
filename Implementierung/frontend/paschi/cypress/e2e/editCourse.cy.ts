@@ -2,8 +2,11 @@
 import {user} from "../support/commands";
 
 describe("add course test", () => {
+  const course = { name: "Klasse 10b", subject: "Informatik" };
+  before(() => {
+    cy.resetTestAccount();
+  })
   it("tests adding students to a course", () => {
-    const course = { name: "Klasse 10b", subject: "Informatik" };
     const students: ({firstName: string, lastName: string}[]) = Array.of({firstName: "Alice", lastName: "Müller"}, {firstName: "Bob", lastName: "Bohne"}, {firstName: "Liam", lastName: "Schaal"}, {firstName: "Christian", lastName: "Kessel"})
     cy.visit("/login");
     cy.userLogin(user.email, user.password);
@@ -16,8 +19,21 @@ describe("add course test", () => {
     cy.sideMenuTo("courses");
     cy.get(".v-list-item").should("contain", course.name).and("contain", course.subject).last().click();
     cy.get("button[name=addStudent]").click();
-    cy.get(".v-list-item").contains(students[0].firstName).and("contain", students[0].lastName).last().click()
+    students.forEach((student) => {
+      cy.get(".v-list-item").contains(student.firstName).and("contain", student.lastName).last().click()
+    })
+    //TODO
+/*    students.forEach((student) => {
+      cy.get(".v-list-item").contains(student.firstName).and("contain", student.lastName)
+    })*/
     cy.sideMenuTo("dashboard");
     cy.desktopLogOut();
   });
+  it("tests changing course name and course subject", () => {
+    const course = { name: "Klasse 10b", subject: "Informatik" };
+    cy.visit("/login");
+    cy.userLogin(user.email, user.password);
+    cy.sideMenuTo("courses");
+    cy.addCourse(course.name, course.subject);
+  })
 });

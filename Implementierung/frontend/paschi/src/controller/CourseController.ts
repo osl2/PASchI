@@ -192,7 +192,9 @@ export class CourseController {
    * @param courseId Die Id der Session.
    */
   getSessions(courseId: string): Session[] | undefined {
-    return useCourseStore().getCourse(courseId)?.sessions;
+    return useCourseStore().getCourse(courseId)?.sessions.sort((a: Session, b: Session) => {
+      return (a.createdAt <= b.createdAt) ? 1 : -1
+    });
   }
 
   /**

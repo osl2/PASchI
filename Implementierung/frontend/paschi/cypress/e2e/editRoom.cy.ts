@@ -2,6 +2,9 @@
 import {user} from "../support/commands";
 
 describe("add and then edit course test", () => {
+  before(() => {
+    cy.resetTestAccount();
+  })
   it("tests adding chairs and tables", () => {
     const room = { name: "123" };
     cy.visit("/login");
