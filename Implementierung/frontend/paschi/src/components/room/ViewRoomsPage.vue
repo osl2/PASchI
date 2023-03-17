@@ -88,7 +88,7 @@ import { RoomController } from "@/controller/RoomController";
 import { useRouter } from "vue-router";
 import PDialog from "@/components/base/PDialog.vue";
 import PInput from "@/components/base/PInput.vue";
-import BottomBar from "@/components/navigation/BottomBar.vue";
+import BottomBar from "@//components/navigation/BottomBar.vue";
 export default defineComponent({
   name: "ViewRoomsPage",
   components: {BottomBar, PInput, PDialog, SideMenu, NavigationBar },

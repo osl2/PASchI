@@ -74,7 +74,7 @@ import SideMenu from "@/components/navigation/SideMenu.vue";
 import Chart from "chart.js/auto";
 import { StatsController } from "@/controller/StatsController";
 import { StudentController } from "@/controller/StudentController";
-import BottomBar from "@/components/navigation/BottomBar.vue";
+import BottomBar from "@//components/navigation/BottomBar.vue";
 
 export default defineComponent({
   name: "StudentStatisticPage",
