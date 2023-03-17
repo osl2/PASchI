@@ -6,6 +6,8 @@ import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.dto.userdata.courses.CourseDto;
 import edu.kit.informatik.dto.userdata.courses.SeatArrangementDto;
 import edu.kit.informatik.dto.userdata.courses.SessionDto;
+import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
+import edu.kit.informatik.dto.userdata.interactions.InteractionDto;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.dto.userdata.interactions.ParticipantTypeDto;
 import edu.kit.informatik.dto.userdata.interactions.QualityDto;
@@ -161,7 +163,7 @@ public final class EntityGenerator {
 
     public static ChairDto createNewChairDto(Faker faker, UserDto userDto) {
         return new ChairDto("0" , userDto.getId(), createNewPositionDto(faker, userDto),
-                Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)), Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+                Timestamp.from(Instant.now().truncatedTo(ChronoUnit.MILLIS)), Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
     }
 
     public static TableDto createNewTableDto(Faker faker, UserDto userDto) {
@@ -170,7 +172,12 @@ public final class EntityGenerator {
         tableDto.setWidth(faker.number().numberBetween(1000, 3000));
         tableDto.setPosition(createNewPositionDto(faker, userDto));
         tableDto.setUserId(userDto.getId());
-        tableDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        tableDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.MILLIS)));
         return tableDto;
+    }
+
+    public static InteractionDto createNewInteraction(UserDto userDto, SessionDto sessionDto, String participantsFromId, String participantToId, CategoryDto categoryDto) {
+        Timestamp createdAt = Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS));
+        return new InteractionDto("0", userDto.getId(), Long.toString(createdAt.getTime()), sessionDto.getId(), participantsFromId, participantToId, categoryDto.getId(), createdAt, createdAt);
     }
 }
