@@ -35,6 +35,11 @@
               @click="editStudentClick(student)"
             >
               <v-icon>fas fa-pencil</v-icon>
+              <v-tooltip
+                activator="parent"
+                location="start"
+              >Schüler bearbeiten
+              </v-tooltip>
             </v-btn>
             <v-btn
               class="ml-2"
@@ -43,6 +48,11 @@
               @click="studentStatisticClick(student)"
             >
               <v-icon> fas fa-chart-line</v-icon>
+              <v-tooltip
+                activator="parent"
+                location="top"
+              >Schülerstatistiken
+              </v-tooltip>
             </v-btn>
             <v-btn
               class="ml-2"
@@ -51,6 +61,11 @@
               @click="removeStudentFromCourse(student)"
             >
               <v-icon>mdi mdi-minus</v-icon>
+              <v-tooltip
+                activator="parent"
+                location="end"
+              >Schüler löschen
+              </v-tooltip>
             </v-btn>
           </v-row>
         </v-list>

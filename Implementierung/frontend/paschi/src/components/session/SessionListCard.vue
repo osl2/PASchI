@@ -33,6 +33,11 @@
               @click="interactionMapClick(session)"
             >
               <v-icon>mdi mdi-map</v-icon>
+              <v-tooltip
+                activator="parent"
+                location="start"
+              >Interaktionskarte
+              </v-tooltip>
             </v-btn>
             <v-btn
               class="ml-2"
@@ -41,6 +46,11 @@
               @click="sessionStatisticClick(session)"
             >
               <v-icon> fas fa-chart-line </v-icon>
+              <v-tooltip
+                activator="parent"
+                location="end"
+              >Sitzungsstatistiken
+              </v-tooltip>
             </v-btn>
             <v-btn
               class="ml-2"
@@ -49,6 +59,11 @@
               @click="deleteSessionClick(session)"
             >
               <v-icon>fas fa-trash-can</v-icon>
+              <v-tooltip
+                activator="parent"
+                location="end"
+              >Sitzung löschen
+              </v-tooltip>
             </v-btn>
           </v-row>
         </v-list>

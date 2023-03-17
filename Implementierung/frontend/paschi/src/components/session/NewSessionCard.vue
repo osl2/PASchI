@@ -45,6 +45,11 @@
               @click="newSessionClick(lastSeatArrangement)"
             >
               <v-icon> fas fa-arrow-right </v-icon>
+              <v-tooltip
+                activator="parent"
+                location="start"
+              >Sitzung starten
+              </v-tooltip>
             </v-btn>
           </v-expansion-panel-title>
           <v-expansion-panel-text class="pa-2">

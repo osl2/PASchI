@@ -39,8 +39,13 @@
               color="primary"
               v-on:click.stop
               @click="editCourseClick(course)"
-              ><v-icon>fas fa-pencil</v-icon></v-btn
-            >
+              ><v-icon>fas fa-pencil</v-icon>
+              <v-tooltip
+                activator="parent"
+                location="end"
+              >Kurs bearbeiten
+              </v-tooltip>
+            </v-btn>
           </template>
         </v-list-item>
       </v-list>
