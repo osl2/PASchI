@@ -3,7 +3,7 @@
     <PDialog
       v-model="addStudentSelectionDialog"
       title="Schüler hinzufügen"
-      :elements="studentsNotInCourseElements"
+      :elements="studentsNotInCourseElements.value"
     >
     </PDialog>
     <v-expansion-panel eager elevation="0" class="rounded-lg">
