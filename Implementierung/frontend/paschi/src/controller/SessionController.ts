@@ -65,8 +65,9 @@ export class SessionController {
     }
 
     const currentDate = new Date();
-    const date = currentDate.getDate().toString() + '.' + (currentDate.getMonth() + 1).toString() + '.' +
-      currentDate.getFullYear().toString();
+    const date = currentDate.getDate().toString() + "." + (currentDate.getMonth() + 1).toString() + "." +
+      currentDate.getFullYear().toString() + "  " + currentDate.getHours().toString() +
+      currentDate.getMinutes().toString();
     const session = new Session(
       undefined,
       useSessionStore().getNextId(),
