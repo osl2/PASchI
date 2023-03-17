@@ -65,9 +65,16 @@ export class SessionController {
     }
 
     const currentDate = new Date();
+    let minutes = currentDate.getMinutes();
+    let minutesString: string;
+    if (minutes < 10) {
+      minutesString = "0" + minutes.toString();
+    } else {
+      minutesString = minutes.toString();
+    }
     const date = currentDate.getDate().toString() + "." + (currentDate.getMonth() + 1).toString() + "." +
       currentDate.getFullYear().toString() + "  " + currentDate.getHours().toString() + ":" +
-      currentDate.getMinutes().toString();
+      minutesString;
     const session = new Session(
       undefined,
       useSessionStore().getNextId(),

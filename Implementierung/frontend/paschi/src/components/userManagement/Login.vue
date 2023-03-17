@@ -53,10 +53,14 @@
               prepend-icon="fas fa-sign-in-alt"
               color="primary"
               @click="login"
+              :loading="loginLoading"
               >Anmelden
             </v-btn>
           </v-card-item>
         </v-form>
+        <v-card-text class="text-red" v-if="loginError">
+          Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Eingaben.
+        </v-card-text>
       </v-card>
       <v-card
         class="mt-8 pa-2 rounded-lg bg-grey-lighten-2"
@@ -88,6 +92,10 @@ export default defineComponent({
     const password = ref("");
     const passwordError = ref(false);
 
+    const loginError = ref(false);
+
+    const loginLoading = ref(false);
+
     onMounted(() => {
       userController.loginWithToken(null).then((res) => {
         if (res === LOGIN_SUCCESS) {
@@ -102,11 +110,15 @@ export default defineComponent({
      * Loggt den Benutzer ein, die eingegebenen Accountdaten korrekt sind.
      */
     function login() {
+      loginLoading.value = true;
       userController.login(email.value, password.value).then((res) => {
         if (res === LOGIN_SUCCESS) {
           if (userController.getUser().isAdmin()) {
             router.push("/admin");
           } else router.push("/dashboard");
+        } else {
+          loginError.value = true;
+          loginLoading.value = false;
         }
       });
     }
@@ -117,6 +129,8 @@ export default defineComponent({
       email,
       passwordError,
       password,
+      loginError,
+      loginLoading
     };
   },
 });

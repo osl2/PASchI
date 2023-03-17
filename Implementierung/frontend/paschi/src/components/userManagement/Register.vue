@@ -109,6 +109,20 @@
         >
         </v-btn>
       </template>
+    </v-snackbar><v-snackbar
+      v-model="backendErrorSnackbar"
+      :timeout="errorSnackbarTimeout"
+    >
+      {{ backendErrorSnackbarText }}
+
+      <template v-slot:actions>
+        <v-btn
+          color="blue"
+          icon="mdi mdi-close"
+          @click="backendErrorSnackbar = false"
+        >
+        </v-btn>
+      </template>
     </v-snackbar>
   </v-main>
 </template>
@@ -117,7 +131,7 @@
 import AppBar from "@/components/navigation/NavigationBar.vue";
 import router from "@/plugins/router";
 import { ref } from "vue";
-import { UserController } from "@/controller/UserController";
+import {REGISTER_SUCCESS, UserController} from "@/controller/UserController";
 export default {
   name: "Register",
   components: { AppBar },
@@ -130,6 +144,8 @@ export default {
     const passwordRepeat = ref("");
     const userController = UserController.getUserController();
     const errorSnackbar = ref(false);
+    const backendErrorSnackbar = ref(false);
+    const backendErrorSnackbarText = ref("Registrierung fehlgeschlagen.");
     const errorSnackbarText = 'Alle Felder müssen ausgefüllt sein.';
     const errorSnackbarTimeout = 2000;
 
@@ -211,7 +227,7 @@ export default {
     /**
      * Falls kein Fehler in den Eingaben ist, wird der Nutzer registriert. Wenn eines der Felder leer ist, wird ein Fehlerhinweis aktiviert.
      */
-    function register() {
+    async function register() {
       if (
         !error([
           requiredRule(firstName.value),
@@ -227,14 +243,22 @@ export default {
           passwordsEqualRule(),
         ])
       ) {
-        userController.register(
+        await userController.register(
           firstName.value,
           lastName.value,
           mail.value,
           password.value,
           passwordRepeat.value
+        ).then(
+          (res) => {
+            if (res === REGISTER_SUCCESS) {
+              router.push("login");
+            } else {
+              backendErrorSnackbarText.value = "Registrierung fehlgeschlagen.";
+              backendErrorSnackbar.value = true;
+            }
+          }
         );
-        router.push("login");
       }
       else if (
         error([
@@ -265,6 +289,8 @@ export default {
       passwordMaxLengthRule,
       passwordsEqualRule,
       nameMaxLengthRule,
+      backendErrorSnackbar,
+      backendErrorSnackbarText,
       router,
     };
   },
