@@ -21,17 +21,6 @@
       <v-expansion-panel-title>
         <h2 class="ma-2">Sitzungsliste</h2>
         <v-spacer />
-        <v-btn
-          min-width="228"
-          class="ml-15 ma-2"
-          variant="flat"
-          color="green"
-          rounded
-          prepend-icon="mdi mdi-plus"
-          v-on:click.stop
-          @click="addSessionClick"
-          >Sitzung starten</v-btn
-        >
       </v-expansion-panel-title>
       <v-expansion-panel-text class="justify-center">
         <v-list>
@@ -69,15 +58,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, ref, Ref } from "vue";
+import { defineComponent, ref, Ref } from "vue";
 import PDialog from "@/components/base/PDialog.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import { useRouter } from "vue-router";
 import { CourseController } from "@/controller/CourseController";
-import { SessionController } from "@/controller/SessionController";
 import { Session } from "@/model/userdata/courses/Session";
-import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
 
 export default defineComponent({
   name: "SessionListCard",
@@ -89,28 +76,18 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const isMobile: Ref<boolean> = inject("isMobile") as Ref<boolean>;
 
     const router = useRouter();
 
     const courseController: CourseController =
       CourseController.getCourseController();
-    const sessionController: SessionController =
-      SessionController.getSessionController();
 
     const deleteSessionBuffer: Ref<Session | undefined> = ref<
       Session | undefined
     >(undefined) as Ref<Session | undefined>;
 
-    const sessionStatisticDialog: Ref<boolean> = ref<boolean>(false);
     const interactionMapSelectionDialog: Ref<boolean> = ref<boolean>(false);
-    const seatArrangementSelectionDialog: Ref<boolean> = ref<boolean>(false);
     const deleteSessionDialog: Ref<boolean> = ref<boolean>(false);
-
-    const seatArrangements: Ref<SeatArrangement[]> = ref<SeatArrangement[]>(
-      getSeatArrangements()
-    ) as Ref<SeatArrangement[]>;
-
     const sessions: Ref<Session[]> = ref<Session[]>(getSessions()) as Ref<
       Session[]
     >;
@@ -122,15 +99,6 @@ export default defineComponent({
       );
       if (sessions instanceof Array) {
         return sessions as Session[];
-      }
-      return [];
-    }
-
-    function getSeatArrangements(): SeatArrangement[] {
-      let seatArrangements: undefined | SeatArrangement[] =
-        courseController.getSeatArrangements(props.courseId);
-      if (seatArrangements instanceof Array) {
-        return seatArrangements as SeatArrangement[];
       }
       return [];
     }
@@ -208,77 +176,17 @@ export default defineComponent({
       });
     }
 
-    /**
-     * Methode zum Starten einer Sitzung.
-     * Bei mobiler Version wird eine Sizung gestartet,
-     * bei Desktop eine Liste mit Sitzornungen geöffnet
-     */
-    async function addSessionClick() {
-      if (isMobile.value) {
-        await router.push({
-          name: "SessionPage",
-          params: {
-            sessionId: await sessionController.createSession(
-              props.courseId,
-              undefined,
-              ""
-            ),
-          }, //TODO session name
-        });
-      } else {
-        seatArrangementSelectionDialog.value = true;
-      }
-    }
-
-    /**
-     * Methode zum Starten einer Desktop- Sitzung
-     *
-     * @param seatArrangement Die Sitzordnung für die Sitzung
-     */
-    async function startSessionClick(seatArrangement: SeatArrangement) {
-      await router.push({
-        name: "SessionPageDesktop",
-        params: {
-          sessionId: await sessionController.createSession(
-            props.courseId,
-            seatArrangement.getId,
-            ""
-          ),
-        }, //TODO session name
-      });
-    }
-
-    async function newStandardSeatArrangement() {
-      const sessionId = await sessionController.createSession(
-        props.courseId,
-        undefined,
-        ""
-      );
-      await router.push({
-        name: "SessionPageDesktop",
-        params: {
-          sessionId: sessionId,
-        },
-      });
-    }
-
     return {
       showCourseStatisticsClick,
       editCourseDetailsClick,
       sessionStatisticClick,
       interactionMapClick,
-      addSessionClick,
-      startSessionClick,
       deleteSessionClick,
       cancelDeleteSessionClick,
       confirmDeleteSessionClick,
       deleteSessionDialog,
-      sessionStatisticDialog,
       interactionMapSelectionDialog,
-      seatArrangementSelectionDialog,
       sessions,
-      seatArrangements,
-      newStandardSeatArrangement,
     };
   },
 });

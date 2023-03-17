@@ -1,7 +1,7 @@
 <template>
   <navigation-bar>
     <template v-slot:append>
-      <v-btn class="ma-2" variant="tonal" rounded @click="saveChangesClick"
+      <v-btn class="ma-2" variant="flat" color="green" rounded @click="saveChangesClick"
         >speichern</v-btn
       >
       <v-btn

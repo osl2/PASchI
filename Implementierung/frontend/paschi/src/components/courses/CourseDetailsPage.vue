@@ -22,6 +22,7 @@
   <v-main>
     <v-container fluid class="v-row align-start justify-space-around">
       <v-container max-width="800" min-width="570" rounded class="ma-1 v-col-5">
+        <NewSessionCard :course-id="courseId" />
         <SessionListCard :course-id="courseId" />
       </v-container>
       <v-container max-width="800" min-width="570" rounded class="ma-1 v-col-5">
@@ -38,10 +39,18 @@ import { defineComponent } from "vue";
 import { useRouter } from "vue-router";
 import PDialog from "@/components/base/PDialog.vue";
 import AddStudentsCard from "@/components/courses/AddStudentsCard.vue";
-import SessionListCard from "@/components/courses/SessionListCard.vue";
+import SessionListCard from "@/components/session/SessionListCard.vue";
+import NewSessionCard from "@/components/session/NewSessionCard.vue";
 export default defineComponent({
   name: "CourseDetailsPage",
-  components: {SessionListCard, AddStudentsCard, PDialog, SideMenu, NavigationBar },
+  components: {
+    NewSessionCard,
+    SessionListCard,
+    AddStudentsCard,
+    PDialog,
+    SideMenu,
+    NavigationBar,
+  },
   props: {
     courseId: {
       type: String,

@@ -8,6 +8,70 @@
 
 $min-window-width-desktop: 1500px;
 
+@font-face {
+  font-family: "Rubik";
+  src: url("@/styles/Rubik/Rubik-Regular.ttf") format("truetype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "Rubik";
+  src: local("Rubik-Medium"), url("@/styles/Rubik/Rubik-Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Rubik";
+  src: local("Rubik-Bold"), url("@/styles/Rubik/Rubik-Bold.ttf") format("truetype");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "Rubik";
+  src: local("Rubik-Italic"), url("@/styles/Rubik/Rubik-Italic.ttf") format("truetype");
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Rubik";
+  src: local("Rubik-MediumItalic"), url("@/styles/Rubik/Rubik-MediumItalic.ttf") format("truetype");
+  font-weight: 500;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Rubik";
+  src: local("Rubik-BoldItalic"), url("@/styles/Rubik/Rubik-BoldItalic.ttf") format("truetype");
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Rubik";
+  src: local("Rubik-Light"), url("@/styles/Rubik/Rubik-Light.ttf") format("truetype");
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "Rubik";
+  src: local("Rubik-LightItalic"), url("@/styles/Rubik/Rubik-LightItalic.ttf") format("truetype");
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Rubik";
+  src: local("Rubik-Black"), url("@/styles/Rubik/Rubik-Black.ttf") format("truetype");
+  font-weight: 900;
+}
+
+@font-face {
+  font-family: "Rubik";
+  src: local("Rubik-BlackItalic"), url("@/styles/Rubik/Rubik-BlackItalic.ttf") format("truetype");
+  font-weight: 900;
+  font-style: italic;
+}
+
 html {
   overflow-y: auto;
 }
