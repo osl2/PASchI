@@ -60,7 +60,9 @@ declare global {
 
       userLogin(eMail: string, password: string): void;
 
-      logOut(): void;
+      adminLogOut(): void;
+      desktopLogOut(): void;
+      mobileLogOut(): void;
       drag(x: number, y: number,): Chainable<JQuery<HTMLElement>>;
       dragAssertSuccess(x: number, y: number,): Chainable<JQuery<HTMLElement>>;
       dragAssertCollision(x: number, y: number,): Chainable<JQuery<HTMLElement>>;
@@ -130,7 +132,7 @@ Cypress.Commands.add("resetTestAccount", () => {
     .within(() => {
       cy.get("button[name=deleteUser]").click();
     });
-  cy.logOut();
+  cy.adminLogOut();
 
   cy.visit("/register");
   cy.get("input[name='firstName']").type(user.firstName);
@@ -152,7 +154,7 @@ Cypress.Commands.add("resetTestAccount", () => {
     .within(() => {
       cy.get("button[name=authUser]").click();
     });
-  cy.logOut();
+  cy.adminLogOut();
 })
 Cypress.Commands.add("addChair", () => {
   cy.get("button[name=addChair]").click();
@@ -283,14 +285,22 @@ Cypress.Commands.add("userLogin", (email, password) => {
   cy.url().should("include", "/dashboard");
   cy.contains("Kürzlich verwendete Kurse");
   cy.contains("Letzte Sitzungen");
-  cy.contains("Abmelden");
   cy.contains("Alle anzeigen");
 });
-
-Cypress.Commands.add("logOut", () => {
+Cypress.Commands.add("desktopLogOut", () => {
+  cy.contains("Abmelden");
+  cy.get(".v-navigation-drawer").within(()=>{
+    cy.get("[name=logOut]").click()
+  });
+  cy.url().should("include", "/login");
+});
+Cypress.Commands.add("adminLogOut", () => {
   cy.contains("Abmelden");
   cy.get("button").contains("Abmelden").click();
   cy.url().should("include", "/login");
+});
+
+Cypress.Commands.add("mobileLogOut", () => {
 });
 
 // Convert this to a module instead of script (allows import/export)

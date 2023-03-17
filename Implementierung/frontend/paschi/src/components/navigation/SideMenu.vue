@@ -56,6 +56,7 @@
           <v-list-item-title> Benutzereinstellungen </v-list-item-title>
         </v-list-item>
         <v-list-item
+          name="logOut"
           prepend-icon="fa-solid fa-arrow-right-from-bracket"
           title="Abmelden"
           @click="logOut">

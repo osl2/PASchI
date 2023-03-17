@@ -12,7 +12,7 @@ describe("add course test", () => {
     cy.sideMenuTo("rooms");
     cy.get(".v-list-item").should("contain", room.name);
     cy.sideMenuTo("dashboard");
-    cy.logOut();
+    cy.desktopLogOut();
   });
   it("tests cancel adding a room", () => {
     const room = { name: "123" };
@@ -25,6 +25,6 @@ describe("add course test", () => {
     cy.get("input[name=name]").type(room.name);
     cy.get("button[name=cancelNewRoom]").click();
     cy.sideMenuTo("dashboard");
-    cy.logOut();
+    cy.desktopLogOut();
   });
 });

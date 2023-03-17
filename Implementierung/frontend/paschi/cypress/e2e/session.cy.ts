@@ -10,6 +10,6 @@ describe("add course test", () => {
     cy.sideMenuTo("courses");
     cy.get(".v-list-item").should("contain", course.name).and("contain", course.subject);
     cy.sideMenuTo("dashboard");
-    cy.logOut();
+    cy.desktopLogOut();
   });
 });

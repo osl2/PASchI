@@ -11,7 +11,7 @@ describe("add course test", () => {
     cy.sideMenuTo("courses");
     cy.get(".v-list-item").should("contain", course.name).and("contain", course.subject);
     cy.sideMenuTo("dashboard");
-    cy.logOut();
+    cy.desktopLogOut();
   });
   it("tests cancel adding a course", () => {
     const course = { name: "Klasse 10b", subject: "Informatik" };
@@ -25,6 +25,6 @@ describe("add course test", () => {
     cy.get("input[name=subject]").type(course.subject);
     cy.get("button[name=cancelNewCourse]").click();
     cy.sideMenuTo("dashboard");
-    cy.logOut();
+    cy.desktopLogOut();
   });
 });

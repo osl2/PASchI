@@ -18,6 +18,6 @@ describe("add course test", () => {
     cy.get("button[name=addStudent]").click();
     cy.get(".v-list-item").contains(students[0].firstName).and("contain", students[0].lastName).last().click()
     cy.sideMenuTo("dashboard");
-    cy.logOut();
+    cy.desktopLogOut();
   });
 });

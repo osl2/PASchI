@@ -25,7 +25,7 @@ describe("add and then edit course test", () => {
     roomCard.get(".v-card[name=table]").should("have.length", 2);
     cy.get("button[name=save]").click();
     cy.sideMenuTo("dashboard");
-    cy.logOut();
+    cy.desktopLogOut();
   });
   it("tests drag chairs", () => {
     const room = { name: "123" };
@@ -59,7 +59,7 @@ describe("add and then edit course test", () => {
       .dragAssertCollision(100, 100);
     cy.get("button[name=save]").click();
     cy.sideMenuTo("dashboard");
-    cy.logOut();
+    cy.desktopLogOut();
   });
   it("tests drag tables and chairs", () => {
     const room = { name: "123" };
@@ -92,7 +92,7 @@ describe("add and then edit course test", () => {
       .dragAssertCollision(100, 100);
     cy.get("button[name=save]").click();
     cy.sideMenuTo("dashboard");
-    cy.logOut();
+    cy.desktopLogOut();
   });
   it("tests drag and chairs", () => {
     const room = { name: "123" };
@@ -125,6 +125,6 @@ describe("add and then edit course test", () => {
       .dragAssertCollision(100, 100);
     cy.get("button[name=save]").click();
     cy.sideMenuTo("dashboard");
-    cy.logOut();
+    cy.desktopLogOut();
   });
 });

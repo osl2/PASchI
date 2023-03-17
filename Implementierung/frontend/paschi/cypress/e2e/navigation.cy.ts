@@ -10,7 +10,7 @@ describe("Navigation test", () => {
     cy.navDropDownTo("courses");
     cy.navDropDownTo("settings");
     cy.navDropDownTo("dashboard");
-    cy.logOut();
+    cy.mobileLogOut();
   });
   it("tests navigation-bar in desktop", () => {
     cy.visit("/login");
@@ -20,6 +20,6 @@ describe("Navigation test", () => {
     cy.sideMenuTo("rooms");
     cy.sideMenuTo("settings");
     cy.sideMenuTo("dashboard");
-    cy.logOut();
+    cy.desktopLogOut();
   });
 });

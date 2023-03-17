@@ -12,7 +12,7 @@ describe("add student test", () => {
       .contains(student.firstName)
       .contains(student.lastName);
     cy.sideMenuTo("dashboard");
-    cy.logOut();
+    cy.desktopLogOut();
   });
   it("tests cancel adding a student", () => {
     const student = { firstName: "Max", lastName: "Mustermann" };
@@ -26,6 +26,6 @@ describe("add student test", () => {
     cy.get("input[name=lastName]").type(student.lastName);
     cy.get("button[name=cancelNewStudent]").click();
     cy.sideMenuTo("dashboard");
-    cy.logOut();
+    cy.desktopLogOut();
   });
 });

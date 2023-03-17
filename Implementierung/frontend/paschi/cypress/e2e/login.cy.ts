@@ -6,12 +6,12 @@ describe("Login test", () => {
   it("tests input of email and password and successful admin- login", () => {
     cy.visit("/login");
     cy.adminLogin(admin.email, admin.password);
-    cy.logOut();
+    cy.adminLogOut();
   });
   it("tests input of email and password and successful user- login", () => {
     cy.visit("/login");
     cy.userLogin(user.email, user.password);
-    cy.logOut();
+    cy.desktopLogOut();
   });
   it("tests input of email and password and unsuccessful admin- login", () => {
     cy.visit("/login");
