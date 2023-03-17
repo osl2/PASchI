@@ -44,7 +44,7 @@ import PDialog from "@/components/base/PDialog.vue";
 import AddStudentsCard from "@/components/courses/AddStudentsCard.vue";
 import SessionListCard from "@/components/session/SessionListCard.vue";
 import NewSessionCard from "@/components/session/NewSessionCard.vue";
-import BottomBar from "@/components/navigation/BottomBar.vue";
+import BottomBar from "@//components/navigation/BottomBar.vue";
 export default defineComponent({
   name: "CourseDetailsPage",
   components: {

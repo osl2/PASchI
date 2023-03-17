@@ -91,12 +91,11 @@ import { SeatArrangementController } from "@/controller/SeatArrangementControlle
 import { useRouter } from "vue-router";
 import PDialog from "@/components/base/PDialog.vue";
 import NewSeatArrangementDialog from "@/components/room/NewSeatArrangementDialog.vue";
-import BottomBar from "@/components/navigation/BottomBar.vue";
+import BottomBar from "@//components/navigation/BottomBar.vue";
 
 export default defineComponent({
   name: "editCoursePage",
-  components: {BottomBar, PDialog, SideMenu, NavigationBar },
-  components: {NewSeatArrangementDialog, PDialog, SideMenu, NavigationBar },
+  components: {BottomBar, PDialog, SideMenu, NavigationBar, NewSeatArrangementDialog, PDialog, SideMenu, NavigationBar },
   props: {
     courseId: {
       type: String,
