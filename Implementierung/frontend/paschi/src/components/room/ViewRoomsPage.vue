@@ -139,8 +139,8 @@ export default defineComponent({
      * Funktion, die einen Raum löscht. Sendet die Anfrage an den Controller.
      * @param room der Raum der gelöscht werden soll.
      */
-    function deleteRoom(room: Room){
-      roomController.deleteRoom(room.getId);
+    async function deleteRoom(room: Room){
+      await roomController.deleteRoom(room.getId);
       rooms.value = roomController.getAllRooms();
     }
 
