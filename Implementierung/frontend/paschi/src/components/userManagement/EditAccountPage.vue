@@ -76,7 +76,7 @@ import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import {UserController} from "@/controller/UserController";
 import {inject, Ref, ref} from "vue";
-import BottomBar from "@/components/navigation/BottomBar.vue";
+import BottomBar from "@//components/navigation/BottomBar.vue";
 
 export default {
   name: "EditAccountPage",
