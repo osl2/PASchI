@@ -6,10 +6,13 @@
         <template v-slot:lineMiddle="lineMiddle">
           <v-avatar
             color="interaction"
-            density="compact"
+            density="comfortable"
             class="font-weight-medium"
           >
             {{ getInteractionBreakdown(lineMiddle.id).total }}
+            <v-icon :style="rotateStyle(lineMiddle.angle)">
+              fas fa-arrow-right
+            </v-icon>
             <v-menu activator="parent" transition="slide-y-transition">
               <v-card
                 min-width="250"
@@ -192,6 +195,12 @@ export default defineComponent({
       console.log("click");
     }
 
+    function rotateStyle(angle: number) {
+      return {
+        transform: "rotate(" + angle + "rad)",
+      };
+    }
+
     return {
       click,
       roomId,
@@ -200,6 +209,7 @@ export default defineComponent({
       interactionLines,
       interactions,
       setSeatLabelOrigin,
+      rotateStyle,
       getInteractionBreakdown: getInteractionCount,
     };
   },
