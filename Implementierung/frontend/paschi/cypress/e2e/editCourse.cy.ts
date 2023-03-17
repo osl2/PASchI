@@ -2,11 +2,11 @@
 import {user} from "../support/commands";
 
 describe("add course test", () => {
+  const course = { name: "Klasse 10b", subject: "Informatik" };
   before(() => {
     cy.resetTestAccount();
   })
   it("tests adding students to a course", () => {
-    const course = { name: "Klasse 10b", subject: "Informatik" };
     const students: ({firstName: string, lastName: string}[]) = Array.of({firstName: "Alice", lastName: "Müller"}, {firstName: "Bob", lastName: "Bohne"}, {firstName: "Liam", lastName: "Schaal"}, {firstName: "Christian", lastName: "Kessel"})
     cy.visit("/login");
     cy.userLogin(user.email, user.password);
@@ -29,4 +29,11 @@ describe("add course test", () => {
     cy.sideMenuTo("dashboard");
     cy.desktopLogOut();
   });
+  it("tests changing course name and course subject", () => {
+    const course = { name: "Klasse 10b", subject: "Informatik" };
+    cy.visit("/login");
+    cy.userLogin(user.email, user.password);
+    cy.sideMenuTo("courses");
+    cy.addCourse(course.name, course.subject);
+  })
 });
