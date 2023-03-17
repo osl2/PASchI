@@ -7,6 +7,8 @@
     </template>
   </navigation-bar>
   <side-menu></side-menu>
+  <ButtomBar />
+
   <v-main>
     <v-container fluid class="v-row align-start justify-space-around">
       <v-card max-width="800" min-width="570" rounded class="ma-1 v-col-5">
@@ -209,9 +211,10 @@ import { computed, defineComponent, inject, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
 import { SessionController } from "@/controller/SessionController";
 import { useRouter } from "vue-router";
+import ButtomBar from "@/components/navigation/ButtomBar.vue";
 export default defineComponent({
   name: "CourseDetailsPage",
-  components: {SideMenu, NavigationBar},
+  components: {ButtomBar, SideMenu, NavigationBar},
   props: {
     courseId: {
       type: String,

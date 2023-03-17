@@ -15,6 +15,7 @@
   </navigation-bar>
 
   <SideMenu />
+  <ButtomBar />
   <v-main class="ma-0 v-row justify-center align-content-xl-space-around">
     <v-container fluid class="v-col-11" style="max-width: 700px">
       <v-list rounded v-if="courses.length > 0">
@@ -122,10 +123,11 @@ import { defineComponent, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
 import { Course } from "@/model/userdata/courses/Course";
 import { useRouter } from "vue-router";
+import ButtomBar from "@/components/navigation/ButtomBar.vue";
 
 export default defineComponent({
   name: "ViewCoursesPage",
-  components: { SideMenu, NavigationBar },
+  components: {ButtomBar, SideMenu, NavigationBar },
 
   computed:{
     isDisabled(){

@@ -18,6 +18,7 @@
 
   <v-main class="v-row justify-center">
     <SideMenu />
+    <ButtomBar />
     <v-form class="mt-5 v-col" style="max-width: 1000px">
       <v-text-field
         v-model="courseName"
@@ -145,10 +146,11 @@ import SideMenu from "@/components/navigation/SideMenu.vue";
 import { Course } from "@/model/userdata/courses/Course";
 import { SeatArrangementController } from "@/controller/SeatArrangementController";
 import { useRouter } from "vue-router";
+import ButtomBar from "@/components/navigation/ButtomBar.vue";
 
 export default defineComponent({
   name: "editCoursePage",
-  components: { SideMenu, NavigationBar },
+  components: {ButtomBar, SideMenu, NavigationBar },
   props: {
     courseId: {
       type: String,
