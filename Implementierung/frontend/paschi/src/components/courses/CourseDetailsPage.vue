@@ -22,13 +22,13 @@
   <side-menu></side-menu>
   <BottomBar />
 
-  <v-main>
-    <v-container fluid class="v-row align-start justify-space-around">
-      <v-container max-width="800" min-width="570" rounded class="ma-1 v-col-5">
+  <v-main class="ma-0">
+    <v-container fluid class="ma-0 w-100 v-row align-start justify-space-evenly">
+      <v-container max-width="800" min-width="570" rounded class="v-col ma-1">
         <NewSessionCard :course-id="courseId" />
         <SessionListCard :course-id="courseId" />
       </v-container>
-      <v-container max-width="800" min-width="570" rounded class="ma-1 v-col-5">
+      <v-container max-width="800" min-width="560" rounded class="v-col ma-1">
         <AddStudentsCard :course-id="courseId" />
       </v-container>
     </v-container>
@@ -44,7 +44,7 @@ import PDialog from "@/components/base/PDialog.vue";
 import AddStudentsCard from "@/components/courses/AddStudentsCard.vue";
 import SessionListCard from "@/components/session/SessionListCard.vue";
 import NewSessionCard from "@/components/session/NewSessionCard.vue";
-import BottomBar from "@/components/navigation/BottomBar.vue";
+import BottomBar from "@//components/navigation/BottomBar.vue";
 export default defineComponent({
   name: "CourseDetailsPage",
   components: {
