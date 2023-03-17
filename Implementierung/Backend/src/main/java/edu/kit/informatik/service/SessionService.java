@@ -132,7 +132,7 @@ public class SessionService extends BaseService<Session, SessionDto, SessionDto>
         List<Interaction> interactions = interactionRepository.findInteractionsBySession(session);
         Set<Participant> participants = new HashSet<>();
 
-        //Teilnehemer anhand der Interaktionen auslesen
+        //Teilnehmer anhand der Interaktionen auslesen
         for (Interaction interaction : interactions) {
             participants.add(participantRepository.findParticipantById(interaction.getFrom().getId())
                     .orElseThrow(() -> new EntityNotFoundException(Participant.class, interaction.getFrom().getId())));
