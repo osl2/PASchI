@@ -144,7 +144,7 @@ export default defineComponent({
     ) {
       const session = await sessionController.createSession(
         courseId,
-        seatArrangement?.getId ?? undefined,
+        seatArrangement?.isVisible()? seatArrangement!.getId : undefined,
         "Session"
       );
       if (!session) {
