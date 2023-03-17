@@ -107,6 +107,12 @@ public class CategoryService extends BaseService<Category, RatedCategoryDto, Cat
         return delete(category);
     }
 
+    /**
+     * Methode zum Löschen einer Category
+     * --> dient für andere Services
+     * @param category {@link Category}
+     * @return Id der {@link Category}
+     */
     protected String delete(Category category) {
         this.categoryBaseRepository.deleteById(category.getId());
         return category.getId();

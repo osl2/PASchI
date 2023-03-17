@@ -5,8 +5,8 @@ import edu.kit.informatik.dto.UserDto;
 import edu.kit.informatik.dto.userdata.courses.CourseDto;
 import edu.kit.informatik.dto.userdata.courses.SeatArrangementDto;
 import edu.kit.informatik.dto.userdata.courses.SessionDto;
+import edu.kit.informatik.dto.userdata.interactions.CategoryDto;
 import edu.kit.informatik.dto.userdata.interactions.InteractionDto;
-import edu.kit.informatik.dto.userdata.interactions.ParticipantDto;
 import edu.kit.informatik.dto.userdata.rooms.RoomDto;
 import edu.kit.informatik.unittests.DatabaseManipulator;
 import edu.kit.informatik.unittests.EntityGenerator;
@@ -19,14 +19,13 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
@@ -48,13 +47,17 @@ public class SessionControllerTest extends AbstractTest {
         Faker faker = new Faker(new Locale("de"));
         userDto = super.addAndLogin(EntityGenerator.createNewUser(faker));
         courseDto = databaseManipulator.addCourse(EntityGenerator.createNewCourse(faker, userDto));
+        courseDto.setParticipantIds(getSomeParticipantsIds());
+
         this.sessions = addSomeSessions();
     }
 
     @After
     @Override
     public void setDown() {
+        databaseManipulator.clearInteractionRepository();
         databaseManipulator.clearSessionRepository();
+        databaseManipulator.clearCategoryRepository();
         databaseManipulator.clearParticipantRepository();
         databaseManipulator.clearSeatArrangementRepository();
         databaseManipulator.clearRoomRepository();
@@ -69,10 +72,44 @@ public class SessionControllerTest extends AbstractTest {
         Faker faker = new Faker(new Locale("de"));
 
         for (int i = 0; i < 10; i++) {
-            sessionDtos.add(EntityGenerator.createNewSession(faker, courseDto, userDto));
+            sessionDtos.add(EntityGenerator.createNewSession(faker, userDto, courseDto));
         }
 
         return sessionDtos;
+    }
+
+    private List<String> getSomeParticipantsIds() {
+
+        List<String> participantsDtos = new ArrayList<>();
+        Faker faker = new Faker(new Locale("de"));
+
+        for (int i = 0; i < 10; i++) {
+            participantsDtos.add(databaseManipulator.addParticipant(EntityGenerator.createNewParticipant(faker, userDto)).getId());
+        }
+
+        return participantsDtos;
+    }
+
+    private List<InteractionDto> getSomeInteractions(SessionDto sessionDto, List<String> participantsIds) throws InterruptedException {
+        List<InteractionDto> interactionDtos = new ArrayList<>();
+        Faker faker = new Faker(new Locale("de"));
+        CategoryDto categoryDto = databaseManipulator.addCategory(EntityGenerator.createNewCategory(faker, this.userDto));
+
+        for (int i = 0; i < 10; i++) {
+            Random random = new Random();
+            int participantsFromIndex;
+            int participantsToIndex;
+            do {
+                participantsFromIndex = random.nextInt(participantsIds.size());
+                participantsToIndex = random.nextInt(participantsIds.size());
+            } while (participantsFromIndex == participantsToIndex);
+
+            interactionDtos.add(EntityGenerator.createNewInteraction(this.userDto, sessionDto,
+                    participantsIds.get(participantsFromIndex), participantsIds.get(participantsToIndex), categoryDto));
+            TimeUnit.MILLISECONDS.sleep(2);
+        }
+
+        return interactionDtos;
     }
 
 
@@ -165,6 +202,7 @@ public class SessionControllerTest extends AbstractTest {
             sessions.get(i).setName(sessionDtos.get(i).getName());
             sessions.get(i).setInteractions(new ArrayList<>());
             sessions.get(i).setSeatArrangementId(addSeatArrangement().getId());
+            sessions.get(i).setInteractions(getSomeInteractions(sessions.get(i), courseDto.getParticipantIds()));
         }
 
         for (SessionDto sessionDto: sessions) {
@@ -185,11 +223,34 @@ public class SessionControllerTest extends AbstractTest {
         assertEquals(sessionDtosFromDB.size(), sessions.size());
 
         for (int i = 0; i < sessions.size(); i++) {
-            assertEquals(sessionDtosFromDB.get(i).getName(), sessions.get(i).getName());
-            assertEquals(sessionDtosFromDB.get(i).getCreatedAt(), sessions.get(i).getCreatedAt());
-            assertEquals(sessionDtosFromDB.get(i).getSeatArrangementId(), sessions.get(i).getSeatArrangementId());
-            assertEquals(sessionDtosFromDB.get(i).getInteractions(), sessions.get(i).getInteractions());
+            sessionDtosFromDB.get(i).getInteractions().sort(Comparator.naturalOrder());
+            sessions.get(i).getInteractions().sort(Comparator.naturalOrder());
+            assertEquals(sessions.get(i).getName(), sessionDtosFromDB.get(i).getName());
+            assertEquals(sessions.get(i).getCreatedAt(), sessionDtosFromDB.get(i).getCreatedAt());
+            assertEquals(sessions.get(i).getSeatArrangementId(), sessionDtosFromDB.get(i).getSeatArrangementId());
+            assertEquals(sessions.get(i).getInteractions().size(), sessionDtosFromDB.get(i).getInteractions().size());
+            for (int j = 0; j < sessionDtosFromDB.get(i).getInteractions().size(); j++) {
+                InteractionDto interactionDtoFromDB = sessionDtosFromDB.get(i).getInteractions().get(i);
+                InteractionDto interactionDto = sessions.get(i).getInteractions().get(i);
+                assertEquals(interactionDto.getCategoryId(), interactionDtoFromDB.getCategoryId());
+                assertEquals(interactionDto.getFromParticipantId(), interactionDtoFromDB.getFromParticipantId());
+                assertEquals(interactionDto.getToParticipantId(), interactionDtoFromDB.getToParticipantId());
+                assertEquals(interactionDto.getCreatedAt(), interactionDtoFromDB.getCreatedAt());
+            }
         }
+
+        for (SessionDto sessionDto: sessions) {
+            sessionDto.setInteractions(new ArrayList<>());
+            MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                    .content(super.mapToJson(sessionDto))
+                    .header("Authorization", "Bearer " + userDto.getToken())
+            ).andReturn();
+
+            int status = mvcResult.getResponse().getStatus();
+            assertEquals(200, status);
+        }
+
+
     }
 
     @Test
@@ -255,37 +316,6 @@ public class SessionControllerTest extends AbstractTest {
 
         assertEquals(404, status);
         assertEquals("Entity of class 'Session' with id: '0' not found", content);
-    }
-
-    private List<InteractionDto> addInteractions(Faker faker, String sessionId, String userId) {
-
-        List<ParticipantDto> participants = databaseManipulator.getParticipants();
-
-        List<InteractionDto> interactionDtos = new ArrayList<>();
-
-        for (int i = 0; i < 20; i++) {
-
-            String fromId = participants.get(faker.number().numberBetween(0, participants.size())).getId();
-            String toId;
-
-            do {
-                toId = participants.get(faker.number().numberBetween(0, participants.size())).getId();
-            } while (fromId.equals(toId));
-
-            InteractionDto interactionDto = new InteractionDto();
-
-            interactionDto.setSessionId(sessionId);
-            interactionDto.setTimeStamp(Timestamp.from(Instant.now()).toString());
-            interactionDto.setCategoryId("");
-            interactionDto.setUserId(userId);
-            interactionDto.setFromParticipantId(fromId);
-            interactionDto.setToParticipantId(toId);
-            interactionDto.setCreatedAt(Timestamp.from(Instant.now().truncatedTo(ChronoUnit.SECONDS)));
-
-            interactionDtos.add(interactionDto);
-        }
-
-        return interactionDtos;
     }
 
     private SeatArrangementDto addSeatArrangement() {

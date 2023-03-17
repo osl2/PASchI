@@ -102,13 +102,18 @@ public class ParticipantService extends BaseService<Participant, ParticipantDto,
         Participant participant = participantOptional.orElseThrow(() ->
                                                                     new EntityNotFoundException(Participant.class, id));
         super.checkAuthorization(authentication, participant.getUser().getId());
-        participant.setFirstName("Deleted");
-        participant.setLastName("User");
+        participant.setFirstName("Gelöschter");
+        participant.setLastName("Teilnehmer");
         participant.setVisible(false);
 
         return id;
     }
 
+    /**
+     * Methode zum Löschen eines {@link Participant}
+     * --> dient zum Löschen fpr andere Services
+     * @param participant {@link Participant}
+     */
     protected void delete(Participant participant) {
         participantRepository.deleteById(participant.getId());
     }

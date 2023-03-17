@@ -64,7 +64,21 @@ public class CourseControllerTest extends AbstractTest {
         }
 
         return courseDtos;
+    }
 
+    private List<ParticipantDto> addParticipantsToDatabase(CourseDto courseDto) {
+        List<ParticipantDto> participantDtos = new ArrayList<>();
+        Faker faker = new Faker(new Locale("de"));
+
+        for (int i = 0; i < 10; i++) {
+            ParticipantDto participantDto = EntityGenerator.createNewParticipant(faker, userDto);
+            List<String> courseIds = new ArrayList<>();
+            courseIds.add(courseDto.getId());
+            participantDto.setCourseIds(courseIds);
+            participantDtos.add(databaseManipulator.addParticipant(participantDto));
+        }
+
+        return participantDtos;
     }
 
     private void addCoursesToDatabase() {
@@ -150,8 +164,7 @@ public class CourseControllerTest extends AbstractTest {
         for (int i = 0; i < courses.size(); i++) {
             courses.get(i).setName(courseDtos.get(i).getName());
             courses.get(i).setSubject(courseDtos.get(i).getSubject());
-            //courses.get(i).setName(courseDtos.get(i).getName());
-            //courses.get(i).setName(courseDtos.get(i).getName());
+            addParticipants(courses.get(i), addParticipantsToDatabase(courseDtos.get(i)));
         }
 
         for (CourseDto courseDto: courses) {
@@ -175,6 +188,7 @@ public class CourseControllerTest extends AbstractTest {
             assertEquals(courseDtosFromDB.get(i).getName(), courses.get(i).getName());
             assertEquals(courseDtosFromDB.get(i).getCreatedAt(), courses.get(i).getCreatedAt());
             assertEquals(courseDtosFromDB.get(i).getSubject(), courses.get(i).getSubject());
+            assertEquals(courseDtosFromDB.get(i).getParticipantIds(), courses.get(i).getParticipantIds());
         }
     }
 
@@ -183,7 +197,18 @@ public class CourseControllerTest extends AbstractTest {
         List<CourseDto> before = databaseManipulator.getCourses();
         addCoursesToDatabase();
 
+
         for (CourseDto courseDto: courses) {
+            addParticipants(courseDto, addParticipantsToDatabase(courseDto));
+            MvcResult mvcResult2 = mvc.perform(MockMvcRequestBuilders.put(BASE_URL).contentType(MediaType.APPLICATION_JSON)
+                    .content(super.mapToJson(courseDto))
+                    .header("Authorization", "Bearer " + userDto.getToken())
+            ).andReturn();
+
+            int status2 = mvcResult2.getResponse().getStatus();
+            assertEquals(200, status2);
+
+
             MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(BASE_URL)
                     .param("id", courseDto.getId())
                     .header("Authorization", "Bearer " + userDto.getToken())
