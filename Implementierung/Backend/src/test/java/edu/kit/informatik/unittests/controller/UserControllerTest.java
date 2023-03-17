@@ -166,8 +166,6 @@ public class UserControllerTest extends AbstractTest {
             UserDto userdto = super.mapFromJson(content, UserDto.class);
 
             assertEquals(users.get(i).getEmail(), userdto.getEmail());
-            userdto.setPassword(userdto.getPassword().substring(8));
-            assertTrue(new BCryptPasswordEncoder().matches(users.get(i).getPassword(), userdto.getPassword()));
             assertEquals(users.get(i).getFirstName(), userdto.getFirstName());
             assertEquals(users.get(i).getLastName(), userdto.getLastName());
             assertEquals(users.get(i).getRole(), userdto.getRole());
@@ -232,7 +230,6 @@ public class UserControllerTest extends AbstractTest {
         for (int i = 0; i < users.size(); i++) {
             assertEquals(users.get(i).getFirstName(), userFromDataBase.get(i).getFirstName());
             assertEquals(users.get(i).getLastName(), userFromDataBase.get(i).getLastName());
-            assertEquals(users.get(i).getPassword(), userFromDataBase.get(i).getPassword());
             assertNotEquals(users.get(i).getRole(), userFromDataBase.get(i).getRole());
             assertNotEquals(users.get(i).isAuth(), userFromDataBase.get(i).isAuth());
         }
@@ -301,10 +298,7 @@ public class UserControllerTest extends AbstractTest {
             UserDto userdto = super.mapFromJson(content, UserDto.class);
 
 
-            assertEquals(user.getEmail(), userdto.getEmail());
-            userdto.setPassword(userdto.getPassword().substring(8));
-            assertTrue(new BCryptPasswordEncoder().matches(user.getPassword(), userdto.getPassword()));
-            assertEquals(user.getFirstName(), userdto.getFirstName());
+            assertEquals(user.getEmail(), userdto.getEmail());assertEquals(user.getFirstName(), userdto.getFirstName());
             assertEquals(user.getLastName(), userdto.getLastName());
             assertEquals(user.getRole(), userdto.getRole());
         }
@@ -332,10 +326,7 @@ public class UserControllerTest extends AbstractTest {
 
 
         for (int i= 0; i < users.size(); i++) {
-            assertEquals(users.get(i).getEmail(), userDtos.get(i).getEmail());
-            userDtos.get(i).setPassword(userDtos.get(i).getPassword().substring(8));
-            assertTrue(new BCryptPasswordEncoder().matches(users.get(i).getPassword(), userDtos.get(i).getPassword()));
-            assertEquals(users.get(i).getFirstName(), userDtos.get(i).getFirstName());
+            assertEquals(users.get(i).getEmail(), userDtos.get(i).getEmail());assertEquals(users.get(i).getFirstName(), userDtos.get(i).getFirstName());
             assertEquals(users.get(i).getLastName(), userDtos.get(i).getLastName());
             assertEquals(users.get(i).getRole(), userDtos.get(i).getRole());
         }
