@@ -94,7 +94,7 @@ export default defineComponent({
 
   setup() {
     const isMobile: Ref<boolean> = inject("isMobile") as Ref<boolean>;
-
+    const userController = UserController.getUserController();
 
     /**
      * Methode, die bestimmt, ob die aktuelle Rute eine Unterroute der angegebenen Seite ist.

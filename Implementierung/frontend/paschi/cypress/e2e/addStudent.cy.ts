@@ -15,7 +15,7 @@ describe("add student test", () => {
     });
     cy.get("input[name=firstName]").type(student.firstName);
     cy.get("input[name=lastName]").type(student.lastName);
-    cy.get("button[name=cancelNewStudent]").click();
+    cy.get("button[name=Abbrechen]").click();
     cy.get(".v-list-item").contains(student.firstName).should("have.length", 0)
     cy.get(".v-list-item").contains(student.lastName).should("have.length", 0);
     cy.sideMenuTo("dashboard");

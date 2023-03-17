@@ -73,12 +73,13 @@
       ]"
     >
       <PInput
+        name="firstName"
         v-model="studentFirstName"
         label="Vorname"
         type="input"
         autofocus
       ></PInput>
-      <PInput v-model="studentLastName" label="Nachname"></PInput>
+      <PInput name="lastName" v-model="studentLastName" label="Nachname"></PInput>
     </PDialog>
   </v-main>
 </template>

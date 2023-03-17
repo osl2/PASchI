@@ -65,6 +65,7 @@
       ]"
     >
       <PInput
+        name="name"
         class="mt-2"
         v-model="newRoomName"
         variant="outlined"
