@@ -2,7 +2,7 @@
   <navigation-bar />
   <RoomDisplay no-drag :room-id="roomId">
     <template v-slot:main>
-      <LineOverlay ref="overlay" :lines="interactionLines">
+      <LineOverlay ref="overlay" z-index="5" :lines="interactionLines">
         <template v-slot:lineMiddle="lineMiddle">
           <v-avatar
             color="interaction"
@@ -42,7 +42,7 @@
     </template>
     <template v-slot:chair="chair">
       <SeatLabel
-        style="z-index: 2"
+        style="z-index: 12"
         :chair="chair.chair"
         @click="click"
         :participant="getParticipant(chair.chair)"

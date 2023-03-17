@@ -25,7 +25,7 @@
       <v-expansion-panel-text class="justify-center">
         <v-list>
           <v-row class="ma-2" v-for="session in sessions"
-            >{{ session.name }} {{ session.date }}
+            >Sitzung am {{ session.date }}
             <v-spacer />
             <v-btn
               variant="tonal"
@@ -48,7 +48,7 @@
               color="red"
               @click="deleteSessionClick(session)"
             >
-              <v-icon>mdi mdi-minus</v-icon>
+              <v-icon>fas fa-trash-can</v-icon>
             </v-btn>
           </v-row>
         </v-list>
