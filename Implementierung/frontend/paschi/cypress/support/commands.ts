@@ -41,6 +41,10 @@ declare global {
 
       addCourse(name: string, subject: string): void;
 
+      deleteTestAccount(): void;
+
+      registerTestAccount(): void;
+
       resetTestAccount(): void;
 
       sideMenuTo(
@@ -106,8 +110,7 @@ Cypress.Commands.add(
   }
 )
 
-Cypress.Commands.add("resetTestAccount", () => {
-  ///*
+Cypress.Commands.add("deleteTestAccount", () => {
   cy.visit("/login");
   cy.adminLogin(admin.email, admin.password);
   cy.get(".v-card[name=userCard]").within(() => {
@@ -131,7 +134,9 @@ Cypress.Commands.add("resetTestAccount", () => {
       cy.get("button[name=deleteUser]").click();
     });
   cy.adminLogOut();
-//*/
+})
+
+Cypress.Commands.add("registerTestAccount", () => {
   cy.visit("/register");
   cy.get("input[name='firstName']").type(user.firstName);
   cy.get("input[name='lastName']").type(user.lastName);
@@ -153,6 +158,12 @@ Cypress.Commands.add("resetTestAccount", () => {
       cy.get("button[name=authUser]").click();
     });
   cy.adminLogOut();
+})
+
+
+Cypress.Commands.add("resetTestAccount", () => {
+  cy.deleteTestAccount();
+  cy.registerTestAccount();
 })
 Cypress.Commands.add("addChair", () => {
   cy.get("button[name=addChair]").click();

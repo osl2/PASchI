@@ -20,6 +20,7 @@
     <v-container fluid class="v-col-11" style="max-width: 700px">
       <v-list rounded v-if="courses.length > 0">
         <v-list-item
+          name="course"
           rounded
           v-for="course in courses"
           :key="course.getId"
