@@ -35,6 +35,7 @@
               <v-icon>fas fa-pencil</v-icon>
             </v-btn>
             <v-btn
+              name="studentStatistic"
               class="ml-2"
               variant="tonal"
               color="primary"

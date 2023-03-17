@@ -1,5 +1,5 @@
 <template>
-  <v-card color="primary-lighten-1">
+  <v-card color="primary-lighten-1" name="recentCoursesCard">
     <v-card-title>
       <v-row class="ma-2"> Letzte Sitzungen </v-row>
     </v-card-title>
@@ -9,6 +9,7 @@
       </v-list-item-title>
       <template v-slot:append>
         <v-btn
+          name="interactionMap"
           variant="tonal"
           color="white"
           @click="navigateToInteractionMap(session)"
@@ -16,6 +17,7 @@
           <v-icon>mdi mdi-map</v-icon>
         </v-btn>
         <v-btn
+          name="statistics"
           class="ml-2"
           variant="tonal"
           color="white"

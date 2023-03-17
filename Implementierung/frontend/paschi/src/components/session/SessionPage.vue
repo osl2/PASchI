@@ -87,7 +87,7 @@
         <v-container>
           <v-row no-gutters>
             <template v-for="category in categories">
-              <v-card class="v-col-3" @click="selectCategory(category)">
+              <v-card class="v-col-3" @click="selectCategory(category)" name="category">
                 <v-row no-gutters justify="space-around" class="ma-2">
                   {{ category.name }}
                 </v-row>

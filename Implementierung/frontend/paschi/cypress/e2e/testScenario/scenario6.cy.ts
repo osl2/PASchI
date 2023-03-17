@@ -4,7 +4,7 @@ describe("add course test", () => {
   before(() => {
     cy.resetTestAccount();
   })
-  it("tests scenario 5", () => {
+  it("tests scenario 6", () => {
     const course = { name: "Klasse 10b", subject: "Informatik" };
     const students = Array.of(
       { firstName: "Anna", lastName: "Bolika" },
@@ -71,6 +71,13 @@ describe("add course test", () => {
     cy.get("[name=recentCoursesCard]").within(()=>{
       cy.get("[name=statistics]").click();
     })
+
+    cy.sideMenuTo("courses");
+    cy.get(".v-list-item[name=course]").click();
+    cy.get(".v-expansion-panel-title[name=studentListTitle]").click()
+    cy.get("[name=studentStatistic]").last()
+
+
     cy.desktopLogOut();
   });
 });

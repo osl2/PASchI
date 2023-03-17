@@ -4,7 +4,7 @@ describe("add course test", () => {
   before(() => {
     cy.resetTestAccount();
   })
-  it("tests scenario 5", () => {
+  it("tests scenario 7", () => {
     const course = { name: "Klasse 10b", subject: "Informatik" };
     const students = Array.of(
       { firstName: "Anna", lastName: "Bolika" },
