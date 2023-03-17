@@ -39,9 +39,19 @@
               color="primary"
               v-on:click.stop
               @click="editCourseClick(course)"
-              ><v-icon>fas fa-pencil</v-icon></v-btn
-            >
+              ><v-icon>fas fa-pencil</v-icon>
+              <v-tooltip
+                activator="parent"
+                location="end"
+              >Kurs bearbeiten
+              </v-tooltip>
+            </v-btn>
           </template>
+          <v-tooltip
+            activator="parent"
+            location="start"
+          >Kurs anzeigen
+          </v-tooltip>
         </v-list-item>
       </v-list>
       <v-card v-else class="pa-2" variant="text">
@@ -75,6 +85,7 @@
         {
           name: 'Bestätigen',
           click: confirmNewCourseClick,
+          disabled: courseName === '',
           color: 'primary',
           submit: true,
         },
@@ -101,11 +112,6 @@ export default defineComponent({
   name: "ViewCoursesPage",
   components: {BottomBar, PInput, PDialog, SideMenu, NavigationBar },
 
-  computed:{
-    isDisabled(){
-      return !(this.courseName);
-    }
-  },
 
   setup() {
     const router = useRouter();

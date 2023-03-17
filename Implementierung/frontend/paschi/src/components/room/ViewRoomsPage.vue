@@ -28,7 +28,24 @@
         >
           <v-list-item-title>
             {{ room.name }}
+
           </v-list-item-title>
+          <template v-slot:append>
+            <v-btn
+              class="ml-2"
+              variant="tonal"
+              color="red"
+              @click="deleteRoom(room)"
+              v-on:click.stop
+            >
+              <v-icon>mdi mdi-trash-can</v-icon>
+            </v-btn>
+          </template>
+          <v-tooltip
+            activator="parent"
+            location="start"
+          >Raum bearbeiten
+          </v-tooltip>
         </v-list-item>
       </v-list>
       <v-card v-else class="pa-2" variant="text">
@@ -60,6 +77,7 @@
         },
         {
           name: 'Bestätigen',
+          disabled: newRoomName === '',
           color: 'primary',
           click: confirmNewRoomClick,
           submit: true,
@@ -80,7 +98,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from "vue";
+import {computed, defineComponent, ref, Ref} from "vue";
 import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import SideMenu from "@/components/navigation/SideMenu.vue";
 import { Room } from "@/model/userdata/rooms/Room";
@@ -121,6 +139,16 @@ export default defineComponent({
         params: { roomId: room.getId },
       });
     }
+
+    /**
+     * Funktion, die einen Raum löscht. Sendet die Anfrage an den Controller.
+     * @param room der Raum der gelöscht werden soll.
+     */
+    async function deleteRoom(room: Room){
+      await roomController.deleteRoom(room.getId);
+      rooms.value = roomController.getAllRooms();
+    }
+
     return {
       editRoom,
       newRoomClick,
@@ -129,6 +157,7 @@ export default defineComponent({
       rooms,
       newRoomName,
       enterRoomNameDialog,
+      deleteRoom,
     };
   },
 });

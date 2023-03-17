@@ -28,8 +28,13 @@
               variant="tonal"
               color="primary"
               @click="editStudentClick(student)"
-              ><v-icon>fas fa-pencil</v-icon></v-btn
-            >
+              ><v-icon>fas fa-pencil</v-icon>
+              <v-tooltip
+                activator="parent"
+                location="start"
+              >Schüler bearbeiten
+              </v-tooltip>
+            </v-btn>
             <v-btn
               class="ml-2"
               variant="tonal"
@@ -37,6 +42,11 @@
               @click="showStatisticsClick(student)"
             >
               <v-icon> fas fa-chart-line </v-icon>
+              <v-tooltip
+                activator="parent"
+                location="end"
+              >Statistiken anzeigen
+              </v-tooltip>
             </v-btn>
           </template>
         </v-list-item>
@@ -67,6 +77,7 @@
         { name: 'Abbrechen', click: abortNewStudentClick },
         {
           name: 'Bestätigen',
+          disabled: studentFirstName === '',
           click: confirmNewStudentClick,
           color: 'primary',
           submit: true,
