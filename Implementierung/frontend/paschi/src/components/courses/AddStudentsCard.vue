@@ -7,10 +7,11 @@
     >
     </PDialog>
     <v-expansion-panel eager elevation="0" class="rounded-lg">
-      <v-expansion-panel-title>
+      <v-expansion-panel-title name="studentListTitle">
         <h2 class="ma-2">Schülerliste</h2>
         <v-spacer />
         <v-btn
+          name="addStudent"
           class="ma-2 mr-4"
           variant="tonal"
           color="green"
@@ -23,7 +24,7 @@
       </v-expansion-panel-title>
       <v-expansion-panel-text class="justify-center">
         <v-list>
-          <v-row class="ma-2" v-for="student in studentsInCourse"
+          <v-row name="student" class="ma-2" v-for="student in studentsInCourse"
             >{{ student.firstName }} {{ student.lastName }}
             <v-spacer />
             <v-btn
