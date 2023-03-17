@@ -94,6 +94,7 @@ export default defineComponent({
 
   setup() {
     const isMobile: Ref<boolean> = inject("isMobile") as Ref<boolean>;
+    const userController = UserController.getUserController();
 
 
     /**
