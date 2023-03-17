@@ -86,7 +86,6 @@ export default defineComponent({
     /**
      * Methode zur Anzeige des Raumauswahldialogs
      */
-
     function selectRoom(roomId: string) {
       selectedRoom = roomId;
       roomElements.value = [];
@@ -95,6 +94,9 @@ export default defineComponent({
       title.value = "Sitzordnung benennen";
     }
 
+    /**
+     * Methode zum Schließen des Raumauswahl-Popups
+     */
     function closeRoomSelectionDialogClick() {
       emit("update:modelValue", false);
       namingStage.value = false;
@@ -108,6 +110,9 @@ export default defineComponent({
       title.value = "Raum auswählen";
     }
 
+    /**
+     * Methode zum Erstellen einer Sitzordnung
+     */
     async function createSeatArrangementClick() {
       const seatArrangementId =
         await seatArrangementController.createSeatArrangement(
@@ -123,6 +128,9 @@ export default defineComponent({
       }
     }
 
+    /**
+     * Methode zum Anzeigen eines Raumes
+     */
     function viewRoomsClick() {
       router.push({ name: "RoomsPage" });
     }

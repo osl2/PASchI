@@ -19,7 +19,7 @@ import {RoomService} from "@/service/RoomService";
 import {SessionService} from "@/service/SessionService";
 
 export const LOGIN_SUCCESS = "Login succesful";
-export const REGISTER_SUCCES = "Register successful";
+export const REGISTER_SUCCESS = "Register successful";
 export const NO_TOKEN_ERROR = "No token found";
 export const PASSWORD_ERROR = "Passwörter stimmen nicht überein";
 
@@ -53,7 +53,9 @@ export class UserController {
     }
 
     useUserStore().setUser(user);
-    await this.getData();
+    if (!user.isAdmin()) {
+      await this.getData();
+    }
     return LOGIN_SUCCESS;
   }
 
@@ -75,7 +77,9 @@ export class UserController {
     }
 
     useUserStore().setUser(user);
-    await this.getData();
+    if (!user.isAdmin()) {
+      await this.getData();
+    }
     return LOGIN_SUCCESS;
   }
 
@@ -118,7 +122,7 @@ export class UserController {
       return <string>message;
     }
     user.deletePassword();
-    return REGISTER_SUCCES;
+    return REGISTER_SUCCESS;
   }
 
   /**
