@@ -1,7 +1,8 @@
 ///<reference types="cypress" />
+import {user} from "../support/commands";
+import {admin} from "../support/commands";
+
 describe("Login test", () => {
-  const admin = { email: "admin@kit.edu", password: "admin" };
-  const user = { firstName: "Testvorname", lastName: "Testnachname", email: "test@kit.edu", password: "12345678" };
   it("tests input of email and password and successful admin- login", () => {
     cy.visit("/login");
     cy.adminLogin(admin.email, admin.password);

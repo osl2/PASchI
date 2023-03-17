@@ -79,6 +79,7 @@
           <h2 class="ma-2">Schülerliste</h2>
           <v-spacer/>
           <v-btn
+            name="addStudent"
             class="ml-15 ma-2"
             variant="flat"
             color="green"

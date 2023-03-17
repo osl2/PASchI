@@ -44,6 +44,8 @@ declare global {
 
       addCourse(name: string, subject: string): void;
 
+      resetTestAccount(): void;
+
       sideMenuTo(
         destination: "dashboard" | "students" | "courses" | "rooms" | "settings"
       ): void;
@@ -65,6 +67,14 @@ declare global {
     }
   }
 }
+
+export const admin = { email: "admin@kit.edu", password: "admin" };
+export const user = {
+  firstName: "Testvorname",
+  lastName: "Testnachname",
+  email: "test@kit.edu",
+  password: "12345678",
+};
 
 Cypress.Commands.add(
   'drag',
@@ -97,6 +107,53 @@ Cypress.Commands.add(
   }
 )
 
+Cypress.Commands.add("resetTestAccount", () => {
+  cy.visit("/login");
+  cy.adminLogin(admin.email, admin.password);
+  cy.get(".v-card[name=userCard]").within(() => {
+    cy.get("button").click();
+  });
+  cy.get(".v-card[name=userCard]")
+    .get("[name=userSearchParameters]")
+    .click({ force: true })
+    .get(".v-overlay")
+    .within((element) => {
+      cy.get(".v-list-item").contains("E-Mail").click();
+    })
+    .get("input[name=userSearch]")
+    .type(user.email);
+  // Cypress bug: cy.get("[name=user]").should('not.have.attr', 'style', 'display: none').first().click()
+  cy.get("[name=userEmail]")
+    .contains(new RegExp("^" + user.email + "$", "g"))
+    .should("have.length", 1)
+    .parents("[name=user]")
+    .within(() => {
+      cy.get("button[name=deleteUser]").click();
+    });
+  cy.logOut();
+
+  cy.visit("/register");
+  cy.get("input[name='firstName']").type(user.firstName);
+  cy.get("input[name='lastName']").type(user.lastName);
+  cy.get("input[name='mail']").type(user.email);
+  cy.get("input[name='password']").type(user.password);
+  cy.get("input[name='passwordRepeat']").type(user.password);
+  cy.get("button[type=submit]").click();
+
+  cy.visit("/login");
+  cy.adminLogin(admin.email, admin.password);
+  cy.get(".v-card[name=requestCard]").within(() => {
+    cy.get("button").click();
+  });
+  cy.get("[name=requestEmail]")
+    .contains(new RegExp("^" + user.email + "$", "g"))
+    .should("have.length", 1)
+    .parents("[name=request]")
+    .within(() => {
+      cy.get("button[name=authUser]").click();
+    });
+  cy.logOut();
+})
 Cypress.Commands.add("addChair", () => {
   cy.get("button[name=addChair]").click();
 });

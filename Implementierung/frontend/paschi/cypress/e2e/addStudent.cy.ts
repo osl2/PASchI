@@ -1,13 +1,7 @@
 ///<reference types="cypress" />
-import { contains } from "html2canvas/dist/types/core/bitwise";
+import {user} from "../support/commands";
 
 describe("add student test", () => {
-  const user = {
-    firstName: "Testvorname",
-    lastName: "Testnachname",
-    email: "test@kit.edu",
-    password: "12345678",
-  };
   it("tests adding a student", () => {
     const student = { firstName: "Max", lastName: "Mustermann" };
     cy.visit("/login");

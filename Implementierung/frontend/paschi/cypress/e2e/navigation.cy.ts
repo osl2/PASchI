@@ -1,12 +1,7 @@
 ///<reference types="cypress" />
+import {user} from "../support/commands";
 
 describe("Navigation test", () => {
-  const user = {
-    firstName: "Testvorname",
-    lastName: "Testnachname",
-    email: "test@kit.edu",
-    password: "12345678",
-  };
   it("tests navigation-bar in mobile version", () => {
     cy.viewport(500, 1000)
     cy.visit("/login");

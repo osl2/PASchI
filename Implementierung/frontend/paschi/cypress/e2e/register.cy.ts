@@ -1,7 +1,7 @@
 ///<reference types="cypress" />
+import {user} from "../support/commands";
 
 describe("Register test", () => {
-  const user = { firstName: "Testvorname", lastName: "Testnachname", email: "test@kit.edu", password: "12345678" };
   const emptyInputMessage = "Alle Felder müssen ausgefüllt sein.";
   it("tests empty first name", () => {
     cy.visit("/register");

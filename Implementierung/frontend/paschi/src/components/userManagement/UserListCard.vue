@@ -1,10 +1,10 @@
 <template>
-  <v-card color="primary" min-width="600">
+  <v-card name="userCard" color="primary" min-width="600">
     <v-card-title>
       <v-row class="ma-2">
         Akzeptierte Accounts
         <v-spacer />
-        <v-btn @click="toggleCollapse">{{ toggleCollapseMessage }}</v-btn>
+        <v-btn name="toggleUserList" @click="toggleCollapse">{{ toggleCollapseMessage }}</v-btn>
       </v-row>
     </v-card-title>
     <v-card-item v-show="!collapsed">
@@ -18,12 +18,14 @@
       <v-row>
         <v-col cols="3">
           <v-select
+            name="userSearchParameters"
             label="suchen nach"
             :items="searchParameters"
             v-model="searchParameter"
         /></v-col>
         <v-col>
           <v-text-field
+            name="userSearch"
             v-model="searchInput"
             label="Suche"
             type="input"
@@ -32,6 +34,7 @@
       </v-row>
     </v-card-item>
     <v-card-item
+      name = "user"
       v-for="user in users.sort((a, b) => a.email.localeCompare(b.email))"
       v-show="!collapsed && includesSearch(user)"
       :key="user.getId"
@@ -40,7 +43,7 @@
         <v-col v-show="showName">
           {{ user.firstName }} {{ user.lastName }}
         </v-col>
-        <v-col v-show="showEmail">
+        <v-col name="userEmail" v-show="showEmail">
           {{ user.email }}
         </v-col>
         <v-col v-show="showId">
@@ -48,6 +51,7 @@
         </v-col>
         <v-col cols="2">
           <v-btn
+            name="deleteUser"
             :loading="loading.includes(user.getId)"
             color="#ff0000"
             @click="deleteUser(user)"
