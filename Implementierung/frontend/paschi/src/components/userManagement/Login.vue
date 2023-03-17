@@ -74,13 +74,18 @@
         </v-card-title>
       </v-card>
     </v-container>
+    <v-footer class="position-fixed w-100 bg-transparent"  style="bottom: 0; height: 50px">
+      <v-spacer></v-spacer>
+      <v-btn @click="imprint"> Impressum </v-btn>
+      <v-btn @click="dataProtection"> Datenschutz </v-btn>
+    </v-footer>
   </v-main>
 </template>
 
 <script lang="ts">
 import AppBar from "@/components/navigation/NavigationBar.vue";
 import router from "@/plugins/router";
-import {LOGIN_SUCCESS, UserController} from "@/controller/UserController";
+import { LOGIN_SUCCESS, UserController } from "@/controller/UserController";
 import { defineComponent, onMounted, ref } from "vue";
 export default defineComponent({
   name: "Login",
@@ -123,14 +128,24 @@ export default defineComponent({
       });
     }
 
+    function dataProtection() {
+      router.push("/data-protection");
+    }
+
+    function imprint() {
+      router.push("/imprint");
+    }
+
     return {
       router,
+      dataProtection,
+      imprint,
       login,
       email,
       passwordError,
       password,
       loginError,
-      loginLoading
+      loginLoading,
     };
   },
 });
