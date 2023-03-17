@@ -27,7 +27,7 @@
         :class="[
           chair === selectedRoomObject && roomObjectOverlaps
             ? 'error'
-            : 'notError',
+            : 'not-error',
         ]"
         @mousedown="mouseDown($event, chair)"
         @mouseenter="mouseEnter($event, chair)"
@@ -62,10 +62,9 @@
         :class="[
           table === selectedRoomObject && roomObjectOverlaps
             ? 'error'
-            : 'notError',
+            : 'not-error-table',
         ]"
         @mousedown="mouseDown($event, table)"
-        @mouseenter="mouseEnter($event, table)"
         @touchstart="touchStart($event, table)"
         @touchmove="touchMove($event, table)"
         @touchend="touchEnd($event)"
@@ -342,10 +341,15 @@ export default defineComponent({
 <style scoped>
 .error {
   border: 2px solid red;
-  z-index: 3;
+  z-index: 7;
 }
 
 .not-error {
-  z-index: 2;
+  z-index: 6;
 }
+
+.not-error-table {
+  z-index: 4;
+}
+
 </style>

@@ -23,7 +23,7 @@
         position: 'fixed',
         top: slot.y + 'px',
         left: slot.x + 'px',
-        zIndex: 1,
+        zIndex: 9,
         transform: 'translate(-50%, -50%)',
       }"
   >
