@@ -14,7 +14,6 @@
     </template>
   </navigation-bar>
 
-  <SideMenu />
   <v-main class="ma-0 v-row justify-center align-content-xl-space-around">
     <SideMenu />
     <BottomBar />
