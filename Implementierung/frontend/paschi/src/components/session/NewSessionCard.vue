@@ -87,6 +87,7 @@
                     v-on:click.stop
                     @click="newSessionClick(seatArrangement)"
                   ></v-btn>
+
                 </template>
               </v-list-item>
             </v-list>
@@ -163,6 +164,8 @@ export default defineComponent({
     function newSeatArrangementClick() {
       showNewSeatArrangementDialog.value = true;
     }
+
+
 
     return {
       showNewSeatArrangementDialog,
