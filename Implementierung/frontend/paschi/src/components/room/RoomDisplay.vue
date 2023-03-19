@@ -281,7 +281,6 @@ export default defineComponent({
         displayCoordinate.y
       );
       emit("selectRoomObject", roomObject, roomCoordinate, displayCoordinate);
-      console.log(roomObject);
     }
 
     function touchMove(event: TouchEvent, roomObject: RoomObject) {
@@ -320,7 +319,6 @@ export default defineComponent({
         roomCoordinate,
         displayCoordinate
       );
-      console.log(roomObject);
       selectedRoomObject.value = undefined;
     }
 
