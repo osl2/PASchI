@@ -46,10 +46,8 @@
               @click="newSessionClick(lastSeatArrangement)"
             >
               <v-icon> fas fa-arrow-right </v-icon>
-              <v-tooltip
-                activator="parent"
-                location="start"
-              >Sitzung starten
+              <v-tooltip activator="parent" location="start"
+                >Sitzung starten
               </v-tooltip>
             </v-btn>
           </v-expansion-panel-title>
@@ -65,6 +63,20 @@
               >Neue Sitzordnung</v-btn
             >
             <v-list class="ma-0 mt-2">
+              <v-list-item v-if="lastSeatArrangement?.isVisible()">
+                Standardsitzordnung
+                <template v-slot:append>
+                  <v-btn
+                    variant="tonal"
+                    class="ma-2"
+                    color="green"
+                    v-on:click.stop
+                    @click="newSessionClick(undefined)"
+                  >
+                    <v-icon>fas fa-arrow-right</v-icon>
+                  </v-btn>
+                </template>
+              </v-list-item>
               <v-list-item
                 v-for="(seatArrangement, index) in seatArrangements"
                 rounded
@@ -91,7 +103,6 @@
                   >
                     <v-icon>fas fa-arrow-right</v-icon>
                   </v-btn>
-
                 </template>
               </v-list-item>
             </v-list>
@@ -103,7 +114,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, inject, Ref, ref} from "vue";
+import { defineComponent, inject, Ref, ref } from "vue";
 import { CourseController } from "@/controller/CourseController";
 import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
 import router from "@/plugins/router";
@@ -131,7 +142,6 @@ export default defineComponent({
     const errorDialog = ref(false);
     const isMobile: Ref<boolean> = inject("isMobile") as Ref<boolean>;
 
-
     function editSeatArrangementClick(seatArrangement: SeatArrangement) {
       router.push({
         name: "SeatArrangementPage",
@@ -144,7 +154,7 @@ export default defineComponent({
     ) {
       const session = await sessionController.createSession(
         courseId,
-        seatArrangement?.isVisible()? seatArrangement!.getId : undefined,
+        seatArrangement?.isVisible() ? seatArrangement!.getId : undefined,
         "Session"
       );
       if (!session) {
@@ -152,7 +162,7 @@ export default defineComponent({
         return;
       }
       await router.push({
-        name: isMobile.value? "SessionPage" : "SessionPageDesktop",
+        name: isMobile.value ? "SessionPage" : "SessionPageDesktop",
         params: { sessionId: session },
       });
     }
@@ -169,8 +179,6 @@ export default defineComponent({
       showNewSeatArrangementDialog.value = true;
     }
 
-
-
     return {
       showNewSeatArrangementDialog,
       lastSeatArrangement,
@@ -180,7 +188,7 @@ export default defineComponent({
       newSessionClick,
       closeErrorDialog,
       errorDialog,
-      isMobile
+      isMobile,
     };
   },
 });

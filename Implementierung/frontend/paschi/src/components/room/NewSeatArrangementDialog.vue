@@ -132,7 +132,7 @@ export default defineComponent({
      * Methode zum Anzeigen eines Raumes
      */
     function viewRoomsClick() {
-      router.push({ name: "RoomsPage" });
+      router.push({ name: "ViewRoomsPage" });
     }
 
     return {
