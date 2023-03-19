@@ -27,7 +27,7 @@
       </v-btn>
     </template>
   </NavigationBar>
-  <LineOverlay :lines="interactionLines" z-index="30" />
+  <LineOverlay :lines="interactionLines" :z-index="30" />
   <RoomDisplay
     style="z-index: 5"
     no-drag

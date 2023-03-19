@@ -29,6 +29,7 @@
             ? 'error'
             : 'not-error',
         ]"
+        :id="chair.getId"
         @mousedown="mouseDown($event, chair)"
         @mouseenter="mouseEnter($event, chair)"
         @touchstart="touchStart($event, chair)"
@@ -102,6 +103,7 @@ import NavigationBar from "@/components/navigation/NavigationBar.vue";
 import { Chair } from "@/model/userdata/rooms/Chair";
 import { Table } from "@/model/userdata/rooms/Table";
 import { useRoomObjectUtilities } from "@/components/room/RoomObjectUtilities";
+import {ro} from "vuetify/locale";
 
 export default defineComponent({
   name: "RoomDisplay.vue",
@@ -279,6 +281,7 @@ export default defineComponent({
         displayCoordinate.y
       );
       emit("selectRoomObject", roomObject, roomCoordinate, displayCoordinate);
+      console.log(roomObject);
     }
 
     function touchMove(event: TouchEvent, roomObject: RoomObject) {
@@ -307,12 +310,17 @@ export default defineComponent({
         displayCoordinate.x,
         displayCoordinate.y
       );
+
+      const elements = document.elementsFromPoint(displayCoordinate.x, displayCoordinate.y)
+      const roomObject = roomObjects.value?.find((element: RoomObject) => elements.includes(document.getElementById(element.getId)!))
+
       emit(
         "deselectRoomObject",
-        selectedRoomObject.value,
+        props.noDrag? roomObject : selectedRoomObject.value,
         roomCoordinate,
         displayCoordinate
       );
+      console.log(roomObject);
       selectedRoomObject.value = undefined;
     }
 
