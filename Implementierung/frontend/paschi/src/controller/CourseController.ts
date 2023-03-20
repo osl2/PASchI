@@ -1,23 +1,21 @@
-import {Course} from "@/model/userdata/courses/Course";
-import {Participant} from "@/model/userdata/interactions/Participant";
-import {Session} from "@/model/userdata/courses/Session";
-import {SeatArrangement} from "@/model/userdata/courses/SeatArrangement";
-import {useCourseStore} from "@/store/CourseStore";
-import {UserController} from "@/controller/UserController";
-import {useStudentStore} from "@/store/ParticipantStore";
-import {SessionController} from "@/controller/SessionController";
-import {SeatArrangementController} from "@/controller/SeatArrangementController";
-import {CourseService} from "@/service/CourseService";
-import {ParticipantService} from "@/service/ParticipantService";
-import {Teacher} from "@/model/userdata/interactions/Teacher";
+import { Course } from "@/model/userdata/courses/Course";
+import { Participant } from "@/model/userdata/interactions/Participant";
+import { Session } from "@/model/userdata/courses/Session";
+import { SeatArrangement } from "@/model/userdata/courses/SeatArrangement";
+import { useCourseStore } from "@/store/CourseStore";
+import { UserController } from "@/controller/UserController";
+import { useStudentStore } from "@/store/ParticipantStore";
+import { SessionController } from "@/controller/SessionController";
+import { SeatArrangementController } from "@/controller/SeatArrangementController";
+import { CourseService } from "@/service/CourseService";
+import { ParticipantService } from "@/service/ParticipantService";
+import { Teacher } from "@/model/userdata/interactions/Teacher";
 
 export class CourseController {
-
   private static controller: CourseController = new CourseController();
   private courseService = CourseService.getService();
 
-  private constructor() {
-  }
+  private constructor() {}
 
   /**
    * Gibt eine Instanz des Kurscontrollers zurück.
@@ -71,15 +69,6 @@ export class CourseController {
     if (course) {
       for (const participant of course.participants) {
         participant.removeCourse(id);
-        await ParticipantService.getService().update(participant);
-      }
-      const sessions = Array.from(course.sessions);
-      for (const session of sessions) {
-        await SessionController.getSessionController().deleteSession(session.getId);
-      }
-      const arrangements = Array.from(course.seatArrangements);
-      for (const arrangement of arrangements) {
-        await SeatArrangementController.getSeatArrangementController().deleteSeatArrangement(arrangement.getId);
       }
       await this.courseService.delete(id);
       useCourseStore().deleteCourse(id);
@@ -107,9 +96,11 @@ export class CourseController {
    * Gibt die aktuellsten Kurse zurück.
    */
   getRecentCourses(): Course[] {
-    const allCourses = useCourseStore().getAllCourses().sort((a: Course, b: Course) => {
-      return (a.updatedAt <= b.updatedAt) ? 1 : -1;
-    });
+    const allCourses = useCourseStore()
+      .getAllCourses()
+      .sort((a: Course, b: Course) => {
+        return a.updatedAt <= b.updatedAt ? 1 : -1;
+      });
 
     const courses = [];
     const max = allCourses.length < 5 ? allCourses.length : 5;
@@ -140,8 +131,12 @@ export class CourseController {
       return undefined;
     }
 
-    return useStudentStore().getAllStudents().filter(student => student.visible &&
-      course?.getParticipant(student.getId) == undefined);
+    return useStudentStore()
+      .getAllStudents()
+      .filter(
+        (student) =>
+          student.visible && course?.getParticipant(student.getId) == undefined
+      );
   }
 
   /**
@@ -174,11 +169,17 @@ export class CourseController {
       course.removeParticipant(studentId);
       student.removeCourse(courseId);
       await ParticipantService.getService().update(student);
-      for (const arrangement of course.seatArrangements.filter(arrangement => arrangement.isVisible())) {
+      for (const arrangement of course.seatArrangements.filter((arrangement) =>
+        arrangement.isVisible()
+      )) {
         for (const value of arrangement.seatMap) {
           if (value[1].getId === studentId) {
-            const arrangementController = SeatArrangementController.getSeatArrangementController();
-            await arrangementController.deleteMapping(arrangement.getId, value[0].getId);
+            const arrangementController =
+              SeatArrangementController.getSeatArrangementController();
+            await arrangementController.deleteMapping(
+              arrangement.getId,
+              value[0].getId
+            );
           }
         }
       }
@@ -192,9 +193,11 @@ export class CourseController {
    * @param courseId Die Id der Session.
    */
   getSessions(courseId: string): Session[] | undefined {
-    return useCourseStore().getCourse(courseId)?.sessions.sort((a: Session, b: Session) => {
-      return (a.createdAt <= b.createdAt) ? 1 : -1
-    });
+    return useCourseStore()
+      .getCourse(courseId)
+      ?.sessions.sort((a: Session, b: Session) => {
+        return a.createdAt <= b.createdAt ? 1 : -1;
+      });
   }
 
   /**
@@ -213,7 +216,9 @@ export class CourseController {
    * @param courseId Die Id des Kurses.
    */
   getSeatArrangements(courseId: string): SeatArrangement[] | undefined {
-    return useCourseStore().getCourse(courseId)?.seatArrangements.filter(arrangement => arrangement.room.visible);
+    return useCourseStore()
+      .getCourse(courseId)
+      ?.seatArrangements.filter((arrangement) => arrangement.room.visible);
   }
 
   /**
