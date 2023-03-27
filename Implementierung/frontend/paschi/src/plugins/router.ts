@@ -19,7 +19,7 @@ import ViewRoomsPage from "@/components/room/ViewRoomsPage.vue";
 import SessionPage from "@/components/session/SessionPage.vue";
 import SessionPageDesktop from "@/components/session/SessionPageDesktop.vue";
 import Imprint from "@/components/legal/Imprint.vue";
-import { UserController } from "@/controller/UserController";
+import {LOGIN_SUCCESS, UserController} from "@/controller/UserController";
 import DataProtection from "@/components/legal/DataProtection.vue";
 const routes = [
   { path: "/", redirect: "/login" },
@@ -146,14 +146,16 @@ router.beforeEach((to, from, next) => {
   if (
     UserController.getUserController().isLoggedIn() ||
     to.name === "Login" ||
-    to.name === "Register"
+    to.name === "Register" ||
+    to.name === "Imprint" ||
+    to.name === "DataProtection"
   ) {
     next();
   } else {
     UserController.getUserController()
       .loginWithToken(null)
       .then(async (res) => {
-        if (res) {
+        if (res === LOGIN_SUCCESS) {
           next();
         } else {
           await router.replace({ name: "Login" });

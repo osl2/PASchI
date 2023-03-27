@@ -114,7 +114,6 @@ export default defineComponent({
       }
       ctx.strokeStyle = "#ff8d00";
       ctx.lineWidth = 5;
-      console.log("drawing line");
       ctx.stroke();
     }
 

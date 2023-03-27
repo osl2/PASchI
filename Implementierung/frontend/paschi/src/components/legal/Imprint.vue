@@ -2,7 +2,6 @@
   <NavigationBar>
     <v-app-bar-title> Impressum </v-app-bar-title>
   </NavigationBar>
-  <SideMenu />
   <v-main class="v-row justify-center">
     <v-card class="mt-5 v-col" max-width="1000">
       <v-card-title class="text-h5 text-center text-indigo-darken-4 text-wrap">
