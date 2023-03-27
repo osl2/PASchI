@@ -1,5 +1,11 @@
 <template>
-  <navigation-bar />
+  <navigation-bar extended>
+    <template v-slot:append>
+      <v-icon class="ma-2" @click="activateInteractionList">
+        mdi mdi-view-list
+      </v-icon>
+    </template>
+  </navigation-bar>
   <RoomDisplay no-drag :room-id="roomId">
     <template v-slot:main>
       <LineOverlay ref="overlay" z-index="5" :lines="interactionLines">
@@ -60,6 +66,68 @@
       />
     </template>
   </RoomDisplay>
+  <v-dialog v-model="interactionListDialog">
+    <v-card cols="11">
+      <v-card-title>
+        <v-row>
+          <v-col cols="11" no-gutters
+          ><div class="v-col-11">Interaktionen</div></v-col
+          >
+          <v-col cols="1" no-gutters align-self="start">
+            <v-row justify="end">
+              <v-icon class="ma-2" @click="interactionListDialog = false">mdi mdi-close</v-icon>
+            </v-row>
+          </v-col>
+        </v-row>
+      </v-card-title>
+      <v-list class="ma-2 v-col-12">
+        <v-row class="ma-2">
+          <v-col><div>Von</div></v-col>
+          <v-col><div>Nach</div></v-col>
+          <v-col><div>Katetegorie</div></v-col>
+          <v-col><div>Qualität</div></v-col>
+          <v-col><div>Zeit</div></v-col>
+        </v-row>
+        <v-divider />
+        <v-row
+          class="ma-2"
+          key="interaction.getId"
+          v-for="interaction in interactions"
+        >
+          <v-col
+          ><div>
+            {{ interaction.fromParticipant.firstName }}
+            {{ interaction.fromParticipant.lastName }}
+          </div></v-col
+          >
+          <v-col
+          ><div>
+            {{ interaction.toParticipant.firstName }}
+            {{ interaction.toParticipant.lastName }}
+          </div></v-col
+          >
+          <v-col
+          ><div>{{ interaction.category.name }}</div></v-col
+          >
+          <v-col>
+            <template v-if="interaction.category.hasQuality()">
+              <v-icon
+                icon="mdi mdi-star"
+                v-for="i in getStars(interaction.category.getQuality())"
+              ></v-icon>
+              <v-icon
+                icon="mdi mdi-star-outline"
+                v-for="i in 5 - (getStars(interaction.category.getQuality()))"
+              ></v-icon>
+            </template>
+          </v-col>
+          <v-col
+          ><div>{{ interaction.timeStamp }}</div></v-col
+          >
+        </v-row>
+      </v-list>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts">
@@ -72,6 +140,7 @@ import { SessionController } from "@/controller/SessionController";
 import { Chair } from "@/model/userdata/rooms/Chair";
 import SeatLabel from "@/components/room/SeatLabel.vue";
 import { Coordinate } from "@/components/room/Coordinate";
+import {Quality} from "@/model/userdata/interactions/Quality";
 
 export default defineComponent({
   name: "ShowInteractionMapPage",
@@ -107,6 +176,8 @@ export default defineComponent({
         to: String;
       }[]
     >([]);
+
+    const interactionListDialog = ref(false);
 
     /**
      * Methode zur Rückgabe der Anzahl an Interaktionen
@@ -146,6 +217,23 @@ export default defineComponent({
         );
       }
       return interactionCount;
+    }
+
+    function getStars(quality: Quality) {
+      switch (quality) {
+        case Quality.ONE_STAR:
+          return 1;
+        case Quality.TWO_STAR:
+          return 2;
+        case Quality.THREE_STAR:
+          return 3;
+        case Quality.FOUR_STAR:
+          return 4;
+        case Quality.FIVE_STAR:
+          return 5;
+        default:
+          return 0
+      }
     }
 
     /**
@@ -218,7 +306,14 @@ export default defineComponent({
       };
     }
 
+    function activateInteractionList() {
+      interactionListDialog.value = true;
+    }
+
     return {
+      activateInteractionList,
+      interactionListDialog,
+      getStars,
       click,
       roomId,
       overlay,
