@@ -64,7 +64,7 @@
                   <v-spacer />
                 </v-row>
               </v-card-title>
-              <v-card-item v-if="stats !== undefined && stats[4].length !== 0">
+              <v-card-item v-if="stats !== undefined && stats[0].length !== 0">
                 <v-list max-height="500">
                   <v-row class="text-wrap ma-2" v-for="studentId in top5InteractionArray"
                   >{{
